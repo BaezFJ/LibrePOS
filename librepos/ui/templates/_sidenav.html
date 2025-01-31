@@ -1,0 +1,67 @@
+{% from "components/collapsible.html" import collapsible_sidebar_menu %}
+
+{% if current_user.is_authenticated %}
+    <ul id="user-sidenav" class="sidenav right">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
+                </div>
+                <a href="">
+                    <img class="circle" src="{{ url_for('static', filename='images/default_male_user.png') }}"
+                         alt="default">
+                </a>
+                <a href="">
+                    <span class="white-text name">{{ current_user.username }}</span>
+                </a>
+                <a><span class="white-text email">{{ current_user.email }}</span></a>
+            </div>
+        </li>
+
+        {# BEGIN: Admin Links #}
+        {% if current_user.role.is_admin %}
+            <li>
+                <a href="{{ url_for("admin.get_dashboard") }}">
+                    <i class="material-icons">dashboard</i>
+                    Dashboard
+                </a>
+            </li>
+        {% endif %}
+        {# END Admin Links #}
+
+        {# BEGIN: Manager Links #}
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header">
+                        <i class="material-icons">restaurant_menu</i>
+                        Menu
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="">
+                                    <i class="material-icons">category</i>Categories
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <i class="material-icons">inventory_2</i>Products
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        {# END: Manager Links #}
+
+
+        <li>
+            <a href="{{ url_for("user.get_logout") }}">
+                <i class="material-icons red-text">logout</i>
+                Logout
+            </a>
+        </li>
+    </ul>
+{% endif %}

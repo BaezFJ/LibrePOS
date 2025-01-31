@@ -1,0 +1,36 @@
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            {#  ========== Left Menu ========== #}
+            {% if current_user.is_authenticated and request.endpoint != 'user.get_dashboard' %}
+                <ul>
+                    <li>
+                        <a href="{{ back_url if back_url else url_for('user.get_dashboard') }}">
+                            <i class="material-icons">{{ 'arrow_back' if back_url else 'home' }}</i>
+                        </a>
+                    </li>
+                </ul>
+            {% endif %}
+
+            {#  ========== Menu Title ========== #}
+            <a href="" class="brand-logo center">
+                {{ title|truncate(8) if title else "LibrePOS" }}
+            </a>
+
+            {#  ========== Right Menu ========== #}
+            <ul class="right">
+                {% if current_user.is_authenticated %}
+                    <li>
+                        <a href="" data-target="user-sidenav" class="sidenav-trigger">
+                            <i class="material-icons">account_circle</i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>
+
+{% if current_user.is_authenticated %}
+    {% include "_sidenav.html" %}
+{% endif %}

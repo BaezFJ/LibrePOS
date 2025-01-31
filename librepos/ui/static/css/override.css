@@ -1,0 +1,26 @@
+a {
+    color: revert;
+}
+
+.modal.bottom-sheet {
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.bottom-sheet {
+    max-height: 80%;
+}
+
+ul {
+    padding-inline-start: 0;
+}
+
+.card-panel{
+    margin: 0;
+}
