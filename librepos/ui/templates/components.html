@@ -94,3 +94,22 @@
         </a>
     </li>
 {% endmacro %}
+
+{% macro render_card_link(url, text, icon) %}
+    <a href="{{ url }}" class="inherit-color">
+        <div class="card-panel center-align hoverable">
+            <i class="large material-icons">{{ icon }}</i><br>
+            <span class="flow-text">{{ text }}</span>
+        </div>
+    </a>
+{% endmacro %}
+
+{% macro render_thead(columns) %}
+    <thead>
+    <tr>
+        {% for column in columns %}
+            <th>{{ column }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+{% endmacro %}
