@@ -1,5 +1,3 @@
-{% from "components/collapsible.html" import collapsible_sidebar_menu %}
-
 {% if current_user.is_authenticated %}
     <ul id="user-sidenav" class="sidenav right">
         <li>
@@ -21,7 +19,7 @@
         {# BEGIN: Admin Links #}
         {% if current_user.role.is_admin %}
             <li>
-                <a href="{{ url_for("admin.get_dashboard") }}">
+                <a href="">
                     <i class="material-icons">dashboard</i>
                     Dashboard
                 </a>
@@ -58,7 +56,7 @@
 
 
         <li>
-            <a href="{{ url_for("user.get_logout") }}">
+            <a href="{{ url_for("auth.logout") }}">
                 <i class="material-icons red-text">logout</i>
                 Logout
             </a>

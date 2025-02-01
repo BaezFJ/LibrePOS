@@ -1,5 +1,6 @@
 from flask import Flask
 
+from .manage import add_cli_commands
 from .urls import register_urls
 
 
@@ -16,6 +17,7 @@ def create_app():
     app.config.from_envvar("LIBREPOS_SETTINGS", silent=True)
 
     # load extensions
+    init_extensions(app)
 
     # load custom jinja filters
     custom_jinja_filters(app)
@@ -24,8 +26,23 @@ def create_app():
     register_urls(app)
 
     # load cli commands
+    add_cli_commands(app)
 
     return app
+
+
+def init_extensions(app):
+    from .extensions import db, login_manager
+    from librepos.models.user import User
+
+    db.init_app(app)
+    login_manager.init_app(app)
+
+    login_manager.login_view = "auth.login"
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
 
 def custom_jinja_filters(app):

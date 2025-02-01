@@ -2,10 +2,10 @@
     <nav>
         <div class="nav-wrapper">
             {#  ========== Left Menu ========== #}
-            {% if current_user.is_authenticated and request.endpoint != 'user.get_dashboard' %}
+            {% if current_user.is_authenticated and request.endpoint != 'dashboard.get_dashboard' %}
                 <ul>
                     <li>
-                        <a href="{{ back_url if back_url else url_for('user.get_dashboard') }}">
+                        <a href="{{ back_url if back_url else url_for('dashboard.get_dashboard') }}">
                             <i class="material-icons">{{ 'arrow_back' if back_url else 'home' }}</i>
                         </a>
                     </li>
