@@ -31,8 +31,6 @@ class User(UserMixin, CRUDMixin, db.Model):
             self.set_password(temporary_password)
             # TODO 1/28/25 : make a function to send the temporary password to user preferred method email/phone
 
-            print(f"Temporary password for {username} is {temporary_password}")
-
     # ForeignKeys
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
 
