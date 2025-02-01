@@ -41,6 +41,7 @@ def admin_required(f):
     :param f: The route handler function being decorated.
     :return: The decorated route handler function that enforces admin checks.
     """
+
     @wraps(f)
     @login_required
     def decorated_function(*args, **kwargs):

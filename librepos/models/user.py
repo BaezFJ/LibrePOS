@@ -13,7 +13,6 @@ from librepos.utils.sqlalchemy import CRUDMixin
 
 
 class User(UserMixin, CRUDMixin, db.Model):
-
     def __init__(self, username, email, first_name, last_name, **kwargs):
         super(User, self).__init__(**kwargs)
 
