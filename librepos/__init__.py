@@ -7,7 +7,9 @@ def create_app():
     _template_folder = "ui/templates"
     _static_folder = "ui/static"
 
-    app = Flask(__name__, template_folder=_template_folder, static_folder=_static_folder)
+    app = Flask(
+        __name__, template_folder=_template_folder, static_folder=_static_folder
+    )
 
     app.config.from_pyfile("config.py")
 

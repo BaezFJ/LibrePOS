@@ -4,7 +4,6 @@ from librepos.utils.sqlalchemy import CRUDMixin
 
 
 class Role(CRUDMixin, db.Model):
-
     def __init__(self, name, **kwargs):
         super(Role, self).__init__(**kwargs)
 

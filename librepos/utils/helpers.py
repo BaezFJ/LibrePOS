@@ -8,6 +8,7 @@ from better_profanity import profanity
 from flask import current_app
 from slugify import slugify
 
+
 def is_profanity(text: str) -> bool:
     """Check if the given text contains profanity."""
     return profanity.contains_profanity(text)
