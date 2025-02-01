@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import flash, redirect, url_for, request
+from flask import flash, redirect, request, url_for
 from flask_login import current_user, login_required
 
 
@@ -41,6 +41,7 @@ def admin_required(f):
     :param f: The route handler function being decorated.
     :return: The decorated route handler function that enforces admin checks.
     """
+
     @wraps(f)
     @login_required
     def decorated_function(*args, **kwargs):

@@ -1,12 +1,13 @@
 import secrets
 import uuid
 from datetime import datetime
-from ipaddress import ip_network, ip_address
+from ipaddress import ip_address, ip_network
 
 import pytz
 from better_profanity import profanity
 from flask import current_app
 from slugify import slugify
+
 
 def is_profanity(text: str) -> bool:
     """Check if the given text contains profanity."""
