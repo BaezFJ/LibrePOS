@@ -9,7 +9,7 @@ dashboard_bp = Blueprint('dashboard', __name__, template_folder='templates')
 def before_request():
     pass
 
-
+@dashboard_bp.route('/')
 @dashboard_bp.route('/dashboard')
 def get_dashboard():
     return render_template("dashboard.html")
