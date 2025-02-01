@@ -3,6 +3,8 @@ from functools import wraps
 from flask import flash, redirect, request, url_for
 from flask_login import current_user, login_required
 
+from librepos.utils import safe_next_url
+
 
 def permission_required(permission: str):
     """
@@ -21,9 +23,12 @@ def permission_required(permission: str):
         @login_required
         def decorated_function(*args, **kwargs):
             if not current_user.role.has_permission(permission):
-                flash("You do not have permission to do that.", "danger")
-                referrer = request.referrer or url_for("user.get_dashboard")
-                return redirect(referrer)
+                next_url = request.args.get("next")
+                if next_url:
+                    next_url = safe_next_url(next_url)
+                    flash("You do not have permission to do that.", "danger")
+                    return redirect(next_url)
+                return redirect(url_for("user.get_dashboard"))
             return f(*args, **kwargs)
 
         return decorated_function
@@ -46,9 +51,12 @@ def admin_required(f):
     @login_required
     def decorated_function(*args, **kwargs):
         if not current_user.role.is_admin:
-            flash("You do not have permission to do that.", "danger")
-            referrer = request.referrer or url_for("user.get_dashboard")
-            return redirect(referrer)
+            next_url = request.args.get("next")
+            if next_url:
+                next_url = safe_next_url(next_url)
+                flash("You do not have permission to do that.", "danger")
+                return redirect(next_url)
+            return redirect(url_for("user.get_dashboard"))
         return f(*args, **kwargs)
 
     return decorated_function
