@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% from "components.html" import render_card %}
+{% from "macros/form.html" import render_form %}
+
+{% block main %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                {% call render_card() %}
+                    {{ render_form(form) }}
+                {% endcall %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
