@@ -1,0 +1,37 @@
+{% from "components.html" import render_form_submit_field, render_form_switch_field, render_form_text_field %}
+
+{% macro render_form(form, url, dynamic=True) %}
+
+    {% set responsive_class = "col s12 m6 l4 xl3" %}
+
+    <form action="{{ url }}" method="POSt" class="row">
+        {{ form.hidden_tag() }}
+        {% for field in form if field.name != 'csrf_token' %}
+            {% if field.name == "submit" %}
+                <div class="col s12 center-block">
+                    {% set submit_icon = "send" %}
+                    {{ render_form_submit_field(field, icon=submit_icon) }}
+                </div>
+            {% else %}
+                <div class="{{ responsive_class }} input-field">
+                    {{ render_form_field(field) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+    </form>
+
+{% endmacro %}
+
+
+{% macro render_form_field(field) %}
+
+    {% if field.type == "SubmitField" %}
+        {{ render_form_submit_field(field) }}
+    {% elif field.type == "BooleanField" %}
+        {{ render_form_switch_field(field) }}
+    {% else %}
+        {{ render_form_text_field(field) }}
+    {% endif %}
+
+{% endmacro %}
