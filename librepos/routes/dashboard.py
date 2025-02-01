@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
 
-dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
+dashboard_bp = Blueprint('dashboard', __name__, template_folder='templates')
 
 
 @dashboard_bp.before_request

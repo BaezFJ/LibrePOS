@@ -56,7 +56,7 @@ class User(UserMixin, CRUDMixin, db.Model):
 
     # Relationships
     role = db.relationship("Role", back_populates="users")
-    orders = db.relationship("UserOrder", back_populates="user")
+    # orders = db.relationship("UserOrder", back_populates="user")
 
     @classmethod
     def get_by_identity(cls, identity: str):

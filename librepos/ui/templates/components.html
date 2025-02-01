@@ -63,3 +63,23 @@
     </button>
 
 {% endmacro %}
+
+{% macro render_sidebar_collapsible_accordion(icon, header) %}
+
+    <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+            <li>
+                <a class="collapsible-header">
+                    <i class="material-icons">{{ icon }}</i>
+                    {{ header }}
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {{ caller() }}
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </li>
+
+{% endmacro %}

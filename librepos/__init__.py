@@ -1,5 +1,6 @@
 from flask import Flask
 
+from .manage import add_cli_commands
 from .urls import register_urls
 
 
@@ -25,8 +26,10 @@ def create_app():
     register_urls(app)
 
     # load cli commands
+    add_cli_commands(app)
 
     return app
+
 
 def init_extensions(app):
     from .extensions import db, login_manager
