@@ -83,3 +83,14 @@
     </li>
 
 {% endmacro %}
+
+{% macro render_list_link(url, text, icon=None) %}
+    <li>
+        <a href="{{ url }}">
+            {% if icon %}
+                <i class="material-icons">{{ icon }}</i>
+            {% endif %}
+            {{ text }}
+        </a>
+    </li>
+{% endmacro %}
