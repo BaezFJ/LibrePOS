@@ -1,13 +1,13 @@
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from librepos.extensions import db
 from librepos.utils.helpers import (
-    generate_uuid,
-    generate_token,
-    generate_slug,
-    generate_password,
     dollars_to_cents,
+    generate_password,
+    generate_slug,
+    generate_token,
+    generate_uuid,
 )
 from librepos.utils.sqlalchemy import CRUDMixin
 

@@ -1,7 +1,7 @@
 import secrets
 import uuid
 from datetime import datetime
-from ipaddress import ip_network, ip_address
+from ipaddress import ip_address, ip_network
 
 import pytz
 from better_profanity import profanity
