@@ -1,4 +1,5 @@
 from functools import wraps
+from urllib.parse import urlparse, urlsplit
 
 from flask import flash, redirect, request, url_for
 from flask_login import current_user, login_required
@@ -24,11 +25,10 @@ def permission_required(permission: str):
         def decorated_function(*args, **kwargs):
             if not current_user.role.has_permission(permission):
                 next_url = request.args.get("next")
-                if next_url:
-                    next_url = safe_next_url(next_url)
-                    flash("You do not have permission to do that.", "danger")
-                    return redirect(next_url)
-                return redirect(url_for("user.get_dashboard"))
+                next_url = next_url.replace("\\", "")
+                if not next_url or urlsplit(next_url).netloc != "":
+                    next_url = url_for("dashboard.get_dashboard")
+                return redirect(next_url)
             return f(*args, **kwargs)
 
         return decorated_function
