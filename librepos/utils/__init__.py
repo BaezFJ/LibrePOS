@@ -1,6 +1,6 @@
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse, urlsplit
 
-from flask import request
+from flask import request, url_for
 
 
 def safe_next_url(next_url):

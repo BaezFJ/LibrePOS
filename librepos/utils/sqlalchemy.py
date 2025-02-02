@@ -32,12 +32,13 @@ class CRUDMixin:
     @classmethod
     def get_all(cls):
         """Get all records."""
-        return cls.query.all()
+        instance = db.session.query(cls).all()
+        return instance
 
     @classmethod
     def update(cls, record_id, **kwargs):
         """Update a record by ID with provided fields."""
-        instance = cls.query.get(record_id)
+        instance = db.session.query(cls).filter_by(id=record_id).first()
         if not instance:
             return None
         for key, value in kwargs.items():
@@ -49,7 +50,7 @@ class CRUDMixin:
     @classmethod
     def delete(cls, record_id):
         """Delete a record by its ID."""
-        instance = cls.query.get(record_id)
+        instance = db.session.query(cls).filter_by(id=record_id).first()
         if not instance:
             return False
         db.session.delete(instance)

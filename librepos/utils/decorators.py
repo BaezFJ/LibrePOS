@@ -25,7 +25,8 @@ def permission_required(permission: str):
         def decorated_function(*args, **kwargs):
             if not current_user.role.has_permission(permission):
                 next_url = request.args.get("next")
-                next_url = next_url.replace("\\", "")
+                if next_url:
+                    next_url = next_url.replace("\\", "")
                 if not next_url or urlsplit(next_url).netloc != "":
                     next_url = url_for("dashboard.get_dashboard")
                 return redirect(next_url)

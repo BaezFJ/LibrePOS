@@ -1,16 +1,15 @@
-from flask_login import login_user
+from werkzeug.security import generate_password_hash
 
 from librepos.extensions import db
-from librepos.utils.sqlalchemy import CRUDMixin
 from librepos.models.user import User
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
-def register_user(username, password):
+def register_user(username: str, password: str, email: str, first_name: str, last_name: str):
     user = User.query.filter_by(username=username).first()
     if user:
         return False, "Username already exists."
-    user = User(username=username, password=generate_password_hash(password))
+    user = User(username=username, password=generate_password_hash(password), email=email, first_name=first_name,
+                last_name=last_name)
     db.session.add(user)
     db.session.commit()
     return True, "User registered successfully."

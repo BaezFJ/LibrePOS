@@ -39,7 +39,7 @@ class User(UserMixin, CRUDMixin, db.Model):
     public_id = db.Column(db.String(50), unique=True)
     slug = db.Column(db.String(30), unique=True, index=True)
     hourly_rate = db.Column(db.Integer, nullable=False, default=0)
-    is_active = db.Column(db.Boolean, nullable=False, default=True)
+    # is_active = db.Column(db.Boolean, nullable=False, default=True)
 
     # Authentication
     username = db.Column(db.String(20), unique=True, index=True)

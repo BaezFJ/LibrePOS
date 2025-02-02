@@ -1,7 +1,6 @@
 import secrets
 import uuid
 from datetime import datetime
-from ipaddress import ip_address, ip_network
 
 import pytz
 from better_profanity import profanity
@@ -63,7 +62,7 @@ def timezone_aware_datetime():
     return datetime.now(pytz_tz)
 
 
-def sanitize_form_data(form, exclude_fields: list[str] = None):
+def sanitize_form_data(form, exclude_fields: list[str] | None = None):
     """
     Sanitizes form data by removing specified fields, including default fields such as
     CSRF token and submit button. This function is used to clean up unnecessary form data
@@ -96,15 +95,3 @@ def cents_to_dollars(cents: int) -> float:
 def dollars_to_cents(dollars: float) -> int:
     """Convert dollars to cents."""
     return int(dollars * 100)
-
-
-def is_local_network(address):
-    """Check if the given IP address is local."""
-    client_ip = ip_address(address)
-    local_networks = ip_network(current_app.config["LOCAL_NETWORK"])
-    return any(client_ip in network for network in local_networks)
-
-
-def is_allowed_ip(address):
-    """Check if the given IP address is allowed."""
-    return is_local_network(address) or address in current_app.config["ALLOWED_IPS"]

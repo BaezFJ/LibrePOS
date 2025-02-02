@@ -31,15 +31,16 @@ def add_cli_commands(app):
 
         # Add all permissions to default admin role
         admin_role = Role.query.filter_by(name="admin").first()
-        for permission in Permission.query.all():
-            RolePermission.create(role_id=admin_role.id, permission_id=permission.id, assigned_by_id=0)
+        if admin_role:
+            for permission in Permission.query.all():
+                RolePermission.create(role_id=admin_role.id, permission_id=permission.id, assigned_by_id=0)
 
-        # Create default admin user
-        user_exists = User.query.filter_by(username="admin").first()
-        if not user_exists:
-            User.create(role_id=admin_role.id, username="admin", password_hash="librepos", first_name="librepos",
-                        last_name="forever",
-                        email="info@librepos.com")
+            # Create default admin user
+            user_exists = User.query.filter_by(username="admin").first()
+            if not user_exists:
+                User.create(role_id=admin_role.id, username="admin", password_hash="librepos", first_name="librepos",
+                            last_name="forever",
+                            email="info@librepos.com")
 
         click.echo("Done!")
 
