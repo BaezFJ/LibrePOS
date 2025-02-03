@@ -1,5 +1,5 @@
 /*!
-* Materialize v2.1.1 (https://materializeweb.com)
+* Materialize v2.2.0 (https://materializeweb.com)
 * Copyright 2014-2024 Materialize
 * MIT License (https://raw.githubusercontent.com/materializecss/materialize/master/LICENSE)
 */
@@ -299,7 +299,7 @@ var M = (function (exports) {
         destroy() { throw new Error("This method must be implemented."); }
     }
 
-    const _defaults$l = {
+    const _defaults$m = {
         alignment: 'left',
         autoFocus: true,
         constrainWidth: true,
@@ -345,13 +345,14 @@ var M = (function (exports) {
             this.isTouchMoving = false;
             this.focusedIndex = -1;
             this.filterQuery = [];
+            this.el.ariaExpanded = 'false';
             // Move dropdown-content after dropdown-trigger
             this._moveDropdown();
             this._makeDropdownFocusable();
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$l;
+            return _defaults$m;
         }
         /**
          * Initializes instances of Dropdown.
@@ -412,6 +413,7 @@ var M = (function (exports) {
         }
         _handleClick = (e) => {
             e.preventDefault();
+            this._moveDropdown(e.target.closest('li'));
             if (this.isOpen) {
                 this.close();
             }
@@ -419,7 +421,8 @@ var M = (function (exports) {
                 this.open();
             }
         };
-        _handleMouseEnter = () => {
+        _handleMouseEnter = (e) => {
+            this._moveDropdown(e.target.closest('li'));
             this.open();
         };
         _handleMouseLeave = (e) => {
@@ -768,6 +771,7 @@ var M = (function (exports) {
             // Do this one frame later so that we don't bind an event handler that's immediately
             // called when the event bubbles up to the document and closes the dropdown
             setTimeout(() => this._setupTemporaryEventHandlers(), 0);
+            this.el.ariaExpanded = 'true';
         };
         /**
          * Close dropdown.
@@ -786,6 +790,7 @@ var M = (function (exports) {
             if (this.options.autoFocus) {
                 this.el.focus();
             }
+            this.el.ariaExpanded = 'false';
         };
         /**
          * While dropdown is open, you can recalculate its dimensions if its contents have changed.
@@ -802,7 +807,7 @@ var M = (function (exports) {
         };
     }
 
-    let _defaults$k = {
+    let _defaults$l = {
         data: [], // Autocomplete data set
         onAutocomplete: null, // Callback for when autocompleted
         dropdownOptions: {
@@ -856,7 +861,7 @@ var M = (function (exports) {
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$k;
+            return _defaults$l;
         }
         /**
          * Initializes instances of Autocomplete.
@@ -1222,7 +1227,7 @@ var M = (function (exports) {
         }
     }
 
-    let _defaults$j = {
+    let _defaults$k = {
         direction: 'top',
         hoverEnabled: true,
         toolbarEnabled: false
@@ -1267,7 +1272,7 @@ var M = (function (exports) {
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$j;
+            return _defaults$k;
         }
         /**
          * Initializes instances of FloatingActionButton.
@@ -1420,46 +1425,136 @@ var M = (function (exports) {
         }
     }
 
-    class Cards {
-        static Init() {
-            if (typeof document !== 'undefined')
-                document.addEventListener("DOMContentLoaded", () => {
-                    document.body.addEventListener('click', e => {
-                        const trigger = e.target;
-                        const card = trigger.closest('.card');
-                        if (!card)
-                            return;
-                        const cardReveal = Array.from(card.children).find(elem => elem.classList.contains('card-reveal'));
-                        if (!cardReveal)
-                            return;
-                        const initialOverflow = getComputedStyle(card).overflow;
-                        // Close Card
-                        const closeArea = cardReveal.querySelector('.card-reveal .card-title');
-                        if (trigger === closeArea || closeArea.contains(trigger)) {
-                            const duration = 225;
-                            cardReveal.style.transition = `transform ${duration}ms ease`; //easeInOutQuad
-                            cardReveal.style.transform = 'translateY(0)';
-                            setTimeout(() => {
-                                cardReveal.style.display = 'none';
-                                card.style.overflow = initialOverflow;
-                            }, duration);
-                        }
-                        // Reveal Card
-                        const activators = card.querySelectorAll('.activator');
-                        activators.forEach(activator => {
-                            if (trigger === activator || activator.contains(trigger)) {
-                                card.style.overflow = 'hidden';
-                                cardReveal.style.display = 'block';
-                                setTimeout(() => {
-                                    const duration = 300;
-                                    cardReveal.style.transition = `transform ${duration}ms ease`; //easeInOutQuad
-                                    cardReveal.style.transform = 'translateY(-100%)';
-                                }, 1);
-                            }
-                        });
-                    });
-                });
+    const _defaults$j = {
+        onOpen: null,
+        onClose: null,
+        inDuration: 225,
+        outDuration: 300
+    };
+    class Cards extends Component {
+        isOpen = false;
+        cardReveal;
+        initialOverflow;
+        _activators;
+        cardRevealClose;
+        constructor(el, options) {
+            super(el, options, Cards);
+            this.el.M_Cards = this;
+            this.options = {
+                ...Cards.defaults,
+                ...options
+            };
+            this.cardReveal = Array.from(this.el.children).find(elem => elem.classList.contains('card-reveal'));
+            if (this.cardReveal) {
+                this.initialOverflow = getComputedStyle(this.el).overflow;
+                this._activators = Array.from(this.el.querySelectorAll('.activator'));
+                this._activators.forEach((el) => el.tabIndex = 0);
+                this.cardRevealClose = this.cardReveal.querySelector('.card-reveal .card-title .close');
+                this.cardRevealClose.tabIndex = -1;
+                this.cardReveal.ariaExpanded = 'false';
+                this._setupEventHandlers();
+            }
         }
+        static get defaults() {
+            return _defaults$j;
+        }
+        /**
+         * Initializes instances of Cards.
+         * @param els HTML elements.
+         * @param options Component options.
+         */
+        static init(els, options) {
+            return super.init(els, options, Cards);
+        }
+        static getInstance(el) {
+            return el.M_Cards;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        destroy() {
+            this._removeEventHandlers();
+            this._activators = [];
+        }
+        _setupEventHandlers = () => {
+            this._activators.forEach((el) => {
+                el.addEventListener('click', this._handleClickInteraction);
+                el.addEventListener('keypress', this._handleKeypressEvent);
+            });
+        };
+        _removeEventHandlers = () => {
+            this._activators.forEach((el) => {
+                el.removeEventListener('click', this._handleClickInteraction);
+                el.removeEventListener('keypress', this._handleKeypressEvent);
+            });
+        };
+        _handleClickInteraction = () => {
+            this._handleRevealEvent();
+        };
+        _handleKeypressEvent = (e) => {
+            if (Utils.keys.ENTER.includes(e.key)) {
+                this._handleRevealEvent();
+            }
+        };
+        _handleRevealEvent = () => {
+            // Reveal Card
+            this._activators.forEach((el) => el.tabIndex = -1);
+            this.open();
+        };
+        _setupRevealCloseEventHandlers = () => {
+            this.cardRevealClose.addEventListener('click', this.close);
+            this.cardRevealClose.addEventListener('keypress', this._handleKeypressCloseEvent);
+        };
+        _removeRevealCloseEventHandlers = () => {
+            this.cardRevealClose.addEventListener('click', this.close);
+            this.cardRevealClose.addEventListener('keypress', this._handleKeypressCloseEvent);
+        };
+        _handleKeypressCloseEvent = (e) => {
+            if (Utils.keys.ENTER.includes(e.key)) {
+                this.close();
+            }
+        };
+        /**
+         * Show card reveal.
+         */
+        open = () => {
+            if (this.isOpen)
+                return;
+            this.isOpen = true;
+            this.el.style.overflow = 'hidden';
+            this.cardReveal.style.display = 'block';
+            this.cardReveal.ariaExpanded = 'true';
+            this.cardRevealClose.tabIndex = 0;
+            setTimeout(() => {
+                this.cardReveal.style.transition = `transform ${this.options.outDuration}ms ease`; //easeInOutQuad
+                this.cardReveal.style.transform = 'translateY(-100%)';
+            }, 1);
+            if (typeof this.options.onOpen === 'function') {
+                this.options.onOpen.call(this);
+            }
+            this._setupRevealCloseEventHandlers();
+        };
+        /**
+         * Hide card reveal.
+         */
+        close = () => {
+            if (!this.isOpen)
+                return;
+            this.isOpen = false;
+            this.cardReveal.style.transition = `transform ${this.options.inDuration}ms ease`; //easeInOutQuad
+            this.cardReveal.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                this.cardReveal.style.display = 'none';
+                this.cardReveal.ariaExpanded = 'false';
+                this._activators.forEach((el) => el.tabIndex = 0);
+                this.cardRevealClose.tabIndex = -1;
+                this.el.style.overflow = this.initialOverflow;
+            }, this.options.inDuration);
+            if (typeof this.options.onClose === 'function') {
+                this.options.onClose.call(this);
+            }
+            this._removeRevealCloseEventHandlers();
+        };
     }
 
     let _defaults$i = {
@@ -1538,6 +1633,7 @@ var M = (function (exports) {
                 if (this.showIndicators) {
                     const indicator = document.createElement('li');
                     indicator.classList.add('indicator-item');
+                    indicator.tabIndex = 0;
                     if (i === 0) {
                         indicator.classList.add('active');
                     }
@@ -1594,6 +1690,7 @@ var M = (function (exports) {
             if (this.showIndicators && this._indicators) {
                 this._indicators.querySelectorAll('.indicator-item').forEach((el) => {
                     el.addEventListener('click', this._handleIndicatorClick);
+                    el.addEventListener('keypress', this._handleIndicatorKeyPress);
                 });
             }
             // Resize
@@ -1734,6 +1831,15 @@ var M = (function (exports) {
         };
         _handleIndicatorClick = (e) => {
             e.stopPropagation();
+            this._handleIndicatorInteraction(e);
+        };
+        _handleIndicatorKeyPress = (e) => {
+            e.stopPropagation();
+            if (Utils.keys.ENTER.includes(e.key)) {
+                this._handleIndicatorInteraction(e);
+            }
+        };
+        _handleIndicatorInteraction = (e) => {
             const indicator = e.target.closest('.indicator-item');
             if (indicator) {
                 const index = [...indicator.parentNode.children].indexOf(indicator);
@@ -2040,6 +2146,7 @@ var M = (function (exports) {
         autocompleteOptions: {},
         autocompleteOnly: false,
         limit: Infinity,
+        allowUserInput: false,
         onChipAdd: null,
         onChipSelect: null,
         onChipDelete: null
@@ -2066,25 +2173,23 @@ var M = (function (exports) {
                 ...Chips.defaults,
                 ...options
             };
-            this.el.classList.add('chips', 'input-field');
+            this.el.classList.add('chips');
             this.chipsData = [];
             this._chips = [];
-            this._setupInput();
-            this.hasAutocomplete = Object.keys(this.options.autocompleteOptions).length > 0;
-            // Set input id
-            if (!this._input.getAttribute('id'))
-                this._input.setAttribute('id', Utils.guid());
             // Render initial chips
             if (this.options.data.length) {
                 this.chipsData = this.options.data;
                 this._renderChips();
             }
-            // Setup autocomplete if needed
-            if (this.hasAutocomplete)
-                this._setupAutocomplete();
-            this._setPlaceholder();
             this._setupLabel();
-            this._setupEventHandlers();
+            // Render input element, setup event handlers
+            if (this.options.allowUserInput) {
+                this.el.classList.add('input-field');
+                this._setupInput();
+                this._setupEventHandlers();
+                // move input to end
+                this.el.append(this._input);
+            }
         }
         static get defaults() {
             return _defaults$h;
@@ -2104,7 +2209,9 @@ var M = (function (exports) {
             return this.chipsData;
         }
         destroy() {
-            this._removeEventHandlers();
+            if (this.options.allowUserInput) {
+                this._removeEventHandlers();
+            }
             this._chips.forEach(c => c.remove());
             this._chips = [];
             this.el.M_Chips = undefined;
@@ -2229,17 +2336,19 @@ var M = (function (exports) {
             const renderedChip = document.createElement('div');
             renderedChip.classList.add('chip');
             renderedChip.innerText = chip.text || chip.id;
-            renderedChip.setAttribute('tabindex', "0");
-            const closeIcon = document.createElement('i');
-            closeIcon.classList.add(this.options.closeIconClass, 'close');
-            closeIcon.innerText = 'close';
             // attach image if needed
             if (chip.image) {
                 const img = document.createElement('img');
                 img.setAttribute('src', chip.image);
                 renderedChip.insertBefore(img, renderedChip.firstChild);
             }
-            renderedChip.appendChild(closeIcon);
+            if (this.options.allowUserInput) {
+                renderedChip.setAttribute('tabindex', '0');
+                const closeIcon = document.createElement('i');
+                closeIcon.classList.add(this.options.closeIconClass, 'close');
+                closeIcon.innerText = 'close';
+                renderedChip.appendChild(closeIcon);
+            }
             return renderedChip;
         }
         _renderChips() {
@@ -2249,8 +2358,6 @@ var M = (function (exports) {
                 this.el.appendChild(chipElem);
                 this._chips.push(chipElem);
             }
-            // move input to end
-            this.el.append(this._input);
         }
         _setupAutocomplete() {
             this.options.autocompleteOptions.onAutocomplete = (items) => {
@@ -2272,6 +2379,14 @@ var M = (function (exports) {
                 this.el.append(this._input);
             }
             this._input.classList.add('input');
+            this.hasAutocomplete = Object.keys(this.options.autocompleteOptions).length > 0;
+            // Setup autocomplete if needed
+            if (this.hasAutocomplete)
+                this._setupAutocomplete();
+            this._setPlaceholder();
+            // Set input id
+            if (!this._input.getAttribute('id'))
+                this._input.setAttribute('id', Utils.guid());
         }
         _setupLabel() {
             this._label = this.el.querySelector('label');
@@ -2512,272 +2627,7 @@ var M = (function (exports) {
         };
     }
 
-    const _defaults$f = {
-        opacity: 0.5,
-        inDuration: 250,
-        outDuration: 250,
-        onOpenStart: null,
-        onOpenEnd: null,
-        onCloseStart: null,
-        onCloseEnd: null,
-        preventScrolling: true,
-        dismissible: true,
-        startingTop: '4%',
-        endingTop: '10%'
-    };
-    class Modal extends Component {
-        static _modalsOpen;
-        static _count;
-        /**
-         * ID of the modal element.
-         */
-        id;
-        /**
-         * If the modal is open.
-         */
-        isOpen;
-        _openingTrigger;
-        _overlay;
-        _nthModalOpened;
-        constructor(el, options) {
-            super(el, options, Modal);
-            this.el.M_Modal = this;
-            this.options = {
-                ...Modal.defaults,
-                ...options
-            };
-            this.isOpen = false;
-            this.id = this.el.id;
-            this._openingTrigger = undefined;
-            this._overlay = document.createElement('div');
-            this._overlay.classList.add('modal-overlay');
-            this.el.tabIndex = 0;
-            this._nthModalOpened = 0;
-            Modal._count++;
-            this._setupEventHandlers();
-        }
-        static get defaults() {
-            return _defaults$f;
-        }
-        /**
-         * Initializes instances of Modal.
-         * @param els HTML elements.
-         * @param options Component options.
-         * @returns {Modal | Modal[]}
-         */
-        static init(els, options = {}) {
-            return super.init(els, options, Modal);
-        }
-        static getInstance(el) {
-            return el.M_Modal;
-        }
-        destroy() {
-            Modal._count--;
-            this._removeEventHandlers();
-            this.el.removeAttribute('style');
-            this._overlay.remove();
-            this.el.M_Modal = undefined;
-        }
-        _setupEventHandlers() {
-            if (Modal._count === 1) {
-                document.body.addEventListener('click', this._handleTriggerClick);
-            }
-            this._overlay.addEventListener('click', this._handleOverlayClick);
-            this.el.addEventListener('click', this._handleModalCloseClick);
-        }
-        _removeEventHandlers() {
-            if (Modal._count === 0) {
-                document.body.removeEventListener('click', this._handleTriggerClick);
-            }
-            this._overlay.removeEventListener('click', this._handleOverlayClick);
-            this.el.removeEventListener('click', this._handleModalCloseClick);
-        }
-        _handleTriggerClick = (e) => {
-            const trigger = e.target.closest('.modal-trigger');
-            if (!trigger)
-                return;
-            const modalId = Utils.getIdFromTrigger(trigger);
-            const modalInstance = document.getElementById(modalId).M_Modal;
-            if (modalInstance)
-                modalInstance.open(trigger);
-            e.preventDefault();
-        };
-        _handleOverlayClick = () => {
-            if (this.options.dismissible)
-                this.close();
-        };
-        _handleModalCloseClick = (e) => {
-            const closeTrigger = e.target.closest('.modal-close');
-            if (closeTrigger)
-                this.close();
-        };
-        _handleKeydown = (e) => {
-            if (Utils.keys.ESC.includes(e.key) && this.options.dismissible)
-                this.close();
-        };
-        _handleFocus = (e) => {
-            // Only trap focus if this modal is the last model opened (prevents loops in nested modals).
-            if (!this.el.contains(e.target) && this._nthModalOpened === Modal._modalsOpen) {
-                this.el.focus();
-            }
-        };
-        _animateIn() {
-            // Set initial styles
-            this._overlay.style.display = 'block';
-            this._overlay.style.opacity = '0';
-            this.el.style.display = 'block';
-            this.el.style.opacity = '0';
-            const duration = this.options.inDuration;
-            const isBottomSheet = this.el.classList.contains('bottom-sheet');
-            if (!isBottomSheet) {
-                this.el.style.top = this.options.startingTop;
-                this.el.style.transform = 'scaleX(0.9) scaleY(0.9)';
-            }
-            // Overlay
-            this._overlay.style.transition = `opacity ${duration}ms ease-out`; // v1: easeOutQuad
-            // Modal
-            this.el.style.transition = `
-      top ${duration}ms ease-out,
-      bottom ${duration}ms ease-out,
-      opacity ${duration}ms ease-out,
-      transform ${duration}ms ease-out
-    `;
-            setTimeout(() => {
-                this._overlay.style.opacity = this.options.opacity.toString();
-                this.el.style.opacity = '1';
-                if (isBottomSheet) {
-                    this.el.style.bottom = '0';
-                }
-                else {
-                    this.el.style.top = this.options.endingTop;
-                    this.el.style.transform = 'scaleX(1) scaleY(1)';
-                }
-                setTimeout(() => {
-                    if (typeof this.options.onOpenEnd === 'function') {
-                        this.options.onOpenEnd.call(this, this.el, this._openingTrigger);
-                    }
-                }, duration);
-            }, 1);
-        }
-        _animateOut() {
-            const duration = this.options.outDuration;
-            const isBottomSheet = this.el.classList.contains('bottom-sheet');
-            if (!isBottomSheet) {
-                this.el.style.top = this.options.endingTop;
-            }
-            // Overlay
-            this._overlay.style.transition = `opacity ${duration}ms ease-out`; // v1: easeOutQuart
-            // Modal // easeOutCubic
-            this.el.style.transition = `
-      top ${duration}ms ease-out,
-      bottom ${duration}ms ease-out,
-      opacity ${duration}ms ease-out,
-      transform ${duration}ms ease-out
-    `;
-            setTimeout(() => {
-                this._overlay.style.opacity = '0';
-                this.el.style.opacity = '0';
-                if (isBottomSheet) {
-                    this.el.style.bottom = '-100%';
-                }
-                else {
-                    this.el.style.top = this.options.startingTop;
-                    this.el.style.transform = 'scaleX(0.9) scaleY(0.9)';
-                }
-                setTimeout(() => {
-                    this.el.style.display = 'none';
-                    this._overlay.remove();
-                    if (typeof this.options.onCloseEnd === 'function') {
-                        this.options.onCloseEnd.call(this, this.el);
-                    }
-                }, duration);
-            }, 1);
-        }
-        /**
-         * Open modal.
-         */
-        open = (trigger) => {
-            if (this.isOpen)
-                return;
-            this.isOpen = true;
-            Modal._modalsOpen++;
-            this._nthModalOpened = Modal._modalsOpen;
-            // Set Z-Index based on number of currently open modals
-            this._overlay.style.zIndex = (1000 + Modal._modalsOpen * 2).toString();
-            this.el.style.zIndex = (1000 + Modal._modalsOpen * 2 + 1).toString();
-            // Set opening trigger, undefined indicates modal was opened by javascript
-            this._openingTrigger = !!trigger ? trigger : undefined;
-            // onOpenStart callback
-            if (typeof this.options.onOpenStart === 'function') {
-                this.options.onOpenStart.call(this, this.el, this._openingTrigger);
-            }
-            if (this.options.preventScrolling) {
-                const hasVerticalScrollBar = document.documentElement.scrollHeight > document.documentElement.clientHeight;
-                if (hasVerticalScrollBar) {
-                    const scrollTop = document.documentElement.scrollTop;
-                    document.documentElement.style.top = '-' + scrollTop + "px";
-                    document.documentElement.classList.add('noscroll');
-                }
-            }
-            this.el.classList.add('open');
-            this.el.insertAdjacentElement('afterend', this._overlay);
-            if (this.options.dismissible) {
-                document.addEventListener('keydown', this._handleKeydown);
-                document.addEventListener('focus', this._handleFocus, true);
-            }
-            this._animateIn();
-            // Focus modal
-            this.el.focus();
-            return this;
-        };
-        /**
-         * Close modal.
-         */
-        close = () => {
-            if (!this.isOpen)
-                return;
-            this.isOpen = false;
-            Modal._modalsOpen--;
-            this._nthModalOpened = 0;
-            // Call onCloseStart callback
-            if (typeof this.options.onCloseStart === 'function') {
-                this.options.onCloseStart.call(this, this.el);
-            }
-            this.el.classList.remove('open');
-            // Enable body scrolling only if there are no more modals open.
-            if (Modal._modalsOpen === 0) {
-                const scrollTop = -parseInt(document.documentElement.style.top);
-                document.documentElement.style.removeProperty("top");
-                document.documentElement.classList.remove('noscroll');
-                document.documentElement.scrollTop = scrollTop;
-            }
-            if (this.options.dismissible) {
-                document.removeEventListener('keydown', this._handleKeydown);
-                document.removeEventListener('focus', this._handleFocus, true);
-            }
-            this._animateOut();
-            return this;
-        };
-        // Experimental!
-        // also note: https://stackoverflow.com/a/35385518/8830502
-        static create(children = '') {
-            return `<dialog id="modal1" class="modal">
-      <div class="modal-content">
-        <h4>${children}</h4>
-        <p>A bunch of text</p>
-      </div>
-      <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect btn-flat">Agree</a>
-      </div>
-    </dialog>`;
-        }
-        static {
-            Modal._modalsOpen = 0;
-            Modal._count = 0;
-        }
-    }
-
-    let _defaults$e = {
+    let _defaults$f = {
         classes: '',
         dropdownOptions: {}
     };
@@ -2815,7 +2665,7 @@ var M = (function (exports) {
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$e;
+            return _defaults$f;
         }
         /**
          * Initializes instances of FormSelect.
@@ -3161,17 +3011,23 @@ var M = (function (exports) {
         }
     }
 
-    let _defaults$d = {
-        // Close when date is selected
-        autoClose: false,
+    const _defaults$e = {
         // the default output format for the input field value
         format: 'mmm dd, yyyy',
         // Used to create date object from current input string
         parse: null,
+        // The initial condition if the datepicker is based on date range
+        isDateRange: false,
+        // The initial condition if the datepicker is based on multiple date selection
+        isMultipleSelection: false,
         // The initial date to view when first opened
         defaultDate: null,
+        // The initial end date to view when first opened
+        defaultEndDate: null,
         // Make the `defaultDate` the initial selected value
         setDefaultDate: false,
+        // Make the `defaultEndDate` the initial selected value
+        setDefaultEndDate: false,
         disableWeekends: false,
         disableDayFn: null,
         // First day of week (0: Sunday, 1: Monday etc)
@@ -3242,15 +3098,11 @@ var M = (function (exports) {
         events: [],
         // callback function
         onSelect: null,
-        onOpen: null,
-        onClose: null,
         onDraw: null
     };
     class Datepicker extends Component {
         id;
-        /** If the picker is open. */
-        isOpen;
-        modal;
+        multiple = false;
         calendarEl;
         /** CLEAR button instance. */
         clearBtn;
@@ -3260,8 +3112,12 @@ var M = (function (exports) {
         modalEl;
         yearTextEl;
         dateTextEl;
+        endDateEl;
+        dateEls;
         /** The selected Date. */
         date;
+        endDate;
+        dates;
         formats;
         calendars;
         _y;
@@ -3286,16 +3142,15 @@ var M = (function (exports) {
             this.id = Utils.guid();
             this._setupVariables();
             this._insertHTMLIntoDOM();
-            this._setupModal();
             this._setupEventHandlers();
             if (!this.options.defaultDate) {
                 this.options.defaultDate = new Date(Date.parse(this.el.value));
             }
-            let defDate = this.options.defaultDate;
+            const defDate = this.options.defaultDate;
             if (Datepicker._isDate(defDate)) {
                 if (this.options.setDefaultDate) {
                     this.setDate(defDate, true);
-                    this.setInputValue();
+                    this.setInputValue(this.el, defDate);
                 }
                 else {
                     this.gotoDate(defDate);
@@ -3304,10 +3159,25 @@ var M = (function (exports) {
             else {
                 this.gotoDate(new Date());
             }
-            this.isOpen = false;
+            if (this.options.isDateRange) {
+                this.multiple = true;
+                const defEndDate = this.options.defaultEndDate;
+                if (Datepicker._isDate(defEndDate)) {
+                    if (this.options.setDefaultEndDate) {
+                        this.setDate(defEndDate, true, true);
+                        this.setInputValue(this.endDateEl, defEndDate);
+                    }
+                }
+            }
+            if (this.options.isMultipleSelection) {
+                this.multiple = true;
+                this.dates = [];
+                this.dateEls = [];
+                this.dateEls.push(el);
+            }
         }
         static get defaults() {
-            return _defaults$d;
+            return _defaults$e;
         }
         /**
          * Initializes instances of Datepicker.
@@ -3321,9 +3191,12 @@ var M = (function (exports) {
             return /Date/.test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime());
         }
         static _isWeekend(date) {
-            let day = date.getDay();
+            const day = date.getDay();
             return day === 0 || day === 6;
         }
+        /**
+         * @deprecated as this function has no effect without any return statement or global parameter setter.
+         */
         static _setToStartOfDay(date) {
             if (Datepicker._isDate(date))
                 date.setHours(0, 0, 0, 0);
@@ -3339,27 +3212,40 @@ var M = (function (exports) {
             // weak date comparison (use setToStartOfDay(date) to ensure correct result)
             return a.getTime() === b.getTime();
         }
+        static _compareWithinRange(day, date, dateEnd) {
+            return day.getTime() > date.getTime() && day.getTime() < dateEnd.getTime();
+        }
+        static _comparePastDate(a, b) {
+            return a.getTime() < b.getTime();
+        }
         static getInstance(el) {
             return el.M_Datepicker;
         }
         destroy() {
             this._removeEventHandlers();
-            this.modal.destroy();
             this.modalEl.remove();
             this.destroySelects();
             this.el.M_Datepicker = undefined;
         }
         destroySelects() {
-            let oldYearSelect = this.calendarEl.querySelector('.orig-select-year');
+            const oldYearSelect = this.calendarEl.querySelector('.orig-select-year');
             if (oldYearSelect) {
                 FormSelect.getInstance(oldYearSelect).destroy();
             }
-            let oldMonthSelect = this.calendarEl.querySelector('.orig-select-month');
+            const oldMonthSelect = this.calendarEl.querySelector('.orig-select-month');
             if (oldMonthSelect) {
                 FormSelect.getInstance(oldMonthSelect).destroy();
             }
         }
         _insertHTMLIntoDOM() {
+            // HTML5 input date field support
+            if (this.el.type == 'date') {
+                this.el.classList.add('datepicker-date-input');
+            }
+            if (this.options.isDateRange) {
+                this.endDateEl = this.createDateInput();
+                this.endDateEl.classList.add('datepicker-end-date');
+            }
             if (this.options.showClearBtn) {
                 this.clearBtn.style.visibility = '';
                 this.clearBtn.innerText = this.options.i18n.clear;
@@ -3377,39 +3263,59 @@ var M = (function (exports) {
                 this.el.parentElement.appendChild(this.modalEl);
             }
         }
-        _setupModal() {
-            this.modalEl.id = 'modal-' + this.id;
-            this.modal = Modal.init(this.modalEl, {
-                onCloseEnd: () => {
-                    this.isOpen = false;
-                }
-            });
-        }
         /**
-         * Gets a string representation of the selected date.
+         * Gets a string representation of the given date.
          */
-        toString(format = null) {
+        toString(date = this.date, format = null) {
             format = format || this.options.format;
             if (typeof format === 'function')
-                return format(this.date);
-            if (!Datepicker._isDate(this.date))
+                return format(date);
+            if (!Datepicker._isDate(date))
                 return '';
             // String Format
+            return this.formatDate(date, format);
+        }
+        /**
+         * Returns the formatted date.
+         */
+        formatDate(date, format) {
             const formatArray = format.split(/(d{1,4}|m{1,4}|y{4}|yy|!.)/g);
-            const formattedDate = formatArray
-                .map(label => this.formats[label] ? this.formats[label]() : label)
+            return formatArray
+                .map((label) => (this.formats[label] ? this.formats[label](date) : label))
                 .join('');
-            return formattedDate;
+        }
+        /**
+         * Sets date from input field.
+         */
+        setDateFromInput(el) {
+            const date = new Date(Date.parse(el.value));
+            this.setDate(date, false, el == this.endDateEl, true);
         }
         /**
          * Set a date on the datepicker.
          * @param date Date to set on the datepicker.
          * @param preventOnSelect Undocumented as of 5 March 2018.
+         * @param isEndDate
+         * @param fromUserInput
          */
-        setDate(date = null, preventOnSelect = false) {
+        setDate(date = null, preventOnSelect = false, isEndDate = false, fromUserInput = false) {
+            const selectedDate = this.validateDate(date);
+            if (!selectedDate) {
+                return;
+            }
+            if (!this.options.isMultipleSelection)
+                this.setSingleDate(selectedDate, isEndDate);
+            else if (!fromUserInput)
+                this.setMultiDate(selectedDate);
+            Datepicker._setToStartOfDay(selectedDate);
+            this.gotoDate(selectedDate);
+            if (!preventOnSelect && typeof this.options.onSelect === 'function') {
+                this.options.onSelect.call(this, selectedDate);
+            }
+        }
+        validateDate(date) {
             if (!date) {
-                this.date = null;
-                this._renderDateDisplay();
+                this._renderDateDisplay(date);
                 return this.draw();
             }
             if (typeof date === 'string') {
@@ -3418,36 +3324,114 @@ var M = (function (exports) {
             if (!Datepicker._isDate(date)) {
                 return;
             }
-            let min = this.options.minDate, max = this.options.maxDate;
+            const min = this.options.minDate, max = this.options.maxDate;
             if (Datepicker._isDate(min) && date < min) {
                 date = min;
             }
             else if (Datepicker._isDate(max) && date > max) {
                 date = max;
             }
-            this.date = new Date(date.getTime());
-            this._renderDateDisplay();
-            Datepicker._setToStartOfDay(this.date);
-            this.gotoDate(this.date);
-            if (!preventOnSelect && typeof this.options.onSelect === 'function') {
-                this.options.onSelect.call(this, this.date);
+            return new Date(date.getTime());
+        }
+        /**
+         * Set a single date on the datepicker.
+         * @param date Date to set on the datepicker.
+         * @param isEndDate
+         */
+        setSingleDate(date, isEndDate) {
+            if (!isEndDate) {
+                this.date = date;
+            }
+            else if (isEndDate) {
+                this.endDate = date;
             }
         }
         /**
-         * Sets current date as the input value.
+         * Set a multi date on the datepicker.
+         * @param date Date to set on the datepicker.
          */
-        setInputValue() {
-            this.el.value = this.toString();
-            this.el.dispatchEvent(new CustomEvent('change', { bubbles: true, cancelable: true, composed: true, detail: { firedBy: this } }));
+        setMultiDate(date) {
+            const selectedDate = this.dates.find((item) => {
+                return item.getTime() === date.getTime() ? item : false;
+            });
+            if (!selectedDate) {
+                this.dates.push(date);
+            }
+            else {
+                this.dates.splice(this.dates.indexOf(selectedDate), 1);
+            }
+            this.dates.sort((a, b) => (a.getTime() < b.getTime() ? -1 : 0));
         }
-        _renderDateDisplay() {
-            let displayDate = Datepicker._isDate(this.date) ? this.date : new Date();
-            let i18n = this.options.i18n;
-            let day = i18n.weekdaysShort[displayDate.getDay()];
-            let month = i18n.monthsShort[displayDate.getMonth()];
-            let date = displayDate.getDate();
-            this.yearTextEl.innerHTML = displayDate.getFullYear().toString();
-            this.dateTextEl.innerHTML = `${day}, ${month} ${date}`;
+        /**
+         * Sets the data-date attribute on the date input field
+         */
+        setDataDate(el, date) {
+            el.setAttribute('data-date', this.toString(date));
+        }
+        /**
+         * Sets dates on the input values.
+         */
+        setInputValues() {
+            if (!this.options?.isMultipleSelection) {
+                this.setInputValue(this.el, this.date);
+                if (this.options?.isDateRange) {
+                    this.setInputValue(this.endDateEl, this.endDate);
+                }
+                return;
+            }
+            this.setMultipleSelectionInputValues();
+        }
+        setMultipleSelectionInputValues() {
+            const dateElsArr = Array.from(this.dateEls).filter((el, index) => {
+                if (index > this.dates.length - 1)
+                    return el;
+            });
+            dateElsArr.forEach((el) => {
+                el.remove();
+            });
+            this.dates.forEach((date, index) => {
+                if (Array.from(this.dateEls)[index]) {
+                    this.setInputValue(this.dateEls[index], date);
+                    return;
+                }
+                const dateEl = this.createDateInput();
+                this.setInputValue(dateEl, date);
+                this.dateEls.push(dateEl);
+            });
+        }
+        /**
+         * Sets given date as the input value on the given element.
+         */
+        setInputValue(el, date) {
+            console.log('setinputvalue');
+            if (el.type == 'date') {
+                this.setDataDate(el, date);
+                el.value = this.formatDate(date, 'yyyy-mm-dd');
+            }
+            else {
+                el.value = this.toString(date);
+            }
+            this.el.dispatchEvent(new CustomEvent('change', {
+                bubbles: true,
+                cancelable: true,
+                composed: true,
+                detail: { firedBy: this }
+            }));
+        }
+        /**
+         * Renders the date in the modal head section.
+         */
+        _renderDateDisplay(date, endDate = null) {
+            const displayDate = Datepicker._isDate(date) ? date : new Date();
+            // this.yearTextEl.innerHTML = displayDate.getFullYear().toString();
+            // @todo should we include an option for date formatting by component options?
+            if (!this.options.isDateRange) {
+                this.dateTextEl.innerHTML = this.formatDate(displayDate, 'ddd, mmm d');
+            }
+            else {
+                const displayEndDate = Datepicker._isDate(endDate) ? endDate : new Date();
+                this.dateTextEl.innerHTML = `${this.formatDate(displayDate, 'mmm d')} - ${this.formatDate(displayEndDate, 'mmm d')}`;
+            }
         }
         /**
          * Change date view to a specific date on the datepicker.
@@ -3459,7 +3443,7 @@ var M = (function (exports) {
                 return;
             }
             if (this.calendars) {
-                let firstVisibleDate = new Date(this.calendars[0].year, this.calendars[0].month, 1), lastVisibleDate = new Date(this.calendars[this.calendars.length - 1].year, this.calendars[this.calendars.length - 1].month, 1), visibleDate = date.getTime();
+                const firstVisibleDate = new Date(this.calendars[0].year, this.calendars[0].month, 1), lastVisibleDate = new Date(this.calendars[this.calendars.length - 1].year, this.calendars[this.calendars.length - 1].month, 1), visibleDate = date.getTime();
                 // get the end of the month
                 lastVisibleDate.setMonth(lastVisibleDate.getMonth() + 1);
                 lastVisibleDate.setDate(lastVisibleDate.getDate() - 1);
@@ -3500,15 +3484,16 @@ var M = (function (exports) {
             this.adjustCalendars();
         }
         render(year, month, randId) {
-            let opts = this.options, now = new Date(), days = Datepicker._getDaysInMonth(year, month), before = new Date(year, month, 1).getDay(), data = [], row = [];
+            const now = new Date(), days = Datepicker._getDaysInMonth(year, month), data = [];
+            let before = new Date(year, month, 1).getDay(), row = [];
             Datepicker._setToStartOfDay(now);
-            if (opts.firstDay > 0) {
-                before -= opts.firstDay;
+            if (this.options.firstDay > 0) {
+                before -= this.options.firstDay;
                 if (before < 0) {
                     before += 7;
                 }
             }
-            let previousMonth = month === 0 ? 11 : month - 1, nextMonth = month === 11 ? 0 : month + 1, yearOfPreviousMonth = month === 0 ? year - 1 : year, yearOfNextMonth = month === 11 ? year + 1 : year, daysInPreviousMonth = Datepicker._getDaysInMonth(yearOfPreviousMonth, previousMonth);
+            const previousMonth = month === 0 ? 11 : month - 1, nextMonth = month === 11 ? 0 : month + 1, yearOfPreviousMonth = month === 0 ? year - 1 : year, yearOfNextMonth = month === 11 ? year + 1 : year, daysInPreviousMonth = Datepicker._getDaysInMonth(yearOfPreviousMonth, previousMonth);
             let cells = days + before, after = cells;
             while (after > 7) {
                 after -= 7;
@@ -3516,12 +3501,29 @@ var M = (function (exports) {
             cells += 7 - after;
             let isWeekSelected = false;
             for (let i = 0, r = 0; i < cells; i++) {
-                let day = new Date(year, month, 1 + (i - before)), isSelected = Datepicker._isDate(this.date)
-                    ? Datepicker._compareDates(day, this.date)
-                    : false, isToday = Datepicker._compareDates(day, now), hasEvent = opts.events.indexOf(day.toDateString()) !== -1 ? true : false, isEmpty = i < before || i >= days + before, dayNumber = 1 + (i - before), monthNumber = month, yearNumber = year, isStartRange = opts.startRange && Datepicker._compareDates(opts.startRange, day), isEndRange = opts.endRange && Datepicker._compareDates(opts.endRange, day), isInRange = opts.startRange && opts.endRange && opts.startRange < day && day < opts.endRange, isDisabled = (opts.minDate && day < opts.minDate) ||
-                    (opts.maxDate && day > opts.maxDate) ||
-                    (opts.disableWeekends && Datepicker._isWeekend(day)) ||
-                    (opts.disableDayFn && opts.disableDayFn(day));
+                const day = new Date(year, month, 1 + (i - before)), isToday = Datepicker._compareDates(day, now), hasEvent = this.options.events.indexOf(day.toDateString()) !== -1, isEmpty = i < before || i >= days + before, isStartRange = this.options.startRange && Datepicker._compareDates(this.options.startRange, day), isEndRange = this.options.endRange && Datepicker._compareDates(this.options.endRange, day), isInRange = this.options.startRange &&
+                    this.options.endRange &&
+                    this.options.startRange < day &&
+                    day < this.options.endRange, isDisabled = (this.options.minDate && day < this.options.minDate) ||
+                    (this.options.maxDate && day > this.options.maxDate) ||
+                    (this.options.disableWeekends && Datepicker._isWeekend(day)) ||
+                    (this.options.disableDayFn && this.options.disableDayFn(day)), isDateRange = this.options.isDateRange &&
+                    Datepicker._isDate(this.endDate) &&
+                    Datepicker._compareWithinRange(day, this.date, this.endDate);
+                let dayNumber = 1 + (i - before), monthNumber = month, yearNumber = year;
+                let isSelected = false;
+                if (Datepicker._isDate(this.date)) {
+                    isSelected = Datepicker._compareDates(day, this.date);
+                }
+                if (!isSelected && Datepicker._isDate(this.endDate)) {
+                    isSelected = Datepicker._compareDates(day, this.endDate);
+                }
+                if (this.options.isMultipleSelection &&
+                    this.dates.find((item) => {
+                        return item.getTime() === day.getTime();
+                    })) {
+                    isSelected = true;
+                }
                 if (isEmpty) {
                     if (i < before) {
                         dayNumber = daysInPreviousMonth + dayNumber;
@@ -3534,7 +3536,7 @@ var M = (function (exports) {
                         yearNumber = yearOfNextMonth;
                     }
                 }
-                let dayConfig = {
+                const dayConfig = {
                     day: dayNumber,
                     month: monthNumber,
                     year: yearNumber,
@@ -3546,20 +3548,21 @@ var M = (function (exports) {
                     isStartRange: isStartRange,
                     isEndRange: isEndRange,
                     isInRange: isInRange,
-                    showDaysInNextAndPreviousMonths: opts.showDaysInNextAndPreviousMonths
+                    showDaysInNextAndPreviousMonths: this.options.showDaysInNextAndPreviousMonths,
+                    isDateRange: isDateRange
                 };
                 row.push(this.renderDay(dayConfig));
                 if (++r === 7) {
-                    data.push(this.renderRow(row, opts.isRTL, isWeekSelected));
+                    data.push(this.renderRow(row, this.options.isRTL, isWeekSelected));
                     row = [];
                     r = 0;
                     isWeekSelected = false;
                 }
             }
-            return this.renderTable(opts, data, randId);
+            return this.renderTable(this.options, data, randId);
         }
         renderDay(opts) {
-            let arr = [];
+            const arr = [];
             let ariaSelected = 'false';
             if (opts.isEmpty) {
                 if (opts.showDaysInNextAndPreviousMonths) {
@@ -3570,6 +3573,7 @@ var M = (function (exports) {
                     return '<td class="is-empty"></td>';
                 }
             }
+            // @todo wouldn't it be better defining opts class mapping and looping trough opts?
             if (opts.isDisabled) {
                 arr.push('is-disabled');
             }
@@ -3580,17 +3584,25 @@ var M = (function (exports) {
                 arr.push('is-selected');
                 ariaSelected = 'true';
             }
+            // @todo should we create this additional css class?
             if (opts.hasEvent) {
                 arr.push('has-event');
             }
+            // @todo should we create this additional css class?
             if (opts.isInRange) {
                 arr.push('is-inrange');
             }
+            // @todo should we create this additional css class?
             if (opts.isStartRange) {
                 arr.push('is-startrange');
             }
+            // @todo should we create this additional css class?
             if (opts.isEndRange) {
                 arr.push('is-endrange');
+            }
+            // @todo create additional css class
+            if (opts.isDateRange) {
+                arr.push('is-daterange');
             }
             return (`<td data-day="${opts.day}" class="${arr.join(' ')}" aria-selected="${ariaSelected}">` +
                 `<button class="datepicker-day-button" type="button" data-year="${opts.year}" data-month="${opts.month}" data-day="${opts.day}">${opts.day}</button>` +
@@ -3612,7 +3624,8 @@ var M = (function (exports) {
                 '</table></div>');
         }
         renderHead(opts) {
-            let i, arr = [];
+            const arr = [];
+            let i;
             for (i = 0; i < 7; i++) {
                 arr.push(`<th scope="col"><abbr title="${this.renderDayName(opts, i)}">${this.renderDayName(opts, i, true)}</abbr></th>`);
             }
@@ -3622,10 +3635,11 @@ var M = (function (exports) {
             return '<tbody>' + rows.join('') + '</tbody>';
         }
         renderTitle(instance, c, year, month, refYear, randId) {
-            let i, j, arr, opts = this.options, isMinYear = year === opts.minYear, isMaxYear = year === opts.maxYear, html = '<div id="' +
+            const opts = this.options, isMinYear = year === opts.minYear, isMaxYear = year === opts.maxYear;
+            let i, j, arr = [], html = '<div id="' +
                 randId +
-                '" class="datepicker-controls" role="heading" aria-live="assertive">', monthHtml, yearHtml, prev = true, next = true;
-            for (arr = [], i = 0; i < 12; i++) {
+                '" class="datepicker-controls" role="heading" aria-live="assertive">', prev = true, next = true;
+            for (i = 0; i < 12; i++) {
                 arr.push('<option value="' +
                     (year === refYear ? i - c : 12 + i - c) +
                     '"' +
@@ -3637,7 +3651,9 @@ var M = (function (exports) {
                     opts.i18n.months[i] +
                     '</option>');
             }
-            monthHtml = '<select class="datepicker-select orig-select-month" tabindex="-1">' + arr.join('') + '</select>';
+            const monthHtml = '<select class="datepicker-select orig-select-month" tabindex="-1">' +
+                arr.join('') +
+                '</select>';
             if (Array.isArray(opts.yearRange)) {
                 i = opts.yearRange[0];
                 j = opts.yearRange[1] + 1;
@@ -3653,8 +3669,8 @@ var M = (function (exports) {
             }
             if (opts.yearRangeReverse)
                 arr.reverse();
-            yearHtml = `<select class="datepicker-select orig-select-year" tabindex="-1">${arr.join('')}</select>`;
-            let leftArrow = '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/><path d="M0-.5h24v24H0z" fill="none"/></svg>';
+            const yearHtml = `<select class="datepicker-select orig-select-year" tabindex="-1">${arr.join('')}</select>`;
+            const leftArrow = '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/><path d="M0-.5h24v24H0z" fill="none"/></svg>';
             html += `<button class="month-prev${prev ? '' : ' is-disabled'} btn-flat" type="button">${leftArrow}</button>`;
             html += '<div class="selects-container">';
             if (opts.showMonthAfterYear) {
@@ -3670,15 +3686,14 @@ var M = (function (exports) {
             if (isMaxYear && (month === 11 || opts.maxMonth <= month)) {
                 next = false;
             }
-            let rightArrow = '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/><path d="M0-.25h24v24H0z" fill="none"/></svg>';
+            const rightArrow = '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/><path d="M0-.25h24v24H0z" fill="none"/></svg>';
             html += `<button class="month-next${next ? '' : ' is-disabled'} btn-flat" type="button">${rightArrow}</button>`;
             return (html += '</div>');
         }
         // refresh HTML
-        draw(force = false) {
-            if (!this.isOpen && !force)
-                return;
-            let opts = this.options, minYear = opts.minYear, maxYear = opts.maxYear, minMonth = opts.minMonth, maxMonth = opts.maxMonth, html = '', randId;
+        draw() {
+            const opts = this.options, minYear = opts.minYear, maxYear = opts.maxYear, minMonth = opts.minMonth, maxMonth = opts.maxMonth;
+            let html = '';
             if (this._y <= minYear) {
                 this._y = minYear;
                 if (!isNaN(minMonth) && this._m < minMonth) {
@@ -3691,22 +3706,26 @@ var M = (function (exports) {
                     this._m = maxMonth;
                 }
             }
-            randId =
-                'datepicker-title-' +
-                    Math.random()
-                        .toString(36)
-                        .replace(/[^a-z]+/g, '')
-                        .substr(0, 2);
+            const randId = 'datepicker-title-' +
+                Math.random()
+                    .toString(36)
+                    .replace(/[^a-z]+/g, '')
+                    .substr(0, 2);
             for (let c = 0; c < 1; c++) {
-                this._renderDateDisplay();
+                if (!this.options.isDateRange) {
+                    this._renderDateDisplay(this.date);
+                }
+                else {
+                    this._renderDateDisplay(this.date, this.endDate);
+                }
                 html +=
                     this.renderTitle(this, c, this.calendars[c].year, this.calendars[c].month, this.calendars[0].year, randId) + this.render(this.calendars[c].year, this.calendars[c].month, randId);
             }
             this.destroySelects();
             this.calendarEl.innerHTML = html;
             // Init Materialize Select
-            let yearSelect = this.calendarEl.querySelector('.orig-select-year');
-            let monthSelect = this.calendarEl.querySelector('.orig-select-month');
+            const yearSelect = this.calendarEl.querySelector('.orig-select-year');
+            const monthSelect = this.calendarEl.querySelector('.orig-select-month');
             FormSelect.init(yearSelect, {
                 classes: 'select-year',
                 dropdownOptions: { container: document.body, constrainWidth: false }
@@ -3727,7 +3746,7 @@ var M = (function (exports) {
             this.el.addEventListener('keydown', this._handleInputKeydown);
             this.el.addEventListener('change', this._handleInputChange);
             this.calendarEl.addEventListener('click', this._handleCalendarClick);
-            this.doneBtn.addEventListener('click', this._finishSelection);
+            this.doneBtn.addEventListener('click', () => this.setInputValues());
             this.cancelBtn.addEventListener('click', this.close);
             if (this.options.showClearBtn) {
                 this.clearBtn.addEventListener('click', this._handleClearClick);
@@ -3743,40 +3762,41 @@ var M = (function (exports) {
             if (this.options.showClearBtn) {
                 this.clearBtn = this.modalEl.querySelector('.datepicker-clear');
             }
+            // TODO: This should not be part of the datepicker
             this.doneBtn = this.modalEl.querySelector('.datepicker-done');
             this.cancelBtn = this.modalEl.querySelector('.datepicker-cancel');
             this.formats = {
-                d: () => {
-                    return this.date.getDate();
+                d: (date) => {
+                    return date.getDate();
                 },
-                dd: () => {
-                    let d = this.date.getDate();
+                dd: (date) => {
+                    const d = date.getDate();
                     return (d < 10 ? '0' : '') + d;
                 },
-                ddd: () => {
-                    return this.options.i18n.weekdaysShort[this.date.getDay()];
+                ddd: (date) => {
+                    return this.options.i18n.weekdaysShort[date.getDay()];
                 },
-                dddd: () => {
-                    return this.options.i18n.weekdays[this.date.getDay()];
+                dddd: (date) => {
+                    return this.options.i18n.weekdays[date.getDay()];
                 },
-                m: () => {
-                    return this.date.getMonth() + 1;
+                m: (date) => {
+                    return date.getMonth() + 1;
                 },
-                mm: () => {
-                    let m = this.date.getMonth() + 1;
+                mm: (date) => {
+                    const m = date.getMonth() + 1;
                     return (m < 10 ? '0' : '') + m;
                 },
-                mmm: () => {
-                    return this.options.i18n.monthsShort[this.date.getMonth()];
+                mmm: (date) => {
+                    return this.options.i18n.monthsShort[date.getMonth()];
                 },
-                mmmm: () => {
-                    return this.options.i18n.months[this.date.getMonth()];
+                mmmm: (date) => {
+                    return this.options.i18n.months[date.getMonth()];
                 },
-                yy: () => {
-                    return ('' + this.date.getFullYear()).slice(2);
+                yy: (date) => {
+                    return ('' + date.getFullYear()).slice(2);
                 },
-                yyyy: () => {
-                    return this.date.getFullYear();
+                yyyy: (date) => {
+                    return date.getFullYear();
                 }
             };
         }
@@ -3785,28 +3805,42 @@ var M = (function (exports) {
             this.el.removeEventListener('keydown', this._handleInputKeydown);
             this.el.removeEventListener('change', this._handleInputChange);
             this.calendarEl.removeEventListener('click', this._handleCalendarClick);
+            if (this.options.isDateRange) {
+                this.endDateEl.removeEventListener('click', this._handleInputClick);
+                this.endDateEl.removeEventListener('keypress', this._handleInputKeydown);
+                this.endDateEl.removeEventListener('change', this._handleInputChange);
+            }
         }
-        _handleInputClick = () => {
-            this.open();
+        _handleInputClick = (e) => {
+            // Prevents default browser datepicker modal rendering
+            if (e.type == 'date') {
+                e.preventDefault();
+            }
+            this.setDateFromInput(e.target);
+            this.draw();
+            this.gotoDate(e.target === this.el ? this.date : this.endDate);
         };
         _handleInputKeydown = (e) => {
             if (Utils.keys.ENTER.includes(e.key)) {
                 e.preventDefault();
-                this.open();
+                this.setDateFromInput(e.target);
+                this.draw();
             }
         };
         _handleCalendarClick = (e) => {
-            if (!this.isOpen)
-                return;
-            const target = (e.target);
+            const target = e.target;
             if (!target.classList.contains('is-disabled')) {
                 if (target.classList.contains('datepicker-day-button') &&
                     !target.classList.contains('is-empty') &&
                     !target.parentElement.classList.contains('is-disabled')) {
-                    this.setDate(new Date(e.target.getAttribute('data-year'), e.target.getAttribute('data-month'), e.target.getAttribute('data-day')));
-                    if (this.options.autoClose) {
-                        this._finishSelection();
+                    const selectedDate = new Date(e.target.getAttribute('data-year'), e.target.getAttribute('data-month'), e.target.getAttribute('data-day'));
+                    if (!this.multiple || (this.multiple && this.options.isMultipleSelection)) {
+                        this.setDate(selectedDate);
                     }
+                    if (this.options.isDateRange) {
+                        this._handleDateRangeCalendarClick(selectedDate);
+                    }
+                    this._finishSelection();
                 }
                 else if (target.closest('.month-prev')) {
                     this.prevMonth();
@@ -3816,10 +3850,24 @@ var M = (function (exports) {
                 }
             }
         };
+        _handleDateRangeCalendarClick = (date) => {
+            if (this.endDate == null || !Datepicker._compareDates(date, this.endDate)) {
+                if (Datepicker._isDate(this.date) && Datepicker._comparePastDate(date, this.date)) {
+                    return;
+                }
+                this.setDate(date, false, Datepicker._isDate(this.date));
+                return;
+            }
+            this._clearDates();
+            this.draw();
+        };
         _handleClearClick = () => {
+            this._clearDates();
+            this.setInputValues();
+        };
+        _clearDates = () => {
             this.date = null;
-            this.setInputValue();
-            this.close();
+            this.endDate = null;
         };
         _handleMonthChange = (e) => {
             this.gotoMonth(e.target.value);
@@ -3843,19 +3891,28 @@ var M = (function (exports) {
         }
         _handleInputChange = (e) => {
             let date;
+            const el = e.target;
             // Prevent change event from being fired when triggered by the plugin
             if (e['detail']?.firedBy === this)
                 return;
+            // Prevent change event from being fired if an end date is set without a start date
+            if (el == this.endDateEl && !this.date)
+                return;
             if (this.options.parse) {
-                date = this.options.parse(this.el.value, typeof this.options.format === "function"
+                date = this.options.parse(e.target.value, typeof this.options.format === 'function'
                     ? this.options.format(new Date(this.el.value))
                     : this.options.format);
             }
             else {
-                date = new Date(Date.parse(this.el.value));
+                date = new Date(Date.parse(e.target.value));
             }
-            if (Datepicker._isDate(date))
-                this.setDate(date);
+            if (Datepicker._isDate(date)) {
+                this.setDate(date, false, el == this.endDateEl, true);
+                if (e.type == 'date') {
+                    this.setDataDate(e, date);
+                    this.setInputValues();
+                }
+            }
         };
         renderDayName(opts, day, abbr = false) {
             day += opts.firstDay;
@@ -3864,41 +3921,31 @@ var M = (function (exports) {
             }
             return abbr ? opts.i18n.weekdaysAbbrev[day] : opts.i18n.weekdays[day];
         }
+        createDateInput() {
+            const dateInput = this.el.cloneNode(true);
+            dateInput.addEventListener('click', this._handleInputClick);
+            dateInput.addEventListener('keypress', this._handleInputKeydown);
+            dateInput.addEventListener('change', this._handleInputChange);
+            this.el.parentElement.appendChild(dateInput);
+            return dateInput;
+        }
         // Set input value to the selected date and close Datepicker
         _finishSelection = () => {
-            this.setInputValue();
+            this.setInputValues();
             this.close();
         };
-        /**
-         * Open datepicker.
-         */
-        open = () => {
-            if (this.isOpen)
-                return;
-            this.isOpen = true;
-            if (typeof this.options.onOpen === 'function') {
-                this.options.onOpen.call(this);
-            }
-            this.draw();
-            this.modal.open(undefined);
+        // deprecated
+        open() {
+            console.warn('Datepicker.open() is deprecated. Remove this method and wrap in modal yourself.');
             return this;
-        };
-        /**
-         * Close datepicker.
-         */
-        close = () => {
-            if (!this.isOpen)
-                return;
-            this.isOpen = false;
-            if (typeof this.options.onClose === 'function') {
-                this.options.onClose.call(this);
-            }
-            this.modal.close();
+        }
+        close() {
+            console.warn('Datepicker.close() is deprecated. Remove this method and wrap in modal yourself.');
             return this;
-        };
+        }
         static {
             Datepicker._template = `
-      <div class="modal datepicker-modal">
+      <div class="datepicker-modal">
         <div class="modal-content datepicker-container">
           <div class="datepicker-date-display">
             <span class="year-text"></span>
@@ -3920,6 +3967,32 @@ var M = (function (exports) {
     }
 
     class Forms {
+        /**
+         * Checks if the label has validation and apply
+         * the correct class and styles
+         * @param textfield
+         */
+        static validateField(textfield) {
+            if (!textfield) {
+                console.error('No text field element found');
+                return;
+            }
+            let hasLength = textfield.getAttribute('data-length') !== null;
+            let lenAttr = parseInt(textfield.getAttribute('data-length'));
+            let len = textfield.value.length;
+            if (len === 0 && textfield.validity.badInput === false && !textfield.required && textfield.classList.contains('validate')) {
+                textfield.classList.remove('invalid');
+            }
+            else if (textfield.classList.contains('validate')) {
+                // Check for character counter attributes
+                if (((textfield.validity.valid) && hasLength && len <= lenAttr) || textfield.validity.valid && !hasLength) {
+                    textfield.classList.remove('invalid');
+                }
+                else {
+                    textfield.classList.add('invalid');
+                }
+            }
+        }
         /**
          * Resizes the given TextArea after updating the
          *  value content dynamically.
@@ -4000,6 +4073,19 @@ var M = (function (exports) {
         static Init() {
             if (typeof document !== 'undefined')
                 document?.addEventListener("DOMContentLoaded", () => {
+                    document.addEventListener('change', (e) => {
+                        const target = e.target;
+                        if (target instanceof HTMLInputElement) {
+                            if (target.value.length !== 0 || target.getAttribute('placeholder') !== null) {
+                                for (const child of target.parentNode.children) {
+                                    if (child.tagName == "label") {
+                                        child.classList.add("active");
+                                    }
+                                }
+                            }
+                            Forms.validateField(target);
+                        }
+                    });
                     document.addEventListener('keyup', (e) => {
                         const target = e.target;
                         // Radio and Checkbox focus class
@@ -4043,7 +4129,7 @@ var M = (function (exports) {
         }
     }
 
-    const _defaults$c = {
+    const _defaults$d = {
         inDuration: 275,
         outDuration: 200,
         onOpenStart: null,
@@ -4088,13 +4174,14 @@ var M = (function (exports) {
             this.originalHeight = 0;
             this.originInlineStyles = this.el.getAttribute('style');
             this.caption = this.el.getAttribute('data-caption') || '';
+            this.el.tabIndex = 0;
             // Wrap
             this.el.before(this.placeholder);
             this.placeholder.append(this.el);
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$c;
+            return _defaults$d;
         }
         /**
          * Initializes instances of MaterialBox.
@@ -4117,11 +4204,21 @@ var M = (function (exports) {
         }
         _setupEventHandlers() {
             this.el.addEventListener('click', this._handleMaterialboxClick);
+            this.el.addEventListener('keypress', this._handleMaterialboxKeypress);
         }
         _removeEventHandlers() {
             this.el.removeEventListener('click', this._handleMaterialboxClick);
+            this.el.removeEventListener('keypress', this._handleMaterialboxKeypress);
         }
         _handleMaterialboxClick = () => {
+            this._handleMaterialboxToggle();
+        };
+        _handleMaterialboxKeypress = (e) => {
+            if (Utils.keys.ENTER.includes(e.key)) {
+                this._handleMaterialboxToggle();
+            }
+        };
+        _handleMaterialboxToggle = () => {
             // If already modal, return to original
             if (this.doneAnimating === false || (this.overlayActive && this.doneAnimating))
                 this.close();
@@ -4403,6 +4500,73 @@ var M = (function (exports) {
         };
     }
 
+    const _defaults$c = {
+        opacity: 0.5,
+        inDuration: 250,
+        outDuration: 250,
+        onOpenStart: null,
+        onOpenEnd: null,
+        onCloseStart: null,
+        onCloseEnd: null,
+        preventScrolling: true,
+        dismissible: true,
+        startingTop: '4%',
+        endingTop: '10%'
+    };
+    class Modal extends Component {
+        constructor(el, options) {
+            super(el, options, Modal);
+            this.el.M_Modal = this;
+            this.options = {
+                ...Modal.defaults,
+                ...options
+            };
+            this.el.tabIndex = 0;
+            this._setupEventHandlers();
+        }
+        static get defaults() {
+            return _defaults$c;
+        }
+        static init(els, options = {}) {
+            return super.init(els, options, Modal);
+        }
+        static getInstance(el) {
+            return el.M_Modal;
+        }
+        destroy() { }
+        _setupEventHandlers() { }
+        _removeEventHandlers() { }
+        _handleTriggerClick() { }
+        _handleOverlayClick() { }
+        _handleModalCloseClick() { }
+        _handleKeydown() { }
+        _handleFocus() { }
+        open() {
+            return this;
+        }
+        close() {
+            return this;
+        }
+        // Experimental!
+        static #createHtml(config) {
+            return `<dialog id="modal1" class="modal">
+      ${config.header ? '<div class="modal-header">' + config.header + '</div>' : ''}
+      <div class="modal-content">
+        ${config.content}
+      </div>
+      ${config.header ? '<div class="modal-footer">' + config.footer + '</div>' : ''}
+    </dialog>`;
+        }
+        static #createHtmlElement(config) {
+            const dialog = document.createElement('dialog');
+            return dialog;
+        }
+        static create(config) {
+            return this.#createHtmlElement(config);
+        }
+        static { }
+    }
+
     let _defaults$b = {
         responsiveThreshold: 0 // breakpoint for swipeable
     };
@@ -4620,17 +4784,20 @@ var M = (function (exports) {
         throttle: 100,
         scrollOffset: 200, // offset - 200 allows elements near bottom of page to scroll
         activeClass: 'active',
-        getActiveElement: (id) => { return 'a[href="#' + id + '"]'; }
+        getActiveElement: (id) => { return 'a[href="#' + id + '"]'; },
+        keepTopElementActive: false,
+        animationDuration: null,
     };
     class ScrollSpy extends Component {
         static _elements;
         static _count;
         static _increment;
-        tickId;
-        id;
         static _elementsInView;
         static _visibleElements;
         static _ticks;
+        static _keptTopActiveElement = null;
+        tickId;
+        id;
         constructor(el, options) {
             super(el, options, ScrollSpy);
             this.el.M_ScrollSpy = this;
@@ -4692,7 +4859,12 @@ var M = (function (exports) {
                 const x = document.querySelector('a[href="#' + scrollspy.el.id + '"]');
                 if (trigger === x) {
                     e.preventDefault();
-                    scrollspy.el.scrollIntoView({ behavior: 'smooth' });
+                    if (scrollspy.el.M_ScrollSpy.options.animationDuration) {
+                        ScrollSpy._smoothScrollIntoView(scrollspy.el, scrollspy.el.M_ScrollSpy.options.animationDuration);
+                    }
+                    else {
+                        scrollspy.el.scrollIntoView({ behavior: 'smooth' });
+                    }
                     break;
                 }
             }
@@ -4725,6 +4897,26 @@ var M = (function (exports) {
             }
             // remember elements in view for next tick
             ScrollSpy._elementsInView = intersections;
+            if (ScrollSpy._elements.length) {
+                const options = ScrollSpy._elements[0].el.M_ScrollSpy.options;
+                if (options.keepTopElementActive && ScrollSpy._visibleElements.length === 0) {
+                    this._resetKeptTopActiveElementIfNeeded();
+                    const topElements = ScrollSpy._elements.filter(value => ScrollSpy._getDistanceToViewport(value.el) <= 0)
+                        .sort((a, b) => {
+                        const distanceA = ScrollSpy._getDistanceToViewport(a.el);
+                        const distanceB = ScrollSpy._getDistanceToViewport(b.el);
+                        if (distanceA < distanceB)
+                            return -1;
+                        if (distanceA > distanceB)
+                            return 1;
+                        return 0;
+                    });
+                    const nearestTopElement = topElements.length ? topElements[topElements.length - 1] : ScrollSpy._elements[0];
+                    const actElem = document.querySelector(options.getActiveElement(nearestTopElement.el.id));
+                    actElem?.classList.add(options.activeClass);
+                    ScrollSpy._keptTopActiveElement = actElem;
+                }
+            }
         };
         static _offset(el) {
             const box = el.getBoundingClientRect();
@@ -4767,6 +4959,7 @@ var M = (function (exports) {
             else {
                 ScrollSpy._visibleElements.push(this.el);
             }
+            this._resetKeptTopActiveElementIfNeeded();
             const selector = this.options.getActiveElement(ScrollSpy._visibleElements[0].id);
             document.querySelector(selector)?.classList.add(this.options.activeClass);
         }
@@ -4780,8 +4973,39 @@ var M = (function (exports) {
                     // Check if empty
                     const selector = this.options.getActiveElement(ScrollSpy._visibleElements[0].id);
                     document.querySelector(selector)?.classList.add(this.options.activeClass);
+                    this._resetKeptTopActiveElementIfNeeded();
                 }
             }
+        }
+        _resetKeptTopActiveElementIfNeeded() {
+            if (ScrollSpy._keptTopActiveElement) {
+                ScrollSpy._keptTopActiveElement.classList.remove(this.options.activeClass);
+                ScrollSpy._keptTopActiveElement = null;
+            }
+        }
+        static _getDistanceToViewport(element) {
+            const rect = element.getBoundingClientRect();
+            const distance = rect.top;
+            return distance;
+        }
+        static _smoothScrollIntoView(element, duration = 300) {
+            const targetPosition = element.getBoundingClientRect().top + (window.scrollY || window.pageYOffset);
+            const startPosition = (window.scrollY || window.pageYOffset);
+            const distance = targetPosition - startPosition;
+            const startTime = performance.now();
+            function scrollStep(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const scrollY = startPosition + distance * progress;
+                if (progress < 1) {
+                    window.scrollTo(0, scrollY);
+                    requestAnimationFrame(scrollStep);
+                }
+                else {
+                    window.scrollTo(0, targetPosition);
+                }
+            }
+            requestAnimationFrame(scrollStep);
         }
         static {
             ScrollSpy._elements = [];
@@ -4896,6 +5120,9 @@ var M = (function (exports) {
             if (this.isFixed) {
                 window.addEventListener('resize', this._handleWindowResize);
             }
+            /* Set aria-hidden state */
+            this._setAriaHidden();
+            this._setTabIndex();
         }
         _removeEventHandlers() {
             if (Sidenav._sidenavs.length === 1) {
@@ -5115,6 +5342,9 @@ var M = (function (exports) {
                     this._preventBodyScrolling();
                 if (!this.isDragged || this.percentOpen != 1)
                     this._animateIn();
+                /* Set aria-hidden state */
+                this._setAriaHidden();
+                this._setTabIndex();
             }
         };
         /**
@@ -5142,6 +5372,9 @@ var M = (function (exports) {
                 else {
                     this._overlay.style.display = 'none';
                 }
+                /* Set aria-hidden state */
+                this._setAriaHidden();
+                this._setTabIndex();
             }
         };
         _animateIn() {
@@ -5218,6 +5451,20 @@ var M = (function (exports) {
                 this._overlay.style.display = 'none';
             }, duration);
         }
+        _setAriaHidden = () => {
+            this.el.ariaHidden = this.isOpen ? 'false' : 'true';
+            const navWrapper = document.querySelector('.nav-wrapper ul');
+            if (navWrapper)
+                navWrapper.ariaHidden = this.isOpen;
+        };
+        _setTabIndex = () => {
+            const navLinks = document.querySelectorAll('.nav-wrapper ul li a');
+            const sideNavLinks = document.querySelectorAll('.sidenav li a');
+            if (navLinks)
+                navLinks.forEach((navLink) => { navLink.tabIndex = this.isOpen ? -1 : 0; });
+            if (sideNavLinks)
+                sideNavLinks.forEach((sideNavLink) => { sideNavLink.tabIndex = this.isOpen ? 0 : -1; });
+        };
         static {
             Sidenav._sidenavs = [];
         }
@@ -5304,8 +5551,14 @@ var M = (function (exports) {
             }
         };
         _handleTabClick = (e) => {
-            const tabLink = e.target;
-            const tab = tabLink.parentElement;
+            let tabLink = e.target;
+            if (!tabLink)
+                return;
+            var tab = tabLink.parentElement;
+            while (tab && !tab.classList.contains('tab')) {
+                tabLink = tabLink.parentElement;
+                tab = tab.parentElement;
+            }
             // Handle click on tab link only
             if (!tabLink || !tab.classList.contains('tab'))
                 return;
@@ -5504,8 +5757,9 @@ var M = (function (exports) {
          * If the tap target is open.
          */
         isOpen;
+        static _taptargets;
         wrapper;
-        _origin;
+        // private _origin: HTMLElement;
         originEl;
         waveEl;
         contentEl;
@@ -5518,10 +5772,12 @@ var M = (function (exports) {
             };
             this.isOpen = false;
             // setup
-            this._origin = document.querySelector(`#${el.dataset.target}`);
+            this.originEl = document.querySelector(`#${el.dataset.target}`);
+            this.originEl.tabIndex = 0;
             this._setup();
             this._calculatePositioning();
             this._setupEventHandlers();
+            TapTarget._taptargets.push(this);
         }
         static get defaults() {
             return _defaults$6;
@@ -5540,40 +5796,54 @@ var M = (function (exports) {
         destroy() {
             this._removeEventHandlers();
             this.el.TapTarget = undefined;
+            const index = TapTarget._taptargets.indexOf(this);
+            if (index >= 0) {
+                TapTarget._taptargets.splice(index, 1);
+            }
         }
         _setupEventHandlers() {
-            this.el.addEventListener('click', this._handleTargetClick);
-            this.originEl.addEventListener('click', this._handleOriginClick);
+            this.originEl.addEventListener('click', this._handleTargetToggle);
+            this.originEl.addEventListener('keypress', this._handleKeyboardInteraction, true);
+            // this.originEl.addEventListener('click', this._handleOriginClick);
             // Resize
             window.addEventListener('resize', this._handleThrottledResize);
         }
         _removeEventHandlers() {
-            this.el.removeEventListener('click', this._handleTargetClick);
-            this.originEl.removeEventListener('click', this._handleOriginClick);
+            this.originEl.removeEventListener('click', this._handleTargetToggle);
+            this.originEl.removeEventListener('keypress', this._handleKeyboardInteraction, true);
+            // this.originEl.removeEventListener('click', this._handleOriginClick);
             window.removeEventListener('resize', this._handleThrottledResize);
         }
         _handleThrottledResize = Utils.throttle(function () { this._handleResize(); }, 200).bind(this);
-        _handleTargetClick = () => {
-            this.open();
+        _handleKeyboardInteraction = (e) => {
+            if (Utils.keys.ENTER.includes(e.key)) {
+                this._handleTargetToggle();
+            }
         };
-        _handleOriginClick = () => {
-            this.close();
+        _handleTargetToggle = () => {
+            !this.isOpen ? this.open() : this.close();
         };
+        /*_handleOriginClick = () => {
+          this.close();
+        }*/
         _handleResize = () => {
             this._calculatePositioning();
         };
         _handleDocumentClick = (e) => {
-            if (!e.target.closest('.tap-target-wrapper')) {
+            if (e.target.closest(`#${this.el.dataset.target}`) !== this.originEl &&
+                !e.target.closest('.tap-target-wrapper')) {
                 this.close();
-                e.preventDefault();
-                e.stopPropagation();
+                // e.preventDefault();
+                // e.stopPropagation();
             }
         };
         _setup() {
             // Creating tap target
             this.wrapper = this.el.parentElement;
             this.waveEl = this.wrapper.querySelector('.tap-target-wave');
-            this.originEl = this.wrapper.querySelector('.tap-target-origin');
+            this.el.parentElement.ariaExpanded = 'false';
+            this.originEl.style.zIndex = '1002';
+            // this.originEl = this.wrapper.querySelector('.tap-target-origin');
             this.contentEl = this.el.querySelector('.tap-target-content');
             // Creating wrapper
             if (!this.wrapper.classList.contains('.tap-target-wrapper')) {
@@ -5593,13 +5863,13 @@ var M = (function (exports) {
                 this.waveEl = document.createElement('div');
                 this.waveEl.classList.add('tap-target-wave');
                 // Creating origin
-                if (!this.originEl) {
-                    this.originEl = this._origin.cloneNode(true); // .clone(true, true);
-                    this.originEl.classList.add('tap-target-origin');
-                    this.originEl.removeAttribute('id');
-                    this.originEl.removeAttribute('style');
-                    this.waveEl.append(this.originEl);
-                }
+                /*if (!this.originEl) {
+                  this.originEl = <HTMLElement>this._origin.cloneNode(true); // .clone(true, true);
+                  this.originEl.classList.add('tap-target-origin');
+                  this.originEl.removeAttribute('id');
+                  this.originEl.removeAttribute('style');
+                  this.waveEl.append(this.originEl);
+                }*/
                 this.wrapper.append(this.waveEl);
             }
         }
@@ -5613,9 +5883,9 @@ var M = (function (exports) {
         }
         _calculatePositioning() {
             // Element or parent is fixed position?
-            let isFixed = getComputedStyle(this._origin).position === 'fixed';
+            let isFixed = getComputedStyle(this.originEl).position === 'fixed';
             if (!isFixed) {
-                let currentElem = this._origin;
+                let currentElem = this.originEl;
                 const parents = [];
                 while ((currentElem = currentElem.parentNode) && currentElem !== document)
                     parents.push(currentElem);
@@ -5626,10 +5896,10 @@ var M = (function (exports) {
                 }
             }
             // Calculating origin
-            const originWidth = this._origin.offsetWidth;
-            const originHeight = this._origin.offsetHeight;
-            const originTop = isFixed ? this._offset(this._origin).top - Utils.getDocumentScrollTop() : this._offset(this._origin).top;
-            const originLeft = isFixed ? this._offset(this._origin).left - Utils.getDocumentScrollLeft() : this._offset(this._origin).left;
+            const originWidth = this.originEl.offsetWidth;
+            const originHeight = this.originEl.offsetHeight;
+            const originTop = isFixed ? this._offset(this.originEl).top - Utils.getDocumentScrollTop() : this._offset(this.originEl).top;
+            const originLeft = isFixed ? this._offset(this.originEl).left - Utils.getDocumentScrollLeft() : this._offset(this.originEl).left;
             // Calculating screen
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
@@ -5690,11 +5960,13 @@ var M = (function (exports) {
                 return;
             // onOpen callback
             if (typeof this.options.onOpen === 'function') {
-                this.options.onOpen.call(this, this._origin);
+                this.options.onOpen.call(this, this.originEl);
             }
             this.isOpen = true;
             this.wrapper.classList.add('open');
+            this.wrapper.ariaExpanded = 'true';
             document.body.addEventListener('click', this._handleDocumentClick, true);
+            document.body.addEventListener('keypress', this._handleDocumentClick, true);
             document.body.addEventListener('touchend', this._handleDocumentClick);
         };
         /**
@@ -5705,13 +5977,18 @@ var M = (function (exports) {
                 return;
             // onClose callback
             if (typeof this.options.onClose === 'function') {
-                this.options.onClose.call(this, this._origin);
+                this.options.onClose.call(this, this.originEl);
             }
             this.isOpen = false;
             this.wrapper.classList.remove('open');
+            this.wrapper.ariaExpanded = 'false';
             document.body.removeEventListener('click', this._handleDocumentClick, true);
+            document.body.removeEventListener('keypress', this._handleDocumentClick, true);
             document.body.removeEventListener('touchend', this._handleDocumentClick);
         };
+        static {
+            TapTarget._taptargets = [];
+        }
     }
 
     let _defaults$5 = {
@@ -5730,19 +6007,13 @@ var M = (function (exports) {
             clear: 'Clear',
             done: 'Ok'
         },
-        autoClose: false, // auto close when minute is selected
         twelveHour: true, // change to 12 hour AM/PM clock from 24 hour
         vibrate: true, // vibrate the device when dragging clock hand
         // Callbacks
-        onOpenStart: null,
-        onOpenEnd: null,
-        onCloseStart: null,
-        onCloseEnd: null,
         onSelect: null
     };
     class Timepicker extends Component {
         id;
-        modal;
         modalEl;
         plate;
         digitalClock;
@@ -5770,8 +6041,6 @@ var M = (function (exports) {
          */
         amOrPm;
         static _template;
-        /** If the picker is open. */
-        isOpen;
         /** Vibrate device when dragging clock hand. */
         vibrate;
         _canvas;
@@ -5795,7 +6064,6 @@ var M = (function (exports) {
             };
             this.id = Utils.guid();
             this._insertHTMLIntoDOM();
-            this._setupModal();
             this._setupVariables();
             this._setupEventHandlers();
             this._clockSetup();
@@ -5820,8 +6088,11 @@ var M = (function (exports) {
             return document.createElementNS(svgNS, name);
         }
         static _Pos(e) {
-            if (e.type.startsWith("touch") && e.targetTouches.length >= 1) {
-                return { x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY };
+            if (e.type.startsWith('touch') && e.targetTouches.length >= 1) {
+                return {
+                    x: e.targetTouches[0].clientX,
+                    y: e.targetTouches[0].clientY
+                };
             }
             // mouse event
             return { x: e.clientX, y: e.clientY };
@@ -5831,7 +6102,6 @@ var M = (function (exports) {
         }
         destroy() {
             this._removeEventHandlers();
-            this.modal.destroy();
             this.modalEl.remove();
             this.el.M_Timepicker = undefined;
         }
@@ -5841,8 +6111,10 @@ var M = (function (exports) {
             this.plate.addEventListener('mousedown', this._handleClockClickStart);
             this.plate.addEventListener('touchstart', this._handleClockClickStart);
             this.digitalClock.addEventListener('keyup', this._inputFromTextField);
-            this.inputHours.addEventListener('click', () => this.showView('hours'));
-            this.inputMinutes.addEventListener('click', () => this.showView('minutes'));
+            this.inputHours.addEventListener('focus', () => this.showView('hours'));
+            this.inputHours.addEventListener('focusout', () => this.formatHours());
+            this.inputMinutes.addEventListener('focus', () => this.showView('minutes'));
+            this.inputMinutes.addEventListener('focusout', () => this.formatMinutes());
         }
         _removeEventHandlers() {
             this.el.removeEventListener('click', this._handleInputClick);
@@ -5903,7 +6175,7 @@ var M = (function (exports) {
             if (this.currentView === 'hours') {
                 this.showView('minutes', this.options.duration / 2);
             }
-            else if (this.options.autoClose) {
+            else {
                 this.minutesView.classList.add('timepicker-dial-out');
                 setTimeout(() => {
                     this.done();
@@ -5931,19 +6203,6 @@ var M = (function (exports) {
                 this.el.parentElement.appendChild(this.modalEl);
             }
         }
-        _setupModal() {
-            this.modal = Modal.init(this.modalEl, {
-                onOpenStart: this.options.onOpenStart,
-                onOpenEnd: this.options.onOpenEnd,
-                onCloseStart: this.options.onCloseStart,
-                onCloseEnd: () => {
-                    if (typeof this.options.onCloseEnd === 'function') {
-                        this.options.onCloseEnd.call(this);
-                    }
-                    this.isOpen = false;
-                }
-            });
-        }
         _setupVariables() {
             this.currentView = 'hours';
             this.vibrate = navigator.vibrate
@@ -5964,10 +6223,10 @@ var M = (function (exports) {
         }
         _createButton(text, visibility) {
             const button = document.createElement('button');
-            button.classList.add('btn-flat', 'waves-effect');
+            button.classList.add('btn', 'btn-flat', 'waves-effect', 'text');
             button.style.visibility = visibility;
             button.type = 'button';
-            button.tabIndex = this.options.twelveHour ? 3 : 1;
+            button.tabIndex = -1;
             button.innerText = text;
             return button;
         }
@@ -5992,13 +6251,13 @@ var M = (function (exports) {
             if (this.options.twelveHour) {
                 // AM Button
                 this._amBtn = document.createElement('div');
-                this._amBtn.classList.add('am-btn');
+                this._amBtn.classList.add('am-btn', 'btn');
                 this._amBtn.innerText = 'AM';
                 this._amBtn.addEventListener('click', this._handleAmPmClick);
                 this.spanAmPm.appendChild(this._amBtn);
                 // PM Button
                 this._pmBtn = document.createElement('div');
-                this._pmBtn.classList.add('pm-btn');
+                this._pmBtn.classList.add('pm-btn', 'btn');
                 this._pmBtn.innerText = 'PM';
                 this._pmBtn.addEventListener('click', this._handleAmPmClick);
                 this.spanAmPm.appendChild(this._pmBtn);
@@ -6048,8 +6307,10 @@ var M = (function (exports) {
                     const tick = $tick.cloneNode(true);
                     const radian = (i / 6) * Math.PI;
                     const radius = this.options.outerRadius;
-                    tick.style.left = this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
-                    tick.style.top = this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
+                    tick.style.left =
+                        this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
+                    tick.style.top =
+                        this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
                     tick.innerHTML = i === 0 ? '00' : i.toString();
                     this.hoursView.appendChild(tick);
                     // tick.on(mousedownEvent, mousedown);
@@ -6061,8 +6322,10 @@ var M = (function (exports) {
                     const radian = (i / 6) * Math.PI;
                     const inner = i > 0 && i < 13;
                     const radius = inner ? this.options.innerRadius : this.options.outerRadius;
-                    tick.style.left = this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
-                    tick.style.top = this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
+                    tick.style.left =
+                        this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
+                    tick.style.top =
+                        this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
                     tick.innerHTML = i === 0 ? '00' : i.toString();
                     this.hoursView.appendChild(tick);
                     // tick.on(mousedownEvent, mousedown);
@@ -6098,12 +6361,12 @@ var M = (function (exports) {
         _updateAmPmView() {
             if (this.options.twelveHour) {
                 if (this.amOrPm === 'PM') {
-                    this._amBtn.classList.remove('text-primary');
-                    this._pmBtn.classList.add('text-primary');
+                    this._amBtn.classList.remove('filled');
+                    this._pmBtn.classList.add('filled');
                 }
                 else if (this.amOrPm === 'AM') {
-                    this._amBtn.classList.add('text-primary');
-                    this._pmBtn.classList.remove('text-primary');
+                    this._amBtn.classList.add('filled');
+                    this._pmBtn.classList.remove('filled');
                 }
             }
         }
@@ -6128,7 +6391,7 @@ var M = (function (exports) {
             }
             this.hours = +value[0] || 0;
             this.minutes = +value[1] || 0;
-            this.inputHours.value = this.hours;
+            this.inputHours.value = Timepicker._addLeadingZero(this.hours);
             this.inputMinutes.value = Timepicker._addLeadingZero(this.minutes);
             this._updateAmPmView();
         }
@@ -6175,31 +6438,26 @@ var M = (function (exports) {
         }
         _inputFromTextField = () => {
             const isHours = this.currentView === 'hours';
-            if (isHours) {
+            if (isHours && this.inputHours.value !== '') {
                 const value = parseInt(this.inputHours.value);
-                if (value > 0 && value < 13) {
-                    this.drawClockFromTimeInput(value, isHours);
-                    this.showView('minutes', this.options.duration / 2);
+                if (value > 0 && value < (this.options.twelveHour ? 13 : 24)) {
                     this.hours = value;
-                    this.inputMinutes.focus();
                 }
                 else {
-                    const hour = new Date().getHours();
-                    this.inputHours.value = (hour % 12).toString();
+                    this.setHoursDefault();
                 }
+                this.drawClockFromTimeInput(this.hours, isHours);
             }
-            else {
+            else if (!isHours && this.inputMinutes.value !== '') {
                 const value = parseInt(this.inputMinutes.value);
                 if (value >= 0 && value < 60) {
-                    this.inputMinutes.value = Timepicker._addLeadingZero(value);
-                    this.drawClockFromTimeInput(value, isHours);
                     this.minutes = value;
-                    this.modalEl.querySelector('.confirmation-btns :nth-child(2)').focus();
                 }
                 else {
-                    const minutes = new Date().getMinutes();
-                    this.inputMinutes.value = Timepicker._addLeadingZero(minutes);
+                    this.minutes = new Date().getMinutes();
+                    this.inputMinutes.value = this.minutes;
                 }
+                this.drawClockFromTimeInput(this.minutes, isHours);
             }
         };
         drawClockFromTimeInput(value, isHours) {
@@ -6209,11 +6467,11 @@ var M = (function (exports) {
             if (this.options.twelveHour) {
                 radius = this.options.outerRadius;
             }
-            let cx1 = Math.sin(radian) * (radius - this.options.tickRadius), cy1 = -Math.cos(radian) * (radius - this.options.tickRadius), cx2 = Math.sin(radian) * radius, cy2 = -Math.cos(radian) * radius;
-            this.hand.setAttribute('x2', cx1.toString());
-            this.hand.setAttribute('y2', cy1.toString());
-            this.bg.setAttribute('cx', cx2.toString());
-            this.bg.setAttribute('cy', cy2.toString());
+            else {
+                radius =
+                    isHours && value > 0 && value < 13 ? this.options.innerRadius : this.options.outerRadius;
+            }
+            this.setClockAttributes(radian, radius);
         }
         setHand(x, y, roundBy5 = false) {
             let radian = Math.atan2(x, -y), isHours = this.currentView === 'hours', unit = Math.PI / (isHours || roundBy5 ? 6 : 30), z = Math.sqrt(x * x + y * y), inner = isHours && z < (this.options.outerRadius + this.options.innerRadius) / 2, radius = inner ? this.options.innerRadius : this.options.outerRadius;
@@ -6271,38 +6529,35 @@ var M = (function (exports) {
             }
             this[this.currentView] = value;
             if (isHours) {
-                this.inputHours.value = value.toString();
+                this.inputHours.value = Timepicker._addLeadingZero(value);
             }
             else {
                 this.inputMinutes.value = Timepicker._addLeadingZero(value);
             }
             // Set clock hand and others' position
+            this.setClockAttributes(radian, radius);
+        }
+        setClockAttributes(radian, radius) {
             let cx1 = Math.sin(radian) * (radius - this.options.tickRadius), cy1 = -Math.cos(radian) * (radius - this.options.tickRadius), cx2 = Math.sin(radian) * radius, cy2 = -Math.cos(radian) * radius;
             this.hand.setAttribute('x2', cx1.toString());
             this.hand.setAttribute('y2', cy1.toString());
             this.bg.setAttribute('cx', cx2.toString());
             this.bg.setAttribute('cy', cy2.toString());
         }
-        /**
-         * Open timepicker.
-         */
-        open = () => {
-            if (this.isOpen)
-                return;
-            this.isOpen = true;
-            this._updateTimeFromInput();
-            this.showView('hours');
-            this.modal.open(undefined);
-        };
-        /**
-         * Close timepicker.
-         */
-        close = () => {
-            if (!this.isOpen)
-                return;
-            this.isOpen = false;
-            this.modal.close();
-        };
+        formatHours() {
+            if (this.inputHours.value == '')
+                this.setHoursDefault();
+            this.inputHours.value = Timepicker._addLeadingZero(Number(this.inputHours.value));
+        }
+        formatMinutes() {
+            if (this.inputMinutes.value == '')
+                this.minutes = new Date().getMinutes();
+            this.inputMinutes.value = Timepicker._addLeadingZero(Number(this.inputMinutes.value));
+        }
+        setHoursDefault() {
+            this.hours = new Date().getHours();
+            this.inputHours.value = (this.hours % (this.options.twelveHour ? 12 : 24)).toString();
+        }
         done = (e = null, clearValue = null) => {
             // Set input value
             let last = this.el.value;
@@ -6318,12 +6573,22 @@ var M = (function (exports) {
             if (value !== last) {
                 this.el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true, composed: true }));
             }
-            this.close();
-            this.el.focus();
+            //this.el.focus();
         };
         clear = () => {
             this.done(null, true);
         };
+        // deprecated
+        open() {
+            // this._updateTimeFromInput();
+            // this.showView('hours');
+            console.warn('Timepicker.close() is deprecated. Remove this method and wrap in modal yourself.');
+            return this;
+        }
+        close() {
+            console.warn('Timepicker.close() is deprecated. Remove this method and wrap in modal yourself.');
+            return this;
+        }
         static {
             Timepicker._template = `
       <div class="modal timepicker-modal">
@@ -6331,9 +6596,15 @@ var M = (function (exports) {
           <div class="timepicker-digital-display">
             <div class="timepicker-text-container">
               <div class="timepicker-display-column">
-                <input type="text" maxlength="2" autofocus class="timepicker-input-hours text-primary" />
-                :
-                <input type="text" maxlength="2" class="timepicker-input-minutes" />
+                <div class="timepicker-input-hours-wrapper">
+                  <input type="text" maxlength="2" autofocus class="timepicker-input-hours text-primary" />
+                </div>
+                <div class="timepicker-input-divider-wrapper">
+                  <span class="timepicker-input-divider">:</span>
+                </div>
+                <div class="timepicker-input-minutes-wrapper">
+                  <input type="text" maxlength="2" class="timepicker-input-minutes" />
+                </div>
               </div>
               <div class="timepicker-display-column timepicker-display-am-pm">
                 <div class="timepicker-span-am-pm"></div>
@@ -6349,7 +6620,7 @@ var M = (function (exports) {
             <div class="timepicker-footer"></div>
           </div>
         </div>
-      </div`;
+      </div>`;
         }
     }
 
@@ -7499,7 +7770,7 @@ var M = (function (exports) {
         }
     }
 
-    const version = '2.1.1';
+    const version = '2.2.0';
     const Grid = (children = '') => {
         return `<div class="row">${children}</row>`;
     };
@@ -7509,10 +7780,12 @@ var M = (function (exports) {
     /**
      * Automatically initialize components.
      * @param context Root element to initialize. Defaults to `document.body`.
+     * @param options Options for each component.
      */
-    function AutoInit(context = document.body) {
+    function AutoInit(context = document.body, options) {
         let registry = {
             Autocomplete: context.querySelectorAll('.autocomplete:not(.no-autoinit)'),
+            Cards: context.querySelectorAll('.cards:not(.no-autoinit)'),
             Carousel: context.querySelectorAll('.carousel:not(.no-autoinit)'),
             Chips: context.querySelectorAll('.chips:not(.no-autoinit)'),
             Collapsible: context.querySelectorAll('.collapsible:not(.no-autoinit)'),
@@ -7531,24 +7804,25 @@ var M = (function (exports) {
             Tooltip: context.querySelectorAll('.tooltipped:not(.no-autoinit)'),
             FloatingActionButton: context.querySelectorAll('.fixed-action-btn:not(.no-autoinit)')
         };
-        Autocomplete.init(registry.Autocomplete, {});
-        Carousel.init(registry.Carousel, {});
-        Chips.init(registry.Chips, {});
-        Collapsible.init(registry.Collapsible, {});
-        Datepicker.init(registry.Datepicker, {});
-        Dropdown.init(registry.Dropdown, {});
-        Materialbox.init(registry.Materialbox, {});
-        Modal.init(registry.Modal, {});
-        Parallax.init(registry.Parallax, {});
-        Pushpin.init(registry.Pushpin, {});
-        ScrollSpy.init(registry.ScrollSpy, {});
-        FormSelect.init(registry.FormSelect, {});
-        Sidenav.init(registry.Sidenav, {});
-        Tabs.init(registry.Tabs, {});
-        TapTarget.init(registry.TapTarget, {});
-        Timepicker.init(registry.Timepicker, {});
-        Tooltip.init(registry.Tooltip, {});
-        FloatingActionButton.init(registry.FloatingActionButton, {});
+        Autocomplete.init(registry.Autocomplete, options?.Autocomplete ?? {});
+        Cards.init(registry.Cards, options?.Cards ?? {});
+        Carousel.init(registry.Carousel, options?.Carousel ?? {});
+        Chips.init(registry.Chips, options?.Chips ?? {});
+        Collapsible.init(registry.Collapsible, options?.Collapsible ?? {});
+        Datepicker.init(registry.Datepicker, options?.Datepicker ?? {});
+        Dropdown.init(registry.Dropdown, options?.Dropdown ?? {});
+        Materialbox.init(registry.Materialbox, options?.Materialbox ?? {});
+        Modal.init(registry.Modal, options?.Modal ?? {});
+        Parallax.init(registry.Parallax, options?.Parallax ?? {});
+        Pushpin.init(registry.Pushpin, options?.Pushpin ?? {});
+        ScrollSpy.init(registry.ScrollSpy, options?.ScrollSpy ?? {});
+        FormSelect.init(registry.FormSelect, options?.FormSelect ?? {});
+        Sidenav.init(registry.Sidenav, options?.Sidenav ?? {});
+        Tabs.init(registry.Tabs, options?.Tabs ?? {});
+        TapTarget.init(registry.TapTarget, options?.TapTarget ?? {});
+        Timepicker.init(registry.Timepicker, options?.Timepicker ?? {});
+        Tooltip.init(registry.Tooltip, options?.Tooltip ?? {});
+        FloatingActionButton.init(registry.FloatingActionButton, options?.FloatingActionButton ?? {});
     }
     // Init
     if (typeof document !== 'undefined') {
@@ -7557,7 +7831,6 @@ var M = (function (exports) {
         document.addEventListener('focus', Utils.docHandleFocus, true);
         document.addEventListener('blur', Utils.docHandleBlur, true);
     }
-    Cards.Init();
     Forms.Init();
     Chips.Init();
     Waves.Init();

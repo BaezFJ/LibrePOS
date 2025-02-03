@@ -1,5 +1,5 @@
 /*!
-* Materialize v2.1.1 (https://materializeweb.com)
+* Materialize v2.2.0 (https://materializeweb.com)
 * Copyright 2014-2024 Materialize
 * MIT License (https://raw.githubusercontent.com/materializecss/materialize/master/LICENSE)
 */
@@ -4414,6 +4414,10 @@ nav ul a span.badge {
 .collapsible span.badge {
   margin-left: auto;
 }
+.collapsible span.badge.leading {
+  margin-right: 7px;
+  order: -1;
+}
 
 .collapsible .active span.badge:not(.new) {
   color: var(--md-sys-color-on-surface-variant);
@@ -5190,9 +5194,6 @@ small {
   font-size: 24px;
   font-weight: 300;
 }
-.card .card-title.activator {
-  cursor: pointer;
-}
 .card.small, .card.medium, .card.large {
   position: relative;
 }
@@ -5278,6 +5279,14 @@ small {
   max-width: 100%;
   padding: 24px;
 }
+.card .card-image .activator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+}
 .card .card-content {
   padding: 24px;
   border-radius: 0 0 2px 2px;
@@ -5292,6 +5301,9 @@ small {
 }
 .card .card-content .card-title i {
   line-height: 32px;
+}
+.card .card-content .card-title.activator {
+  cursor: pointer;
 }
 .card .card-action {
   border-top: 1px solid var(--md-sys-color-outline-variant);
@@ -5398,7 +5410,6 @@ small {
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
-  height: 48px;
   width: 100%;
   background-color: var(--md-sys-color-surface);
   margin: 0 auto;
@@ -5442,15 +5453,25 @@ small {
   display: inline-block;
   text-align: center;
   line-height: 48px;
-  height: 48px;
   padding: 0;
   margin: 0;
 }
+.tabs .tab i.material-icons {
+  position: relative;
+  top: 8px;
+  vertical-align: middle;
+}
+.tabs .tab span {
+  height: 24px;
+  line-height: 20px;
+}
 .tabs .tab a {
   color: var(--md-sys-color-on-surface-variant);
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
+  min-height: 48px;
   padding: 0 24px;
   font-size: 14px;
   text-overflow: ellipsis;
@@ -5485,6 +5506,18 @@ small {
   background-color: var(--md-sys-color-primary);
   will-change: left, right;
   border-radius: 3px 3px 0 0;
+}
+.tabs.tabs-horizontal .tab {
+  height: 48px;
+}
+.tabs.tabs-horizontal .tab a {
+  display: block;
+}
+.tabs.tabs-horizontal .tab i.material-icons {
+  padding: 0 4px;
+  position: relative;
+  top: -2px;
+  vertical-align: middle;
 }
 
 /* Fixed Sidenav hide on smaller */
@@ -5553,7 +5586,7 @@ small {
   border-radius: var(--btn-border-radius);
   padding-left: var(--btn-padding);
   padding-right: var(--btn-padding);
-  font-size: ver(--btn-font-size);
+  font-size: var(--btn-font-size);
   font-weight: 500;
   text-decoration: none;
   display: inline-flex;
@@ -5719,7 +5752,7 @@ small {
 }
 .btn-floating.btn-small {
   --btn-small-height: calc(0.75 * var(--btn-height));
-  width: var(--btn-small-height) e;
+  width: var(--btn-small-height);
   height: var(--btn-small-height);
 }
 .btn-floating.btn-small.halfway-fab {
@@ -5961,91 +5994,58 @@ body.keyboard-focused .dropdown-content li:focus {
 }
 
 .modal {
-  --modal-footer-height: 56px;
   --modal-footer-divider-height: 1px;
   --modal-border-radius: 28px;
   --modal-padding: 24px;
-  display: none;
-  position: fixed;
-  left: 0;
-  right: 0;
-  background-color: var(--md-sys-color-surface);
+  --modal-padding-bottom: 16px;
+  border: none;
+  outline: none;
   padding: 0;
   max-height: 70%;
   width: 55%;
-  margin: auto;
-  overflow-y: auto;
   border-radius: var(--modal-border-radius);
   will-change: top, opacity;
+  background-color: color-mix(in srgb, var(--md-sys-color-surface), var(--md-sys-color-surface-tint) 17%);
 }
-.modal:focus {
-  outline: none;
+.modal[open] {
+  display: flex;
+  flex-direction: column;
 }
 @media only screen and (max-width : 992.99px) {
   .modal {
     width: 80%;
   }
 }
-.modal h1, .modal h2, .modal h3, .modal h4 {
-  margin-top: 0;
+.modal::backdrop {
+  backdrop-filter: blur(1px);
+}
+.modal .modal-header {
+  padding: var(--modal-padding);
+  padding-bottom: var(--modal-padding-bottom);
+  flex-shrink: 0;
 }
 .modal .modal-content {
+  padding: 0 var(--modal-padding);
+  overflow-y: auto;
+}
+.modal .modal-footer {
+  border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
   padding: var(--modal-padding);
-  overflow-y: hidden;
+  text-align: right;
+  flex-shrink: 0;
 }
 .modal .modal-close {
   cursor: pointer;
 }
-.modal .modal-footer {
-  border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
-  background-color: var(--md-sys-color-surface);
-  padding: 4px 6px;
-  height: var(--modal-footer-height);
-  width: 100%;
-  text-align: right;
-}
-.modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-small, .modal .modal-footer .btn-flat {
-  margin: 6px 0;
-}
-
-.modal-overlay {
-  position: fixed;
-  z-index: 999;
-  top: -25%;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  height: 125%;
-  width: 100%;
-  background: #000;
-  display: none;
-  will-change: opacity;
-}
-
-.modal.modal-fixed-footer {
-  padding: 0;
-  height: 70%;
-}
-.modal.modal-fixed-footer .modal-content {
-  position: absolute;
-  height: calc(100% - var(--modal-footer-height));
-  max-height: 100%;
-  width: 100%;
-  overflow-y: auto;
-}
-.modal.modal-fixed-footer .modal-footer {
-  border-top: var(--modal-footer-divider-height) solid var(--md-sys-color-outline-variant);
-  position: absolute;
-  bottom: var(--modal-footer-divider-height);
+.modal h1, .modal h2, .modal h3, .modal h4, .modal h5, .modal h6 {
+  margin: 0;
 }
 
 .modal.bottom-sheet {
-  top: auto;
-  bottom: -100%;
-  margin: 0;
-  width: 100%;
+  margin-bottom: 0;
   max-height: 45%;
-  border-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   will-change: bottom, opacity;
 }
 
@@ -6078,18 +6078,24 @@ body.keyboard-focused .dropdown-content li:focus {
 }
 
 .collapsible-header::after {
-  content: "▾";
-  text-align: right;
-  margin-right: 0.25rem;
-  width: 100%;
+  content: "\e5cf";
+  margin-left: 0.5rem;
+  font-family: "Material Symbols Outlined", "Material Symbols Rounded", "Material Symbols Sharp", "Material Icons";
+  font-size: 25px;
+  line-height: 0.9;
+  -webkit-font-smoothing: antialiased;
 }
 
 .active .collapsible-header::after {
-  content: "▴";
+  content: "\e5ce";
 }
 
 .keyboard-focused .collapsible-header:focus {
   background-color: rgba(0, 0, 0, 0.12);
+}
+
+.collapsible-header-content {
+  flex-grow: 1;
 }
 
 .collapsible-body {
@@ -6179,7 +6185,6 @@ body.keyboard-focused .dropdown-content li:focus {
   gap: 4px;
   flex-wrap: wrap;
   border: none;
-  border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
   box-shadow: none;
   margin: 0 0 8px 0;
   padding: 4px;
@@ -6190,7 +6195,10 @@ body.keyboard-focused .dropdown-content li:focus {
   border-bottom: 1px solid var(--md-sys-color-primary);
   box-shadow: 0 1px 0 0 var(--md-sys-color-primary);
 }
-.chips:hover {
+.chips.input-field {
+  border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
+}
+.chips.input-field:hover {
   cursor: text;
 }
 .chips input:not([type]):not(.browser-default).input {
@@ -6204,6 +6212,9 @@ body.keyboard-focused .dropdown-content li:focus {
   margin: 0;
   padding: 0;
   width: 120px;
+  width: fit-content;
+  min-width: 100px;
+  max-width: 200px;
 }
 .chips input:not([type]):not(.browser-default).input:focus {
   border: 0;
@@ -6313,17 +6324,20 @@ textarea.materialize-textarea {
   height: 56px;
 }
 
-/* Validation Sass Placeholders */
-/*
-%custom-success-message {
-  content: attr(data-success);
-  color: $success-color;
+.input-field input.invalid, .input-field textarea.invalid {
+  border-bottom: 2px solid var(--md-sys-color-error);
+  box-shadow: 0 1px 0 0 var(--md-sys-color-error);
 }
-%custom-error-message {
+
+.input-field input.invalid ~ .supporting-text[data-error] > span, .input-field textarea.invalid ~ .supporting-text[data-error] > span {
+  display: none;
+}
+
+.input-field input.invalid ~ .supporting-text:after, .input-field textarea.invalid ~ .supporting-text:after {
   content: attr(data-error);
   color: var(--md-sys-color-error);
 }
-*/
+
 .input-field {
   --input-color: var(--md-sys-color-primary);
   position: relative;
@@ -6358,6 +6372,9 @@ textarea.materialize-textarea {
 }
 .input-field input:disabled + label, .input-field input[readonly=readonly] + label, .input-field textarea:disabled + label, .input-field textarea[readonly=readonly] + label {
   color: rgba(var(--md_sys_color_on-surface), 0.38);
+}
+.input-field input.invalid ~ label, .input-field input:focus.invalid ~ label, .input-field textarea.invalid ~ label, .input-field textarea:focus.invalid ~ label {
+  color: var(--md-sys-color-error);
 }
 .input-field input::placeholder {
   user-select: none;
@@ -6534,6 +6551,26 @@ textarea.materialize-textarea {
   height: 40px;
   width: 40px;
   margin: 5px 15px;
+}
+
+/* Datepicker date input fields */
+.datepicker-date-input {
+  position: relative;
+  text-indent: -9999px;
+}
+.datepicker-date-input::after {
+  display: block;
+  position: absolute;
+  top: 1.1rem;
+  content: attr(data-date);
+  color: var(--input-color);
+  text-indent: 0;
+}
+.datepicker-date-input:focus-visible {
+  text-indent: 0;
+}
+.datepicker-date-input:focus-visible:after {
+  text-indent: -9999px;
 }
 
 [type=radio]:not(:checked),
@@ -8368,6 +8405,10 @@ input[type=range]::-ms-thumb {
 .datepicker-controls .select-wrapper .caret {
   display: none;
 }
+.datepicker-controls .select-dropdown {
+  padding: 0;
+  vertical-align: middle;
+}
 .datepicker-controls .select-year input {
   width: 50px;
 }
@@ -8385,6 +8426,7 @@ input[type=range]::-ms-thumb {
 }
 
 .month-prev, .month-next {
+  height: 49px;
   margin-top: 4px;
   cursor: pointer;
   background-color: transparent;
@@ -8530,28 +8572,38 @@ input[type=range]::-ms-thumb {
 
 /* Clock Digital Display */
 .timepicker-digital-display {
-  width: 200px;
+  width: auto;
   flex: 1 auto;
   background-color: var(--md-sys-color-primary);
-  padding: 10px;
+  padding: 2rem 0.67rem 0.67rem 0.67rem;
   font-weight: 300;
 }
 
 .timepicker-text-container {
   font-size: 4rem;
-  font-weight: bold;
-  text-align: center;
+  text-align: left;
   color: var(--font-on-primary-color-medium);
   font-weight: 400;
   position: relative;
   user-select: none;
+  padding: 1rem 1rem 1.5rem 1rem;
 }
 .timepicker-text-container input[type=text] {
   height: 4rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--md-sys-color-secondary);
   border-bottom: 0px;
   font-size: 4rem;
   direction: ltr;
+}
+
+.timepicker-display-column {
+  display: inline-flex;
+}
+
+.timepicker-input-hours-wrapper,
+.timepicker-input-minutes-wrapper {
+  width: 6.9rem;
+  height: 5.2rem;
 }
 
 .timepicker-input-hours,
@@ -8560,45 +8612,75 @@ input[type=range]::-ms-thumb {
   cursor: pointer;
 }
 
-input[type=text].timepicker-input-hours {
-  text-align: right;
-  width: 28%;
-  margin-right: 3px;
+input[type=text].timepicker-input-hours,
+input[type=text].timepicker-input-minutes {
+  height: 100%;
+  padding: 0.8rem;
+  border: 0;
+  text-align: center;
 }
 
-input[type=text].timepicker-input-minutes {
-  width: 33%;
-  margin-left: 3px;
+.timepicker-input-divider-wrapper {
+  width: 1.6rem;
+  text-align: center;
 }
 
 input[type=text].text-primary {
-  color: rgb(255, 255, 255);
+  color: var(--md-sys-color-on-background);
 }
 
 .timepicker-display-am-pm {
   font-size: 1.3rem;
   position: absolute;
+  top: 1rem;
   right: 1rem;
-  bottom: 1rem;
   font-weight: 400;
+}
+
+.timepicker-span-am-pm {
+  height: 5.2rem;
+  max-width: 3.5rem;
+}
+
+.timepicker-modal .am-btn,
+.timepicker-modal .pm-btn {
+  width: 3.6rem;
+  height: 50%;
+  padding-left: calc(var(--btn-padding) / 1.6);
+  padding-right: calc(var(--btn-padding) / 1.6);
+  line-height: 2rem;
+  vertical-align: middle;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.timepicker-modal .am-btn {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.timepicker-modal .pm-btn {
+  border-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 /* Analog Clock Display */
 .timepicker-analog-display {
   flex: 2.5 auto;
+  padding: 0.67rem;
   background-color: var(--md-sys-color-surface);
 }
 
 .timepicker-plate {
   background-color: rgba(0, 0, 0, 0.09);
   border-radius: 50%;
-  width: 270px;
-  height: 270px;
+  width: 260px;
+  height: 260px;
   overflow: visible;
   position: relative;
-  margin: auto;
-  margin-top: 25px;
-  margin-bottom: 5px;
+  margin: 2rem 1.6rem 1.6rem 1.6rem;
   user-select: none;
 }
 
@@ -8691,21 +8773,49 @@ input[type=text].text-primary {
 }
 
 /* Media Queries */
-@media only screen and (min-width : 601px) {
+@media only screen and (min-width : 993px) {
   .timepicker-modal {
-    max-width: 600px;
+    width: auto;
+    max-width: 620px;
   }
   .timepicker-container.modal-content {
     flex-direction: row;
   }
+  .timepicker-digital-display {
+    padding: 0.67rem;
+  }
   .timepicker-text-container {
-    top: 32%;
+    top: 31%;
+    text-align: center;
   }
   .timepicker-display-am-pm {
     position: relative;
+    top: auto;
     right: auto;
-    bottom: auto;
     text-align: center;
     margin-top: 1.2rem;
+  }
+  .timepicker-span-am-pm {
+    max-width: unset;
+  }
+  .timepicker-modal .am-btn,
+  .timepicker-modal .pm-btn {
+    width: auto;
+    padding-left: var(--btn-padding);
+    padding-right: var(--btn-padding);
+    border-radius: var(--btn-border-radius);
+    border: 1px solid var(--md-sys-color-outline);
+    line-height: inherit;
+    vertical-align: top;
+    text-align: inherit;
+  }
+  .timepicker-modal .am-btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .timepicker-modal .pm-btn {
+    border-left: 0;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
   }
 }
