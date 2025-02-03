@@ -1,10 +1,11 @@
 import secrets
 import uuid
 from datetime import datetime
+from urllib.parse import urlparse, urljoin
 
 import pytz
 from better_profanity import profanity
-from flask import current_app
+from flask import current_app, request
 from slugify import slugify
 
 
@@ -95,3 +96,9 @@ def cents_to_dollars(cents: int) -> float:
 def dollars_to_cents(dollars: float) -> int:
     """Convert dollars to cents."""
     return int(dollars * 100)
+
+
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
