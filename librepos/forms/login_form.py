@@ -1,8 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SubmitField, SelectField, FloatField, PasswordField
-from wtforms.validators import DataRequired, Email
+from wtforms import (
+    StringField,
+    BooleanField,
+    SubmitField,
+    PasswordField,
+)
+from wtforms.validators import DataRequired
 
 kw = {"placeholder": " "}
+
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()], render_kw=kw)

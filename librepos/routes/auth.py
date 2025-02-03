@@ -2,7 +2,7 @@
 File: auth.py
 Author: [javier]
 Date: [2/1/25]
-Description: 
+Description:
     This module is responsible for handling user authentication, including login, registration,
     and related functionality. It defines routes for the login and registration pages and
     integrates form validation and user authentication logic.
@@ -28,9 +28,7 @@ def login():
         user = authenticate_user(form.username.data, form.password.data)
         if user:
             login_user(user, remember=form.remember_me.data)
-            flash(
-                f"Welcome back, {user.username}! You are now logged in.", "success"
-            )
+            flash(f"Welcome back, {user.username}! You are now logged in.", "success")
             return redirect(url_for("dashboard.get_dashboard"))
         else:
             flash("Invalid credentials.", "danger")
@@ -39,9 +37,7 @@ def login():
 
 @auth_bp.get("/register")
 def get_register():
-    context = {
-        "title": "Register"
-    }
+    context = {"title": "Register"}
     return render_template("auth/register.html", **context)
 
 

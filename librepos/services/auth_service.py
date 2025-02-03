@@ -4,12 +4,19 @@ from librepos.extensions import db
 from librepos.models.user import User
 
 
-def register_user(username: str, password: str, email: str, first_name: str, last_name: str):
+def register_user(
+    username: str, password: str, email: str, first_name: str, last_name: str
+):
     user = User.query.filter_by(username=username).first()
     if user:
         return False, "Username already exists."
-    user = User(username=username, password=generate_password_hash(password), email=email, first_name=first_name,
-                last_name=last_name)
+    user = User(
+        username=username,
+        password=generate_password_hash(password),
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+    )
     db.session.add(user)
     db.session.commit()
     return True, "User registered successfully."

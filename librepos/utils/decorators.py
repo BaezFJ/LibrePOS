@@ -28,9 +28,14 @@ def permission_required(permission: str):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             if not current_user.role.has_permission(permission):
-                flash(f"You don't have the appropriate permissions to access this page.", "danger")
+                flash(
+                    "You don't have the appropriate permissions to access this page.",
+                    "danger",
+                )
                 next_url = request.args.get("next", "")
-                next_url = next_url.replace("\\", "")  # In case backslashes might break parsing
+                next_url = next_url.replace(
+                    "\\", ""
+                )  # In case backslashes might break parsing
                 if not next_url or not is_safe_url(next_url):
                     next_url = url_for("dashboard.get_dashboard")
                 return redirect(next_url)
