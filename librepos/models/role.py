@@ -23,7 +23,7 @@ class Role(CRUDMixin, db.Model):
     users = db.relationship("User", back_populates="role")
     permissions = db.relationship("RolePermission", back_populates="role")
 
-    def has_permission(self, permission_name):
+    def has_permission(self, permission_name: str):
         """Check if the role has the given permission."""
         from librepos.models.role_permission import RolePermission
 
