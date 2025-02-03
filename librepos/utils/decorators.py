@@ -6,19 +6,54 @@ from flask_login import current_user
 from librepos.utils.helpers import is_safe_url
 
 
+def user_has_permission(permission: str):
+    """
+    Determines if the currently authenticated user has a specific permission.
+
+    :param permission: Permission to check for the current user.
+    :type permission: str
+    :return: Boolean indicating whether the user has the specified permission.
+    :rtype: bool
+    """
+    return hasattr(current_user, "role") and current_user.role.has_permission(permission)
+
+
+def get_safe_redirect_url(default="dashboard.get_dashboard"):
+    """
+    Returns a safe redirect URL based on a user-provided "next" parameter. If the
+    provided "next" URL is unsafe or absent, the function defaults to a specified
+    fallback URL.
+
+    The function ensures that user-provided input does not lead to unsafe
+    redirects by validating the URL's safety using the `is_safe_url` function.
+    Unsafe user input will be replaced with a secure default.
+
+    :param default: Fallback route name to use if the provided URL is unsafe or
+        not specified. Defaults to "dashboard.get_dashboard".
+    :type default: str
+    :return: A safe URL string for redirection.
+    :rtype: str
+    """
+    next_url = request.args.get("next", "")
+    next_url = next_url.replace("\\", "")
+    if not next_url or not is_safe_url(next_url):
+        next_url = url_for(default)
+    return next_url
+
+
 def permission_required(permission: str):
     """
-    Decorator to enforce that the current user has the required permission to access
-    a specific route or function. If the user lacks the required permission, they will
-    be redirected to a safe URL, and an appropriate flash message will be displayed.
+    Decorator to restrict access to a route based on a user's permission. This decorator checks
+    whether the current user holds the required permission before accessing the decorated function.
+    If the user does not have the required permission, they will be flashed a message and redirected
+    to a safe URL.
 
-    The decorator checks the user's permission via their role and ensures that any
-    passed "next" URL is safe before redirecting.
+    This function takes a `permission` argument that specifies the permission string necessary to
+    access the route.
 
-    :param permission: The specific permission required to access the wrapped route
-        or function.
+    :param permission: The permission string required to access the decorated route
     :type permission: str
-    :return: A decorated function that enforces the permission check.
+    :return: A decorator function that restricts access based on the specified permission
     :rtype: Callable
     """
 
@@ -27,18 +62,9 @@ def permission_required(permission: str):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if not current_user.role.has_permission(permission):
-                flash(
-                    "You don't have the appropriate permissions to access this page.",
-                    "danger",
-                )
-                next_url = request.args.get("next", "")
-                next_url = next_url.replace(
-                    "\\", ""
-                )  # In case backslashes might break parsing
-                if not next_url or not is_safe_url(next_url):
-                    next_url = url_for("dashboard.get_dashboard")
-                return redirect(next_url)
+            if not user_has_permission(permission):
+                flash("You don't have the appropriate permissions to access this page.", "danger")
+                return redirect(get_safe_redirect_url())
             return f(*args, **kwargs)
 
         return decorated_function
