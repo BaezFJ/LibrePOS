@@ -24,10 +24,10 @@ def permission_required(permission: str):
         @login_required
         def decorated_function(*args, **kwargs):
             if not current_user.role.has_permission(permission):
-                next_url = request.args.get("next")
-                if next_url:
-                    next_url = next_url.replace("\\", "")
-                if not next_url or urlsplit(next_url).netloc != "":
+                next_url = request.args.get("next", "")
+                next_url = next_url.replace("\\", "")
+                parsed_url = urlparse(next_url)
+                if not next_url or parsed_url.netloc or parsed_url.scheme:
                     next_url = url_for("dashboard.get_dashboard")
                 return redirect(next_url)
             return f(*args, **kwargs)
@@ -52,10 +52,11 @@ def admin_required(f):
     @login_required
     def decorated_function(*args, **kwargs):
         if not current_user.role.is_admin:
-            next_url = request.args.get("next")
-            if next_url:
-                next_url = safe_next_url(next_url)
-                flash("You do not have permission to do that.", "danger")
+            next_url = request.args.get("next", "")
+            next_url = next_url.replace("\\", "")
+            parsed_url = urlparse(next_url)
+            if not next_url or parsed_url.netloc or parsed_url.scheme:
+                next_url = url_for("dashboard.get_dashboard")
                 return redirect(next_url)
             return redirect(url_for("user.get_dashboard"))
         return f(*args, **kwargs)
