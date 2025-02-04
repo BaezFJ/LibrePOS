@@ -20,7 +20,10 @@ def permission_required(permission: str):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             if not user_has_permission(permission):
-                flash("You don't have the appropriate permissions to access this page.", "danger")
+                flash(
+                    "You don't have the appropriate permissions to access this page.",
+                    "danger",
+                )
                 return redirect(url_for("dashboard.get_dashboard"))
             return f(*args, **kwargs)
 

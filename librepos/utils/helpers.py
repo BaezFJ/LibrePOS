@@ -1,12 +1,10 @@
 import secrets
 import uuid
 from datetime import datetime
-from urllib.parse import urlparse, urljoin
 
 import pytz
 from better_profanity import profanity
-from flask import current_app, request, url_for
-from flask_login import current_user
+from flask import current_app
 from slugify import slugify
 
 
