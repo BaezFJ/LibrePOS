@@ -77,14 +77,16 @@
 <!--Application JavaScript-->
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 <!-- Flask Message -->
-{% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-        <script type="application/javascript">
-            {% for category, message in messages %}
-                new M.Toast({text: '{{ message|safe }}', displayLength: 1800, classes: "rounded {{ category }}"});
-            {% endfor %}
-        </script>
-    {% endif %}
-{% endwith %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    new M.Toast({text: "{{ message|safe }}", classes: "rounded {{ category }}"});
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    });
+</script>
 </body>
 </html>

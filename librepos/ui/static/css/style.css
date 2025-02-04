@@ -73,3 +73,19 @@ main > :first-child {
 .scrollable {
     overflow: scroll;
 }
+
+.success {
+    background-color: #a6e3a1;
+}
+
+.danger {
+    background-color: #f38ba8;
+}
+
+.info {
+    background-color: #89b4fa;
+}
+
+.warning {
+    background-color: #f9e2af;
+}
