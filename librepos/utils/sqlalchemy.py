@@ -57,6 +57,12 @@ class CRUDMixin:
         db.session.commit()
         return True
 
+    @classmethod
+    def get_by_id(cls, record_id):
+        """Get a record by its ID."""
+        instance = db.session.query(cls).filter_by(id=record_id).first_or_404()
+        return instance
+
     def save(self):
         """Save the current instance to the database."""
         db.session.add(self)

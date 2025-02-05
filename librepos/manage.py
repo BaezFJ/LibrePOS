@@ -1,10 +1,16 @@
 import click
 
-from .data.init_data import ROLES, PERMISSIONS
-from .models.permission import Permission
-from .models.role import Role
-from .models.role_permission import RolePermission
-from .models.user import User
+from librepos.blueprints.user.models import Group
+from librepos.blueprints.user.models import Permission
+from librepos.blueprints.user.models import Policy
+from librepos.blueprints.user.models import Role
+from librepos.blueprints.user.models import (
+    User,
+    PermissionPolicy,
+    PolicyGroup,
+    GroupUser,
+)
+from .data.init_data import ROLES, PERMISSIONS, POLICIES, GROUPS
 
 
 def add_cli_commands(app):
@@ -31,27 +37,49 @@ def add_cli_commands(app):
         db.create_all()
 
         populate_table(Permission, PERMISSIONS)
+        populate_table(Policy, POLICIES)
+        populate_table(Group, GROUPS)
         populate_table(Role, ROLES)
 
-        # Add all permissions to default admin role
-        admin_role = Role.query.filter_by(name="admin").first()
-        if admin_role:
-            for permission in Permission.query.all():
-                RolePermission.create(
-                    role_id=admin_role.id, permission_id=permission.id, assigned_by_id=0
+        # permission_policy
+        _permissions = Permission.query.all()
+        _administrator_access_policy = Policy.query.filter_by(
+            name="AdministratorAccess"
+        ).first()
+
+        if _administrator_access_policy:
+            for _permission in _permissions:
+                PermissionPolicy.create(
+                    permission_id=_permission.id,
+                    policy_id=_administrator_access_policy.id,
                 )
 
-            # Create default admin user
-            user_exists = User.query.filter_by(username="admin").first()
-            if not user_exists:
-                User.create(
-                    role_id=admin_role.id,
-                    username="admin",
-                    password_hash="librepos",
-                    first_name="librepos",
-                    last_name="forever",
-                    email="info@librepos.com",
-                )
+        _administrator_group = Group.query.filter_by(name="Administrator").first()
+        if _administrator_group:
+            PolicyGroup.create(
+                group_id=_administrator_group.id,
+                policy_id=_administrator_access_policy.id,
+            )
+
+        # Create default admin
+        user_exists = User.query.filter_by(username="admin").first()
+        admin_role = Role.query.filter_by(name="admin").first()
+        if not user_exists:
+            User.create(
+                role_id=admin_role.id,
+                username="admin",
+                password_hash="librepos",
+                first_name="librepos",
+                last_name="forever",
+                email="info@librepos.com",
+            )
+
+        # add the newly create admin user to the Administrator Group
+        admin_group = Group.query.filter_by(name="Administrator").first()
+        if admin_group:
+            admin_user = User.query.filter_by(username="admin").first()
+            if admin_user:
+                GroupUser.create(group_id=admin_group.id, user_id=admin_user.id)
 
         click.echo("Done!")
 

@@ -2,6 +2,9 @@
 const SERVICE_WORKER_SCRIPT = '/sw.js';
 const SERVICE_WORKER_SUCCESS_MSG = '--- Service Worker registered successfully ---';
 const SERVICE_WORKER_ERROR_MSG = '*** Service Worker registration failed ***';
+// Selector constants
+const TAB_SELECTOR = '.tabs';
+const TAB_CONTENT_SELECTOR = (selectedTabId) => `#${selectedTabId}-content`;
 
 // Service worker registration logic
 const registerServiceWorker = () => {
@@ -53,6 +56,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize modals
     initializeModals();
+
+    // Function to handle the 'onShow' event
+    const handleTabShow = (tab) => {
+        const selectedTabId = tab.getAttribute('id');
+        const tabContent = document.querySelector(TAB_CONTENT_SELECTOR(selectedTabId));
+        if (tabContent) {
+            tabContent.classList.add('active');
+        }
+    };
+
+    // Function to initialize tabs
+    const initializeTabs = () => {
+        const tabs = document.querySelectorAll(TAB_SELECTOR);
+        return M.Tabs.init(tabs, {
+            swipeable: true,
+            onShow: handleTabShow,
+        });
+    };
+
+    // Initialize tabs
+    initializeTabs();
 
     const initializeSelectElements = () => {
         const selectElements = document.querySelectorAll('select');

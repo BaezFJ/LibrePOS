@@ -20,7 +20,7 @@
 
         {{ render_list_link("", "Dashboard", "dashboard") }}
         {{ render_list_link("", "Inventory", "inventory") }}
-        {{ render_list_link("", "Users", "people") }}
+        {{ render_list_link(url_for("user.list_users"), "Users", "people") }}
         {{ render_list_link("", "Orders", "list_alt") }}
         {{ render_list_link("", "Customers", "groups") }}
 
