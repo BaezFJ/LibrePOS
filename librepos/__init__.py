@@ -33,7 +33,7 @@ def create_app():
 
 def init_extensions(app):
     from .extensions import db, login_manager
-    from librepos.models.user import User
+    from librepos.blueprints.user.models.user import User
 
     db.init_app(app)
     login_manager.init_app(app)
@@ -42,7 +42,7 @@ def init_extensions(app):
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return User.query.get(str(user_id))
 
 
 def custom_jinja_filters(app):

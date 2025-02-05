@@ -1,7 +1,12 @@
-from librepos.routes.dashboard import dashboard_bp
-from librepos.routes.auth import auth_bp
+from flask import redirect, url_for
+
+from librepos.blueprints import blueprints
 
 
 def register_urls(app):
-    app.register_blueprint(dashboard_bp)
-    app.register_blueprint(auth_bp)
+    @app.get("/")
+    def index():
+        return redirect(url_for("user.view_dashboard"))
+
+    for bp in blueprints:
+        app.register_blueprint(bp)

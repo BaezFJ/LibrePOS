@@ -9,7 +9,7 @@ class Permission(CRUDMixin, db.Model):
     def __init__(self, name, **kwargs):
         super(Permission, self).__init__(**kwargs)
 
-        self.name = name.lower()
+        self.name = name
         self.slug = generate_slug(name)
 
     # Columns
@@ -19,5 +19,11 @@ class Permission(CRUDMixin, db.Model):
     description = db.Column(db.String(256), nullable=True)
     is_active = db.Column(db.Boolean, default=True)
 
-    # Relationships
-    roles = db.relationship("RolePermission", back_populates="permission")
+    # Relationship to the join model
+    permission_policies = db.relationship(
+        "PermissionPolicy", back_populates="permission", cascade="all, delete-orphan"
+    )
+
+    @property
+    def policies(self):
+        return [pp.policy for pp in self.permission_policies]

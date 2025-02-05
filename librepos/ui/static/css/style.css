@@ -70,6 +70,10 @@ main > :first-child {
     align-content: center;
 }
 
+.space-between {
+    justify-content: space-between;
+}
+
 .scrollable {
     overflow: scroll;
 }
@@ -88,4 +92,15 @@ main > :first-child {
 
 .warning {
     background-color: #f9e2af;
+}
+
+.btn.outlined.danger {
+    color: #f38ba8;
+    border-color: #f38ba8;
+}
+
+.outlined {
+    border: 1px solid;
+    border-radius: .75rem;
+    padding: 0.25rem 0.5rem;
 }

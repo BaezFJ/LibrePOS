@@ -1,0 +1,12 @@
+{% from "components.html" import render_card %}
+
+{% macro build_icon_card(icon, text) %}
+
+    {% call render_card() %}
+        <div class="center-align">
+            <i class="large material-icons">{{ icon }}</i>
+            <h5 class="my-0">{{ text|truncate(length=8) }}</h5>
+        </div>
+    {% endcall %}
+
+{% endmacro %}

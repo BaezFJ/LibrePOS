@@ -6,9 +6,9 @@ from flask_login import current_user
 
 def user_has_permission(permission: str) -> bool:
     """Check if the current user has the specified permission."""
-    if not current_user or not hasattr(current_user, "role"):
+    if not current_user:
         return False
-    return current_user.role.has_permission(permission)
+    return current_user.has_permission(permission)
 
 
 def permission_required(permission: str):
@@ -19,12 +19,12 @@ def permission_required(permission: str):
     def restrict_access(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if not user_has_permission(permission):
+            if not current_user.has_permission(permission):
                 flash(
                     "You don't have the appropriate permissions to access this page.",
                     "danger",
                 )
-                return redirect(url_for("dashboard.get_dashboard"))
+                return redirect(url_for("user.get_dashboard"))
             return f(*args, **kwargs)
 
         return decorated_function

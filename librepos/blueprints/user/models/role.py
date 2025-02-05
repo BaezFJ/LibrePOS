@@ -21,18 +21,18 @@ class Role(CRUDMixin, db.Model):
 
     # Relationships
     users = db.relationship("User", back_populates="role")
-    permissions = db.relationship("RolePermission", back_populates="role")
+    # permissions = db.relationship("RolePermission", back_populates="role")
 
-    def has_permission(self, permission_name: str):
-        """Check if the role has the given permission."""
-        from librepos.models.role_permission import RolePermission
-
-        role_permission = RolePermission.query.filter_by(role_id=self.id).all()
-        for rp in role_permission:
-            if rp.permission.name == permission_name:
-                return True
-        return False
-
-    @classmethod
-    def get_active_roles(cls):
-        return cls.query.filter_by(is_active=True).all()
+    # def has_permission(self, permission_name: str):
+    #     """Check if the role has the given permission."""
+    #     from librepos.blueprints.user.models.role_permission import RolePermission
+    #
+    #     role_permission = RolePermission.query.filter_by(role_id=self.id).all()
+    #     for rp in role_permission:
+    #         if rp.permission.name == permission_name:
+    #             return True
+    #     return False
+    #
+    # @classmethod
+    # def get_active_roles(cls):
+    #     return cls.query.filter_by(is_active=True).all()

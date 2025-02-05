@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash
 
 from librepos.extensions import db
-from librepos.models.user import User
+from librepos.blueprints.user.models import User
 
 
 def register_user(
