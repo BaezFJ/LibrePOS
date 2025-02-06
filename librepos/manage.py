@@ -64,7 +64,7 @@ def add_cli_commands(app):
         # Create default admin
         user_exists = User.query.count()
         admin_role = Role.query.filter_by(name="admin").first()
-        
+
         if not user_exists and admin_role:
             User.create(
                 role_id=admin_role.id,

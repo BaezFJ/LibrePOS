@@ -19,6 +19,7 @@ class UserStatus(enum.Enum):
     FIRED = "fired"
     PENDING = "pending"
     DELETED = "deleted"
+    LOCKED = "locked"
 
 
 class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
@@ -30,6 +31,7 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
         self.email = email
 
         self.set_password(password)
+        self.init_relationships()
 
     # ForeignKeys
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
@@ -65,6 +67,16 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
         """Returns a list of groups the user belongs to."""
         _group_users = cast(List[Any], self.group_users)
         return [gu.group for gu in _group_users]
+
+    def init_relationships(self):
+        from librepos.blueprints.user.models import UserProfile, UserActivity
+
+        UserProfile.create(user=self)
+        UserActivity.create(user=self)
+
+    def change_status(self, status: UserStatus):
+        self.status = status
+        db.session.commit()
 
     def has_permission(self, permission_name: str) -> bool:
         """

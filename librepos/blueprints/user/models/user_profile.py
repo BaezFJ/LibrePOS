@@ -20,5 +20,6 @@ class UserProfile(CRUDMixin, db.Model):
     # Relationships
     user = db.relationship("User", back_populates="profile")
 
+    @property
     def full_name(self) -> str:
-        return f"{self.first_name} {self.last_name}"
+        return str(self.first_name + " " + self.last_name)

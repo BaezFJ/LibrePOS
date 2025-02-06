@@ -27,10 +27,16 @@ class UserWorkDetails(CRUDMixin, db.Model):
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date)
     start_compensation = db.Column(db.Integer, nullable=False)
-    start_compensation_type = db.Column(Enum(CompensationType), nullable=False, default=CompensationType.HOURLY)
+    start_compensation_type = db.Column(
+        Enum(CompensationType), nullable=False, default=CompensationType.HOURLY
+    )
     current_compensation = db.Column(db.Integer, nullable=False)
-    current_compensation_type = db.Column(Enum(CompensationType), nullable=False, default=CompensationType.HOURLY)
+    current_compensation_type = db.Column(
+        Enum(CompensationType), nullable=False, default=CompensationType.HOURLY
+    )
     end_compensation = db.Column(db.Integer, nullable=False)
-    end_compensation_type = db.Column(Enum(CompensationType), nullable=False, default=CompensationType.HOURLY)
+    end_compensation_type = db.Column(
+        Enum(CompensationType), nullable=False, default=CompensationType.HOURLY
+    )
 
     # TODO 2/6/25 : add the assigned_terminal_id, assigned_devices, store_id

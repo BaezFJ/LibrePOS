@@ -3,7 +3,6 @@ from librepos.utils.sqlalchemy import CRUDMixin
 
 
 class UserAddress(CRUDMixin, db.Model):
-
     # ForeignKeys
     user_id = db.Column(db.String, db.ForeignKey("user.id"), nullable=False)
 
@@ -17,7 +16,6 @@ class UserAddress(CRUDMixin, db.Model):
     gps_latitude = db.Column(db.Float)
     gps_longitude = db.Column(db.Float)
     is_default = db.Column(db.Boolean, default=False)
-    
+
     # Relationships
     user = db.relationship("User", back_populates="addresses")
-    

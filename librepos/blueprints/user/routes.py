@@ -13,7 +13,8 @@ from flask_login import login_required, current_user
 
 from librepos.blueprints.user.models.user import User
 from librepos.utils.decorators import permission_required
-from .forms import UserForm
+from .forms import UserForm, UserProfileForm
+from .models import UserProfile
 from ...utils.helpers import sanitize_form_data
 
 user_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/user")
@@ -35,10 +36,8 @@ def before_request():
 
 @user_bp.get("/dashboard")
 def get_dashboard():
-    _user = User.get_by_id(current_user.id)
     context = {
         "title": "Dashboard",
-        "user": _user,
     }
     return render_template("user/dashboard.html", **context)
 
@@ -73,8 +72,9 @@ def list_users():
 def get_user(user_id):
     _user = User.get_by_id(user_id)
     form = UserForm(obj=_user)
+    _title = f"{_user.profile.full_name if _user.profile else 'not found'}"
     context = {
-        "title": f"{_user.username if _user else 'not found'}",
+        "title": _title,
         "user": _user,
         "form": form,
         "back_url": url_for("user.list_users"),
@@ -96,3 +96,28 @@ def delete_user(user_id):
     # TODO 2/6/25 : implement delete login
     flash("This feature is not yet implemented.", "warning")
     return redirect(url_for("user.list_users"))
+
+
+@user_bp.get("/<string:user_id>/profile")
+def get_user_profile(user_id):
+    _user_profile = UserProfile.query.filter_by(user_id=user_id).first()
+    form = UserProfileForm(obj=_user_profile)
+    context = {
+        "title": "Profile",
+        "form": form,
+        "back_url": url_for("user.get_dashboard"),
+    }
+    return render_template("user/user_profile.html", **context)
+
+
+@user_bp.post("/update-profile")
+def update_profile():
+    form = UserProfileForm()
+    if form.validate_on_submit():
+        _user_profile = UserProfile.query.filter_by(user_id=current_user.id).first()
+        sanitized_data = sanitize_form_data(form)
+        UserProfile.update(_user_profile.id, **sanitized_data)
+        flash("Profile updated successfully.", "success")
+        return redirect(url_for("user.get_dashboard"))
+    flash("Profile update failed.", "danger")
+    return redirect(url_for("user.get_user_profile", user_id=current_user.id))
