@@ -60,7 +60,7 @@ class CRUDMixin:
     @classmethod
     def get_by_id(cls, record_id):
         """Get a record by its ID."""
-        instance = db.session.query(cls).filter_by(id=record_id).first_or_404()
+        instance = db.session.query(cls).filter_by(id=record_id).first()
         return instance
 
     def save(self):

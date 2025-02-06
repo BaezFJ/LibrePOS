@@ -1,4 +1,5 @@
 import enum
+from typing import cast, List, Any
 
 from flask_login import UserMixin
 from sqlalchemy import Enum
@@ -52,7 +53,6 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
     slug = db.Column(db.String(30), unique=True, index=True)
     hourly_rate = db.Column(db.Integer, nullable=False, default=0)
     status = db.Column(Enum(UserStatus), nullable=False, default=UserStatus.ACTIVE)
-    # is_active = db.Column(db.Boolean, nullable=False, default=True)
 
     # Authentication
     username = db.Column(db.String(20), unique=True, index=True)
@@ -75,8 +75,6 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
         "GroupUser", back_populates="user", cascade="all, delete-orphan"
     )
 
-    # orders = db.relationship("UserOrder", back_populates="user")
-
     @property
     def is_active(self):
         return self.status == UserStatus.ACTIVE
@@ -87,9 +85,10 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
         return timezone_aware_datetime().date()
 
     @property
-    def groups(self):
+    def groups(self) -> List[Any]:
         """Returns a list of groups the user belongs to."""
-        return [gu.group for gu in self.group_users]
+        _group_users = cast(List[Any], self.group_users)
+        return [gu.group for gu in _group_users]
 
     def has_permission(self, permission_name: str) -> bool:
         """
@@ -147,39 +146,6 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
     def check_password(self, password):
         """Check if the user's password is correct."""
         return check_password_hash(self.password_hash, password)
-
-    # def in_role(self, role_name):
-    #     """Check if the user is in the given role."""
-    #     return self.role.name == role_name.lower()
-
-    # def check_role_permission(self, permission_name: str):
-    #     """Check if the user has the given permission."""
-    #     return self.role.has_permission(permission_name)
-
-    # def reset_password(self):
-    #     """Reset the user's password."""
-    #     if self.email_confirmed:
-    #         token = generate_token()
-    #         self.reset_token = token
-    #         # TODO 1/26/25 : send token to the user's email to continue the password reset process.
-    #
-    #     else:
-    #         raise Exception("User is not confirmed.")
-
-    # def is_last_admin(self):
-    #     """Check if the user is the last admin."""
-    #     from librepos.blueprints.user.models.role import Role
-    #
-    #     admin_roles = Role.query.filter_by(is_admin=True).all()
-    #     admin_count = 0
-    #     for role in admin_roles:
-    #         user_role_count = User.query.filter_by(role_id=role.id).count()
-    #         admin_count += user_role_count
-    #     return (
-    #         self.role.is_admin
-    #         and User.query.filter_by(role_id=self.role_id).count() == 1
-    #         and admin_count == 1
-    #     )
 
     def set_hourly_rate(self, new_rate):
         """Update the user's hourly rate."""

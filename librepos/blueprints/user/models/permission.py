@@ -1,3 +1,5 @@
+from typing import List, cast, Any
+
 from librepos.extensions import db
 from librepos.utils.helpers import generate_slug
 from librepos.utils.sqlalchemy import CRUDMixin
@@ -25,5 +27,6 @@ class Permission(CRUDMixin, db.Model):
     )
 
     @property
-    def policies(self):
-        return [pp.policy for pp in self.permission_policies]
+    def policies(self) -> List[Any]:
+        _policies = cast(List[Any], self.permission_policies)
+        return [pp.policy for pp in _policies]

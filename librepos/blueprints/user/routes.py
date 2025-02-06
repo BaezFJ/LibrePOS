@@ -85,13 +85,14 @@ def get_user(user_id):
 @user_bp.post("/<string:user_id>/edit")
 @permission_required("UpdateUser")
 def update_user(user_id):
-    pass
+    # TODO 2/5/25 : implement update logic
+    flash("This feature is not yet implemented.", "warning")
+    return redirect(url_for("user.list_users"))
 
 
 @user_bp.post("/<string:user_id>/delete")
 @permission_required("DeleteUser")
 def delete_user(user_id):
-    _user = User.get_by_id(user_id)
-    if _user:
-        _user.set_status("DELETED")
+    # TODO 2/6/25 : implement delete login
+    flash("This feature is not yet implemented.", "warning")
     return redirect(url_for("user.list_users"))

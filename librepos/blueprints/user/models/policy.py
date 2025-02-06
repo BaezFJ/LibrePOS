@@ -1,4 +1,5 @@
 import enum
+from typing import cast, List, Any
 
 from sqlalchemy import Enum
 
@@ -28,9 +29,11 @@ class Policy(CRUDMixin, TimestampMixin, db.Model):
     )
 
     @property
-    def permissions(self):
-        return [pp.permission for pp in self.permission_policies]
+    def permissions(self) -> List[Any]:
+        _permission_policies = cast(List[Any], self.permission_policies)
+        return [pp.permission for pp in _permission_policies]
 
     @property
-    def groups(self):
-        return [pg.group for pg in self.policy_groups]
+    def groups(self) -> List[Any]:
+        _policy_groups = cast(List[Any], self.policy_groups)
+        return [pg.group for pg in _policy_groups]

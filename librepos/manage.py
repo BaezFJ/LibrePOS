@@ -55,7 +55,7 @@ def add_cli_commands(app):
                 )
 
         _administrator_group = Group.query.filter_by(name="Administrator").first()
-        if _administrator_group:
+        if _administrator_group and _administrator_access_policy:
             PolicyGroup.create(
                 group_id=_administrator_group.id,
                 policy_id=_administrator_access_policy.id,
@@ -64,7 +64,7 @@ def add_cli_commands(app):
         # Create default admin
         user_exists = User.query.filter_by(username="admin").first()
         admin_role = Role.query.filter_by(name="admin").first()
-        if not user_exists:
+        if not user_exists and admin_role:
             User.create(
                 role_id=admin_role.id,
                 username="admin",
