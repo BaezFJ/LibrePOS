@@ -11,7 +11,7 @@ Description:
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
 
-from librepos.services.auth_service import authenticate_user
+from librepos.blueprints.user.models.user import User
 from .forms import LoginForm
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates")
@@ -28,10 +28,17 @@ def login():
         "form": form,
     }
     if form.validate_on_submit():
-        user = authenticate_user(form.username.data, form.password.data)
-        if user:
-            login_user(user, remember=form.remember_me.data)
-            flash(f"Welcome back, {user.username}! You are now logged in.", "success")
+        # user = authenticate_user(form.email.data, form.password.data)
+        _user = User.query.filter_by(email=form.email.data).first()
+        if _user and not _user.is_active:
+            flash(
+                "Your account is not active. Please contact the site administrator.",
+                "danger",
+            )
+            return redirect(url_for("auth.login"))
+        if _user:
+            login_user(_user, remember=form.remember_me.data)
+            flash(f"Welcome back, {_user.email}! You are now logged in.", "success")
             return redirect(url_for("user.get_dashboard"))
         else:
             flash("Invalid credentials.", "danger")

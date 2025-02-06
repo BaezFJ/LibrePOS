@@ -7,12 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from librepos.extensions import db
 from librepos.utils.helpers import (
-    dollars_to_cents,
-    generate_password,
-    generate_slug,
-    generate_token,
     generate_uuid,
-    timezone_aware_datetime,
 )
 from librepos.utils.sqlalchemy import CRUDMixin, TimestampMixin
 
@@ -27,48 +22,30 @@ class UserStatus(enum.Enum):
 
 
 class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
-    def __init__(self, username, email, first_name, last_name, **kwargs):
+    def __init__(self, role_id, email, password, **kwargs):
         super(User, self).__init__(**kwargs)
 
         self.id = generate_uuid()
-        self.username = username
-        self.slug = generate_slug(username)
+        self.role_id = role_id
         self.email = email
-        self.api_token = generate_token()
-        self.first_name = first_name.capitalize()
-        self.last_name = last_name.capitalize()
 
-        if kwargs.get("password_hash"):
-            self.set_password(kwargs.get("password_hash"))
-        else:
-            temporary_password = generate_password()
-            self.set_password(temporary_password)
-            # TODO 1/28/25 : make a function to send the temporary password to user preferred method email/phone
+        self.set_password(password)
 
     # ForeignKeys
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
 
     # Columns
     id = db.Column(db.String, primary_key=True, unique=True, index=True)
-    slug = db.Column(db.String(30), unique=True, index=True)
-    hourly_rate = db.Column(db.Integer, nullable=False, default=0)
     status = db.Column(Enum(UserStatus), nullable=False, default=UserStatus.ACTIVE)
-
-    # Authentication
-    username = db.Column(db.String(20), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    api_token = db.Column(db.String(128), unique=True, index=True)
-
-    # Contact
-    first_name = db.Column(db.String(30), nullable=False)
-    last_name = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(120), unique=True, index=True)
-    phone = db.Column(db.String(15), nullable=True, index=True)
-    phone_confirmed = db.Column(db.Boolean, nullable=False, default=False)
-    email_confirmed = db.Column(db.Boolean, nullable=False, default=False)
 
     # Relationships
     role = db.relationship("Role", back_populates="users")
+    profile = db.relationship("UserProfile", back_populates="user", uselist=False)
+    activity = db.relationship("UserActivity", back_populates="user", uselist=False)
+    addresses = db.relationship("UserAddress", back_populates="user")
+    shift_details = db.relationship("UserShiftDetails", back_populates="user")
 
     # Relationship for group membership (via the association model)
     group_users = db.relationship(
@@ -80,9 +57,8 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
         return self.status == UserStatus.ACTIVE
 
     @property
-    def last_activity(self):
-        # return self.orders[-1].created_at if self.orders else None
-        return timezone_aware_datetime().date()
+    def phone(self):
+        return self.profile.phone_number if self.profile else None
 
     @property
     def groups(self) -> List[Any]:
@@ -132,11 +108,6 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
                 policies_dict[policy.id] = policy
         return list(policies_dict.values())
 
-    @classmethod
-    def get_by_identity(cls, identity: str):
-        """Get a user by username or email."""
-        return cls.query.filter((cls.username == identity) | (cls.email == identity))
-
     def set_password(self, password):
         """Set the user's password."""
         self.password_hash = generate_password_hash(
@@ -146,8 +117,3 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
     def check_password(self, password):
         """Check if the user's password is correct."""
         return check_password_hash(self.password_hash, password)
-
-    def set_hourly_rate(self, new_rate):
-        """Update the user's hourly rate."""
-        self.hourly_rate = dollars_to_cents(new_rate)
-        db.session.commit()

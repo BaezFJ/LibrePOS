@@ -62,22 +62,20 @@ def add_cli_commands(app):
             )
 
         # Create default admin
-        user_exists = User.query.filter_by(username="admin").first()
+        user_exists = User.query.count()
         admin_role = Role.query.filter_by(name="admin").first()
+        
         if not user_exists and admin_role:
             User.create(
                 role_id=admin_role.id,
-                username="admin",
-                password_hash="librepos",
-                first_name="librepos",
-                last_name="forever",
-                email="info@librepos.com",
+                password="librepos",
+                email="admin@librepos.com",
             )
 
         # add the newly create admin user to the Administrator Group
         admin_group = Group.query.filter_by(name="Administrator").first()
         if admin_group:
-            admin_user = User.query.filter_by(username="admin").first()
+            admin_user = User.query.filter_by(email="admin@librepos.com").first()
             if admin_user:
                 GroupUser.create(group_id=admin_group.id, user_id=admin_user.id)
 

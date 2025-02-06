@@ -5,14 +5,20 @@ from .permission_policy import PermissionPolicy
 from .policy import Policy
 from .policy_group import PolicyGroup
 from .role import Role
-
-# from .role_permission import RolePermission
 from .user import User
+from .user_activity import UserActivity
+from .user_address import UserAddress
+from .user_profile import UserProfile
+from .user_shift_details import UserShiftDetails
 
 __all__ = [
     "Permission",
     "Role",
     "User",
+    "UserProfile",
+    "UserActivity",
+    "UserAddress",
+    "UserShiftDetails",
     "Group",
     "Policy",
     "PolicyGroup",
