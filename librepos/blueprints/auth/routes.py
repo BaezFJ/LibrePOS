@@ -29,12 +29,12 @@ def login():
     }
     if form.validate_on_submit():
         _user = User.query.filter_by(
-            email=form.email.data, status=UserStatus.ACTIVE
+            username=form.username.data, status=UserStatus.ACTIVE
         ).first()
 
         # check if the user account is locked
         _user_locked = User.query.filter_by(
-            email=form.email.data, status=UserStatus.LOCKED
+            username=form.username.data, status=UserStatus.LOCKED
         ).first()
         if _user_locked:
             flash(
@@ -68,13 +68,14 @@ def login():
                 ip_address=_ip_address, device_info=_device_info
             )
 
-            if _user.profile.first_name and _user.profile.last_name:
+            if _user.activity.login_count == 1:
                 flash(
-                    f"Welcome, {_user.profile.full_name}! You are now logged in.",
-                    "success",
+                    "Welcome, first time login. Please update your profile.",
+                    "info",
                 )
-            else:
-                flash(f"Welcome, {_user.email}! You are now logged in.", "success")
+                return redirect(url_for("user.get_user_profile", user_id=_user.id))
+
+            flash("You have successfully logged in.", "success")
 
             return redirect(url_for("user.get_dashboard"))
 

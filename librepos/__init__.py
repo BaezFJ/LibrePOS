@@ -32,10 +32,11 @@ def create_app():
 
 
 def init_extensions(app):
-    from .extensions import db, login_manager
+    from .extensions import db, login_manager, mail
     from librepos.blueprints.user.models.user import User
 
     db.init_app(app)
+    mail.init_app(app)
     login_manager.init_app(app)
 
     login_manager.login_view = "auth.login"  # type: ignore
@@ -57,6 +58,8 @@ def custom_jinja_filters(app):
 
     @app.template_filter("datetime")
     def format_datetime(value, format_spec=default_datetime_format):
+        if value is None:
+            return "N/A"
         if format_spec in datetime_formats:
             format_spec = datetime_formats[format_spec]
         return value.strftime(format_spec)

@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from librepos.extensions import db
 from librepos.utils.helpers import (
-    generate_uuid,
+    generate_uuid, timezone_aware_datetime
 )
 from librepos.utils.sqlalchemy import CRUDMixin, TimestampMixin
 
@@ -23,12 +23,12 @@ class UserStatus(enum.Enum):
 
 
 class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
-    def __init__(self, role_id, email, password, **kwargs):
+    def __init__(self, role_id, username, password, **kwargs):
         super(User, self).__init__(**kwargs)
 
         self.id = generate_uuid()
         self.role_id = role_id
-        self.email = email
+        self.username = username
 
         self.set_password(password)
         self.init_relationships()
@@ -40,7 +40,7 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
     id = db.Column(db.String, primary_key=True, unique=True, index=True)
     status = db.Column(Enum(UserStatus), nullable=False, default=UserStatus.ACTIVE)
     password_hash = db.Column(db.String(128))
-    email = db.Column(db.String(120), unique=True, index=True)
+    username = db.Column(db.String(120), unique=True, index=True)
 
     # Relationships
     role = db.relationship("Role", back_populates="users")
@@ -48,6 +48,7 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
     activity = db.relationship("UserActivity", back_populates="user", uselist=False)
     addresses = db.relationship("UserAddress", back_populates="user")
     shift_details = db.relationship("UserShiftDetails", back_populates="user")
+    work_details = db.relationship("UserWorkDetails", back_populates="user", uselist=False)
 
     # Relationship for group membership (via the association model)
     group_users = db.relationship(
@@ -69,10 +70,12 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
         return [gu.group for gu in _group_users]
 
     def init_relationships(self):
-        from librepos.blueprints.user.models import UserProfile, UserActivity
+        from librepos.blueprints.user.models import UserProfile, UserActivity, UserWorkDetails
 
-        UserProfile.create(user=self)
+        # UserProfile.create(user=self)
         UserActivity.create(user=self)
+        # UserWorkDetails.create(user=self, user_id=self.id, start_date=timezone_aware_datetime().date(),
+        #                        hire_date=timezone_aware_datetime().date(), start_compensation=1500)
 
     def change_status(self, status: UserStatus):
         self.status = status

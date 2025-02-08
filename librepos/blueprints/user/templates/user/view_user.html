@@ -7,13 +7,18 @@
 {% block main %}
 
     <div class="container">
+
         <div class="flex space-between">
             <div class="flex">
-                <h4>{{ user.username|title }}</h4>
-                <p class="ml-2"><a href="">( &nbsp; {{ user.role.name|title }} &nbsp; )</a></p>
+                <h4>{{ user.username }}</h4>
+                <a href="" class="ml-3 blue-text">Edit</a>
             </div>
             <button class="btn outlined danger waves-effect waves-red">Delete</button>
         </div>
+
+        <div class="divider mb-4 py-1"></div>
+
+
         <div class="row">
 
             <div class="col s12 outlined">
@@ -21,20 +26,8 @@
                 <div class="row">
                     <div class="col s4 m3 l2">
                         <blockquote>
-                            <p><b>Hire Date</b></p>
-                            <p>{{ user.last_activity|datetime }}</p>
-                        </blockquote>
-                    </div>
-                    <div class="col s4 m3 l2">
-                        <blockquote>
-                            <p><b>Start Date</b></p>
-                            <p>{{ user.last_activity|datetime }}</p>
-                        </blockquote>
-                    </div>
-                    <div class="col s4 m3 l2">
-                        <blockquote>
-                            <p><b>Hourly Rate</b></p>
-                            <p>{{ user.hourly_rate|currency }}</p>
+                            <p><b>Account Status</b></p>
+                            <p>{{ user.status.name|title }}</p>
                         </blockquote>
                     </div>
                     <div class="col s4 m3 l2">
@@ -46,20 +39,43 @@
                     <div class="col s4 m3 l2">
                         <blockquote>
                             <p><b>Last sign-in</b></p>
-                            <p>{{ user.last_activity|datetime }}</p>
+                            <p>{{ user.activity.last_login|datetime }}</p>
                         </blockquote>
                     </div>
-                    <div class="col s4 m3 l2 align-center">
-                        <button class="btn filled">Edit</button>
+
+
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>Start Date</b></p>
+                            <p>{{ user.work_details.start_date|datetime if user.work_details.start_date else "N/A" }}</p>
+                        </blockquote>
                     </div>
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>End Date</b></p>
+                            <p>{{ user.work_details.end_date|datetime if user.work_details.end_date else "N/A" }}</p>
+                        </blockquote>
+                    </div>
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>Hourly Rate</b></p>
+                            <p>{{ user.work_details.current_compensation|currency if user.work_details.current_compensation else "N/A" }}</p>
+                        </blockquote>
+                    </div>
+
+
                 </div>
             </div>
 
-{#            <div class="col s12">#}
-{#                {{ render_form(form) }}#}
-{#            </div>#}
+            {#            <div class="col s12">#}
+            {#                {{ render_form(form) }}#}
+            {#            </div>#}
         </div>
-        <div class="divider my-2"></div>
+
+
+        <div class="divider my-4 py-1"></div>
+
+
         <ul class="tabs tabs-fixed-width tabs-horizontal z-depth-1 col s12">
             <li class="tab">
                 <a href="#permissions" class="active"><i class="material-icons">admin_panel_settings</i>Permissions</a>

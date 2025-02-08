@@ -69,13 +69,13 @@ def add_cli_commands(app):
             User.create(
                 role_id=admin_role.id,
                 password="librepos",
-                email="admin@librepos.com",
+                username="LibrePOS",
             )
 
         # add the newly create admin user to the Administrator Group
         admin_group = Group.query.filter_by(name="Administrator").first()
         if admin_group:
-            admin_user = User.query.filter_by(email="admin@librepos.com").first()
+            admin_user = User.query.filter_by(username="LibrePOS").first()
             if admin_user:
                 GroupUser.create(group_id=admin_group.id, user_id=admin_user.id)
 

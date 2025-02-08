@@ -13,9 +13,9 @@ from flask_login import login_required, current_user
 
 from librepos.blueprints.user.models.user import User
 from librepos.utils.decorators import permission_required
-from .forms import UserForm, UserProfileForm
+from .forms import UserForm, UserProfileForm, NewUserForm
 from .models import UserProfile
-from ...utils.helpers import sanitize_form_data
+from ...utils.helpers import sanitize_form_data, generate_password
 
 user_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/user")
 
@@ -43,12 +43,13 @@ def get_dashboard():
 
 
 @user_bp.post("/new")
-@permission_required("create_user")
+@permission_required("CreateUser")
 def create_user():
-    form = UserForm()
+    form = NewUserForm()
     if form.validate_on_submit():
+        temp_password = generate_password()
         sanitized_data = sanitize_form_data(form)
-        User.create(**sanitized_data)
+        User.create(password=temp_password, **sanitized_data)
         flash("User created successfully.", "success")
     return redirect(url_for("user.list_users"))
 
@@ -57,7 +58,7 @@ def create_user():
 @permission_required("ListUsers")
 def list_users():
     _users = User.get_all()
-    form = UserForm()
+    form = NewUserForm()
     context = {
         "title": "Users",
         "users": _users,
@@ -72,9 +73,8 @@ def list_users():
 def get_user(user_id):
     _user = User.get_by_id(user_id)
     form = UserForm(obj=_user)
-    _title = f"{_user.profile.full_name if _user.profile else 'not found'}"
     context = {
-        "title": _title,
+        "title": _user.username,
         "user": _user,
         "form": form,
         "back_url": url_for("user.list_users"),
@@ -116,8 +116,12 @@ def update_profile():
     if form.validate_on_submit():
         _user_profile = UserProfile.query.filter_by(user_id=current_user.id).first()
         sanitized_data = sanitize_form_data(form)
-        UserProfile.update(_user_profile.id, **sanitized_data)
-        flash("Profile updated successfully.", "success")
-        return redirect(url_for("user.get_dashboard"))
+        if _user_profile:
+            UserProfile.update(_user_profile.id, **sanitized_data)
+            flash("Profile updated successfully.", "success")
+        else:
+            UserProfile.create(user_id=current_user.id, **sanitized_data)
+            flash("Profile created successfully.", "success")
+        return redirect(url_for("user.list_users"))
     flash("Profile update failed.", "danger")
     return redirect(url_for("user.get_user_profile", user_id=current_user.id))

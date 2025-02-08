@@ -10,6 +10,7 @@ from .user_activity import UserActivity
 from .user_address import UserAddress
 from .user_profile import UserProfile
 from .user_shift_details import UserShiftDetails
+from .user_work_details import UserWorkDetails
 
 __all__ = [
     "Permission",
@@ -19,6 +20,7 @@ __all__ = [
     "UserActivity",
     "UserAddress",
     "UserShiftDetails",
+    "UserWorkDetails",
     "Group",
     "Policy",
     "PolicyGroup",

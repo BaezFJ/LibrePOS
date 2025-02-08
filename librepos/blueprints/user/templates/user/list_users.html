@@ -9,21 +9,21 @@
         <div class="row">
             <div class="col s12">
                 <table class="highlight centered">
-                    {{ render_thead(["Status", "Username", "Role", "Last Activity"]) }}
+                    {{ render_thead(["Status", "Username", "Role", "LastLogin"]) }}
                     <tbody>
                     {% for user in users %}
                         <tr>
                             <td>
-                                <i class="material-icons {{ 'green-text' if user.is_active else 'red-text' }}">radio_button_checked</i>
+                                {{ user.status.name|title }}
                             </td>
                             <td>
-                                <a href="{{ url_for("user.get_user", user_id=user.id) }}">{{ user.username|capitalize }}</a>
+                                <a href="{{ url_for("user.get_user", user_id=user.id) }}">{{ user.username }}</a>
                             </td>
                             <td>
                                 {{ user.role.name|title }}
                             </td>
                             <td>
-                                {{ user.last_activity|datetime }}
+                                {{ user.activity.last_login|datetime if user.activity.last_login else "N/A" }}
                             </td>
                         </tr>
                     {% endfor %}
