@@ -5,7 +5,7 @@ from wtforms import (
     SubmitField,
     PasswordField,
 )
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired
 
 kw = {"placeholder": " "}
 

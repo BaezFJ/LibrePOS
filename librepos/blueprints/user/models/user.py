@@ -6,9 +6,7 @@ from sqlalchemy import Enum
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from librepos.extensions import db
-from librepos.utils.helpers import (
-    generate_uuid, timezone_aware_datetime
-)
+from librepos.utils.helpers import generate_uuid
 from librepos.utils.sqlalchemy import CRUDMixin, TimestampMixin
 
 
@@ -26,19 +24,23 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
     def __init__(self, role_id, username, password, **kwargs):
         super(User, self).__init__(**kwargs)
 
+        from librepos.blueprints.user.models import UserActivity
+
         self.id = generate_uuid()
         self.role_id = role_id
         self.username = username
 
         self.set_password(password)
-        self.init_relationships()
+
+        UserActivity.create(user=self)
 
     # ForeignKeys
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
 
     # Columns
-    id = db.Column(db.String, primary_key=True, unique=True, index=True)
+    id = db.Column(db.String(), primary_key=True, unique=True, index=True)
     status = db.Column(Enum(UserStatus), nullable=False, default=UserStatus.ACTIVE)
+    active = db.Column("is_active", db.Boolean(), nullable=False, default=True)
     password_hash = db.Column(db.String(128))
     username = db.Column(db.String(120), unique=True, index=True)
 
@@ -48,16 +50,14 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
     activity = db.relationship("UserActivity", back_populates="user", uselist=False)
     addresses = db.relationship("UserAddress", back_populates="user")
     shift_details = db.relationship("UserShiftDetails", back_populates="user")
-    work_details = db.relationship("UserWorkDetails", back_populates="user", uselist=False)
+    work_details = db.relationship(
+        "UserWorkDetails", back_populates="user", uselist=False
+    )
 
     # Relationship for group membership (via the association model)
     group_users = db.relationship(
         "GroupUser", back_populates="user", cascade="all, delete-orphan"
     )
-
-    @property
-    def is_active(self):
-        return self.status == UserStatus.ACTIVE
 
     @property
     def phone(self):
@@ -68,14 +68,6 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
         """Returns a list of groups the user belongs to."""
         _group_users = cast(List[Any], self.group_users)
         return [gu.group for gu in _group_users]
-
-    def init_relationships(self):
-        from librepos.blueprints.user.models import UserProfile, UserActivity, UserWorkDetails
-
-        # UserProfile.create(user=self)
-        UserActivity.create(user=self)
-        # UserWorkDetails.create(user=self, user_id=self.id, start_date=timezone_aware_datetime().date(),
-        #                        hire_date=timezone_aware_datetime().date(), start_compensation=1500)
 
     def change_status(self, status: UserStatus):
         self.status = status

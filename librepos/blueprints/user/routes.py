@@ -73,8 +73,9 @@ def list_users():
 def get_user(user_id):
     _user = User.get_by_id(user_id)
     form = UserForm(obj=_user)
+    title = _user.username if _user else "User"
     context = {
-        "title": _user.username,
+        "title": title,
         "user": _user,
         "form": form,
         "back_url": url_for("user.list_users"),

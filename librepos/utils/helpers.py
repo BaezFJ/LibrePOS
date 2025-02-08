@@ -1,6 +1,4 @@
-import re
 import secrets
-import unicodedata
 import uuid
 from datetime import datetime
 
@@ -149,8 +147,6 @@ Best regards,
 [Company Name]
 [Contact Information]
 """
-    message = f"Hi {username}, thanks for registering to Librepos! your default password is {temp_password}"
-
     send_mail(
         subject=subject,
         body=body,

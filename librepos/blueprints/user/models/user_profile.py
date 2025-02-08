@@ -15,7 +15,9 @@ class Gender(enum.Enum):
 
 class UserProfile(CRUDMixin, db.Model):
     # ForeignKeys
-    user_id = db.Column(db.String, db.ForeignKey("user.id"), nullable=False, unique=True)
+    user_id = db.Column(
+        db.String, db.ForeignKey("user.id"), nullable=False, unique=True
+    )
 
     # Columns
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, index=True)
@@ -34,7 +36,7 @@ class UserProfile(CRUDMixin, db.Model):
     # Relationships
     user = db.relationship("User", back_populates="profile")
 
-    # TODO 2/8/25 : move the following columns to a separate user_config_options table 
+    # TODO 2/8/25 : move the following columns to a separate user_config_options table
     # language = db.Column(db.String(5), default="en")
     # timezone = db.Column(db.String(50))
     # dark_mode_enabled = db.Column(db.Boolean, default=False)

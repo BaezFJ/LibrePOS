@@ -19,7 +19,9 @@ class CompensationType(enum.Enum):
 
 class UserWorkDetails(CRUDMixin, db.Model):
     # ForeignKeys
-    user_id = db.Column(db.String, db.ForeignKey("user.id"), nullable=False, unique=True)
+    user_id = db.Column(
+        db.String, db.ForeignKey("user.id"), nullable=False, unique=True
+    )
 
     # Columns
     id = db.Column(db.Integer, primary_key=True, index=True)

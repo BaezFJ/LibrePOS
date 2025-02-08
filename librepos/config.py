@@ -4,6 +4,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def strtobool(val):
+    val = val.lower()
+    if val in ("yes", "true", "t", "1"):
+        return True
+    elif val in ("no", "false", "f", "0"):
+        return False
+    else:
+        raise ValueError("invalid truth value %r" % (val,))
+
+
 # Application Settings
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 TIMEZONE = os.getenv("TIMEZONE", "US/Central")
