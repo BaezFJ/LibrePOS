@@ -46,12 +46,12 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
 
     # Relationships
     role = db.relationship("Role", back_populates="users")
-    profile = db.relationship("UserProfile", back_populates="user", uselist=False)
-    activity = db.relationship("UserActivity", back_populates="user", uselist=False)
-    addresses = db.relationship("UserAddress", back_populates="user")
-    shift_details = db.relationship("UserShiftDetails", back_populates="user")
+    profile = db.relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    activity = db.relationship("UserActivity", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    addresses = db.relationship("UserAddress", back_populates="user", cascade="all, delete-orphan")
+    shift_details = db.relationship("UserShiftDetails", back_populates="user", cascade="all, delete-orphan")
     work_details = db.relationship(
-        "UserWorkDetails", back_populates="user", uselist=False
+        "UserWorkDetails", back_populates="user", uselist=False, cascade="all, delete-orphan"
     )
 
     # Relationship for group membership (via the association model)

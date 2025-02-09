@@ -32,12 +32,13 @@ def create_app():
 
 
 def init_extensions(app):
-    from .extensions import db, login_manager, mail
+    from .extensions import db, login_manager, mail, csrf
     from librepos.blueprints.user.models.user import User
 
     db.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
+    csrf.init_app(app)
 
     login_manager.login_view = "auth.login"  # type: ignore
 

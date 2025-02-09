@@ -13,7 +13,30 @@
                 <h4>{{ user.username }}</h4>
                 <a href="" class="ml-3 blue-text">Edit</a>
             </div>
-            <button class="btn outlined danger waves-effect waves-red">Delete</button>
+            <button class="btn outlined danger waves-effect waves-red" popovertarget="deleteUserModal">Delete</button>
+            <div id="deleteUserModal" class="modal danger-border" popover>
+                <div class="modal-header">
+                    <h4 class="center-align">Delete User?</h4>
+                </div>
+                <div class="modal-content">
+                    <p class="flow-text grey-text">
+                        Are you sure you want to delete this user?
+                        <br>
+                        This action cannot be undone.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <div class="flex space-between">
+                        <form action="{{ url_for("user.delete_user", user_id=user.id) }}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn danger">Delete</button>
+                        </form>
+                        <button tabindex="0" class="waves-effect btn-flat white-text" popovertarget="deleteUserModal">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="divider mb-4 py-1"></div>

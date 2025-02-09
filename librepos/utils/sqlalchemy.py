@@ -72,3 +72,8 @@ class CRUDMixin:
         """Delete the current instance from the database."""
         db.session.delete(self)
         db.session.commit()
+
+    @staticmethod
+    def update_instance():
+        """Update the current instance"""
+        return db.session.commit()

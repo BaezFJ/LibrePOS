@@ -95,7 +95,15 @@ def update_user(user_id):
 @permission_required("DeleteUser")
 def delete_user(user_id):
     # TODO 2/6/25 : implement delete login
-    flash("This feature is not yet implemented.", "warning")
+    _user = User.query.filter_by(id=user_id).first_or_404()
+    if _user:
+        # TODO 2/8/25 : chang user status to deleted if history of sales if found, delete otherwise.
+        _user.status = "DELETED"
+        _user.update_instance()
+        # _user.delete_instance()
+        flash("User deleted successfully.", "success")
+        return redirect(url_for("user.list_users"))
+    flash("No user found", "danger")
     return redirect(url_for("user.list_users"))
 
 
