@@ -8,10 +8,11 @@ Description:
     integrates form validation and user authentication logic.
 """
 
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 
 from librepos.blueprints.user.models.user import User, UserStatus
+from librepos.utils.messages import Messages, display_message
 from .forms import LoginForm
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates")
@@ -20,67 +21,47 @@ auth_bp = Blueprint("auth", __name__, template_folder="templates")
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        flash("You are already logged in.", "info")
+        display_message(Messages.AUTH_LOGGED_IN)
         return redirect(url_for("user.get_dashboard"))
+
     form = LoginForm()
-    context = {
-        "title": "Login",
-        "form": form,
-    }
+    login_redirect = url_for("auth.login")
+    context = {"title": "Login", "form": form}
+
     if form.validate_on_submit():
-        _user = User.query.filter_by(
-            username=form.username.data, status=UserStatus.ACTIVE
-        ).first()
+        username = form.username.data
+        user = User.query.filter_by(username=username, status=UserStatus.ACTIVE).first()
+        locked_user = User.query.filter_by(username=username, status=UserStatus.LOCKED).first()
 
-        # check if the user account is locked
-        _user_locked = User.query.filter_by(
-            username=form.username.data, status=UserStatus.LOCKED
-        ).first()
-        if _user_locked:
-            flash(
-                "Your account is locked. Please contact the site administrator.",
-                "danger",
-            )
-            return redirect(url_for("auth.login"))
+        if locked_user:
+            display_message(Messages.AUTH_LOCKED)
+            return redirect(login_redirect)
 
-        # Incorrect password used
-        if _user and not _user.check_password(form.password.data):
-            flash("Invalid credentials please try again.", "danger")
-            _user.activity.update_failed_login_attempts()
-            return redirect(url_for("auth.login"))
+        if user and not user.check_password(form.password.data):
+            display_message(Messages.AUTH_FAILED)
+            user.activity.update_failed_login_attempts()
+            return redirect(login_redirect)
 
-        if _user and _user.check_password(form.password.data):
-            # user is not active
-            if not _user.is_active:
-                flash(
-                    "Your account is not active. Please contact the site administrator.",
-                    "danger",
-                )
-                return redirect(url_for("auth.login"))
+        if user and user.check_password(form.password.data):
+            if not user.is_active:
+                display_message(Messages.AUTH_LOCKED)
+                return redirect(login_redirect)
 
-            # login user
-            login_user(_user, remember=form.remember_me.data)
+            login_user(user, remember=form.remember_me.data)
+            ip_address = request.remote_addr
+            device_info = request.user_agent.string
+            user.activity.update_activity(ip_address=ip_address, device_info=device_info)
 
-            # update the user activity (login count, ip_address, device)
-            _ip_address = request.remote_addr
-            _device_info = request.user_agent.string
-            _user.activity.update_activity(
-                ip_address=_ip_address, device_info=_device_info
-            )
+            if user.activity.login_count == 1:
+                target_profile_url = url_for("user.get_user_profile", user_id=user.id)
+                display_message(Messages.AUTH_LOGIN)
+                return redirect(target_profile_url)
 
-            if _user.activity.login_count == 1:
-                flash(
-                    "Welcome, first time login. Please update your profile.",
-                    "info",
-                )
-                return redirect(url_for("user.get_user_profile", user_id=_user.id))
-
-            flash("You have successfully logged in.", "success")
-
+            display_message(Messages.AUTH_LOGIN)
             return redirect(url_for("user.get_dashboard"))
 
-        flash("Invalid credentials please try again.", "danger")
-        return redirect(url_for("auth.login"))
+        display_message(Messages.AUTH_FAILED)
+        return redirect(login_redirect)
     return render_template("auth/login.html", **context)
 
 
@@ -88,5 +69,5 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash("You have been logged out.", "success")
+    display_message(Messages.AUTH_LOGOUT)
     return redirect(url_for("auth.login"))
