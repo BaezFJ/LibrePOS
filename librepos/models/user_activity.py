@@ -21,7 +21,7 @@ class UserActivity(CRUDMixin, db.Model):
 
     def update_failed_login_attempts(self):
         if self.failed_login_attempts >= 3:
-            from librepos.blueprints.user.models.user import UserStatus
+            from librepos.models.user import UserStatus
 
             self.user.change_status(UserStatus.LOCKED)
         self.failed_login_attempts += 1

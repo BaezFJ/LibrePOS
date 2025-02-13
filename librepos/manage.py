@@ -1,15 +1,6 @@
 import click
 
-from librepos.blueprints.user.models import Group
-from librepos.blueprints.user.models import Permission
-from librepos.blueprints.user.models import Policy
-from librepos.blueprints.user.models import Role
-from librepos.blueprints.user.models import (
-    User,
-    PermissionPolicy,
-    PolicyGroup,
-    GroupUser,
-)
+from librepos.models import Group, Permission, Policy, Role, User, PermissionPolicy, PolicyGroup, GroupUser
 from .data.init_data import ROLES, PERMISSIONS, POLICIES, GROUPS
 
 

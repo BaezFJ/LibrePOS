@@ -1,5 +1,6 @@
 from .user.routes import user_bp
-from .auth.routes import auth_bp
+
+from .dashboard.routes import dashboard_bp
 
 
-blueprints = [user_bp, auth_bp]
+blueprints = [user_bp, dashboard_bp]

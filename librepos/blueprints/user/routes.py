@@ -9,37 +9,32 @@ Description:
 """
 
 from flask import Blueprint, render_template, url_for, redirect, flash
-from flask_login import login_required, current_user
+from flask_login import current_user, logout_user, login_required
 
-from librepos.blueprints.user.models.user import User
+from librepos.models import UserProfile
+from librepos.models.user import User
 from librepos.utils.decorators import permission_required
+from librepos.utils.helpers import sanitize_form_data, generate_password
+from librepos.utils.messages import display_message, Messages
+from .controller import UserController
 from .forms import UserForm, UserProfileForm, NewUserForm
-from .models import UserProfile
-from ...utils.helpers import sanitize_form_data, generate_password
 
-user_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/user")
+user_bp = Blueprint("user", __name__, template_folder="templates")
+
+controller = UserController
 
 
-@user_bp.before_request
+@user_bp.route("/login", methods=["GET", "POST"])
+def login():
+    return controller().handle_login()
+
+
+@user_bp.get("/logout")
 @login_required
-def before_request():
-    """
-    Decorator to require a user to be logged in before processing a request. This
-    function is registered to be invoked before each request handled by the
-    decorated blueprint. It leverages the Flask-Login's `@login_required`
-    decorator to enforce user authentication.
-
-    :return: None
-    """
-    pass
-
-
-@user_bp.get("/dashboard")
-def get_dashboard():
-    context = {
-        "title": "Dashboard",
-    }
-    return render_template("user/dashboard.html", **context)
+def logout():
+    logout_user()
+    display_message(Messages.AUTH_LOGOUT)
+    return redirect(url_for("user.login"))
 
 
 @user_bp.post("/new")
@@ -63,7 +58,7 @@ def list_users():
         "title": "Users",
         "users": _users,
         "form": form,
-        "back_url": url_for("user.get_dashboard"),
+        "back_url": url_for("dashboard.get_dashboard"),
     }
     return render_template("user/list_users.html", **context)
 
@@ -114,7 +109,7 @@ def get_user_profile(user_id):
     context = {
         "title": "Profile",
         "form": form,
-        "back_url": url_for("user.get_dashboard"),
+        "back_url": url_for("dashboard.get_dashboard"),
     }
     return render_template("user/user_profile.html", **context)
 

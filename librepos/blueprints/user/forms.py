@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, FloatField, SelectField, SubmitField, EmailField
+from wtforms import StringField, FloatField, SelectField, SubmitField, EmailField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Email
 
 kw = {"placeholder": " "}
@@ -9,7 +9,7 @@ class UserForm(FlaskForm):
     def __init__(self, **kwargs):
         super(UserForm, self).__init__(**kwargs)
 
-        from .models import Role
+        from librepos.models import Role
 
         active_roles = Role.query.filter_by(is_active=True).all()
         self.role_id.choices = [(r.id, r.name.title()) for r in active_roles]
@@ -34,7 +34,7 @@ class NewUserForm(FlaskForm):
     def __init__(self, **kwargs):
         super(NewUserForm, self).__init__(**kwargs)
 
-        from .models import Role
+        from librepos.models import Role
 
         active_roles = Role.query.filter_by(is_active=True).all()
         self.role_id.choices = [(r.id, r.name.title()) for r in active_roles]
@@ -55,6 +55,13 @@ class UserProfileForm(FlaskForm):
     def __init__(self, **kwargs):
         super(UserProfileForm, self).__init__(**kwargs)
 
-        from librepos.blueprints.user.models.user_profile import Gender
+        from librepos.models.user_profile import Gender
 
         self.gender.choices = [(g.value, g.name.title()) for g in Gender]
+
+
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()], render_kw=kw)
+    password = PasswordField("Password", validators=[DataRequired()], render_kw=kw)
+    remember_me = BooleanField("Remember Me")
+    submit = SubmitField("Sign In")
