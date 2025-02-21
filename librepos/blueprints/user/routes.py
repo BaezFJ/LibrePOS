@@ -7,7 +7,6 @@ Description:
     It provides endpoints for creating, listing, viewing, editing, and deleting users,
     as well as ensuring appropriate permissions and authentication for each action.
 """
-from crypt import methods
 
 from flask import Blueprint, url_for, redirect, flash
 from flask_login import current_user, login_required
@@ -56,6 +55,13 @@ def list_users():
 def edit_user(user_id):
     """(Admin only) Allows an administrator to modify details or roles for a specific user."""
     return user_controller().edit_user(user_id=user_id)
+
+
+@user_bp.get("/dashboard")
+@login_required
+def dashboard():
+    """Displays the dashboard page for the logged-in user."""
+    return user_controller().dashboard()
 
 
 @user_bp.post("/new")

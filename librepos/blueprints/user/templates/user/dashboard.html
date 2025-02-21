@@ -4,36 +4,36 @@
 
 {% block main %}
 
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col s6">
-                    {{ render_card_link("", "Dine-In", "table_restaurant") }}
-                </div>
-                <div class="col s6">
-                    {{ render_card_link("", "Takeout", "takeout_dining") }}
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <table class="highlight centered">
-            {{ render_thead(["Status", "Order", "Customer", "Time", "Actions"]) }}
-            <tbody>
-            <tr>
-                <td>
-                    <i class="material-icons green-text">radio_button_checked</i>
-                </td>
-                <td>#12</td>
-                <td><b>7098</b></td>
-                <td>07:35PM</td>
-                <td>
-                    <a href="" class="btn filled">view</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </section>
+{#    <section>#}
+{#        <div class="container">#}
+{#            <div class="row">#}
+{#                <div class="col s6">#}
+{#                    {{ render_card_link("", "Dine-In", "table_restaurant") }}#}
+{#                </div>#}
+{#                <div class="col s6">#}
+{#                    {{ render_card_link("", "Takeout", "takeout_dining") }}#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </section>#}
+{##}
+{#    <section>#}
+{#        <table class="highlight centered">#}
+{#            {{ render_thead(["Status", "Order", "Customer", "Time", "Actions"]) }}#}
+{#            <tbody>#}
+{#            <tr>#}
+{#                <td>#}
+{#                    <i class="material-icons green-text">radio_button_checked</i>#}
+{#                </td>#}
+{#                <td>#12</td>#}
+{#                <td><b>7098</b></td>#}
+{#                <td>07:35PM</td>#}
+{#                <td>#}
+{#                    <a href="" class="btn filled">view</a>#}
+{#                </td>#}
+{#            </tr>#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </section>#}
 
 {% endblock %}

@@ -12,7 +12,7 @@ class UserController:
 
     def __init__(self):
         self.login_url = url_for("user.login")
-        self.dashboard_url = url_for("dashboard.get_dashboard")
+        self.dashboard_url = url_for("user.dashboard")
 
         self.user_model = User
 
@@ -104,3 +104,10 @@ class UserController:
             "back_url": url_for("user.list_users"),
         }
         return render_template("user/edit_user.html", **context)
+
+    @staticmethod
+    def dashboard():
+        context = {
+            "title": "Dashboard"
+        }
+        return render_template("user/dashboard.html", **context)
