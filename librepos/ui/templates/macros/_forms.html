@@ -1,0 +1,70 @@
+{% macro render_form(form, url, dynamic=True) %}
+
+    {% set responsive_class = "col s12 m6 l4 xl3" %}
+
+    <form action="{{ url }}" method="POSt" class="row">
+        {{ form.hidden_tag() }}
+        {% for field in form if field.name != 'csrf_token' %}
+            {% if field.name == "submit" %}
+                <div class="col s12 center-block">
+                    {{ submit_field(field) }}
+                </div>
+            {% else %}
+                <div class="{{ responsive_class }} input-field">
+                    {{ form_field(field) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+    </form>
+
+{% endmacro %}
+
+
+{% macro form_field(field) %}
+
+    {% if field.type == "BooleanField" %}
+        {{ switch_field(field) }}
+    {% else %}
+        {{ text_field(field) }}
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro switch_field(field) %}
+
+    <div class="switch">
+        <span>{{ field.label.text }} &colon; &nbsp;</span>
+        <label>
+            {{ field(**kwargs)|safe }}
+            <span class="lever"></span>
+        </label>
+    </div>
+
+{% endmacro %}
+
+{% macro text_field(field, icon=None, suffix=False, support_text=None) %}
+
+    {% if icon %}
+        <i class="material-icons {{ 'suffix' if suffix else 'prefix' }}">{{ icon }}</i>
+    {% endif %}
+
+    {{ field(**kwargs)|safe }}
+    {{ field.label }}
+
+    {% if support_text %}
+        <span class="supporting-text">{{ support_text }}</span>
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro submit_field(field, icon="send") %}
+
+    <button class="btn icon-right tonal waves-effect waves-light" type="submit" name="action">
+        {{ field.name }}
+        <i class="material-icons right">{{ icon }}</i>
+    </button>
+
+{% endmacro %}

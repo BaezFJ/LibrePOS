@@ -1,0 +1,7 @@
+{% macro icon(name, size="", color="", position="", classes="") %}
+    <i class="material-icons {{ size }} {{ color }} {{ position }} {{ classes }}">{{ name }}</i>
+{% endmacro %}
+
+{% macro symbol(name, style="outlined", size="", color="", position="", classes="") %}
+    <i class="material-symbols-{{ style }} {{ size }} {{ color }} {{ position }} {{ classes }}">{{ name }}</i>
+{% endmacro %}

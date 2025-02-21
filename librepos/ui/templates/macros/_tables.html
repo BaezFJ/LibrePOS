@@ -1,0 +1,54 @@
+{% macro thead(columns) %}
+    <thead>
+    <tr>
+        {% for column in columns %}
+            <th>{{ column }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+{% endmacro %}
+
+
+{% macro tbody(rows) %}
+    <tbody>
+    {% for row in rows %}
+        <tr>
+            {% for column in row %}
+                <td>{{ column }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+{% endmacro %}
+
+
+{% macro table(headers, rows, actions=None, classes="striped highlight") %}
+    <table class="{{ classes }}">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+                {% if actions %}<th>Actions</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                    {% if actions %}
+                        <td>
+                            {% for action in actions %}
+                                <a href="{{ action.href(row) }}" class="btn-small {{ action.classes }}">
+                                    <i class="material-icons">{{ action.icon }}</i>
+                                </a>
+                            {% endfor %}
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
