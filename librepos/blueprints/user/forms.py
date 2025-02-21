@@ -47,7 +47,7 @@ class UserProfileForm(FlaskForm):
     middle_name = StringField("Middle Name", render_kw=kw)
     last_name = StringField("Last Name", validators=[DataRequired()], render_kw=kw)
     email = EmailField("Email", validators=[DataRequired(), Email()], render_kw=kw)
-    phone_number = StringField("Phone Number", render_kw=kw)
+    phone = StringField("Phone", render_kw=kw)
     gender = SelectField("Gender", coerce=str, render_kw=kw)
     profile_picture = StringField("Profile Picture", render_kw=kw)
     submit = SubmitField("Submit")

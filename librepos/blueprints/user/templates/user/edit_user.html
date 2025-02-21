@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% from "components.html" import render_card %}
+{% from "macros/_forms.html" import render_form %}
+{% from "macros/_cards.html" import build_icon_card %}
+{% from "macros/_tables.html" import thead %}
+
+{% block main %}
+
+    <div class="container">
+
+        <div class="flex space-between">
+            <div class="flex">
+                <h4>{{ user.username }}</h4>
+                <a href="" class="ml-3 blue-text">Edit</a>
+            </div>
+            <button class="btn outlined danger waves-effect waves-red" popovertarget="deleteUserModal">Delete</button>
+            <div id="deleteUserModal" class="modal danger-border" popover>
+                <div class="modal-header">
+                    <h4 class="center-align">Delete User?</h4>
+                </div>
+                <div class="modal-content">
+                    <p class="flow-text grey-text">
+                        Are you sure you want to delete this user?
+                        <br>
+                        This action cannot be undone.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <div class="flex space-between">
+                        <form action="{{ url_for("user.delete_user", user_id=user.id) }}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn danger">Delete</button>
+                        </form>
+                        <button tabindex="0" class="waves-effect btn-flat white-text" popovertarget="deleteUserModal">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider mb-4 py-1"></div>
+
+
+        <div class="row">
+
+            <div class="col s12 outlined">
+                <h5>Summary</h5>
+                <div class="row">
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>Account Status</b></p>
+                            <p>{{ user.status.name|title }}</p>
+                        </blockquote>
+                    </div>
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>Created</b></p>
+                            <p>{{ user.created_date }}</p>
+                        </blockquote>
+                    </div>
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>Last sign-in</b></p>
+                            <p>{{ user.activity.last_login|datetime }}</p>
+                        </blockquote>
+                    </div>
+
+
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>Start Date</b></p>
+                            <p>{{ user.work_details.start_date|datetime if user.work_details.start_date else "N/A" }}</p>
+                        </blockquote>
+                    </div>
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>End Date</b></p>
+                            <p>{{ user.work_details.end_date|datetime if user.work_details.end_date else "N/A" }}</p>
+                        </blockquote>
+                    </div>
+                    <div class="col s4 m3 l2">
+                        <blockquote>
+                            <p><b>Hourly Rate</b></p>
+                            <p>{{ user.work_details.current_compensation|currency if user.work_details.current_compensation else "N/A" }}</p>
+                        </blockquote>
+                    </div>
+
+
+                </div>
+            </div>
+
+            {#            <div class="col s12">#}
+            {#                {{ render_form(form) }}#}
+            {#            </div>#}
+        </div>
+
+
+        <div class="divider my-4 py-1"></div>
+
+
+        <ul class="tabs tabs-fixed-width tabs-horizontal z-depth-1 col s12">
+            <li class="tab">
+                <a href="#permissions" class="active"><i class="material-icons">admin_panel_settings</i>Permissions</a>
+            </li>
+            <li class="tab">
+                <a href="#security"><i class="material-icons">security</i>Security</a>
+            </li>
+            <li class="tab">
+                <a href="#activity"><i class="material-icons">track_changes</i>Activity</a>
+            </li>
+        </ul>
+        <div id="permissions" class="col s12">
+            <div class="outlined mt-6">
+                <div class="flex space-between">
+                    <h5>Permissions <span class="grey-text">({{ user.list_permissions()|count }})</span></h5>
+                    <a href="" class="btn filled">Edit Permissions</a>
+                </div>
+                <p class="grey-text flow-text">Permissions are defined by attaching them directly to the user or through
+                    roles.</p>
+                <table class="highlight">
+                    {{ thead(["Policy Name", "Type", "Attached via"]) }}
+                    <tbody>
+                    {% for policy in user.list_policies() %}
+                        <tr>
+                            <td><a href="">{{ policy.name }}</a></td>
+                            <td>System</td>
+                            <td>
+                                {% for group in policy.groups %}
+                                    {% if group in user.groups %}
+                                        {{ group.name }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="security" class="col s12">
+
+
+            <div class="outlined mt-6">
+                <div class="flex space-between">
+                    <h5>Terminal sign-in</h5>
+                    <a href="" class="btn filled">Manage Access</a>
+                </div>
+                <div class="row">
+                    <div class="col s12 m6">
+                        <p><b>Terminal sign-in link</b></p>
+                        <p>
+                            <a href="">https://example.com/login?token=1234567890</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="outlined mt-6">
+                <div class="flex space-between">
+                    <h5>Access Keys</h5>
+                    <a href="" class="btn filled">Create access key</a>
+                </div>
+                <p class="grey-text flow-text">
+                    User access keys are used to authenticate to the API.
+                </p>
+
+            </div>
+
+
+        </div>
+        <div id="activity" class="col s12"><p>Activity</p></div>
+    </div>
+
+{% endblock %}

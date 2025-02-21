@@ -37,3 +37,8 @@ class UserActivity(CRUDMixin, db.Model):
         self.last_ip_address = ip_address
         self.device_info = device_info
         return self.save()
+
+    def get_last_login(self):
+        _date = self.last_login.strftime("%Y-%m-%d")
+        _time = self.last_login.strftime("%I:%M %p")
+        return f"{_date} @ {_time}"

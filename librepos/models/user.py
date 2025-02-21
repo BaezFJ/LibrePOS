@@ -24,7 +24,7 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
     def __init__(self, role_id, username, password, **kwargs):
         super(User, self).__init__(**kwargs)
 
-        from librepos.blueprints.user.models import UserActivity
+        from librepos.models import UserActivity
 
         self.id = generate_uuid()
         self.role_id = role_id
@@ -61,7 +61,7 @@ class User(UserMixin, CRUDMixin, TimestampMixin, db.Model):
 
     @property
     def phone(self):
-        return self.profile.phone_number if self.profile else None
+        return self.profile.phone if self.profile else None
 
     @property
     def groups(self) -> List[Any]:

@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
-{% from "macros/form.html" import render_form %}
+{% from "macros/_forms.html" import render_form %}
 
 {% block main %}
 
     <div class="container">
         <div class="row">
             <div class="col s12">
-                {{ render_form(form, url_for("user.update_profile")) }}
+                {{ render_form(form) }}
             </div>
         </div>
     </div>

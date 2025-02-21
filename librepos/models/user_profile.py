@@ -26,12 +26,12 @@ class UserProfile(CRUDMixin, db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     date_of_birth = db.Column(db.Date)
     gender = db.Column(Enum(Gender), nullable=False, default=Gender.NOT_SPECIFIED)
-    phone_number = db.Column(db.String(20), unique=True)
+    phone = db.Column(db.String(20), unique=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     profile_picture = db.Column(db.String(255))
 
     email_verified = db.Column(db.Boolean, default=False)
-    phone_number_verified = db.Column(db.Boolean, default=False)
+    phone_verified = db.Column(db.Boolean, default=False)
 
     # Relationships
     user = db.relationship("User", back_populates="profile")

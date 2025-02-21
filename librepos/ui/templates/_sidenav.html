@@ -26,7 +26,7 @@
 
         <div class="divider"></div>
 
-        {{ render_list_link(url_for("user.get_user_profile", user_id=current_user.id), "Profile", "person") }}
+        {{ render_list_link(url_for("user.profile"), "Profile", "person") }}
         {{ render_list_link("", "Schedule", "schedule") }}
 
         {{ render_list_link(url_for("user.logout"), "Logout", "logout") }}
