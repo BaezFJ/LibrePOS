@@ -17,6 +17,8 @@ class Messages(enum.Enum):
     AUTH_LOCKED: str = "Your account is locked. Please contact the site administrator."
     AUTH_FAILED: str = "Invalid credentials please try again."
     AUTH_LOGOUT: str = "You have successfully logged out."
+    USER_PROFILE_UPDATED: str = "Your profile has been updated."
+    FORM_SUBMISSION_ERROR: str = "Form submission failed."
 
 
 # Define the mapping between Messages and their corresponding AlertCategory.
@@ -27,6 +29,8 @@ MESSAGE_ALERT_MAPPING = {
     Messages.AUTH_LOCKED: AlertCategory.DANGER,
     Messages.AUTH_FAILED: AlertCategory.DANGER,
     Messages.AUTH_LOGOUT: AlertCategory.SUCCESS,
+    Messages.USER_PROFILE_UPDATED: AlertCategory.SUCCESS,
+    Messages.FORM_SUBMISSION_ERROR: AlertCategory.DANGER,
 }
 
 
