@@ -13,6 +13,7 @@ a {
     justify-content: center;
 }
 
+.modal,
 .modal.bottom-sheet {
     max-height: 80%;
 }
@@ -21,6 +22,6 @@ ul {
     padding-inline-start: 0;
 }
 
-.card-panel{
+.card-panel {
     margin: 0;
 }
