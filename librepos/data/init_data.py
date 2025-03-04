@@ -63,3 +63,36 @@ MENU_GROUPS = [
         "name": "Desserts",
     }
 ]
+
+TICKET_TYPES = [
+    {
+        "name": "dine-in",
+        "icon": "table_restaurant"
+    },
+    {
+        "name": "take-out",
+        "icon": "takeout_dining",
+        "default": True
+    },
+    {
+        "name": "delivery",
+        "icon": "delivery_dining",
+        "active": False,
+        "visible": False
+    },
+    {
+        "name": "phone",
+        "icon": "phone"
+    },
+    {
+        "name": "drive-thru",
+        "icon": "time_to_leave",
+        "active": False,
+        "visible": False
+    },
+    {
+        "name": "online",
+        "icon": "public",
+        "visible": False
+    }
+]
