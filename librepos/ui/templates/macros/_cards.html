@@ -34,3 +34,15 @@
     </div>
 
 {% endmacro %}
+
+
+{% macro order_card(url, order) %}
+
+    <!-- Order Card -->
+    <a href="{{ url }}">
+        {% call card_block() %}
+
+        {% endcall %}
+    </a>
+
+{% endmacro %}
