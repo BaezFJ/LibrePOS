@@ -11,6 +11,7 @@ from .user_address import UserAddress
 from .user_profile import UserProfile
 from .user_shift_details import UserShiftDetails
 from .user_work_details import UserWorkDetails
+from .menu_group import MenuGroup
 
 __all__ = [
     "Permission",
@@ -26,4 +27,5 @@ __all__ = [
     "PolicyGroup",
     "PermissionPolicy",
     "GroupUser",
+    "MenuGroup",
 ]

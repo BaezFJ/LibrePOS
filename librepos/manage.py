@@ -1,7 +1,7 @@
 import click
 
-from librepos.models import Group, Permission, Policy, Role, User, PermissionPolicy, PolicyGroup, GroupUser
-from .data.init_data import ROLES, PERMISSIONS, POLICIES, GROUPS
+from librepos.models import Group, Permission, Policy, Role, User, PermissionPolicy, PolicyGroup, GroupUser, MenuGroup
+from .data.init_data import ROLES, PERMISSIONS, POLICIES, GROUPS, MENU_GROUPS
 
 
 def add_cli_commands(app):
@@ -31,6 +31,7 @@ def add_cli_commands(app):
         populate_table(Policy, POLICIES)
         populate_table(Group, GROUPS)
         populate_table(Role, ROLES)
+        populate_table(MenuGroup, MENU_GROUPS)
 
         # permission_policy
         _permissions = Permission.query.all()
