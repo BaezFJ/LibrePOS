@@ -51,3 +51,15 @@ POLICIES = [
 GROUPS = [
     {"name": "Administrator", "description": "Allows full access to LibrePOS system."}
 ]
+
+MENU_GROUPS = [
+    {
+        "name": "Entrees",
+    },
+    {
+        "name": "Beverages",
+    },
+    {
+        "name": "Desserts",
+    }
+]
