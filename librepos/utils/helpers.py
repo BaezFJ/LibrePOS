@@ -4,7 +4,8 @@ from datetime import datetime
 
 import pytz
 from better_profanity import profanity
-from flask import current_app
+from flask import current_app, flash
+from flask_mailman import EmailMessage
 from slugify import slugify
 
 
@@ -95,3 +96,60 @@ def cents_to_dollars(cents: int) -> float:
 def dollars_to_cents(dollars: float) -> int:
     """Convert dollars to cents."""
     return int(dollars * 100)
+
+
+def send_mail(**kwargs):
+    if current_app.config["MAIL_SUPPRESS_SEND"]:
+        flash("Email not sent due to MAIL_SUPPRESS_SEND being set to True.")
+        return
+    else:
+        msg = EmailMessage(**kwargs)
+        flash(f"Email sent to {msg.to} with subject {msg.subject}")
+        msg.send()
+
+
+def send_user_registration_mail(username, email, temp_password):
+    company_name = current_app.config["COMPANY_NAME"]
+
+    subject = f"Welcome to {company_name} – Your Onboarding Details"
+    from_email = current_app.config["MAIL_DEFAULT_SENDER"]
+    body = f"""
+Hi {username},
+
+Welcome to {company_name}! We are excited to have you join our team.
+
+Below are your onboarding details:
+
+Login Credentials:
+
+    Username: {username}
+    Temporary Password: {temp_password}
+
+Please log in on your first day and change your temporary password as soon as possible.
+
+Start Date:
+
+    [Start Date]
+
+Compensation Details:
+
+    Amount: [Compensation Amount]
+    Type: [Compensation Type] (e.g., hourly, salary, commission, etc.)
+
+If you have any questions or need assistance with your account or any other onboarding matters, please feel free to reach out to our HR team at [HR Email or Phone Number].
+
+Once again, welcome aboard! We look forward to a successful journey together.
+
+Best regards,
+
+[Your Name]
+[Your Title]
+[Company Name]
+[Contact Information]
+"""
+    send_mail(
+        subject=subject,
+        body=body,
+        from_email=from_email,
+        to=[email],
+    )

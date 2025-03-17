@@ -16,7 +16,7 @@
       <list>
         <option value="$MODULE_DIR$/librepos/ui/templates" />
         <option value="$MODULE_DIR$/librepos/blueprints/user/templates" />
-        <option value="$MODULE_DIR$/librepos/blueprints/auth/templates" />
+        <option value="$MODULE_DIR$/librepos/blueprints/dashboard/templates" />
       </list>
     </option>
   </component>

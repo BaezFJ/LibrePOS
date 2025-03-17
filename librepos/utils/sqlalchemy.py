@@ -60,7 +60,7 @@ class CRUDMixin:
     @classmethod
     def get_by_id(cls, record_id):
         """Get a record by its ID."""
-        instance = db.session.query(cls).filter_by(id=record_id).first_or_404()
+        instance = db.session.query(cls).filter_by(id=record_id).first()
         return instance
 
     def save(self):
@@ -72,3 +72,8 @@ class CRUDMixin:
         """Delete the current instance from the database."""
         db.session.delete(self)
         db.session.commit()
+
+    @staticmethod
+    def update_instance():
+        """Update the current instance"""
+        return db.session.commit()

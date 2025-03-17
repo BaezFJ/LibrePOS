@@ -1,0 +1,19 @@
+{% macro card_block(title=None, actions=None, classes="") %}
+
+    <div class="card {{ classes }}">
+        <div class="card-content">
+            {% if title %}
+                <span class="card-title">{{ title|title }}</span>
+            {% endif %}
+            {{ caller() }}
+        </div>
+        {% if actions %}
+            <div class="card-action">
+                {% for action in actions %}
+                    <a href="{{ action.href }}" class="{{ action.classes }}">{{ action.label }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+{% endmacro %}

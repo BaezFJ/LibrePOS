@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
-{% from "components.html" import render_thead, render_card %}
-{% from "macros/form.html" import render_form %}
-{% from "macros/card.html" import build_icon_card %}
+{% from "components.html" import render_card %}
+{% from "macros/_forms.html" import render_form %}
+{% from "macros/_cards.html" import build_icon_card %}
+{% from "macros/_tables.html" import thead %}
 
 {% block main %}
 
@@ -119,7 +120,7 @@
                 <p class="grey-text flow-text">Permissions are defined by attaching them directly to the user or through
                     roles.</p>
                 <table class="highlight">
-                    {{ render_thead(["Policy Name", "Type", "Attached via"]) }}
+                    {{ thead(["Policy Name", "Type", "Attached via"]) }}
                     <tbody>
                     {% for policy in user.list_policies() %}
                         <tr>

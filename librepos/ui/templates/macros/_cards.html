@@ -1,0 +1,48 @@
+{% from "macros/_blocks.html" import card_block %}
+
+{% macro icon_card(icon, text, href=None) %}
+    <!-- Icon Card -->
+    {% if href %}
+        <a href="{{ href }}" class="inherit-color">
+            {% call card_block(classes="center-align") %}
+                <i class="large material-icons">{{ icon }}</i>
+                <h5 class="my-0">{{ text|truncate(length=8) }}</h5>
+            {% endcall %}
+        </a>
+    {% else %}
+        {% call card_block(classes="center-align") %}
+            <i class="large material-icons">{{ icon }}</i>
+            <h5 class="my-0">{{ text|truncate(length=8) }}</h5>
+        {% endcall %}
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro profile_card(user) %}
+
+    <!-- Profile Card -->
+    <div class="card">
+        <div class="card-content center-align">
+            <img src="https://placehold.co/120" alt="{{ user.username }}" class="profile-img">
+            <h5 id="username">{{ user.profile.full_name }}</h5>
+            <p class="grey-text">{{ user.profile.email }}</p>
+            {% if user.profile.phone %}
+                <p class="grey-text">{{ user.profile.phone|phone }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+{% macro order_card(url, order) %}
+
+    <!-- Order Card -->
+    <a href="{{ url }}">
+        {% call card_block() %}
+
+        {% endcall %}
+    </a>
+
+{% endmacro %}

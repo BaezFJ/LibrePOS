@@ -1,5 +1,6 @@
 from librepos.extensions import db
 from librepos.utils.sqlalchemy import CRUDMixin, TimestampMixin
+from typing import cast, List, Any
 
 
 class Group(CRUDMixin, TimestampMixin, db.Model):
@@ -17,9 +18,11 @@ class Group(CRUDMixin, TimestampMixin, db.Model):
     )
 
     @property
-    def policies(self):
-        return [pp.policy for pp in self.policy_groups]
+    def policies(self) -> List[Any]:
+        policy_groups = cast(List[Any], self.policy_groups)
+        return [pp.policy for pp in policy_groups]
 
     @property
-    def users(self):
-        return [gu.user for gu in self.group_users]
+    def users(self) -> List[Any]:
+        _group_users = cast(List[Any], self.group_users)
+        return [gu.user for gu in _group_users]

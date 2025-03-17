@@ -1,0 +1,9 @@
+{% macro button(label, href='#', size='normal', color='primary', waves='waves-effect', icon=None, classes='') %}
+    <a href="{{ href }}" class="btn {% if size == 'large' %}btn-large{% elif size == 'small' %}btn-small{% endif %}
+        {{ color }} {{ waves }} {{ classes }}">
+        {% if icon %}
+            <i class="material-icons left">{{ icon }}</i>
+        {% endif %}
+        {{ label }}
+    </a>
+{% endmacro %}

@@ -1,16 +1,8 @@
 import click
 
-from librepos.blueprints.user.models import Group
-from librepos.blueprints.user.models import Permission
-from librepos.blueprints.user.models import Policy
-from librepos.blueprints.user.models import Role
-from librepos.blueprints.user.models import (
-    User,
-    PermissionPolicy,
-    PolicyGroup,
-    GroupUser,
-)
-from .data.init_data import ROLES, PERMISSIONS, POLICIES, GROUPS
+from librepos.models import Group, Permission, Policy, Role, User, PermissionPolicy, PolicyGroup, GroupUser, MenuGroup, \
+    TicketType
+from .data.init_data import ROLES, PERMISSIONS, POLICIES, GROUPS, MENU_GROUPS, TICKET_TYPES
 
 
 def add_cli_commands(app):
@@ -40,6 +32,8 @@ def add_cli_commands(app):
         populate_table(Policy, POLICIES)
         populate_table(Group, GROUPS)
         populate_table(Role, ROLES)
+        populate_table(MenuGroup, MENU_GROUPS)
+        populate_table(TicketType, TICKET_TYPES)
 
         # permission_policy
         _permissions = Permission.query.all()
@@ -55,29 +49,27 @@ def add_cli_commands(app):
                 )
 
         _administrator_group = Group.query.filter_by(name="Administrator").first()
-        if _administrator_group:
+        if _administrator_group and _administrator_access_policy:
             PolicyGroup.create(
                 group_id=_administrator_group.id,
                 policy_id=_administrator_access_policy.id,
             )
 
         # Create default admin
-        user_exists = User.query.filter_by(username="admin").first()
+        user_exists = User.query.count()
         admin_role = Role.query.filter_by(name="admin").first()
-        if not user_exists:
+
+        if not user_exists and admin_role:
             User.create(
                 role_id=admin_role.id,
-                username="admin",
-                password_hash="librepos",
-                first_name="librepos",
-                last_name="forever",
-                email="info@librepos.com",
+                password="librepos",
+                username="LibrePOS",
             )
 
         # add the newly create admin user to the Administrator Group
         admin_group = Group.query.filter_by(name="Administrator").first()
         if admin_group:
-            admin_user = User.query.filter_by(username="admin").first()
+            admin_user = User.query.filter_by(username="LibrePOS").first()
             if admin_user:
                 GroupUser.create(group_id=admin_group.id, user_id=admin_user.id)
 
