@@ -36,13 +36,17 @@
 {% endmacro %}
 
 
-{% macro order_card(url, order) %}
+{% macro order_card(order) %}
 
     <!-- Order Card -->
-    <a href="{{ url }}">
-        {% call card_block() %}
-
-        {% endcall %}
-    </a>
+    <div class="card success-border">
+        <div class="card-content">
+            <span class="card-title">&num; {{ order.sequence_number }}</span>
+            <h1 class="center-align my-0"><b>6</b></h1>
+        </div>
+        <div class="card-action">
+            <p class="center-align">Done</p>
+        </div>
+    </div>
 
 {% endmacro %}

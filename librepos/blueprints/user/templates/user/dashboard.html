@@ -1,25 +1,29 @@
 {% extends 'base.html' %}
 
-{% from "macros/_cards.html" import icon_card %}
+{% from "macros/_cards.html" import icon_card, order_card %}
 
 {% block main %}
 
     <section>
         <div class="container">
             <div class="row">
-                <div class="col s6 m4 offset-m2">
-                    {{ icon_card("table_restaurant", "Dine-In", "") }}
-                </div>
-                <div class="col s6 m4">
-                    {{ icon_card("takeout_dining", "Takeout", "") }}
-                </div>
+                {% for ticket_type in ticket_types %}
+                    <div class="col s6 m4 offset-m2">
+                        {{ icon_card(ticket_type.icon, ticket_type.name|title, "") }}
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </section>
 
     <section>
-        <div class="row">
-            <div class="col s6">
+        <div class="container">
+            <div class="row">
+                {% for order in orders %}
+                    <div class="col s6">
+                        {{ order_card(order) }}
+                    </div>
+                {% endfor %}
 
             </div>
         </div>
@@ -43,5 +47,12 @@
     {#            </tbody>#}
     {#        </table>#}
     {#    </section>#}
+
+
+    <div class="fixed-action-btn">
+        <button hx-post="" hx-trigger="click" class="btn-floating btn-large">
+            <i class="large material-icons">add</i>
+        </button>
+    </div>
 
 {% endblock %}

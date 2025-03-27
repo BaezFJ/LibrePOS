@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, request
 from flask_login import login_user, current_user, logout_user
 
-from librepos.models import UserProfile
+from librepos.models import UserProfile, TicketType
 from librepos.models.user import User, UserStatus
 from librepos.utils.helpers import sanitize_form_data
 from librepos.utils.messages import Messages, display_message
@@ -107,7 +107,22 @@ class UserController:
 
     @staticmethod
     def dashboard():
+        """Displays the dashboard page for the logged-in user."""
+        ticket_types = TicketType.query.filter_by(visible=True, active=True).all()
+        # orders = current_user.orders.filter_by(status="OPEN").all()
+        orders = [
+            {
+                "id": 1,
+                "sequence_number": "19",
+            },
+            {
+                "id": 2,
+                "sequence_number": "18",
+            }
+        ]
         context = {
-            "title": "Dashboard"
+            "title": "Dashboard",
+            "ticket_types": ticket_types,
+            "orders": orders,
         }
         return render_template("user/dashboard.html", **context)
