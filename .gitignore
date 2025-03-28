@@ -333,3 +333,4 @@ FodyWeavers.xsd
 *.msm
 *.msp
 *.sln.iml
+!/issue_template.txt
