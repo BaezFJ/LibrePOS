@@ -19,7 +19,7 @@ class UserController:
     def handle_login(self):
 
         if current_user.is_authenticated:
-            display_message(Messages.AUTH_LOGGED_IN)
+            display_message(Messages.AUTH_LOGGED_IN, category="info")
             return redirect(self.dashboard_url)
 
         form = LoginForm()
@@ -31,17 +31,17 @@ class UserController:
             locked_user = User.query.filter_by(username=username, status=UserStatus.LOCKED).first()
 
             if locked_user:
-                display_message(Messages.AUTH_LOCKED)
+                display_message(Messages.AUTH_LOCKED, category="warning")
                 return redirect(self.login_url)
 
             if user and not user.check_password(form.password.data):
-                display_message(Messages.AUTH_FAILED)
+                display_message(Messages.AUTH_FAILED, category="danger")
                 user.activity.update_failed_login_attempts()
                 return redirect(self.login_url)
 
             if user and user.check_password(form.password.data):
                 if not user.is_active:
-                    display_message(Messages.AUTH_LOCKED)
+                    display_message(Messages.AUTH_LOCKED, category="warning")
                     return redirect(self.login_url)
 
                 login_user(user, remember=form.remember_me.data)
@@ -51,19 +51,19 @@ class UserController:
 
                 if user.activity.login_count == 1:
                     target_profile_url = url_for("user.profile", user_id=user.id)
-                    display_message(Messages.AUTH_LOGIN)
+                    display_message(Messages.AUTH_LOGIN, category="success")
                     return redirect(target_profile_url)
 
-                display_message(Messages.AUTH_LOGIN)
+                display_message(Messages.AUTH_LOGIN, category="success")
                 return redirect(self.dashboard_url)
 
-            display_message(Messages.AUTH_FAILED)
+            display_message(Messages.AUTH_FAILED, category="danger")
             return redirect(self.login_url)
         return render_template("user/login.html", **context)
 
     def handle_logout(self):
         logout_user()
-        display_message(Messages.AUTH_LOGOUT)
+        display_message(Messages.AUTH_LOGOUT, category="success")
         return redirect(self.login_url)
 
     def list_users(self):
@@ -92,7 +92,7 @@ class UserController:
                 UserProfile.create(user_id=user_id, **sanitized_data)
             else:
                 UserProfile.update(user_id, **sanitized_data)
-            display_message(Messages.USER_PROFILE_UPDATED)
+            display_message(Messages.USER_PROFILE_UPDATED, category="success")
             return redirect(self.dashboard_url)
         return render_template("user/profile.html", **context)
 

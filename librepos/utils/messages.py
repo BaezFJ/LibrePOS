@@ -1,24 +1,24 @@
-import enum
+from enum import StrEnum
 
 from flask import flash
 
 
-class AlertCategory(enum.Enum):
-    SUCCESS: str = "success"
-    INFO: str = "info"
-    WARNING: str = "warning"
-    DANGER: str = "danger"
+class AlertCategory(StrEnum):
+    SUCCESS = "success"
+    INFO = "info"
+    WARNING = "warning"
+    DANGER = "danger"
 
 
-class Messages(enum.Enum):
-    AUTH_LOGIN: str = "You have successfully logged in."
-    AUTH_LOGGED_IN: str = "You are already logged in."
-    AUTH_INACTIVE: str = "Your account is not active. Please contact the site administrator."
-    AUTH_LOCKED: str = "Your account is locked. Please contact the site administrator."
-    AUTH_FAILED: str = "Invalid credentials please try again."
-    AUTH_LOGOUT: str = "You have successfully logged out."
-    USER_PROFILE_UPDATED: str = "Your profile has been updated."
-    FORM_SUBMISSION_ERROR: str = "Form submission failed."
+class Messages(StrEnum):
+    AUTH_LOGIN = "You have successfully logged in."
+    AUTH_LOGGED_IN = "You are already logged in."
+    AUTH_INACTIVE = "Your account is not active. Please contact the site administrator."
+    AUTH_LOCKED = "Your account is locked. Please contact the site administrator."
+    AUTH_FAILED = "Invalid credentials please try again."
+    AUTH_LOGOUT = "You have successfully logged out."
+    USER_PROFILE_UPDATED = "Your profile has been updated."
+    FORM_SUBMISSION_ERROR = "Form submission failed."
 
 
 # Define the mapping between Messages and their corresponding AlertCategory.
@@ -34,7 +34,7 @@ MESSAGE_ALERT_MAPPING = {
 }
 
 
-def display_message(message: Messages, category: str = None):
+def display_message(message: Messages, category: str):
     # Use provided category if given; otherwise, look it up from the mapping.
     alert_category = category or MESSAGE_ALERT_MAPPING.get(message, AlertCategory.DANGER).value
     # Determine the message text. If the passed message isn't in the mapping, use a default error message.
