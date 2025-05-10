@@ -4,7 +4,6 @@ from .models import User, UserProfile
 
 
 class UserRepository:
-
     # *** User Queries ***
     @staticmethod
     def get_by_username(username: str):

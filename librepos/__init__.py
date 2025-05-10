@@ -44,7 +44,9 @@ def init_extensions(app):
     login_manager.login_view = "auth.login_form"  # type: ignore
     login_manager.session_protection = "strong"
     login_manager.refresh_view = "auth.reauthenticate"  # type: ignore
-    login_manager.needs_refresh_message = "To protect your account, please reauthenticate to access this page."
+    login_manager.needs_refresh_message = (
+        "To protect your account, please reauthenticate to access this page."
+    )
     login_manager.needs_refresh_message_category = "info"
 
     @login_manager.user_loader

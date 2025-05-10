@@ -17,7 +17,10 @@ def permission_required(permission_name: str):
                 return redirect(url_for("auth.login"))
 
             if not current_user.has_permission(permission_name):
-                flash("You don't have the required permission to access this page. Contact a manager for assistance.", "danger")
+                flash(
+                    "You don't have the required permission to access this page. Contact a manager for assistance.",
+                    "danger",
+                )
                 return redirect(url_for("dashboard.index"))
 
             return view_func(*args, **kwargs)

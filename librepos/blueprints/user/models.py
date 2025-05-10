@@ -1,9 +1,6 @@
 import enum
 
-from zoneinfo import ZoneInfo
-from datetime import datetime
-
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 
 from librepos.extensions import db
@@ -22,6 +19,7 @@ class UserStatus(enum.Enum):
 
 class User(db.Model, UserMixin):
     """User model."""
+
     __tablename__ = "users"
 
     def __init__(self, username: str, email: str, password: str, **kwargs):
@@ -46,7 +44,12 @@ class User(db.Model, UserMixin):
 
     # Relationships
     role = db.relationship("Role", back_populates="users")
-    profile = db.relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    profile = db.relationship(
+        "UserProfile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
 
     @staticmethod
     def _hash_password(password: str) -> str:
@@ -62,15 +65,16 @@ class User(db.Model, UserMixin):
 
 class UserProfile(db.Model):
     """UserProfile model."""
+
     __tablename__ = "user_profile"
-    
-    def __init__(self, user_id:int, **kwargs):
+
+    def __init__(self, user_id: int, **kwargs):
         super(UserProfile, self).__init__(**kwargs)
         self.user_id = user_id
-    
+
     # ForeignKeys
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
-    
+
     # Columns
     first_name = db.Column(db.String(50), nullable=False)
     middle_name = db.Column(db.String(50), nullable=True)
@@ -82,7 +86,12 @@ class UserProfile(db.Model):
     zip_code = db.Column(db.String(10), nullable=True)
     country = db.Column(db.String(50), nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=timezone_aware_datetime)
-    updated_at = db.Column(db.DateTime, nullable=False, default=timezone_aware_datetime, onupdate=timezone_aware_datetime)
-    
+    updated_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=timezone_aware_datetime,
+        onupdate=timezone_aware_datetime,
+    )
+
     # Relationships
-    user = db.relationship('User', back_populates='profile')
+    user = db.relationship("User", back_populates="profile")
