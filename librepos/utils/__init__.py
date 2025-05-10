@@ -1,20 +1,38 @@
-from urllib.parse import urljoin
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
-from flask import request
+from flask import current_app
 
 
-def safe_next_url(next_url):
+def timezone_aware_datetime():
+    timezone = current_app.config["TIMEZONE"]
+
+    if not timezone:
+        return datetime.now(ZoneInfo("UTC"))
+
+    return datetime.now(ZoneInfo(timezone))
+
+
+def sanitize_form_data(form, exclude_fields: list[str] | None = None):
     """
-    Joins the provided next_url with the host URL of the current request context to produce
-    a complete, safe URL. This function ensures that relative URLs are properly resolved
-    to prevent potential security issues or misdirected links.
+    Sanitizes form data by removing specified fields, including default fields such as
+    CSRF token and submit button. This function is used to clean up unnecessary form data
+    before further processing or saving.
 
-    :param next_url: The relative or absolute path URL to be combined with the host URL
-        of the current request context to create a full, safe URL.
-    :type next_url: str
-
-    :return: A fully constructed and safe URL based on the host URL and the provided
-        next_url value.
-    :rtype: str
+    :param form: A form object that contains the data to be sanitized.
+    :type form: Any
+    :param exclude_fields: Optional list of field names to be excluded from the sanitized data.
+    :type exclude_fields: list[str] | None
+    :return: A dictionary with the sanitized form data, excluding the specified fields.
+    :rtype: dict
     """
-    return urljoin(request.host_url, next_url)
+    sanitized_data = form.data
+
+    sanitized_data.pop("csrf_token", None)
+    sanitized_data.pop("submit", None)
+
+    if exclude_fields:
+        for field in exclude_fields:
+            sanitized_data.pop(field, None)
+
+    return sanitized_data

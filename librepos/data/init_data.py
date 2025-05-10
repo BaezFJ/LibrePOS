@@ -1,56 +1,102 @@
-ROLES = [
-    {
-        "name": "admin",
-        "description": "Manage all aspects, including employee roles, menus, promotions, and settings.",
-    },
-    {
-        "name": "manager",
-        "description": "Access to reports, inventory, and staff management (without system-level settings)",
-    },
-    {
-        "name": "cashier",
-        "description": "Process sales, apply discounts (if allowed), and issue receipts.  Limited access to reports (e.g., daily sales summary).",
-    },
-    {
-        "name": "waiter / server",
-        "description": "Enter orders, split bills, and send order tickets to kitchen printers or displays. Limited visibility of sales or reports.",
-    },
-]
+from librepos.blueprints.user.models import User
+from librepos.blueprints.auth.models import Role, Permission, Policy, PolicyPermission, RolePolicy
+from librepos.extensions import db
 
-PERMISSIONS = [
-    # ********** Users Permissions **********
-    {
-        "name": "CreateUser",
-        "description": "Add user username, email, roles, and permissions",
-    },
-    {
-        "name": "GetUser",
-        "description": "View user details",
-    },
-    {
-        "name": "ListUsers",
-        "description": "View users and their roles",
-    },
-    {
-        "name": "UpdateUser",
-        "description": "Edit user username, email, roles, and permissions",
-    },
-    {
-        "name": "DeleteUser",
-        "description": "Delete user from system.",
-    },
-]
 
-POLICIES = [
-    {
-        "name": "AdministratorAccess",
-        "description": "Allows full access to LibrePOS system.",
-    }
-]
+def seed_roles():
+    admin_role = Role(name="admin",
+                      description="Manage all aspects, including employee roles, menus, promotions, and settings.")
+    manager_role = Role(name="manager",
+                        description="Access to reports, inventory, and staff management (without system-level settings)")
+    cashier_role = Role(name="cashier",
+                        description="Process sales, apply discounts (if allowed), and issue receipts.  Limited access to reports (e.g., daily sales summary).")
+    waiter_role = Role(name="waiter",
+                       description="Enter orders, split bills, and send order tickets to kitchen printers or displays. Limited visibility of sales or reports.")
+    return [admin_role, manager_role, cashier_role, waiter_role]
 
-GROUPS = [
-    {"name": "Administrator", "description": "Allows full access to LibrePOS system."}
-]
+
+def seed_policies():
+    admin_policy = Policy(name="administrator", description="Allows full access to LibrePOS system.")
+    manager_policy = Policy(name="manager",
+                            description="Limited access to reports, inventory, and staff management (without system-level settings)")
+    cashier_policy = Policy(name="cashier",
+                            description="Limited access to reports (e.g., daily sales summary).")
+    waiter_policy = Policy(name="waiter", description="Limited visibility of sales or reports.")
+    return [admin_policy, manager_policy, cashier_policy, waiter_policy]
+
+
+def seed_permissions():
+    create_user_permission = Permission(name="create_user",
+                                        description="Add user username, email, roles, and permissions")
+    get_user_permission = Permission(name="get_user", description="View user details")
+    list_users_permission = Permission(name="list_users", description="View users and their roles")
+    update_user_permission = Permission(name="update_user",
+                                        description="Edit user username, email, roles, and permissions")
+    delete_user_permission = Permission(name="delete_user", description="Delete user from system.")
+    return [create_user_permission, get_user_permission, list_users_permission, update_user_permission,
+            delete_user_permission]
+
+
+def seed_policy_permissions() -> None:
+    permissions = Permission.query.all()
+    admin_policy_permissions = permissions
+    manager_policy_permissions = [p for p in permissions if p.name not in ["delete_user", "update_user", "create_user"]]
+
+    admin_policy = Policy.query.filter_by(name="administrator").first()
+    manager_policy = Policy.query.filter_by(name="manager").first()
+
+    if admin_policy:
+        for permission in admin_policy_permissions:
+            admin_policy_permission = PolicyPermission(policy_id=admin_policy.id, permission_id=permission.id,
+                                                       added_by="system")
+            db.session.add(admin_policy_permission)
+            db.session.commit()
+
+    if manager_policy:
+        for permission in manager_policy_permissions:
+            manager_policy_permission = PolicyPermission(policy_id=manager_policy.id, permission_id=permission.id,
+                                                         added_by="system")
+            db.session.add(manager_policy_permission)
+            db.session.commit()
+
+
+def seed_role_policies():
+    admin_role = Role.query.filter_by(name="admin").first()
+    admin_policy = Policy.query.filter_by(name="administrator").first()
+
+    manager_role = Role.query.filter_by(name="manager").first()
+    manger_policy = Policy.query.filter_by(name="manager").first()
+
+    if admin_role and admin_policy:
+        admin_role_policy = RolePolicy(role_id=admin_role.id, policy_id=admin_policy.id, assigned_by="system")
+        db.session.add(admin_role_policy)
+        db.session.commit()
+
+    if manager_role and manger_policy:
+        manager_role_policy = RolePolicy(role_id=manager_role.id, policy_id=manger_policy.id, assigned_by="system")
+        db.session.add(manager_role_policy)
+        db.session.commit()
+
+
+def seed_users() -> None:
+    admin_user = User(username="admin", email="admin@mail.com", password="librepos", role_id=1)
+    manager_user = User(username="manager", email="manager@mail.com", password="librepos", role_id=2)
+    db.session.add_all([admin_user, manager_user,])
+    db.session.commit()
+
+
+def seed_all():
+    roles = seed_roles()
+    policies = seed_policies()
+    permissions = seed_permissions()
+
+    db.session.add_all(permissions + list(roles) + policies)
+    db.session.commit()
+
+    seed_policy_permissions()
+    seed_role_policies()
+    seed_users()
+
 
 MENU_GROUPS = [
     {

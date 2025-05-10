@@ -4,29 +4,24 @@ from flask import redirect, url_for, flash
 from flask_login import current_user
 
 
-def user_has_permission(permission: str) -> bool:
-    """Check if the current user has the specified permission."""
-    if not current_user:
-        return False
-    return current_user.has_permission(permission)
-
-
-def permission_required(permission: str):
+def permission_required(permission_name: str):
     """
-    Decorator to restrict access to a route based on a user's permission.
+    Decorator to restrict access to users with a specific permission.
     """
 
-    def restrict_access(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if not current_user.has_permission(permission):
-                flash(
-                    "You don't have the appropriate permissions to access this page.",
-                    "danger",
-                )
-                return redirect(url_for("user.get_dashboard"))
-            return f(*args, **kwargs)
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapped_view(*args, **kwargs):
+            if not current_user.is_authenticated:
+                flash("Authentication required to access this page.", "warning")
+                return redirect(url_for("auth.login"))
 
-        return decorated_function
+            if not current_user.has_permission(permission_name):
+                flash("You don't have the required permission to access this page. Contact a manager for assistance.", "danger")
+                return redirect(url_for("dashboard.index"))
 
-    return restrict_access
+            return view_func(*args, **kwargs)
+
+        return wrapped_view
+
+    return decorator

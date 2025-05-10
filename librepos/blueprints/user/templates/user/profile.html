@@ -1,15 +1,65 @@
 {% extends 'base.html' %}
 
-{% from "macros/_forms.html" import render_form %}
 
 {% block main %}
 
-    <div class="container">
-        <div class="row">
-            <div class="col s12">
-                {{ render_form(form) }}
+    <section>
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col s12 m8 offset-m2">
+                    <div class="card">
+                        <div class="card-content">
+                            <form action="" method="POST" class="row">
+                                {{ form.hidden_tag() }}
+                                <div class="col s12 m6 input-field">
+                                    {{ form.first_name() }}
+                                    {{ form.first_name.label }}
+                                </div>
+                                <div class="col s12 m6 input-field">
+                                    {{ form.middle_name() }}
+                                    {{ form.middle_name.label }}
+                                </div>
+                                <div class="col s12 input-field">
+                                    {{ form.last_name() }}
+                                    {{ form.last_name.label }}
+                                </div>
+                                <div class="col s12 input-field">
+                                    {{ form.phone_number() }}
+                                    {{ form.phone_number.label }}
+                                </div>
+                                <div class="col s12 m6 input-field">
+                                    {{ form.address() }}
+                                    {{ form.address.label }}
+                                </div>
+                                <div class="col s12 m6 input-field">
+                                    {{ form.city() }}
+                                    {{ form.city.label }}
+                                </div>
+                                <div class="col s6 m3 input-field">
+                                    {{ form.zip_code() }}
+                                    {{ form.zip_code.label }}
+                                </div>
+                                <div class="col s6 m4 input-field">
+                                    {{ form.state() }}
+                                    {{ form.state.label }}
+                                </div>
+                                <div class="col s12 m4 input-field">
+                                    {{ form.country() }}
+                                    {{ form.country.label }}
+                                </div>
+                                <div class="col s12 center-block">
+                                    {{ form.submit(class="btn") }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
-    </div>
+
+    </section>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 from flask import Flask
 
 from .manage import add_cli_commands
-from .urls import register_urls
+from librepos.blueprints import blueprints
 
 
 def create_app():
@@ -22,8 +22,9 @@ def create_app():
     # load custom jinja filters
     custom_jinja_filters(app)
 
-    # load urls
-    register_urls(app)
+    # register blueprints
+    for bp in blueprints:
+        app.register_blueprint(bp)
 
     # load cli commands
     add_cli_commands(app)
@@ -33,18 +34,22 @@ def create_app():
 
 def init_extensions(app):
     from .extensions import db, login_manager, mail, csrf
-    from librepos.models.user import User
+    from librepos.blueprints.user.models import User
 
     db.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
 
-    login_manager.login_view = "user.login"  # type: ignore
+    login_manager.login_view = "auth.login_form"  # type: ignore
+    login_manager.session_protection = "strong"
+    login_manager.refresh_view = "auth.reauthenticate"  # type: ignore
+    login_manager.needs_refresh_message = "To protect your account, please reauthenticate to access this page."
+    login_manager.needs_refresh_message_category = "info"
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(str(user_id))
+        return User.query.get(user_id)
 
 
 def custom_jinja_filters(app):

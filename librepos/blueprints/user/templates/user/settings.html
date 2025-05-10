@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col s6">
+                    <a href="{{ url_for('user.profile') }}">
+                        <div class="card">
+                            <div class="card-content center-align">
+                                <i class="large material-icons">person</i>
+                                <h5>Profile</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col s6">
+                    <a href="{{ url_for('user.account') }}">
+                        <div class="card">
+                            <div class="card-content center-align">
+                                <i class="large material-icons">settings</i>
+                                <h5>Account</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col s6">
+                    <a href="{{ url_for('user.appearance') }}">
+                        <div class="card">
+                            <div class="card-content center-align">
+                                <i class="large material-icons">brush</i>
+                                <h5>Appearance</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col s6">
+                    <a href="{{ url_for('user.notifications') }}">
+                        <div class="card">
+                            <div class="card-content center-align">
+                                <i class="large material-icons">notifications</i>
+                                <h5>Notifications</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col s6">
+                    <a href="{{ url_for('user.security') }}">
+                        <div class="card">
+                            <div class="card-content center-align">
+                                <i class="large material-icons">security</i>
+                                <h5>Security</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col s6">
+                    <a href="{{ url_for('user.accessibility') }}">
+                        <div class="card">
+                            <div class="card-content center-align">
+                                <i class="large material-icons">accessibility</i>
+                                <h5>Accessibility</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}
