@@ -1,6 +1,6 @@
 /*!
-* Materialize v2.2.0 (https://materializeweb.com)
-* Copyright 2014-2024 Materialize
+* Materialize v2.2.2 (https://materializeweb.com)
+* Copyright 2014-2025 Materialize
 * MIT License (https://raw.githubusercontent.com/materializecss/materialize/master/LICENSE)
 */
 var M = (function (exports) {
@@ -26,7 +26,7 @@ var M = (function (exports) {
             ARROW_DOWN: ['ArrowDown', 'Down'],
             ARROW_LEFT: ['ArrowLeft', 'Left'],
             ARROW_RIGHT: ['ArrowRight', 'Right'],
-            DELETE: ['Delete', 'Del'],
+            DELETE: ['Delete', 'Del']
         };
         /**
          * Detects when a key is pressed.
@@ -52,6 +52,8 @@ var M = (function (exports) {
          * Detects when document is focused.
          * @param e Event instance.
          */
+        /* eslint-disabled as of required event type condition check */
+        /* eslint-disable-next-line */
         static docHandleFocus(e) {
             if (Utils.keyDown) {
                 document.body.classList.add('keyboard-focused');
@@ -61,6 +63,8 @@ var M = (function (exports) {
          * Detects when document is not focused.
          * @param e Event instance.
          */
+        /* eslint-disabled as of required event type condition check */
+        /* eslint-disable-next-line */
         static docHandleBlur(e) {
             document.body.classList.remove('keyboard-focused');
         }
@@ -82,21 +86,21 @@ var M = (function (exports) {
          * @param offset Element offset.
          */
         static checkWithinContainer(container, bounding, offset) {
-            let edges = {
+            const edges = {
                 top: false,
                 right: false,
                 bottom: false,
                 left: false
             };
-            let containerRect = container.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
             // If body element is smaller than viewport, use viewport height instead.
-            let containerBottom = container === document.body
+            const containerBottom = container === document.body
                 ? Math.max(containerRect.bottom, window.innerHeight)
                 : containerRect.bottom;
-            let scrollLeft = container.scrollLeft;
-            let scrollTop = container.scrollTop;
-            let scrolledX = bounding.left - scrollLeft;
-            let scrolledY = bounding.top - scrollTop;
+            const scrollLeft = container.scrollLeft;
+            const scrollTop = container.scrollTop;
+            const scrolledX = bounding.left - scrollLeft;
+            const scrolledY = bounding.top - scrollTop;
             // Check for container and viewport for each edge
             if (scrolledX < containerRect.left + offset || scrolledX < offset) {
                 edges.left = true;
@@ -122,7 +126,7 @@ var M = (function (exports) {
          * @param offset Element offset.
          */
         static checkPossibleAlignments(el, container, bounding, offset) {
-            let canAlign = {
+            const canAlign = {
                 top: true,
                 right: true,
                 bottom: true,
@@ -132,16 +136,16 @@ var M = (function (exports) {
                 spaceOnBottom: null,
                 spaceOnLeft: null
             };
-            let containerAllowsOverflow = getComputedStyle(container).overflow === 'visible';
-            let containerRect = container.getBoundingClientRect();
-            let containerHeight = Math.min(containerRect.height, window.innerHeight);
-            let containerWidth = Math.min(containerRect.width, window.innerWidth);
-            let elOffsetRect = el.getBoundingClientRect();
-            let scrollLeft = container.scrollLeft;
-            let scrollTop = container.scrollTop;
-            let scrolledX = bounding.left - scrollLeft;
-            let scrolledYTopEdge = bounding.top - scrollTop;
-            let scrolledYBottomEdge = bounding.top + elOffsetRect.height - scrollTop;
+            const containerAllowsOverflow = getComputedStyle(container).overflow === 'visible';
+            const containerRect = container.getBoundingClientRect();
+            const containerHeight = Math.min(containerRect.height, window.innerHeight);
+            const containerWidth = Math.min(containerRect.width, window.innerWidth);
+            const elOffsetRect = el.getBoundingClientRect();
+            const scrollLeft = container.scrollLeft;
+            const scrollTop = container.scrollTop;
+            const scrolledX = bounding.left - scrollLeft;
+            const scrolledYTopEdge = bounding.top - scrollTop;
+            const scrolledYBottomEdge = bounding.top + elOffsetRect.height - scrollTop;
             // Check for container and viewport for left
             canAlign.spaceOnRight = !containerAllowsOverflow
                 ? containerWidth - (scrolledX + bounding.width)
@@ -190,7 +194,6 @@ var M = (function (exports) {
         static getDocumentScrollTop() {
             return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
         }
-        ;
         /**
          * Retrieves document scroll postion from left.
          */
@@ -203,35 +206,128 @@ var M = (function (exports) {
          * @param wait Wait time.
          * @param options Additional options.
          */
-        static throttle(func, wait, options = null) {
-            let context, args, result;
-            let timeout = null;
-            let previous = 0;
-            options || (options = {});
-            let later = function () {
+        static throttle(func, wait, options = {}) {
+            let context, args, result, timeout = null, previous = 0;
+            const later = () => {
                 previous = options.leading === false ? 0 : new Date().getTime();
                 timeout = null;
                 result = func.apply(context, args);
                 context = args = null;
             };
-            return function () {
-                let now = new Date().getTime();
+            return (...args) => {
+                const now = new Date().getTime();
                 if (!previous && options.leading === false)
                     previous = now;
-                let remaining = wait - (now - previous);
-                context = this;
-                args = arguments;
+                const remaining = wait - (now - previous);
                 if (remaining <= 0) {
                     clearTimeout(timeout);
                     timeout = null;
                     previous = now;
-                    result = func.apply(context, args);
-                    context = args = null;
+                    result = func.apply(this, args);
                 }
                 else if (!timeout && options.trailing !== false) {
                     timeout = setTimeout(later, remaining);
                 }
                 return result;
+            };
+        }
+        /**
+         * Renders confirm/close buttons with callback function
+         */
+        static createConfirmationContainer(container, confirmText, cancelText, onConfirm, onCancel) {
+            const confirmationButtonsContainer = document.createElement('div');
+            confirmationButtonsContainer.classList.add('confirmation-btns');
+            container.append(confirmationButtonsContainer);
+            this.createButton(confirmationButtonsContainer, cancelText, ['btn-cancel'], true, onCancel);
+            this.createButton(confirmationButtonsContainer, confirmText, ['btn-confirm'], true, onConfirm);
+        }
+        /**
+         * Renders a button with optional callback function
+         */
+        static createButton(container, text, className = [], visibility = true, callback = null) {
+            className = className.concat(['btn', 'waves-effect', 'text']);
+            const button = document.createElement('button');
+            button.className = className.join(' ');
+            button.style.visibility = visibility ? 'visible' : 'hidden';
+            button.type = 'button';
+            button.tabIndex = !!visibility ? 0 : -1;
+            button.innerText = text;
+            button.addEventListener('click', callback);
+            button.addEventListener('keypress', (e) => {
+                if (Utils.keys.ENTER.includes(e.key))
+                    callback(e);
+            });
+            container.append(button);
+        }
+        static _setAbsolutePosition(origin, container, position, margin, transitionMovement, align = 'center') {
+            const originHeight = origin.offsetHeight, originWidth = origin.offsetWidth, containerHeight = container.offsetHeight, containerWidth = container.offsetWidth;
+            let xMovement = 0, yMovement = 0, targetTop = origin.getBoundingClientRect().top + Utils.getDocumentScrollTop(), targetLeft = origin.getBoundingClientRect().left + Utils.getDocumentScrollLeft();
+            if (position === 'top') {
+                targetTop += -containerHeight - margin;
+                if (align === 'center') {
+                    targetLeft += originWidth / 2 - containerWidth / 2; // This is center align
+                }
+                yMovement = -transitionMovement;
+            }
+            else if (position === 'right') {
+                targetTop += originHeight / 2 - containerHeight / 2;
+                targetLeft = originWidth + margin;
+                xMovement = transitionMovement;
+            }
+            else if (position === 'left') {
+                targetTop += originHeight / 2 - containerHeight / 2;
+                targetLeft = -containerWidth - margin;
+                xMovement = -transitionMovement;
+            }
+            else {
+                targetTop += originHeight + margin;
+                if (align === 'center') {
+                    targetLeft += originWidth / 2 - containerWidth / 2; // This is center align
+                }
+                yMovement = transitionMovement;
+            }
+            if (align === 'right') {
+                targetLeft += originWidth - containerWidth - margin;
+            }
+            const newCoordinates = Utils._repositionWithinScreen(targetLeft, targetTop, containerWidth, containerHeight, margin, transitionMovement, align);
+            container.style.top = newCoordinates.y + 'px';
+            container.style.left = newCoordinates.x + 'px';
+            return { x: xMovement, y: yMovement };
+        }
+        static _repositionWithinScreen(x, y, width, height, margin, transitionMovement, align) {
+            const scrollLeft = Utils.getDocumentScrollLeft();
+            const scrollTop = Utils.getDocumentScrollTop();
+            let newX = x - scrollLeft;
+            let newY = y - scrollTop;
+            const bounding = {
+                left: newX,
+                top: newY,
+                width: width,
+                height: height
+            };
+            let offset;
+            if (align === 'left' || align == 'center') {
+                offset = margin + transitionMovement;
+            }
+            else if (align === 'right') {
+                offset = margin - transitionMovement;
+            }
+            const edges = Utils.checkWithinContainer(document.body, bounding, offset);
+            if (edges.left) {
+                newX = offset;
+            }
+            else if (edges.right) {
+                newX -= newX + width - window.innerWidth;
+            }
+            if (edges.top) {
+                newY = offset;
+            }
+            else if (edges.bottom) {
+                newY -= newY + height - window.innerHeight;
+            }
+            return {
+                x: newX + scrollLeft,
+                y: newY + scrollTop
             };
         }
     }
@@ -257,7 +353,7 @@ var M = (function (exports) {
                 console.error(Error(el + ' is not an HTML Element'));
             }
             // If exists, destroy and reinitialize in child
-            let ins = classDef.getInstance(el);
+            const ins = classDef.getInstance(el);
             if (!!ins) {
                 ins.destroy();
             }
@@ -285,21 +381,26 @@ var M = (function (exports) {
         /**
          * @returns default options for component instance.
          */
-        static get defaults() { return {}; }
+        static get defaults() {
+            return {};
+        }
         /**
          * Retrieves component instance for the given element.
          * @param el Associated HTML Element.
          */
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         static getInstance(el) {
-            throw new Error("This method must be implemented.");
+            throw new Error('This method must be implemented.');
         }
         /**
          * Destroy plugin instance and teardown.
          */
-        destroy() { throw new Error("This method must be implemented."); }
+        destroy() {
+            throw new Error('This method must be implemented.');
+        }
     }
 
-    const _defaults$m = {
+    const _defaults$n = {
         alignment: 'left',
         autoFocus: true,
         constrainWidth: true,
@@ -332,7 +433,7 @@ var M = (function (exports) {
         filterTimeout;
         constructor(el, options) {
             super(el, options, Dropdown);
-            this.el.M_Dropdown = this;
+            this.el['M_Dropdown'] = this;
             Dropdown._dropdowns.push(this);
             this.id = Utils.getIdFromTrigger(el);
             this.dropdownEl = document.getElementById(this.id);
@@ -347,12 +448,12 @@ var M = (function (exports) {
             this.filterQuery = [];
             this.el.ariaExpanded = 'false';
             // Move dropdown-content after dropdown-trigger
-            this._moveDropdown();
+            this._moveDropdownToElement();
             this._makeDropdownFocusable();
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$m;
+            return _defaults$n;
         }
         /**
          * Initializes instances of Dropdown.
@@ -363,13 +464,13 @@ var M = (function (exports) {
             return super.init(els, options, Dropdown);
         }
         static getInstance(el) {
-            return el.M_Dropdown;
+            return el['M_Dropdown'];
         }
         destroy() {
             this._resetDropdownStyles();
             this._removeEventHandlers();
             Dropdown._dropdowns.splice(Dropdown._dropdowns.indexOf(this), 1);
-            this.el.M_Dropdown = undefined;
+            this.el['M_Dropdown'] = undefined;
         }
         _setupEventHandlers() {
             // Trigger keydown handler
@@ -413,7 +514,7 @@ var M = (function (exports) {
         }
         _handleClick = (e) => {
             e.preventDefault();
-            this._moveDropdown(e.target.closest('li'));
+            //this._moveDropdown((<HTMLElement>e.target).closest('li'));
             if (this.isOpen) {
                 this.close();
             }
@@ -421,8 +522,8 @@ var M = (function (exports) {
                 this.open();
             }
         };
-        _handleMouseEnter = (e) => {
-            this._moveDropdown(e.target.closest('li'));
+        _handleMouseEnter = () => {
+            //this._moveDropdown((<HTMLElement>e.target).closest('li'));
             this.open();
         };
         _handleMouseLeave = (e) => {
@@ -430,9 +531,7 @@ var M = (function (exports) {
             const leaveToDropdownContent = !!toEl.closest('.dropdown-content');
             let leaveToActiveDropdownTrigger = false;
             const closestTrigger = toEl.closest('.dropdown-trigger');
-            if (closestTrigger &&
-                !!closestTrigger.M_Dropdown &&
-                closestTrigger.M_Dropdown.isOpen) {
+            if (closestTrigger && !!closestTrigger['M_Dropdown'] && closestTrigger['M_Dropdown'].isOpen) {
                 leaveToActiveDropdownTrigger = true;
             }
             // Close hover dropdown if mouse did not leave to either active dropdown-trigger or dropdown-content
@@ -442,9 +541,7 @@ var M = (function (exports) {
         };
         _handleDocumentClick = (e) => {
             const target = e.target;
-            if (this.options.closeOnClick &&
-                target.closest('.dropdown-content') &&
-                !this.isTouchMoving) {
+            if (this.options.closeOnClick && target.closest('.dropdown-content') && !this.isTouchMoving) {
                 // isTouchMoving to check if scrolling on mobile.
                 this.close();
             }
@@ -512,7 +609,7 @@ var M = (function (exports) {
             else if (Utils.keys.ENTER.includes(e.key) && this.isOpen) {
                 // Search for <a> and <button>
                 const focusedElement = this.dropdownEl.children[this.focusedIndex];
-                const activatableElement = focusedElement.querySelector('a, button');
+                const activatableElement = focusedElement?.querySelector('a, button');
                 // Click a or button tag if exists, otherwise click li tag
                 if (!!activatableElement) {
                     activatableElement.click();
@@ -531,12 +628,17 @@ var M = (function (exports) {
             // CASE WHEN USER TYPE LTTERS
             const keyText = e.key.toLowerCase();
             const isLetter = /[a-zA-Z0-9-_]/.test(keyText);
-            const specialKeys = [...Utils.keys.ARROW_DOWN, ...Utils.keys.ARROW_UP, ...Utils.keys.ENTER, ...Utils.keys.ESC, ...Utils.keys.TAB];
+            const specialKeys = [
+                ...Utils.keys.ARROW_DOWN,
+                ...Utils.keys.ARROW_UP,
+                ...Utils.keys.ENTER,
+                ...Utils.keys.ESC,
+                ...Utils.keys.TAB
+            ];
             if (isLetter && !specialKeys.includes(e.key)) {
                 this.filterQuery.push(keyText);
                 const string = this.filterQuery.join('');
-                const newOptionEl = Array.from(this.dropdownEl.querySelectorAll('li'))
-                    .find((el) => el.innerText.toLowerCase().indexOf(string) === 0);
+                const newOptionEl = Array.from(this.dropdownEl.querySelectorAll('li')).find((el) => el.innerText.toLowerCase().indexOf(string) === 0);
                 if (newOptionEl) {
                     this.focusedIndex = [...newOptionEl.parentNode.children].indexOf(newOptionEl);
                     this._focusFocusedItem();
@@ -544,7 +646,7 @@ var M = (function (exports) {
             }
             this.filterTimeout = setTimeout(this._resetFilterQuery, 1000);
         };
-        _handleWindowResize = (e) => {
+        _handleWindowResize = () => {
             // Only re-place the dropdown if it's still visible
             // Accounts for elements hiding via media queries
             if (this.el.offsetParent) {
@@ -556,32 +658,33 @@ var M = (function (exports) {
         };
         _resetDropdownStyles() {
             this.dropdownEl.style.display = '';
+            this._resetDropdownPositioningStyles();
+            this.dropdownEl.style.transform = '';
+            this.dropdownEl.style.opacity = '';
+        }
+        _resetDropdownPositioningStyles() {
             this.dropdownEl.style.width = '';
             this.dropdownEl.style.height = '';
             this.dropdownEl.style.left = '';
             this.dropdownEl.style.top = '';
             this.dropdownEl.style.transformOrigin = '';
-            this.dropdownEl.style.transform = '';
-            this.dropdownEl.style.opacity = '';
         }
-        // Move dropdown after container or trigger
-        _moveDropdown(containerEl = null) {
-            if (!!this.options.container) {
+        _moveDropdownToElement(containerEl = null) {
+            if (this.options.container) {
                 this.options.container.append(this.dropdownEl);
+                return;
             }
-            else if (containerEl) {
-                if (!containerEl.contains(this.dropdownEl)) {
+            if (containerEl) {
+                if (!containerEl.contains(this.dropdownEl))
                     containerEl.append(this.dropdownEl);
-                }
+                return;
             }
-            else {
-                this.el.after(this.dropdownEl);
-            }
+            this.el.after(this.dropdownEl);
         }
         _makeDropdownFocusable() {
             if (!this.dropdownEl)
                 return;
-            this.dropdownEl.popover = "";
+            this.dropdownEl.popover = '';
             // Needed for arrow key navigation
             this.dropdownEl.tabIndex = 0;
             // Only set tabindex if it hasn't been set by user
@@ -605,7 +708,7 @@ var M = (function (exports) {
             }
         }
         _getDropdownPosition(closestOverflowParent) {
-            this.el.offsetParent.getBoundingClientRect();
+            // const offsetParentBRect = this.el.offsetParent.getBoundingClientRect();
             const triggerBRect = this.el.getBoundingClientRect();
             const dropdownBRect = this.dropdownEl.getBoundingClientRect();
             let idealHeight = dropdownBRect.height;
@@ -689,7 +792,7 @@ var M = (function (exports) {
             this.dropdownEl.style.opacity = '0';
             this.dropdownEl.style.transform = 'scale(0.3, 0.3)';
             setTimeout(() => {
-                // easeOutQuad (opacity) & easeOutQuint    
+                // easeOutQuad (opacity) & easeOutQuint
                 this.dropdownEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
                 // to
                 this.dropdownEl.style.opacity = '1';
@@ -704,7 +807,7 @@ var M = (function (exports) {
         }
         _animateOut() {
             const duration = this.options.outDuration;
-            // easeOutQuad (opacity) & easeOutQuint    
+            // easeOutQuad (opacity) & easeOutQuint
             this.dropdownEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
             // to
             this.dropdownEl.style.opacity = '0';
@@ -725,21 +828,19 @@ var M = (function (exports) {
             }
             return null;
         }
-        ;
         _placeDropdown() {
             // Container here will be closest ancestor with overflow: hidden
             let closestOverflowParent = this._getClosestAncestor(this.dropdownEl, (ancestor) => {
-                return !['HTML', 'BODY'].includes(ancestor.tagName) && getComputedStyle(ancestor).overflow !== 'visible';
+                return (!['HTML', 'BODY'].includes(ancestor.tagName) &&
+                    getComputedStyle(ancestor).overflow !== 'visible');
             });
             // Fallback
             if (!closestOverflowParent) {
-                closestOverflowParent = (!!this.dropdownEl.offsetParent
-                    ? this.dropdownEl.offsetParent
-                    : this.dropdownEl.parentNode);
+                closestOverflowParent = ((!!this.dropdownEl.offsetParent ? this.dropdownEl.offsetParent : this.dropdownEl.parentNode));
             }
             if (getComputedStyle(closestOverflowParent).position === 'static')
                 closestOverflowParent.style.position = 'relative';
-            this._moveDropdown(closestOverflowParent);
+            //this._moveDropdown(closestOverflowParent);
             // Set width before calculating positionInfo
             const idealWidth = this.options.constrainWidth
                 ? this.el.getBoundingClientRect().width
@@ -797,17 +898,13 @@ var M = (function (exports) {
          */
         recalculateDimensions = () => {
             if (this.isOpen) {
-                this.dropdownEl.style.width = '';
-                this.dropdownEl.style.height = '';
-                this.dropdownEl.style.left = '';
-                this.dropdownEl.style.top = '';
-                this.dropdownEl.style.transformOrigin = '';
+                this._resetDropdownPositioningStyles();
                 this._placeDropdown();
             }
         };
     }
 
-    let _defaults$l = {
+    const _defaults$m = {
         data: [], // Autocomplete data set
         onAutocomplete: null, // Callback for when autocompleted
         dropdownOptions: {
@@ -824,7 +921,8 @@ var M = (function (exports) {
                 || option.text?.toLocaleLowerCase().includes(normSearch)));
         },
         maxDropDownHeight: '300px',
-        allowUnsafeHTML: false
+        allowUnsafeHTML: false,
+        selected: []
     };
     class Autocomplete extends Component {
         /** If the autocomplete is open. */
@@ -844,7 +942,7 @@ var M = (function (exports) {
         menuItems;
         constructor(el, options) {
             super(el, options, Autocomplete);
-            this.el.M_Autocomplete = this;
+            this.el['M_Autocomplete'] = this;
             this.options = {
                 ...Autocomplete.defaults,
                 ...options
@@ -852,8 +950,8 @@ var M = (function (exports) {
             this.isOpen = false;
             this.count = 0;
             this.activeIndex = -1;
-            this.oldVal = "";
-            this.selectedValues = [];
+            this.oldVal = '';
+            this.selectedValues = this.selectedValues || this.options.selected.map((value) => ({ id: value })) || [];
             this.menuItems = this.options.data || [];
             this.$active = null;
             this._mousedown = false;
@@ -861,7 +959,7 @@ var M = (function (exports) {
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$l;
+            return _defaults$m;
         }
         /**
          * Initializes instances of Autocomplete.
@@ -872,17 +970,17 @@ var M = (function (exports) {
             return super.init(els, options, Autocomplete);
         }
         static getInstance(el) {
-            return el.M_Autocomplete;
+            return el['M_Autocomplete'];
         }
         destroy() {
             this._removeEventHandlers();
             this._removeDropdown();
-            this.el.M_Autocomplete = undefined;
+            this.el['M_Autocomplete'] = undefined;
         }
         _setupEventHandlers() {
             this.el.addEventListener('blur', this._handleInputBlur);
-            this.el.addEventListener('keyup', this._handleInputKeyupAndFocus);
-            this.el.addEventListener('focus', this._handleInputKeyupAndFocus);
+            this.el.addEventListener('keyup', this._handleInputKeyup);
+            this.el.addEventListener('focus', this._handleInputFocus);
             this.el.addEventListener('keydown', this._handleInputKeydown);
             this.el.addEventListener('click', this._handleInputClick);
             this.container.addEventListener('mousedown', this._handleContainerMousedownAndTouchstart);
@@ -894,8 +992,8 @@ var M = (function (exports) {
         }
         _removeEventHandlers() {
             this.el.removeEventListener('blur', this._handleInputBlur);
-            this.el.removeEventListener('keyup', this._handleInputKeyupAndFocus);
-            this.el.removeEventListener('focus', this._handleInputKeyupAndFocus);
+            this.el.removeEventListener('keyup', this._handleInputKeyup);
+            this.el.removeEventListener('focus', this._handleInputFocus);
             this.el.removeEventListener('keydown', this._handleInputKeydown);
             this.el.removeEventListener('click', this._handleInputClick);
             this.container.removeEventListener('mousedown', this._handleContainerMousedownAndTouchstart);
@@ -910,19 +1008,21 @@ var M = (function (exports) {
             this.container.style.maxHeight = this.options.maxDropDownHeight;
             this.container.id = `autocomplete-options-${Utils.guid()}`;
             this.container.classList.add('autocomplete-content', 'dropdown-content');
+            this.container.ariaExpanded = 'true';
             this.el.setAttribute('data-target', this.container.id);
-            this.menuItems.forEach(menuItem => {
+            this.menuItems.forEach((menuItem) => {
                 const itemElement = this._createDropdownItem(menuItem);
                 this.container.append(itemElement);
             });
             // ! Issue in Component Dropdown: _placeDropdown moves dom-position
             this.el.parentElement.appendChild(this.container);
             // Initialize dropdown
-            let dropdownOptions = {
+            const dropdownOptions = {
                 ...Autocomplete.defaults.dropdownOptions,
                 ...this.options.dropdownOptions
             };
-            let userOnItemClick = dropdownOptions.onItemClick;
+            // @todo shouldn't we conditionally check if dropdownOptions.onItemClick is set in first place?
+            const userOnItemClick = dropdownOptions.onItemClick;
             // Ensuring the select Option call when user passes custom onItemClick function to dropdown
             dropdownOptions.onItemClick = (li) => {
                 if (!li)
@@ -941,6 +1041,10 @@ var M = (function (exports) {
                 this.el.after(label);
             // Sketchy removal of dropdown click handler
             this.el.removeEventListener('click', this.dropdown._handleClick);
+            if (!this.options.isMultiSelect && !(this.options.selected.length === 0)) {
+                const selectedValue = this.menuItems.filter((value) => value.id === this.selectedValues[0].id);
+                this.el.value = selectedValue[0].text;
+            }
             // Set Value if already set in HTML
             if (this.el.value)
                 this.selectOption(this.el.value);
@@ -952,6 +1056,7 @@ var M = (function (exports) {
             this._updateSelectedInfo();
         }
         _removeDropdown() {
+            this.container.ariaExpanded = 'false';
             this.container.parentNode.removeChild(this.container);
         }
         _handleInputBlur = () => {
@@ -960,21 +1065,31 @@ var M = (function (exports) {
                 this._resetAutocomplete();
             }
         };
-        _handleInputKeyupAndFocus = (e) => {
+        _handleInputKeyup = (e) => {
             if (e.type === 'keyup')
                 Autocomplete._keydown = false;
             this.count = 0;
             const actualValue = this.el.value.toLocaleLowerCase();
             // Don't capture enter or arrow key usage.
-            if (Utils.keys.ENTER.includes(e.key) || Utils.keys.ARROW_UP.includes(e.key) || Utils.keys.ARROW_DOWN.includes(e.key))
+            if (Utils.keys.ENTER.includes(e.key) ||
+                Utils.keys.ARROW_UP.includes(e.key) ||
+                Utils.keys.ARROW_DOWN.includes(e.key))
                 return;
             // Check if the input isn't empty
             // Check if focus triggered by tab
-            if (this.oldVal !== actualValue && (Utils.tabPressed || e.type !== 'focus')) {
+            if (this.oldVal !== actualValue && Utils.tabPressed) {
                 this.open();
             }
+            this._inputChangeDetection(actualValue);
+        };
+        _handleInputFocus = () => {
+            this.count = 0;
+            const actualValue = this.el.value.toLocaleLowerCase();
+            this._inputChangeDetection(actualValue);
+        };
+        _inputChangeDetection = (value) => {
             // Value has changed!
-            if (this.oldVal !== actualValue) {
+            if (this.oldVal !== value) {
                 this._setStatusLoading();
                 this.options.onSearch(this.el.value, this);
             }
@@ -983,7 +1098,7 @@ var M = (function (exports) {
                 this.selectedValues = [];
                 this._triggerChanged();
             }
-            this.oldVal = actualValue;
+            this.oldVal = value;
         };
         _handleInputKeydown = (e) => {
             Autocomplete._keydown = true;
@@ -1051,6 +1166,7 @@ var M = (function (exports) {
             const item = document.createElement('li');
             item.setAttribute('data-id', entry.id);
             item.setAttribute('style', 'display:grid; grid-auto-flow: column; user-select: none; align-items: center;');
+            item.tabIndex = 0;
             // Checkbox
             if (this.options.isMultiSelect) {
                 item.innerHTML = `
@@ -1089,7 +1205,8 @@ var M = (function (exports) {
             item.appendChild(itemText);
             item.querySelector('.item-text').appendChild(div);
             // Description
-            if (typeof entry.description === 'string' || (typeof entry.description === 'number' && !isNaN(entry.description))) {
+            if (typeof entry.description === 'string' ||
+                (typeof entry.description === 'number' && !isNaN(entry.description))) {
                 const description = document.createElement('small');
                 description.setAttribute('style', 'line-height:1.3;color:grey;white-space:nowrap;text-overflow:ellipsis;display:block;width:90%;overflow:hidden;');
                 description.innerText = entry.description;
@@ -1121,7 +1238,8 @@ var M = (function (exports) {
             }
         }
         _setStatusLoading() {
-            this.el.parentElement.querySelector('.status-info').innerHTML = `<div style="height:100%;width:50px;"><svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+            this.el.parentElement.querySelector('.status-info').innerHTML =
+                `<div style="height:100%;width:50px;"><svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
     <circle fill="#888c" stroke="none" cx="6" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1"/></circle>
     <circle fill="#888c" stroke="none" cx="26" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2"/></circle>
     <circle fill="#888c" stroke="none" cx="46" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite"  begin="0.3"/></circle>
@@ -1176,14 +1294,29 @@ var M = (function (exports) {
         /**
          * Updates the visible or selectable items shown in the menu.
          * @param menuItems Items to be available.
+         * @param selected Selected item ids
+         * @param open Option to conditionally open dropdown
          */
-        setMenuItems(menuItems) {
+        setMenuItems(menuItems, selected = null, open = true) {
             this.menuItems = menuItems;
-            this.open();
+            this.options.data = menuItems;
+            if (selected) {
+                this.selectedValues = this.menuItems.filter((item) => !(selected.indexOf(item.id) === -1));
+            }
+            if (this.options.isMultiSelect) {
+                this._renderDropdown();
+            }
+            else {
+                this._refreshInputText();
+            }
+            if (open)
+                this.open();
             this._updateSelectedInfo();
+            this._triggerChanged();
         }
         /**
          * Sets selected values.
+         * @deprecated @see https://github.com/materializecss/materialize/issues/552
          * @param entries
          */
         setValues(entries) {
@@ -1203,16 +1336,16 @@ var M = (function (exports) {
             if (!entry)
                 return;
             // Toggle Checkbox
-            const li = this.container.querySelector('li[data-id="' + id + '"]');
-            if (!li)
-                return;
+            /* const li = this.container.querySelector('li[data-id="' + id + '"]');
+            if (!li) return;*/
             if (this.options.isMultiSelect) {
-                const checkbox = li.querySelector('input[type="checkbox"]');
-                checkbox.checked = !checkbox.checked;
-                if (checkbox.checked)
+                /* const checkbox = <HTMLInputElement | null>li.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;*/
+                if (!(this.selectedValues.filter((selectedEntry) => selectedEntry.id === entry.id).length >= 1))
                     this.selectedValues.push(entry);
                 else
                     this.selectedValues = this.selectedValues.filter((selectedEntry) => selectedEntry.id !== entry.id);
+                this._renderDropdown();
                 this.el.focus();
             }
             else {
@@ -1225,9 +1358,16 @@ var M = (function (exports) {
             this._updateSelectedInfo();
             this._triggerChanged();
         }
+        selectOptions(ids) {
+            const entries = this.menuItems.filter((item) => !(ids.indexOf(item.id) === -1));
+            if (!entries)
+                return;
+            this.selectedValues = entries;
+            this._renderDropdown();
+        }
     }
 
-    let _defaults$k = {
+    const _defaults$l = {
         direction: 'top',
         hoverEnabled: true,
         toolbarEnabled: false
@@ -1248,7 +1388,7 @@ var M = (function (exports) {
         btnWidth;
         constructor(el, options) {
             super(el, options, FloatingActionButton);
-            this.el.M_FloatingActionButton = this;
+            this.el['M_FloatingActionButton'] = this;
             this.options = {
                 ...FloatingActionButton.defaults,
                 ...options
@@ -1261,6 +1401,8 @@ var M = (function (exports) {
             this.offsetY = 0;
             this.offsetX = 0;
             this.el.classList.add(`direction-${this.options.direction}`);
+            this._anchor.tabIndex = 0;
+            this._menu.ariaExpanded = 'false';
             if (this.options.direction === 'top')
                 this.offsetY = 40;
             else if (this.options.direction === 'right')
@@ -1272,7 +1414,7 @@ var M = (function (exports) {
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$k;
+            return _defaults$l;
         }
         /**
          * Initializes instances of FloatingActionButton.
@@ -1283,11 +1425,11 @@ var M = (function (exports) {
             return super.init(els, options, FloatingActionButton);
         }
         static getInstance(el) {
-            return el.M_FloatingActionButton;
+            return el['M_FloatingActionButton'];
         }
         destroy() {
             this._removeEventHandlers();
-            this.el.M_FloatingActionButton = undefined;
+            this.el['M_FloatingActionButton'] = undefined;
         }
         _setupEventHandlers() {
             if (this.options.hoverEnabled && !this.options.toolbarEnabled) {
@@ -1297,6 +1439,7 @@ var M = (function (exports) {
             else {
                 this.el.addEventListener('click', this._handleFABClick);
             }
+            this.el.addEventListener('keypress', this._handleFABKeyPress);
         }
         _removeEventHandlers() {
             if (this.options.hoverEnabled && !this.options.toolbarEnabled) {
@@ -1306,8 +1449,17 @@ var M = (function (exports) {
             else {
                 this.el.removeEventListener('click', this._handleFABClick);
             }
+            this.el.removeEventListener('keypress', this._handleFABKeyPress);
         }
         _handleFABClick = () => {
+            this._handleFABToggle();
+        };
+        _handleFABKeyPress = (e) => {
+            if (Utils.keys.ENTER.includes(e.key)) {
+                this._handleFABToggle();
+            }
+        };
+        _handleFABToggle = () => {
             if (this.isOpen) {
                 this.close();
             }
@@ -1318,7 +1470,7 @@ var M = (function (exports) {
         _handleDocumentClick = (e) => {
             const elem = e.target;
             if (elem !== this._menu)
-                this.close;
+                this.close();
         };
         /**
          * Open FAB.
@@ -1349,6 +1501,7 @@ var M = (function (exports) {
         };
         _animateInFAB() {
             this.el.classList.add('active');
+            this._menu.ariaExpanded = 'true';
             const delayIncrement = 40;
             const duration = 275;
             this._floatingBtnsReverse.forEach((el, index) => {
@@ -1365,32 +1518,35 @@ var M = (function (exports) {
                         el.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
                         el.style.opacity = '1';
                         el.style.transform = 'translate(0, 0) scale(1)';
+                        el.tabIndex = 0;
                     }, 1);
                 }, delay);
             });
         }
         _animateOutFAB() {
             const duration = 175;
-            setTimeout(() => this.el.classList.remove('active'), duration);
+            setTimeout(() => {
+                this.el.classList.remove('active');
+                this._menu.ariaExpanded = 'false';
+            }, duration);
             this._floatingBtnsReverse.forEach((el) => {
                 el.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
                 // to
                 el.style.opacity = '0';
                 el.style.transform = `translate(${this.offsetX}px, ${this.offsetY}px) scale(0.4)`;
+                el.tabIndex = -1;
             });
         }
         _animateInToolbar() {
-            let scaleFactor;
-            let windowWidth = window.innerWidth;
-            let windowHeight = window.innerHeight;
-            let btnRect = this.el.getBoundingClientRect();
-            const backdrop = document.createElement('div');
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const btnRect = this.el.getBoundingClientRect();
+            const backdrop = document.createElement('div'), scaleFactor = windowWidth / backdrop[0].clientWidth, fabColor = getComputedStyle(this._anchor).backgroundColor; // css('background-color');
             backdrop.classList.add('fab-backdrop'); //  $('<div class="fab-backdrop"></div>');
-            const fabColor = getComputedStyle(this._anchor).backgroundColor; // css('background-color');
+            backdrop.style.backgroundColor = fabColor;
             this._anchor.append(backdrop);
             this.offsetX = btnRect.left - windowWidth / 2 + btnRect.width / 2;
             this.offsetY = windowHeight - btnRect.bottom;
-            scaleFactor = windowWidth / backdrop[0].clientWidth;
             this.btnBottom = btnRect.bottom;
             this.btnLeft = btnRect.left;
             this.btnWidth = btnRect.width;
@@ -1402,12 +1558,13 @@ var M = (function (exports) {
             this.el.style.left = '0';
             this.el.style.transform = 'translateX(' + this.offsetX + 'px)';
             this.el.style.transition = 'none';
+            this._menu.ariaExpanded = 'true';
             this._anchor.style.transform = `translateY(${this.offsetY}px`;
             this._anchor.style.transition = 'none';
-            backdrop.style.backgroundColor = fabColor;
             setTimeout(() => {
                 this.el.style.transform = '';
-                this.el.style.transition = 'transform .2s cubic-bezier(0.550, 0.085, 0.680, 0.530), background-color 0s linear .2s';
+                this.el.style.transition =
+                    'transform .2s cubic-bezier(0.550, 0.085, 0.680, 0.530), background-color 0s linear .2s';
                 this._anchor.style.overflow = 'visible';
                 this._anchor.style.transform = '';
                 this._anchor.style.transition = 'transform .2s';
@@ -1416,7 +1573,10 @@ var M = (function (exports) {
                     this.el.style.backgroundColor = fabColor;
                     backdrop.style.transform = 'scale(' + scaleFactor + ')';
                     backdrop.style.transition = 'transform .2s cubic-bezier(0.550, 0.055, 0.675, 0.190)';
-                    this._menu.querySelectorAll('li > a').forEach((a) => a.style.opacity = '1');
+                    this._menu.querySelectorAll('li > a').forEach((a) => {
+                        a.style.opacity = '1';
+                        a.tabIndex = 0;
+                    });
                     // Scroll to close.
                     window.addEventListener('scroll', this.close, true);
                     document.body.addEventListener('click', this._handleDocumentClick, true);
@@ -1425,7 +1585,7 @@ var M = (function (exports) {
         }
     }
 
-    const _defaults$j = {
+    const _defaults$k = {
         onOpen: null,
         onClose: null,
         inDuration: 225,
@@ -1439,24 +1599,29 @@ var M = (function (exports) {
         cardRevealClose;
         constructor(el, options) {
             super(el, options, Cards);
-            this.el.M_Cards = this;
+            this.el['M_Cards'] = this;
             this.options = {
                 ...Cards.defaults,
                 ...options
             };
-            this.cardReveal = Array.from(this.el.children).find(elem => elem.classList.contains('card-reveal'));
+            this._activators = [];
+            this.cardReveal = this.el.querySelector('.card-reveal');
             if (this.cardReveal) {
                 this.initialOverflow = getComputedStyle(this.el).overflow;
                 this._activators = Array.from(this.el.querySelectorAll('.activator'));
-                this._activators.forEach((el) => el.tabIndex = 0);
-                this.cardRevealClose = this.cardReveal.querySelector('.card-reveal .card-title .close');
-                this.cardRevealClose.tabIndex = -1;
+                this._activators.forEach((el) => {
+                    if (el)
+                        el.tabIndex = 0;
+                });
+                this.cardRevealClose = this.cardReveal?.querySelector('.card-title');
+                if (this.cardRevealClose)
+                    this.cardRevealClose.tabIndex = -1;
                 this.cardReveal.ariaExpanded = 'false';
                 this._setupEventHandlers();
             }
         }
         static get defaults() {
-            return _defaults$j;
+            return _defaults$k;
         }
         /**
          * Initializes instances of Cards.
@@ -1467,7 +1632,7 @@ var M = (function (exports) {
             return super.init(els, options, Cards);
         }
         static getInstance(el) {
-            return el.M_Cards;
+            return el['M_Cards'];
         }
         /**
          * {@inheritDoc}
@@ -1498,7 +1663,7 @@ var M = (function (exports) {
         };
         _handleRevealEvent = () => {
             // Reveal Card
-            this._activators.forEach((el) => el.tabIndex = -1);
+            this._activators.forEach((el) => (el.tabIndex = -1));
             this.open();
         };
         _setupRevealCloseEventHandlers = () => {
@@ -1546,7 +1711,7 @@ var M = (function (exports) {
             setTimeout(() => {
                 this.cardReveal.style.display = 'none';
                 this.cardReveal.ariaExpanded = 'false';
-                this._activators.forEach((el) => el.tabIndex = 0);
+                this._activators.forEach((el) => (el.tabIndex = 0));
                 this.cardRevealClose.tabIndex = -1;
                 this.el.style.overflow = this.initialOverflow;
             }, this.options.inDuration);
@@ -1555,9 +1720,20 @@ var M = (function (exports) {
             }
             this._removeRevealCloseEventHandlers();
         };
+        static Init() {
+            if (typeof document !== 'undefined')
+                // Handle initialization of static cards.
+                document.addEventListener('DOMContentLoaded', () => {
+                    const cards = document.querySelectorAll('.card');
+                    cards.forEach((el) => {
+                        if (el && (el['M_Card'] == undefined))
+                            this.init(el);
+                    });
+                });
+        }
     }
 
-    let _defaults$i = {
+    const _defaults$j = {
         duration: 200, // ms
         dist: -100, // zoom scale TODO: make this more intuitive as an option
         shift: 0, // spacing for center image
@@ -1600,7 +1776,7 @@ var M = (function (exports) {
         oneTimeCallback;
         constructor(el, options) {
             super(el, options, Carousel);
-            this.el.M_Carousel = this;
+            this.el['M_Carousel'] = this;
             this.options = {
                 ...Carousel.defaults,
                 ...options
@@ -1648,7 +1824,7 @@ var M = (function (exports) {
             // Setup cross browser string
             this.xform = 'transform';
             ['webkit', 'Moz', 'O', 'ms'].every((prefix) => {
-                var e = prefix + 'Transform';
+                const e = prefix + 'Transform';
                 if (typeof document.body.style[e] !== 'undefined') {
                     this.xform = e;
                     return false;
@@ -1659,7 +1835,7 @@ var M = (function (exports) {
             this._scroll(this.offset);
         }
         static get defaults() {
-            return _defaults$i;
+            return _defaults$j;
         }
         /**
          * Initializes instances of Carousel.
@@ -1670,11 +1846,11 @@ var M = (function (exports) {
             return super.init(els, options, Carousel);
         }
         static getInstance(el) {
-            return el.M_Carousel;
+            return el['M_Carousel'];
         }
         destroy() {
             this._removeEventHandlers();
-            this.el.M_Carousel = undefined;
+            this.el['M_Carousel'] = undefined;
         }
         _setupEventHandlers() {
             if (typeof window.ontouchstart !== 'undefined') {
@@ -1714,7 +1890,7 @@ var M = (function (exports) {
             }
             window.removeEventListener('resize', this._handleThrottledResize);
         }
-        _handleThrottledResize = Utils.throttle(function () { this._handleResize(); }, 200, null).bind(this);
+        _handleThrottledResize = () => Utils.throttle(this._handleResize, 200, null).bind(this);
         _handleCarouselTap = (e) => {
             // Fixes firefox draggable image bug
             if (e.type === 'mousedown' && e.target.tagName === 'IMG') {
@@ -1817,7 +1993,8 @@ var M = (function (exports) {
                 // fixes https://github.com/materializecss/materialize/issues/180
                 if (clickedIndex < 0) {
                     // relative X position > center of carousel = clicked at the right part of the carousel
-                    if (e.clientX - e.target.getBoundingClientRect().left > this.el.clientWidth / 2) {
+                    if (e.clientX - e.target.getBoundingClientRect().left >
+                        this.el.clientWidth / 2) {
                         this.next();
                     }
                     else {
@@ -1893,7 +2070,7 @@ var M = (function (exports) {
         }
         _xpos(e) {
             // touch event
-            if (e.type.startsWith("touch") && e.targetTouches.length >= 1) {
+            if (e.type.startsWith('touch') && e.targetTouches.length >= 1) {
                 return e.targetTouches[0].clientX;
             }
             // mouse event
@@ -1901,27 +2078,23 @@ var M = (function (exports) {
         }
         _ypos(e) {
             // touch event
-            if (e.type.startsWith("touch") && e.targetTouches.length >= 1) {
+            if (e.type.startsWith('touch') && e.targetTouches.length >= 1) {
                 return e.targetTouches[0].clientY;
             }
             // mouse event
             return e.clientY;
         }
         _wrap(x) {
-            return x >= this.count
-                ? x % this.count
-                : x < 0
-                    ? this._wrap(this.count + (x % this.count))
-                    : x;
+            return x >= this.count ? x % this.count : x < 0 ? this._wrap(this.count + (x % this.count)) : x;
         }
         _track = () => {
-            let now, elapsed, delta, v;
-            now = Date.now();
-            elapsed = now - this.timestamp;
+            const now = Date.now(), elapsed = now - this.timestamp, delta = this.offset - this.frame, v = (1000 * delta) / (1 + elapsed);
+            // now = Date.now();
+            // elapsed = now - this.timestamp;
             this.timestamp = now;
-            delta = this.offset - this.frame;
+            // delta = this.offset - this.frame;
             this.frame = this.offset;
-            v = (1000 * delta) / (1 + elapsed);
+            // v = (1000 * delta) / (1 + elapsed);
             this.velocity = 0.8 * v + 0.2 * this.velocity;
         };
         _autoScroll = () => {
@@ -1944,21 +2117,22 @@ var M = (function (exports) {
                 this.el.classList.add('scrolling');
             }
             if (this.scrollingTimeout != null) {
-                window.clearTimeout(this.scrollingTimeout);
+                clearTimeout(this.scrollingTimeout);
             }
-            this.scrollingTimeout = window.setTimeout(() => {
+            this.scrollingTimeout = setTimeout(() => {
                 this.el.classList.remove('scrolling');
             }, this.options.duration);
             // Start actual scroll
-            let i, half, delta, dir, tween, el, alignment, zTranslation, tweenedOpacity, centerTweenedOpacity;
-            let lastCenter = this.center;
-            let numVisibleOffset = 1 / this.options.numVisible;
             this.offset = typeof x === 'number' ? x : this.offset;
             this.center = Math.floor((this.offset + this.dim / 2) / this.dim);
-            delta = this.offset - this.center * this.dim;
-            dir = delta < 0 ? 1 : -1;
-            tween = (-dir * delta * 2) / this.dim;
-            half = this.count >> 1;
+            const half = this.count >> 1, delta = this.offset - this.center * this.dim, dir = delta < 0 ? 1 : -1, tween = (-dir * delta * 2) / this.dim;
+            let i, el, alignment, zTranslation, tweenedOpacity, centerTweenedOpacity;
+            const lastCenter = this.center;
+            const numVisibleOffset = 1 / this.options.numVisible;
+            // delta = this.offset - this.center * this.dim;
+            // dir = delta < 0 ? 1 : -1;
+            // tween = (-dir * delta * 2) / this.dim;
+            // half = this.count >> 1;
             if (this.options.fullWidth) {
                 alignment = 'translateX(0)';
                 centerTweenedOpacity = 1;
@@ -1988,10 +2162,7 @@ var M = (function (exports) {
                     this.el.querySelector('.carousel-item').classList.remove('active');
                     el.classList.add('active');
                 }
-                let transformString = `${alignment} translateX(${-delta / 2}px) translateX(${dir *
-                this.options.shift *
-                tween *
-                i}px) translateZ(${this.options.dist * tween}px)`;
+                const transformString = `${alignment} translateX(${-delta / 2}px) translateX(${dir * this.options.shift * tween * i}px) translateZ(${this.options.dist * tween}px)`;
                 this._updateItemStyle(el, centerTweenedOpacity, 0, transformString);
             }
             for (i = 1; i <= half; ++i) {
@@ -2007,8 +2178,7 @@ var M = (function (exports) {
                 // Don't show wrapped items.
                 if (!this.noWrap || this.center + i < this.count) {
                     el = this.images[this._wrap(this.center + i)];
-                    let transformString = `${alignment} translateX(${this.options.shift +
-                    (this.dim * i - delta) / 2}px) translateZ(${zTranslation}px)`;
+                    const transformString = `${alignment} translateX(${this.options.shift + (this.dim * i - delta) / 2}px) translateZ(${zTranslation}px)`;
                     this._updateItemStyle(el, tweenedOpacity, -i, transformString);
                 }
                 // left side
@@ -2023,8 +2193,7 @@ var M = (function (exports) {
                 // Don't show wrapped items.
                 if (!this.noWrap || this.center - i >= 0) {
                     el = this.images[this._wrap(this.center - i)];
-                    let transformString = `${alignment} translateX(${-this.options.shift +
-                    (-this.dim * i - delta) / 2}px) translateZ(${zTranslation}px)`;
+                    const transformString = `${alignment} translateX(${-this.options.shift + (-this.dim * i - delta) / 2}px) translateZ(${zTranslation}px)`;
                     this._updateItemStyle(el, tweenedOpacity, -i, transformString);
                 }
             }
@@ -2032,9 +2201,7 @@ var M = (function (exports) {
             // Don't show wrapped items.
             if (!this.noWrap || (this.center >= 0 && this.center < this.count)) {
                 el = this.images[this._wrap(this.center)];
-                let transformString = `${alignment} translateX(${-delta / 2}px) translateX(${dir *
-                this.options.shift *
-                tween}px) translateZ(${this.options.dist * tween}px)`;
+                const transformString = `${alignment} translateX(${-delta / 2}px) translateX(${dir * this.options.shift * tween}px) translateZ(${this.options.dist * tween}px)`;
                 this._updateItemStyle(el, centerTweenedOpacity, 0, transformString);
             }
             // onCycleTo callback
@@ -2138,7 +2305,7 @@ var M = (function (exports) {
         }
     }
 
-    let _defaults$h = {
+    const _defaults$i = {
         data: [],
         placeholder: '',
         secondaryPlaceholder: '',
@@ -2168,7 +2335,7 @@ var M = (function (exports) {
         _selectedChip;
         constructor(el, options) {
             super(el, options, Chips);
-            this.el.M_Chips = this;
+            this.el['M_Chips'] = this;
             this.options = {
                 ...Chips.defaults,
                 ...options
@@ -2192,7 +2359,7 @@ var M = (function (exports) {
             }
         }
         static get defaults() {
-            return _defaults$h;
+            return _defaults$i;
         }
         /**
          * Initializes instances of Chips.
@@ -2203,7 +2370,7 @@ var M = (function (exports) {
             return super.init(els, options, Chips);
         }
         static getInstance(el) {
-            return el.M_Chips;
+            return el['M_Chips'];
         }
         getData() {
             return this.chipsData;
@@ -2212,12 +2379,13 @@ var M = (function (exports) {
             if (this.options.allowUserInput) {
                 this._removeEventHandlers();
             }
-            this._chips.forEach(c => c.remove());
+            this._chips.forEach((c) => c.remove());
             this._chips = [];
-            this.el.M_Chips = undefined;
+            this.el['M_Chips'] = undefined;
         }
         _setupEventHandlers() {
             this.el.addEventListener('click', this._handleChipClick);
+            // @todo why do we need this as document event listener, shouldn't we apply it to the element wrapper itself?
             document.addEventListener('keydown', Chips._handleChipsKeydown);
             document.addEventListener('keyup', Chips._handleChipsKeyup);
             this.el.addEventListener('blur', Chips._handleChipsBlur, true);
@@ -2260,7 +2428,7 @@ var M = (function (exports) {
             const tag = e.target.tagName;
             if (tag === 'INPUT' || tag === 'TEXTAREA' || !chipsKeydown)
                 return;
-            const currChips = chips.M_Chips;
+            const currChips = chips['M_Chips'];
             if (Utils.keys.BACKSPACE.includes(e.key) || Utils.keys.DELETE.includes(e.key)) {
                 e.preventDefault();
                 let selectIndex = currChips.chipsData.length;
@@ -2294,13 +2462,13 @@ var M = (function (exports) {
                 }
             }
         }
-        static _handleChipsKeyup(e) {
+        static _handleChipsKeyup() {
             Chips._keydown = false;
         }
         static _handleChipsBlur(e) {
             if (!Chips._keydown && document.hidden) {
                 const chips = e.target.closest('.chips');
-                const currChips = chips.M_Chips;
+                const currChips = chips['M_Chips'];
                 currChips._selectedChip = null;
             }
         }
@@ -2404,7 +2572,7 @@ var M = (function (exports) {
         }
         _isValidAndNotExist(chip) {
             const isValid = !!chip.id;
-            const doesNotExist = !this.chipsData.some(item => item.id == chip.id);
+            const doesNotExist = !this.chipsData.some((item) => item.id == chip.id);
             return isValid && doesNotExist;
         }
         /**
@@ -2455,15 +2623,18 @@ var M = (function (exports) {
         }
         static Init() {
             if (typeof document !== 'undefined')
-                document.addEventListener("DOMContentLoaded", () => {
-                    // Handle removal of static chips.
-                    document.body.addEventListener('click', e => {
-                        if (e.target.closest('.chip .close')) {
-                            const chips = e.target.closest('.chips');
-                            if (chips && chips.M_Chips == undefined)
-                                return;
-                            e.target.closest('.chip').remove();
-                        }
+                // Handle removal of static chips.
+                document.addEventListener('DOMContentLoaded', () => {
+                    const chips = document.querySelectorAll('.chips');
+                    chips.forEach((el) => {
+                        // if (el && (el['M_Chips == undefined) return;
+                        el.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('close')) {
+                                const chip = e.target.closest('.chip');
+                                if (chip)
+                                    chip.remove();
+                            }
+                        });
                     });
                 });
         }
@@ -2472,7 +2643,7 @@ var M = (function (exports) {
         }
     }
 
-    const _defaults$g = {
+    const _defaults$h = {
         accordion: true,
         onOpenStart: null,
         onOpenEnd: null,
@@ -2485,14 +2656,14 @@ var M = (function (exports) {
         _headers;
         constructor(el, options) {
             super(el, options, Collapsible);
-            this.el.M_Collapsible = this;
+            this.el['M_Collapsible'] = this;
             this.options = {
                 ...Collapsible.defaults,
                 ...options
             };
             // Setup tab indices
             this._headers = Array.from(this.el.querySelectorAll('li > .collapsible-header'));
-            this._headers.forEach(el => el.tabIndex = 0);
+            this._headers.forEach((el) => (el.tabIndex = 0));
             this._setupEventHandlers();
             // Open active
             const activeBodies = Array.from(this.el.querySelectorAll('li.active > .collapsible-body'));
@@ -2504,11 +2675,11 @@ var M = (function (exports) {
             }
             else {
                 // Expandables => all active
-                activeBodies.forEach(el => this._setExpanded(el));
+                activeBodies.forEach((el) => this._setExpanded(el));
             }
         }
         static get defaults() {
-            return _defaults$g;
+            return _defaults$h;
         }
         /**
          * Initializes instances of Collapsible.
@@ -2519,19 +2690,19 @@ var M = (function (exports) {
             return super.init(els, options, Collapsible);
         }
         static getInstance(el) {
-            return el.M_Collapsible;
+            return el['M_Collapsible'];
         }
         destroy() {
             this._removeEventHandlers();
-            this.el.M_Collapsible = undefined;
+            this.el['M_Collapsible'] = undefined;
         }
         _setupEventHandlers() {
             this.el.addEventListener('click', this._handleCollapsibleClick);
-            this._headers.forEach(header => header.addEventListener('keydown', this._handleCollapsibleKeydown));
+            this._headers.forEach((header) => header.addEventListener('keydown', this._handleCollapsibleKeydown));
         }
         _removeEventHandlers() {
             this.el.removeEventListener('click', this._handleCollapsibleClick);
-            this._headers.forEach(header => header.removeEventListener('keydown', this._handleCollapsibleKeydown));
+            this._headers.forEach((header) => header.removeEventListener('keydown', this._handleCollapsibleKeydown));
         }
         _handleCollapsibleClick = (e) => {
             const header = e.target.closest('.collapsible-header');
@@ -2554,7 +2725,7 @@ var M = (function (exports) {
             }
         };
         _setExpanded(li) {
-            li.style.maxHeight = li.scrollHeight + "px";
+            li.style.maxHeight = li.scrollHeight + 'px';
         }
         _animateIn(index) {
             const li = this.el.children[index];
@@ -2577,7 +2748,7 @@ var M = (function (exports) {
             const body = li.querySelector('.collapsible-body');
             const duration = this.options.outDuration; // easeInOutCubic
             body.style.transition = `max-height ${duration}ms ease-out`;
-            body.style.maxHeight = "0";
+            body.style.maxHeight = '0';
             setTimeout(() => {
                 if (typeof this.options.onCloseEnd === 'function') {
                     this.options.onCloseEnd.call(this, li);
@@ -2589,7 +2760,7 @@ var M = (function (exports) {
          * @param n Nth section to open.
          */
         open = (index) => {
-            const listItems = Array.from(this.el.children).filter(c => c.tagName === 'LI');
+            const listItems = Array.from(this.el.children).filter((c) => c.tagName === 'LI');
             const li = listItems[index];
             if (li && !li.classList.contains('active')) {
                 // onOpenStart callback
@@ -2598,8 +2769,8 @@ var M = (function (exports) {
                 }
                 // Handle accordion behavior
                 if (this.options.accordion) {
-                    const activeLis = listItems.filter(li => li.classList.contains('active'));
-                    activeLis.forEach(activeLi => {
+                    const activeLis = listItems.filter((li) => li.classList.contains('active'));
+                    activeLis.forEach((activeLi) => {
                         const index = listItems.indexOf(activeLi);
                         this.close(index);
                     });
@@ -2614,7 +2785,7 @@ var M = (function (exports) {
          * @param n Nth section to close.
          */
         close = (index) => {
-            const li = Array.from(this.el.children).filter(c => c.tagName === 'LI')[index];
+            const li = Array.from(this.el.children).filter((c) => c.tagName === 'LI')[index];
             if (li && li.classList.contains('active')) {
                 // onCloseStart callback
                 if (typeof this.options.onCloseStart === 'function') {
@@ -2627,7 +2798,7 @@ var M = (function (exports) {
         };
     }
 
-    let _defaults$f = {
+    const _defaults$g = {
         classes: '',
         dropdownOptions: {}
     };
@@ -2649,23 +2820,25 @@ var M = (function (exports) {
         wrapper;
         selectOptions;
         _values;
+        nativeTabIndex;
         constructor(el, options) {
             super(el, options, FormSelect);
             if (this.el.classList.contains('browser-default'))
                 return;
-            this.el.M_FormSelect = this;
+            this.el['M_FormSelect'] = this;
             this.options = {
                 ...FormSelect.defaults,
                 ...options
             };
             this.isMultiple = this.el.multiple;
+            this.nativeTabIndex = this.el.tabIndex ?? -1;
             this.el.tabIndex = -1;
             this._values = [];
             this._setupDropdown();
             this._setupEventHandlers();
         }
         static get defaults() {
-            return _defaults$f;
+            return _defaults$g;
         }
         /**
          * Initializes instances of FormSelect.
@@ -2676,18 +2849,18 @@ var M = (function (exports) {
             return super.init(els, options, FormSelect);
         }
         static getInstance(el) {
-            return el.M_FormSelect;
+            return el['M_FormSelect'];
         }
         destroy() {
             this._removeEventHandlers();
             this._removeDropdown();
-            this.el.M_FormSelect = undefined;
+            this.el['M_FormSelect'] = undefined;
         }
         _setupEventHandlers() {
             this.dropdownOptions.querySelectorAll('li:not(.optgroup)').forEach((el) => {
                 el.addEventListener('click', this._handleOptionClick);
                 el.addEventListener('keydown', (e) => {
-                    if (e.key === " " || e.key === "Enter")
+                    if (e.key === ' ' || e.key === 'Enter')
                         this._handleOptionClick(e);
                 });
             });
@@ -2723,7 +2896,8 @@ var M = (function (exports) {
             return true;
         }
         _selectOptionElement(virtualOption) {
-            if (!virtualOption.classList.contains('disabled') && !virtualOption.classList.contains('optgroup')) {
+            if (!virtualOption.classList.contains('disabled') &&
+                !virtualOption.classList.contains('optgroup')) {
                 const value = this._values.find((value) => value.optionEl === virtualOption);
                 const previousSelectedValues = this.getSelectedValues();
                 if (this.isMultiple) {
@@ -2754,8 +2928,6 @@ var M = (function (exports) {
         };
         _setupDropdown() {
             this.labelEl = document.querySelector('[for="' + this.el.id + '"]');
-            if (this.labelEl)
-                this.labelEl.style.display = 'none';
             this.wrapper = document.createElement('div');
             this.wrapper.classList.add('select-wrapper', 'input-field');
             if (this.options.classes.length > 0) {
@@ -2769,10 +2941,11 @@ var M = (function (exports) {
             hiddenDiv.appendChild(this.el);
             if (this.el.disabled)
                 this.wrapper.classList.add('disabled');
-            this.selectOptions = Array.from(this.el.children).filter(el => ['OPTION', 'OPTGROUP'].includes(el.tagName));
+            this.selectOptions = (Array.from(this.el.children).filter((el) => ['OPTION', 'OPTGROUP'].includes(el.tagName)));
             // Create dropdown
             this.dropdownOptions = document.createElement('ul');
             this.dropdownOptions.id = `select-options-${Utils.guid()}`;
+            this.dropdownOptions.setAttribute('popover', 'auto');
             this.dropdownOptions.classList.add('dropdown-content', 'select-dropdown');
             this.dropdownOptions.setAttribute('role', 'listbox');
             this.dropdownOptions.ariaMultiSelectable = this.isMultiple.toString();
@@ -2788,7 +2961,7 @@ var M = (function (exports) {
                     }
                     else if (realOption.tagName === 'OPTGROUP') {
                         // Optgroup
-                        const groupId = "opt-group-" + Utils.guid();
+                        const groupId = 'opt-group-' + Utils.guid();
                         const groupParent = document.createElement('li');
                         groupParent.classList.add('optgroup');
                         groupParent.tabIndex = -1;
@@ -2797,42 +2970,43 @@ var M = (function (exports) {
                         groupParent.innerHTML = `<span id="${groupId}" role="presentation">${realOption.getAttribute('label')}</span>`;
                         this.dropdownOptions.append(groupParent);
                         const groupChildren = [];
-                        const selectOptions = Array.from(realOption.children).filter(el => el.tagName === 'OPTION');
-                        selectOptions.forEach(realOption => {
+                        const selectOptions = (Array.from(realOption.children).filter((el) => el.tagName === 'OPTION'));
+                        selectOptions.forEach((realOption) => {
                             const virtualOption = this._createAndAppendOptionWithIcon(realOption, 'optgroup-option');
-                            const childId = "opt-child-" + Utils.guid();
+                            const childId = 'opt-child-' + Utils.guid();
                             virtualOption.id = childId;
                             groupChildren.push(childId);
                             this._addOptionToValues(realOption, virtualOption);
                         });
-                        groupParent.setAttribute("aria-owns", groupChildren.join(" "));
+                        groupParent.setAttribute('aria-owns', groupChildren.join(' '));
                     }
                 });
             }
             this.wrapper.append(this.dropdownOptions);
             // Add input dropdown
             this.input = document.createElement('input');
-            this.input.id = "m_select-input-" + Utils.guid();
+            this.input.id = 'm_select-input-' + Utils.guid();
             this.input.classList.add('select-dropdown', 'dropdown-trigger');
             this.input.type = 'text';
             this.input.readOnly = true;
             this.input.setAttribute('data-target', this.dropdownOptions.id);
             this.input.ariaReadOnly = 'true';
-            this.input.ariaRequired = this.el.hasAttribute("required").toString(); //setAttribute("aria-required", this.el.hasAttribute("required"));
+            this.input.ariaRequired = this.el.hasAttribute('required').toString(); //setAttribute("aria-required", this.el.hasAttribute("required"));
             if (this.el.disabled)
                 this.input.disabled = true; // 'true');
+            this.input.setAttribute('tabindex', this.nativeTabIndex.toString());
             const attrs = this.el.attributes;
             for (let i = 0; i < attrs.length; ++i) {
                 const attr = attrs[i];
-                if (attr.name.startsWith("aria-"))
+                if (attr.name.startsWith('aria-'))
                     this.input.setAttribute(attr.name, attr.value);
             }
             // Adds aria-attributes to input element
             this.input.setAttribute('role', 'combobox');
             this.input.ariaExpanded = 'false';
-            this.input.setAttribute("aria-owns", this.dropdownOptions.id);
-            this.input.setAttribute("aria-controls", this.dropdownOptions.id);
-            this.input.placeholder = " ";
+            this.input.setAttribute('aria-owns', this.dropdownOptions.id);
+            this.input.setAttribute('aria-controls', this.dropdownOptions.id);
+            this.input.placeholder = ' ';
             this.wrapper.prepend(this.input);
             this._setValueToInput();
             // Add caret
@@ -2846,12 +3020,12 @@ var M = (function (exports) {
             this.wrapper.prepend(dropdownIcon);
             // Initialize dropdown
             if (!this.el.disabled) {
-                const dropdownOptions = { ...this.options.dropdownOptions }; // TODO:
+                const dropdownOptions = { ...this.options.dropdownOptions };
                 dropdownOptions.coverTrigger = false;
                 const userOnOpenEnd = dropdownOptions.onOpenEnd;
                 const userOnCloseEnd = dropdownOptions.onCloseEnd;
                 // Add callback for centering selected option when dropdown content is scrollable
-                dropdownOptions.onOpenEnd = (el) => {
+                dropdownOptions.onOpenEnd = () => {
                     const selectedOption = this.dropdownOptions.querySelector('.selected');
                     if (selectedOption) {
                         // Focus selected option in dropdown
@@ -2873,7 +3047,7 @@ var M = (function (exports) {
                         userOnOpenEnd.call(this.dropdown, this.el);
                 };
                 // Add callback for reseting "expanded" state
-                dropdownOptions.onCloseEnd = (el) => {
+                dropdownOptions.onCloseEnd = () => {
                     this.input.ariaExpanded = 'false';
                     // Handle user declared onOpenEnd if needed
                     if (userOnCloseEnd && typeof userOnCloseEnd === 'function')
@@ -2885,13 +3059,9 @@ var M = (function (exports) {
             }
             // Add initial selections
             this._setSelectedStates();
-            // Add Label
-            if (this.labelEl) {
-                const label = document.createElement('label');
-                label.htmlFor = this.input.id;
-                label.innerText = this.labelEl.innerText;
-                this.input.after(label);
-            }
+            // move label
+            if (this.labelEl)
+                this.input.after(this.labelEl);
         }
         _addOptionToValues(realOption, virtualOption) {
             this._values.push({ el: realOption, optionEl: virtualOption });
@@ -2951,7 +3121,7 @@ var M = (function (exports) {
                 checkbox.checked = false;
         }
         _deselectAll() {
-            this._values.forEach(value => this._deselectValue(value));
+            this._values.forEach((value) => this._deselectValue(value));
         }
         _isValueSelected(value) {
             const realValues = this.getSelectedValues();
@@ -2971,7 +3141,7 @@ var M = (function (exports) {
             const selectedRealOptions = this._getSelectedOptions();
             const selectedOptionPairs = this._values.filter((value) => selectedRealOptions.indexOf(value.el) >= 0);
             // Filter not disabled
-            const notDisabledOptionPairs = selectedOptionPairs.filter(op => !op.el.disabled);
+            const notDisabledOptionPairs = selectedOptionPairs.filter((op) => !op.el.disabled);
             const texts = notDisabledOptionPairs.map((value) => value.optionEl.querySelector('span').innerText.trim());
             // Set input-text to first Option with empty value which indicates a description like "choose your option"
             if (texts.length === 0) {
@@ -3002,13 +3172,81 @@ var M = (function (exports) {
             if (!li)
                 return;
             if (!this.isMultiple)
-                ul.querySelectorAll('li.selected').forEach(li => li.classList.remove('selected'));
+                ul.querySelectorAll('li.selected').forEach((li) => li.classList.remove('selected'));
             li.classList.add('selected');
             li.ariaSelected = 'true';
         }
         getSelectedValues() {
             return this._getSelectedOptions().map((realOption) => realOption.value);
         }
+    }
+
+    const _defaults$f = {
+        margin: 5,
+        transition: 10,
+        duration: 250,
+        align: 'left'
+    };
+    class DockedDisplayPlugin {
+        el;
+        container;
+        options;
+        visible;
+        constructor(el, container, options) {
+            this.el = el;
+            this.options = {
+                ..._defaults$f,
+                ...options
+            };
+            this.container = document.createElement('div');
+            this.container.classList.add('display-docked');
+            this.container.append(container);
+            el.parentElement.append(this.container);
+            document.addEventListener('click', (e) => {
+                if (this.visible && !(this.el === e.target) && !(e.target.closest('.display-docked'))) {
+                    this.hide();
+                }
+            });
+        }
+        /**
+         * Initializes instance of DockedDisplayPlugin
+         * @param el HTMLElement to position to
+         * @param container HTMLElement to be positioned
+         * @param options Plugin options
+         */
+        static init(el, container, options) {
+            return new DockedDisplayPlugin(el, container, options);
+        }
+        show = () => {
+            if (this.visible)
+                return;
+            this.visible = true;
+            const coordinates = Utils._setAbsolutePosition(this.el, this.container, 'bottom', this.options.margin, this.options.transition, this.options.align);
+            // @todo move to Util? -> duplicate code fragment with tooltip
+            // easeOutCubic
+            this.container.style.visibility = 'visible';
+            this.container.style.transition = `
+      transform ${this.options.duration}ms ease-out,
+      opacity ${this.options.duration}ms ease-out`;
+            setTimeout(() => {
+                this.container.style.transform = `translateX(${coordinates.x}px) translateY(${coordinates.y}px)`;
+                this.container.style.opacity = (1).toString();
+            }, 1);
+        };
+        hide = () => {
+            if (!this.visible)
+                return;
+            this.visible = false;
+            // @todo move to Util? -> duplicate code fragment with tooltip
+            this.container.removeAttribute('style');
+            this.container.style.transition = `
+      transform ${this.options.duration}ms ease-out,
+      opacity ${this.options.duration}ms ease-out`;
+            setTimeout(() => {
+                this.container.style.transform = `translateX(0px) translateY(0px)`;
+                this.container.style.opacity = '0';
+            }, 1);
+        };
     }
 
     const _defaults$e = {
@@ -3018,6 +3256,8 @@ var M = (function (exports) {
         parse: null,
         // The initial condition if the datepicker is based on date range
         isDateRange: false,
+        // The selector of the user specified date range end element
+        dateRangeEndEl: null,
         // The initial condition if the datepicker is based on multiple date selection
         isMultipleSelection: false,
         // The initial date to view when first opened
@@ -3051,10 +3291,14 @@ var M = (function (exports) {
         showMonthAfterYear: false,
         // Render days of the calendar grid that fall in the next or previous month
         showDaysInNextAndPreviousMonths: false,
+        // Specify if docked picker is in open state by default
+        openByDefault: false,
         // Specify a DOM element to render the calendar in
         container: null,
         // Show clear button
         showClearBtn: false,
+        // Autosubmit
+        autoSubmit: true,
         // internationalization
         i18n: {
             cancel: 'Cancel',
@@ -3098,18 +3342,23 @@ var M = (function (exports) {
         events: [],
         // callback function
         onSelect: null,
-        onDraw: null
+        onDraw: null,
+        onInputInteraction: null,
+        displayPlugin: null,
+        displayPluginOptions: null,
+        onConfirm: null,
+        onCancel: null,
     };
     class Datepicker extends Component {
         id;
         multiple = false;
         calendarEl;
         /** CLEAR button instance. */
-        clearBtn;
+        // clearBtn: HTMLElement;
         /** DONE button instance */
-        doneBtn;
-        cancelBtn;
-        modalEl;
+        /*doneBtn: HTMLElement;
+        cancelBtn: HTMLElement;*/
+        containerEl;
         yearTextEl;
         dateTextEl;
         endDateEl;
@@ -3122,10 +3371,12 @@ var M = (function (exports) {
         calendars;
         _y;
         _m;
+        displayPlugin;
+        footer;
         static _template;
         constructor(el, options) {
             super(el, options, Datepicker);
-            this.el.M_Datepicker = this;
+            this.el['M_Datepicker'] = this;
             this.options = {
                 ...Datepicker.defaults,
                 ...options
@@ -3175,6 +3426,10 @@ var M = (function (exports) {
                 this.dateEls = [];
                 this.dateEls.push(el);
             }
+            if (this.options.displayPlugin) {
+                if (this.options.displayPlugin === 'docked')
+                    this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
+            }
         }
         static get defaults() {
             return _defaults$e;
@@ -3219,13 +3474,13 @@ var M = (function (exports) {
             return a.getTime() < b.getTime();
         }
         static getInstance(el) {
-            return el.M_Datepicker;
+            return el['M_Datepicker'];
         }
         destroy() {
             this._removeEventHandlers();
-            this.modalEl.remove();
+            this.containerEl.remove();
             this.destroySelects();
-            this.el.M_Datepicker = undefined;
+            this.el['M_Datepicker'] = undefined;
         }
         destroySelects() {
             const oldYearSelect = this.calendarEl.querySelector('.orig-select-year');
@@ -3242,26 +3497,54 @@ var M = (function (exports) {
             if (this.el.type == 'date') {
                 this.el.classList.add('datepicker-date-input');
             }
-            if (this.options.isDateRange) {
-                this.endDateEl = this.createDateInput();
-                this.endDateEl.classList.add('datepicker-end-date');
+            if (!this.el.parentElement.querySelector('.datepicker-format') === null) {
+                this._renderDateInputFormat(this.el);
             }
-            if (this.options.showClearBtn) {
-                this.clearBtn.style.visibility = '';
-                this.clearBtn.innerText = this.options.i18n.clear;
+            if (this.options.isDateRange) {
+                this.containerEl.classList.add('daterange');
+                if (!this.options.dateRangeEndEl) {
+                    this.endDateEl = this.createDateInput();
+                    this.endDateEl.classList.add('datepicker-end-date');
+                }
+                else if (document.querySelector(this.options.dateRangeEndEl) === undefined) {
+                    console.warn('Specified date range end input element in dateRangeEndEl not found');
+                }
+                else {
+                    this.endDateEl = document.querySelector(this.options.dateRangeEndEl);
+                    if (!this.endDateEl.parentElement.querySelector('.datepicker-format') === null) {
+                        this._renderDateInputFormat(this.endDateEl);
+                    }
+                }
+            }
+            /*if (this.options.showClearBtn) {
+              this.clearBtn.style.visibility = '';
+              this.clearBtn.innerText = this.options.i18n.clear;
             }
             this.doneBtn.innerText = this.options.i18n.done;
-            this.cancelBtn.innerText = this.options.i18n.cancel;
+            this.cancelBtn.innerText = this.options.i18n.cancel;*/
+            Utils.createButton(this.footer, this.options.i18n.clear, ['datepicker-clear'], this.options.showClearBtn, this._handleClearClick);
+            if (!this.options.autoSubmit) {
+                Utils.createConfirmationContainer(this.footer, this.options.i18n.done, this.options.i18n.cancel, this._confirm, this._cancel);
+            }
             if (this.options.container) {
                 const optEl = this.options.container;
                 this.options.container =
                     optEl instanceof HTMLElement ? optEl : document.querySelector(optEl);
-                this.options.container.append(this.modalEl);
+                this.options.container.append(this.containerEl);
             }
             else {
-                //this.modalEl.before(this.el);
-                this.el.parentElement.appendChild(this.modalEl);
+                //this.containerEl.before(this.el);
+                const appendTo = !this.endDateEl ? this.el : this.endDateEl;
+                if (!this.options.openByDefault)
+                    this.containerEl.setAttribute('style', 'display: none; visibility: hidden;');
+                appendTo.parentElement.after(this.containerEl);
             }
+        }
+        /**
+         * Renders the date input format
+         */
+        _renderDateInputFormat(el) {
+            el.parentElement.querySelector('.datepicker-format').innerHTML = this.options.format.toString();
         }
         /**
          * Gets a string representation of the given date.
@@ -3351,7 +3634,7 @@ var M = (function (exports) {
          * @param date Date to set on the datepicker.
          */
         setMultiDate(date) {
-            const selectedDate = this.dates.find((item) => {
+            const selectedDate = this.dates?.find((item) => {
                 return item.getTime() === date.getTime() ? item : false;
             });
             if (!selectedDate) {
@@ -3403,7 +3686,6 @@ var M = (function (exports) {
          * Sets given date as the input value on the given element.
          */
         setInputValue(el, date) {
-            console.log('setinputvalue');
             if (el.type == 'date') {
                 this.setDataDate(el, date);
                 el.value = this.formatDate(date, 'yyyy-mm-dd');
@@ -3507,7 +3789,7 @@ var M = (function (exports) {
                     day < this.options.endRange, isDisabled = (this.options.minDate && day < this.options.minDate) ||
                     (this.options.maxDate && day > this.options.maxDate) ||
                     (this.options.disableWeekends && Datepicker._isWeekend(day)) ||
-                    (this.options.disableDayFn && this.options.disableDayFn(day)), isDateRange = this.options.isDateRange &&
+                    (this.options.disableDayFn && this.options.disableDayFn(day)), isDateRangeStart = this.options.isDateRange && this.date && this.endDate && Datepicker._compareDates(this.date, day), isDateRangeEnd = this.options.isDateRange && this.endDate && Datepicker._compareDates(this.endDate, day), isDateRange = this.options.isDateRange &&
                     Datepicker._isDate(this.endDate) &&
                     Datepicker._compareWithinRange(day, this.date, this.endDate);
                 let dayNumber = 1 + (i - before), monthNumber = month, yearNumber = year;
@@ -3519,9 +3801,7 @@ var M = (function (exports) {
                     isSelected = Datepicker._compareDates(day, this.endDate);
                 }
                 if (this.options.isMultipleSelection &&
-                    this.dates.find((item) => {
-                        return item.getTime() === day.getTime();
-                    })) {
+                    this.dates?.some((item) => item.getTime() === day.getTime())) {
                     isSelected = true;
                 }
                 if (isEmpty) {
@@ -3549,6 +3829,8 @@ var M = (function (exports) {
                     isEndRange: isEndRange,
                     isInRange: isInRange,
                     showDaysInNextAndPreviousMonths: this.options.showDaysInNextAndPreviousMonths,
+                    isDateRangeStart: isDateRangeStart,
+                    isDateRangeEnd: isDateRangeEnd,
                     isDateRange: isDateRange
                 };
                 row.push(this.renderDay(dayConfig));
@@ -3562,8 +3844,18 @@ var M = (function (exports) {
             return this.renderTable(this.options, data, randId);
         }
         renderDay(opts) {
-            const arr = [];
-            let ariaSelected = 'false';
+            const classMap = {
+                isDisabled: 'is-disabled',
+                isToday: 'is-today',
+                isSelected: 'is-selected',
+                hasEvent: 'has-event',
+                isInRange: 'is-inrange',
+                isStartRange: 'is-startrange',
+                isEndRange: 'is-endrange',
+                isDateRangeStart: 'is-daterange-start',
+                isDateRangeEnd: 'is-daterange-end',
+                isDateRange: 'is-daterange'
+            }, ariaSelected = !(['isSelected', 'isDateRange'].filter((prop) => !!(opts.hasOwnProperty(prop) && opts[prop] === true)).length === 0), arr = ['datepicker-day'];
             if (opts.isEmpty) {
                 if (opts.showDaysInNextAndPreviousMonths) {
                     arr.push('is-outside-current-month');
@@ -3573,36 +3865,10 @@ var M = (function (exports) {
                     return '<td class="is-empty"></td>';
                 }
             }
-            // @todo wouldn't it be better defining opts class mapping and looping trough opts?
-            if (opts.isDisabled) {
-                arr.push('is-disabled');
-            }
-            if (opts.isToday) {
-                arr.push('is-today');
-            }
-            if (opts.isSelected) {
-                arr.push('is-selected');
-                ariaSelected = 'true';
-            }
-            // @todo should we create this additional css class?
-            if (opts.hasEvent) {
-                arr.push('has-event');
-            }
-            // @todo should we create this additional css class?
-            if (opts.isInRange) {
-                arr.push('is-inrange');
-            }
-            // @todo should we create this additional css class?
-            if (opts.isStartRange) {
-                arr.push('is-startrange');
-            }
-            // @todo should we create this additional css class?
-            if (opts.isEndRange) {
-                arr.push('is-endrange');
-            }
-            // @todo create additional css class
-            if (opts.isDateRange) {
-                arr.push('is-daterange');
+            for (const [property, className] of Object.entries(classMap)) {
+                if (opts.hasOwnProperty(property) && opts[property]) {
+                    arr.push(className);
+                }
             }
             return (`<td data-day="${opts.day}" class="${arr.join(' ')}" aria-selected="${ariaSelected}">` +
                 `<button class="datepicker-day-button" type="button" data-year="${opts.year}" data-month="${opts.month}" data-day="${opts.day}">${opts.day}</button>` +
@@ -3671,7 +3937,9 @@ var M = (function (exports) {
                 arr.reverse();
             const yearHtml = `<select class="datepicker-select orig-select-year" tabindex="-1">${arr.join('')}</select>`;
             const leftArrow = '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/><path d="M0-.5h24v24H0z" fill="none"/></svg>';
-            html += `<button class="month-prev${prev ? '' : ' is-disabled'} btn-flat" type="button">${leftArrow}</button>`;
+            html += `<button class="month-prev${prev ? '' : ' is-disabled'
+        // @todo remove button class and add scss mixin, current implementation temporary for focus states, @see https://github.com/materializecss/materialize/issues/566
+        } btn" type="button">${leftArrow}</button>`;
             html += '<div class="selects-container">';
             if (opts.showMonthAfterYear) {
                 html += yearHtml + monthHtml;
@@ -3687,7 +3955,9 @@ var M = (function (exports) {
                 next = false;
             }
             const rightArrow = '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/><path d="M0-.25h24v24H0z" fill="none"/></svg>';
-            html += `<button class="month-next${next ? '' : ' is-disabled'} btn-flat" type="button">${rightArrow}</button>`;
+            html += `<button class="month-next${next ? '' : ' is-disabled'
+        // @todo remove button class and add scss mixin, current implementation temporary for focus states, @see https://github.com/materializecss/materialize/issues/566
+        } btn" type="button">${rightArrow}</button>`;
             return (html += '</div>');
         }
         // refresh HTML
@@ -3726,6 +3996,7 @@ var M = (function (exports) {
             // Init Materialize Select
             const yearSelect = this.calendarEl.querySelector('.orig-select-year');
             const monthSelect = this.calendarEl.querySelector('.orig-select-month');
+            // @todo fix accessibility @see https://github.com/materializecss/materialize/issues/522
             FormSelect.init(yearSelect, {
                 classes: 'select-year',
                 dropdownOptions: { container: document.body, constrainWidth: false }
@@ -3746,25 +4017,26 @@ var M = (function (exports) {
             this.el.addEventListener('keydown', this._handleInputKeydown);
             this.el.addEventListener('change', this._handleInputChange);
             this.calendarEl.addEventListener('click', this._handleCalendarClick);
-            this.doneBtn.addEventListener('click', () => this.setInputValues());
-            this.cancelBtn.addEventListener('click', this.close);
+            /* this.doneBtn.addEventListener('click', this._confirm);
+            this.cancelBtn.addEventListener('click', this._cancel);
+        
             if (this.options.showClearBtn) {
-                this.clearBtn.addEventListener('click', this._handleClearClick);
-            }
+              this.clearBtn.addEventListener('click', this._handleClearClick);
+            }*/
         }
         _setupVariables() {
             const template = document.createElement('template');
             template.innerHTML = Datepicker._template.trim();
-            this.modalEl = template.content.firstChild;
-            this.calendarEl = this.modalEl.querySelector('.datepicker-calendar');
-            this.yearTextEl = this.modalEl.querySelector('.year-text');
-            this.dateTextEl = this.modalEl.querySelector('.date-text');
-            if (this.options.showClearBtn) {
-                this.clearBtn = this.modalEl.querySelector('.datepicker-clear');
+            this.containerEl = template.content.firstChild;
+            this.calendarEl = this.containerEl.querySelector('.datepicker-calendar');
+            this.yearTextEl = this.containerEl.querySelector('.year-text');
+            this.dateTextEl = this.containerEl.querySelector('.date-text');
+            /* if (this.options.showClearBtn) {
+              this.clearBtn = this.containerEl.querySelector('.datepicker-clear');
             }
-            // TODO: This should not be part of the datepicker
-            this.doneBtn = this.modalEl.querySelector('.datepicker-done');
-            this.cancelBtn = this.modalEl.querySelector('.datepicker-cancel');
+            this.doneBtn = this.containerEl.querySelector('.datepicker-done');
+            this.cancelBtn = this.containerEl.querySelector('.datepicker-cancel');*/
+            this.footer = this.containerEl.querySelector('.datepicker-footer');
             this.formats = {
                 d: (date) => {
                     return date.getDate();
@@ -3819,12 +4091,20 @@ var M = (function (exports) {
             this.setDateFromInput(e.target);
             this.draw();
             this.gotoDate(e.target === this.el ? this.date : this.endDate);
+            if (this.displayPlugin)
+                this.displayPlugin.show();
+            if (this.options.onInputInteraction)
+                this.options.onInputInteraction.call(this);
         };
         _handleInputKeydown = (e) => {
             if (Utils.keys.ENTER.includes(e.key)) {
                 e.preventDefault();
                 this.setDateFromInput(e.target);
                 this.draw();
+                if (this.displayPlugin)
+                    this.displayPlugin.show();
+                if (this.options.onInputInteraction)
+                    this.options.onInputInteraction.call(this);
             }
         };
         _handleCalendarClick = (e) => {
@@ -3840,7 +4120,8 @@ var M = (function (exports) {
                     if (this.options.isDateRange) {
                         this._handleDateRangeCalendarClick(selectedDate);
                     }
-                    this._finishSelection();
+                    if (this.options.autoSubmit)
+                        this._finishSelection();
                 }
                 else if (target.closest('.month-prev')) {
                     this.prevMonth();
@@ -3868,6 +4149,7 @@ var M = (function (exports) {
         _clearDates = () => {
             this.date = null;
             this.endDate = null;
+            this.draw();
         };
         _handleMonthChange = (e) => {
             this.gotoMonth(e.target.value);
@@ -3932,7 +4214,17 @@ var M = (function (exports) {
         // Set input value to the selected date and close Datepicker
         _finishSelection = () => {
             this.setInputValues();
-            this.close();
+            // Commented out because of function deprecations
+            // this.close();
+        };
+        _confirm = () => {
+            this._finishSelection();
+            if (typeof this.options.onConfirm === 'function')
+                this.options.onConfirm.call(this);
+        };
+        _cancel = () => {
+            if (typeof this.options.onCancel === 'function')
+                this.options.onCancel.call(this);
         };
         // deprecated
         open() {
@@ -3945,8 +4237,7 @@ var M = (function (exports) {
         }
         static {
             Datepicker._template = `
-      <div class="datepicker-modal">
-        <div class="modal-content datepicker-container">
+        <div class="datepicker-container">
           <div class="datepicker-date-display">
             <span class="year-text"></span>
             <span class="date-text"></span>
@@ -3954,15 +4245,14 @@ var M = (function (exports) {
           <div class="datepicker-calendar-container">
             <div class="datepicker-calendar"></div>
             <div class="datepicker-footer">
-              <button class="btn-flat datepicker-clear waves-effect" style="visibility: hidden;" type="button"></button>
+              <!--<button class="btn-flat datepicker-clear waves-effect" style="visibility: hidden;" type="button"></button>
               <div class="confirmation-btns">
                 <button class="btn-flat datepicker-cancel waves-effect" type="button"></button>
                 <button class="btn-flat datepicker-done waves-effect" type="button"></button>
-              </div>
+              </div>-->
             </div>
           </div>
-        </div>
-      </div>`;
+        </div>`;
         }
     }
 
@@ -3977,15 +4267,19 @@ var M = (function (exports) {
                 console.error('No text field element found');
                 return;
             }
-            let hasLength = textfield.getAttribute('data-length') !== null;
-            let lenAttr = parseInt(textfield.getAttribute('data-length'));
-            let len = textfield.value.length;
-            if (len === 0 && textfield.validity.badInput === false && !textfield.required && textfield.classList.contains('validate')) {
+            const hasLength = textfield.getAttribute('data-length') !== null;
+            const lenAttr = parseInt(textfield.getAttribute('data-length'));
+            const len = textfield.value.length;
+            if (len === 0 &&
+                textfield.validity.badInput === false &&
+                !textfield.required &&
+                textfield.classList.contains('validate')) {
                 textfield.classList.remove('invalid');
             }
             else if (textfield.classList.contains('validate')) {
                 // Check for character counter attributes
-                if (((textfield.validity.valid) && hasLength && len <= lenAttr) || textfield.validity.valid && !hasLength) {
+                if ((textfield.validity.valid && hasLength && len <= lenAttr) ||
+                    (textfield.validity.valid && !hasLength)) {
                     textfield.classList.remove('invalid');
                 }
                 else {
@@ -3996,13 +4290,14 @@ var M = (function (exports) {
         /**
          * Resizes the given TextArea after updating the
          *  value content dynamically.
-         * @param textarea TextArea to be resized
+         * @param e EventTarget
          */
-        static textareaAutoResize(textarea) {
-            if (!textarea) {
-                console.error('No textarea element found');
-                return;
-            }
+        static textareaAutoResize(e) {
+            const textarea = e;
+            // if (!textarea) {
+            //   console.error('No textarea element found');
+            //   return;
+            // }
             // Textarea Auto Resize
             let hiddenDiv = document.querySelector('.hiddendiv');
             if (!hiddenDiv) {
@@ -4042,15 +4337,14 @@ var M = (function (exports) {
                 hiddenDiv.style.whiteSpace = 'pre'; //.css('white-space', 'pre');
             }
             hiddenDiv.innerText = textarea.value + '\n';
-            const content = hiddenDiv.innerHTML.replace(/\n/g, '<br>');
-            hiddenDiv.innerHTML = content;
+            hiddenDiv.innerHTML = hiddenDiv.innerHTML.replace(/\n/g, '<br>');
             // When textarea is hidden, width goes crazy.
             // Approximate with half of window size
             if (textarea.offsetWidth > 0 && textarea.offsetHeight > 0) {
                 hiddenDiv.style.width = textarea.getBoundingClientRect().width + 'px'; // ('width', textarea.width() + 'px');
             }
             else {
-                hiddenDiv.style.width = (window.innerWidth / 2) + 'px'; //css('width', window.innerWidth / 2 + 'px');
+                hiddenDiv.style.width = window.innerWidth / 2 + 'px'; //css('width', window.innerWidth / 2 + 'px');
             }
             // Resize if the new height is greater than the
             // original height of the textarea
@@ -4067,19 +4361,18 @@ var M = (function (exports) {
                 // So we set the height to the original one
                 textarea.style.height = originalHeight + 'px';
             }
-            textarea.setAttribute('previous-length', textarea.value.length.toString());
+            textarea.setAttribute('previous-length', (textarea.value || '').length.toString());
         }
-        ;
         static Init() {
             if (typeof document !== 'undefined')
-                document?.addEventListener("DOMContentLoaded", () => {
+                document?.addEventListener('DOMContentLoaded', () => {
                     document.addEventListener('change', (e) => {
                         const target = e.target;
                         if (target instanceof HTMLInputElement) {
                             if (target.value.length !== 0 || target.getAttribute('placeholder') !== null) {
                                 for (const child of target.parentNode.children) {
-                                    if (child.tagName == "label") {
-                                        child.classList.add("active");
+                                    if (child.tagName == 'label') {
+                                        child.classList.add('active');
                                     }
                                 }
                             }
@@ -4093,15 +4386,21 @@ var M = (function (exports) {
                             // TAB, check if tabbing to radio or checkbox.
                             if (Utils.keys.TAB.includes(e.key)) {
                                 target.classList.add('tabbed');
-                                target.addEventListener('blur', e => target.classList.remove('tabbed'), { once: true });
+                                target.addEventListener('blur', () => target.classList.remove('tabbed'), {
+                                    once: true
+                                });
                             }
                         }
                     });
-                    document.querySelectorAll('.materialize-textarea').forEach((textArea) => {
+                    document
+                        .querySelectorAll('.materialize-textarea')
+                        .forEach((textArea) => {
                         Forms.InitTextarea(textArea);
                     });
                     // File Input Path
-                    document.querySelectorAll('.file-field input[type="file"]').forEach((fileInput) => {
+                    document
+                        .querySelectorAll('.file-field input[type="file"]')
+                        .forEach((fileInput) => {
                         Forms.InitFileInputPath(fileInput);
                     });
                 });
@@ -4109,13 +4408,13 @@ var M = (function (exports) {
         static InitTextarea(textarea) {
             // Save Data in Element
             textarea.setAttribute('original-height', textarea.getBoundingClientRect().height.toString());
-            textarea.setAttribute('previous-length', textarea.value.length.toString());
+            textarea.setAttribute('previous-length', (textarea.value || '').length.toString());
             Forms.textareaAutoResize(textarea);
-            textarea.addEventListener('keyup', e => Forms.textareaAutoResize(textarea));
-            textarea.addEventListener('keydown', e => Forms.textareaAutoResize(textarea));
+            textarea.addEventListener('keyup', (e) => Forms.textareaAutoResize(e.target));
+            textarea.addEventListener('keydown', (e) => Forms.textareaAutoResize(e.target));
         }
         static InitFileInputPath(fileInput) {
-            fileInput.addEventListener('change', e => {
+            fileInput.addEventListener('change', () => {
                 const fileField = fileInput.closest('.file-field');
                 const pathInput = fileField.querySelector('input.file-path');
                 const files = fileInput.files;
@@ -4161,7 +4460,7 @@ var M = (function (exports) {
         _photoCaption;
         constructor(el, options) {
             super(el, options, Materialbox);
-            this.el.M_Materialbox = this;
+            this.el['M_Materialbox'] = this;
             this.options = {
                 ...Materialbox.defaults,
                 ...options
@@ -4192,11 +4491,11 @@ var M = (function (exports) {
             return super.init(els, options, Materialbox);
         }
         static getInstance(el) {
-            return el.M_Materialbox;
+            return el['M_Materialbox'];
         }
         destroy() {
             this._removeEventHandlers();
-            this.el.M_Materialbox = undefined;
+            this.el['M_Materialbox'] = undefined;
             // Unwrap image
             //this.placeholder.after(this.el).remove();
             this.placeholder.remove();
@@ -4253,8 +4552,8 @@ var M = (function (exports) {
             const box = el.getBoundingClientRect();
             const docElem = document.documentElement;
             return {
-                top: box.top + window.pageYOffset - docElem.clientTop,
-                left: box.left + window.pageXOffset - docElem.clientLeft
+                top: box.top + window.scrollY - docElem.clientTop,
+                left: box.left + window.scrollX - docElem.clientLeft
             };
         }
         _updateVars() {
@@ -4281,14 +4580,18 @@ var M = (function (exports) {
                 // to
                 this.el.style.height = this.newHeight + 'px';
                 this.el.style.width = this.newWidth + 'px';
-                this.el.style.left = (Utils.getDocumentScrollLeft() +
-                    this.windowWidth / 2 -
-                    this._offset(this.placeholder).left -
-                    this.newWidth / 2) + 'px';
-                this.el.style.top = (Utils.getDocumentScrollTop() +
-                    this.windowHeight / 2 -
-                    this._offset(this.placeholder).top -
-                    this.newHeight / 2) + 'px';
+                this.el.style.left =
+                    Utils.getDocumentScrollLeft() +
+                        this.windowWidth / 2 -
+                        this._offset(this.placeholder).left -
+                        this.newWidth / 2 +
+                        'px';
+                this.el.style.top =
+                    Utils.getDocumentScrollTop() +
+                        this.windowHeight / 2 -
+                        this._offset(this.placeholder).top -
+                        this.newHeight / 2 +
+                        'px';
             }, 1);
             setTimeout(() => {
                 this.doneAnimating = true;
@@ -4345,12 +4648,13 @@ var M = (function (exports) {
                 if (this.attrHeight)
                     this.el.setAttribute('height', this.attrHeight.toString());
                 this.el.removeAttribute('style');
-                this.originInlineStyles && this.el.setAttribute('style', this.originInlineStyles);
+                if (this.originInlineStyles)
+                    this.el.setAttribute('style', this.originInlineStyles);
                 // Remove class
                 this.el.classList.remove('active');
                 this.doneAnimating = true;
                 // Remove overflow overrides on ancestors
-                this._changedAncestorList.forEach(anchestor => anchestor.style.overflow = '');
+                this._changedAncestorList.forEach((anchestor) => (anchestor.style.overflow = ''));
                 // onCloseEnd callback
                 if (typeof this.options.onCloseEnd === 'function')
                     this.options.onCloseEnd.call(this, this.el);
@@ -4384,7 +4688,7 @@ var M = (function (exports) {
         _addOverlay() {
             this._overlay = document.createElement('div');
             this._overlay.id = 'materialbox-overlay';
-            this._overlay.addEventListener('click', e => {
+            this._overlay.addEventListener('click', () => {
                 if (this.doneAnimating)
                     this.close();
             }, { once: true });
@@ -4516,7 +4820,7 @@ var M = (function (exports) {
     class Modal extends Component {
         constructor(el, options) {
             super(el, options, Modal);
-            this.el.M_Modal = this;
+            this.el['M_Modal'] = this;
             this.options = {
                 ...Modal.defaults,
                 ...options
@@ -4531,7 +4835,7 @@ var M = (function (exports) {
             return super.init(els, options, Modal);
         }
         static getInstance(el) {
-            return el.M_Modal;
+            return el['M_Modal'];
         }
         destroy() { }
         _setupEventHandlers() { }
@@ -4559,6 +4863,7 @@ var M = (function (exports) {
         }
         static #createHtmlElement(config) {
             const dialog = document.createElement('dialog');
+            dialog.id = config.id;
             return dialog;
         }
         static create(config) {
@@ -4567,7 +4872,7 @@ var M = (function (exports) {
         static { }
     }
 
-    let _defaults$b = {
+    const _defaults$b = {
         responsiveThreshold: 0 // breakpoint for swipeable
     };
     class Parallax extends Component {
@@ -4578,7 +4883,7 @@ var M = (function (exports) {
         static _handleWindowResizeThrottled;
         constructor(el, options) {
             super(el, options, Parallax);
-            this.el.M_Parallax = this;
+            this.el['M_Parallax'] = this;
             this.options = {
                 ...Parallax.defaults,
                 ...options
@@ -4602,25 +4907,24 @@ var M = (function (exports) {
             return super.init(els, options, Parallax);
         }
         static getInstance(el) {
-            return el.M_Parallax;
+            return el['M_Parallax'];
         }
         destroy() {
             Parallax._parallaxes.splice(Parallax._parallaxes.indexOf(this), 1);
             this._img.style.transform = '';
             this._removeEventHandlers();
-            this.el.M_Parallax = undefined;
+            this.el['M_Parallax'] = undefined;
         }
         static _handleScroll() {
             for (let i = 0; i < Parallax._parallaxes.length; i++) {
-                let parallaxInstance = Parallax._parallaxes[i];
+                const parallaxInstance = Parallax._parallaxes[i];
                 parallaxInstance._updateParallax.call(parallaxInstance);
             }
         }
         static _handleWindowResize() {
             for (let i = 0; i < Parallax._parallaxes.length; i++) {
-                let parallaxInstance = Parallax._parallaxes[i];
-                parallaxInstance._enabled =
-                    window.innerWidth > parallaxInstance.options.responsiveThreshold;
+                const parallaxInstance = Parallax._parallaxes[i];
+                parallaxInstance._enabled = window.innerWidth > parallaxInstance.options.responsiveThreshold;
             }
         }
         _setupEventHandlers() {
@@ -4653,12 +4957,12 @@ var M = (function (exports) {
             const box = el.getBoundingClientRect();
             const docElem = document.documentElement;
             return {
-                top: box.top + window.pageYOffset - docElem.clientTop,
-                left: box.left + window.pageXOffset - docElem.clientLeft
+                top: box.top + window.scrollY - docElem.clientTop,
+                left: box.left + window.scrollX - docElem.clientLeft
             };
         }
         _updateParallax() {
-            const containerHeight = this.el.getBoundingClientRect().height > 0 ? this.el.parentNode.offsetHeight : 500;
+            const containerHeight = this.el.getBoundingClientRect().height > 0 ? this.el.parentElement.offsetHeight : 500;
             const imgHeight = this._img.offsetHeight;
             const parallaxDist = imgHeight - containerHeight;
             const bottom = this._offset(this.el).top + containerHeight;
@@ -4677,7 +4981,7 @@ var M = (function (exports) {
         }
     }
 
-    let _defaults$a = {
+    const _defaults$a = {
         top: 0,
         bottom: Infinity,
         offset: 0,
@@ -4688,7 +4992,7 @@ var M = (function (exports) {
         originalOffset;
         constructor(el, options) {
             super(el, options, Pushpin);
-            this.el.M_Pushpin = this;
+            this.el['M_Pushpin'] = this;
             this.options = {
                 ...Pushpin.defaults,
                 ...options
@@ -4710,22 +5014,22 @@ var M = (function (exports) {
             return super.init(els, options, Pushpin);
         }
         static getInstance(el) {
-            return el.M_Pushpin;
+            return el['M_Pushpin'];
         }
         destroy() {
             this.el.style.top = null;
             this._removePinClasses();
             // Remove pushpin Inst
-            let index = Pushpin._pushpins.indexOf(this);
+            const index = Pushpin._pushpins.indexOf(this);
             Pushpin._pushpins.splice(index, 1);
             if (Pushpin._pushpins.length === 0) {
                 this._removeEventHandlers();
             }
-            this.el.M_Pushpin = undefined;
+            this.el['M_Pushpin'] = undefined;
         }
         static _updateElements() {
-            for (let elIndex in Pushpin._pushpins) {
-                let pInstance = Pushpin._pushpins[elIndex];
+            for (const elIndex in Pushpin._pushpins) {
+                const pInstance = Pushpin._pushpins[elIndex];
                 pInstance._updatePosition();
             }
         }
@@ -4736,7 +5040,7 @@ var M = (function (exports) {
             document.removeEventListener('scroll', Pushpin._updateElements);
         }
         _updatePosition() {
-            let scrolled = Utils.getDocumentScrollTop() + this.options.offset;
+            const scrolled = Utils.getDocumentScrollTop() + this.options.offset;
             if (this.options.top <= scrolled &&
                 this.options.bottom >= scrolled &&
                 !this.el.classList.contains('pinned')) {
@@ -4780,13 +5084,15 @@ var M = (function (exports) {
         }
     }
 
-    let _defaults$9 = {
+    const _defaults$9 = {
         throttle: 100,
         scrollOffset: 200, // offset - 200 allows elements near bottom of page to scroll
         activeClass: 'active',
-        getActiveElement: (id) => { return 'a[href="#' + id + '"]'; },
+        getActiveElement: (id) => {
+            return 'a[href="#' + id + '"]';
+        },
         keepTopElementActive: false,
-        animationDuration: null,
+        animationDuration: null
     };
     class ScrollSpy extends Component {
         static _elements;
@@ -4800,7 +5106,7 @@ var M = (function (exports) {
         id;
         constructor(el, options) {
             super(el, options, ScrollSpy);
-            this.el.M_ScrollSpy = this;
+            this.el['M_ScrollSpy'] = this;
             this.options = {
                 ...ScrollSpy.defaults,
                 ...options
@@ -4809,7 +5115,7 @@ var M = (function (exports) {
             ScrollSpy._count++;
             ScrollSpy._increment++;
             this.tickId = -1;
-            this.id = ScrollSpy._increment;
+            this.id = ScrollSpy._increment.toString();
             this._setupEventHandlers();
             this._handleWindowScroll();
         }
@@ -4825,7 +5131,7 @@ var M = (function (exports) {
             return super.init(els, options, ScrollSpy);
         }
         static getInstance(el) {
-            return el.M_ScrollSpy;
+            return el['M_ScrollSpy'];
         }
         destroy() {
             ScrollSpy._elements.splice(ScrollSpy._elements.indexOf(this), 1);
@@ -4835,7 +5141,7 @@ var M = (function (exports) {
             this._removeEventHandlers();
             const actElem = document.querySelector(this.options.getActiveElement(this.el.id));
             actElem.classList.remove(this.options.activeClass);
-            this.el.M_ScrollSpy = undefined;
+            this.el['M_ScrollSpy'] = undefined;
         }
         _setupEventHandlers() {
             if (ScrollSpy._count === 1) {
@@ -4851,7 +5157,7 @@ var M = (function (exports) {
                 document.body.removeEventListener('click', this._handleTriggerClick);
             }
         }
-        _handleThrottledResize = Utils.throttle(function () { this._handleWindowScroll(); }, 200).bind(this);
+        _handleThrottledResize = () => Utils.throttle(this._handleWindowScroll, 200).bind(this);
         _handleTriggerClick = (e) => {
             const trigger = e.target;
             for (let i = ScrollSpy._elements.length - 1; i >= 0; i--) {
@@ -4859,8 +5165,8 @@ var M = (function (exports) {
                 const x = document.querySelector('a[href="#' + scrollspy.el.id + '"]');
                 if (trigger === x) {
                     e.preventDefault();
-                    if (scrollspy.el.M_ScrollSpy.options.animationDuration) {
-                        ScrollSpy._smoothScrollIntoView(scrollspy.el, scrollspy.el.M_ScrollSpy.options.animationDuration);
+                    if (scrollspy.el['M_ScrollSpy'].options.animationDuration) {
+                        ScrollSpy._smoothScrollIntoView(scrollspy.el, scrollspy.el['M_ScrollSpy'].options.animationDuration);
                     }
                     else {
                         scrollspy.el.scrollIntoView({ behavior: 'smooth' });
@@ -4873,12 +5179,12 @@ var M = (function (exports) {
             // unique tick id
             ScrollSpy._ticks++;
             // viewport rectangle
-            let top = Utils.getDocumentScrollTop(), left = Utils.getDocumentScrollLeft(), right = left + window.innerWidth, bottom = top + window.innerHeight;
+            const top = Utils.getDocumentScrollTop(), left = Utils.getDocumentScrollLeft(), right = left + window.innerWidth, bottom = top + window.innerHeight;
             // determine which elements are in view
-            let intersections = ScrollSpy._findElements(top, right, bottom, left);
+            const intersections = ScrollSpy._findElements(top, right, bottom, left);
             for (let i = 0; i < intersections.length; i++) {
-                let scrollspy = intersections[i];
-                let lastTick = scrollspy.tickId;
+                const scrollspy = intersections[i];
+                const lastTick = scrollspy.tickId;
                 if (lastTick < 0) {
                     // entered into view
                     scrollspy._enter();
@@ -4887,8 +5193,8 @@ var M = (function (exports) {
                 scrollspy.tickId = ScrollSpy._ticks;
             }
             for (let i = 0; i < ScrollSpy._elementsInView.length; i++) {
-                let scrollspy = ScrollSpy._elementsInView[i];
-                let lastTick = scrollspy.tickId;
+                const scrollspy = ScrollSpy._elementsInView[i];
+                const lastTick = scrollspy.tickId;
                 if (lastTick >= 0 && lastTick !== ScrollSpy._ticks) {
                     // exited from view
                     scrollspy._exit();
@@ -4898,10 +5204,11 @@ var M = (function (exports) {
             // remember elements in view for next tick
             ScrollSpy._elementsInView = intersections;
             if (ScrollSpy._elements.length) {
-                const options = ScrollSpy._elements[0].el.M_ScrollSpy.options;
+                const options = ScrollSpy._elements[0].el['M_ScrollSpy'].options;
                 if (options.keepTopElementActive && ScrollSpy._visibleElements.length === 0) {
                     this._resetKeptTopActiveElementIfNeeded();
-                    const topElements = ScrollSpy._elements.filter(value => ScrollSpy._getDistanceToViewport(value.el) <= 0)
+                    const topElements = ScrollSpy._elements
+                        .filter((value) => ScrollSpy._getDistanceToViewport(value.el) <= 0)
                         .sort((a, b) => {
                         const distanceA = ScrollSpy._getDistanceToViewport(a.el);
                         const distanceB = ScrollSpy._getDistanceToViewport(b.el);
@@ -4911,7 +5218,9 @@ var M = (function (exports) {
                             return 1;
                         return 0;
                     });
-                    const nearestTopElement = topElements.length ? topElements[topElements.length - 1] : ScrollSpy._elements[0];
+                    const nearestTopElement = topElements.length
+                        ? topElements[topElements.length - 1]
+                        : ScrollSpy._elements[0];
                     const actElem = document.querySelector(options.getActiveElement(nearestTopElement.el.id));
                     actElem?.classList.add(options.activeClass);
                     ScrollSpy._keptTopActiveElement = actElem;
@@ -4927,13 +5236,13 @@ var M = (function (exports) {
             };
         }
         static _findElements(top, right, bottom, left) {
-            let hits = [];
+            const hits = [];
             for (let i = 0; i < ScrollSpy._elements.length; i++) {
-                let scrollspy = ScrollSpy._elements[i];
-                let currTop = top + scrollspy.options.scrollOffset || 200;
+                const scrollspy = ScrollSpy._elements[i];
+                const currTop = top + scrollspy.options.scrollOffset || 200;
                 if (scrollspy.el.getBoundingClientRect().height > 0) {
-                    let elTop = ScrollSpy._offset(scrollspy.el).top, elLeft = ScrollSpy._offset(scrollspy.el).left, elRight = elLeft + scrollspy.el.getBoundingClientRect().width, elBottom = elTop + scrollspy.el.getBoundingClientRect().height;
-                    let isIntersect = !(elLeft > right ||
+                    const elTop = ScrollSpy._offset(scrollspy.el).top, elLeft = ScrollSpy._offset(scrollspy.el).left, elRight = elLeft + scrollspy.el.getBoundingClientRect().width, elBottom = elTop + scrollspy.el.getBoundingClientRect().height;
+                    const isIntersect = !(elLeft > right ||
                         elRight < left ||
                         elTop > bottom ||
                         elBottom < currTop);
@@ -4945,11 +5254,12 @@ var M = (function (exports) {
             return hits;
         }
         _enter() {
-            ScrollSpy._visibleElements = ScrollSpy._visibleElements.filter(value => value.getBoundingClientRect().height !== 0);
+            ScrollSpy._visibleElements = ScrollSpy._visibleElements.filter((value) => value.getBoundingClientRect().height !== 0);
             if (ScrollSpy._visibleElements[0]) {
                 const actElem = document.querySelector(this.options.getActiveElement(ScrollSpy._visibleElements[0].id));
                 actElem?.classList.remove(this.options.activeClass);
-                if (ScrollSpy._visibleElements[0].M_ScrollSpy && this.id < ScrollSpy._visibleElements[0].M_ScrollSpy.id) {
+                if (ScrollSpy._visibleElements[0]['M_ScrollSpy'] &&
+                    this.id < ScrollSpy._visibleElements[0]['M_ScrollSpy'].id) {
                     ScrollSpy._visibleElements.unshift(this.el);
                 }
                 else {
@@ -4964,7 +5274,7 @@ var M = (function (exports) {
             document.querySelector(selector)?.classList.add(this.options.activeClass);
         }
         _exit() {
-            ScrollSpy._visibleElements = ScrollSpy._visibleElements.filter(value => value.getBoundingClientRect().height !== 0);
+            ScrollSpy._visibleElements = ScrollSpy._visibleElements.filter((value) => value.getBoundingClientRect().height !== 0);
             if (ScrollSpy._visibleElements[0]) {
                 const actElem = document.querySelector(this.options.getActiveElement(ScrollSpy._visibleElements[0].id));
                 actElem?.classList.remove(this.options.activeClass);
@@ -4990,7 +5300,7 @@ var M = (function (exports) {
         }
         static _smoothScrollIntoView(element, duration = 300) {
             const targetPosition = element.getBoundingClientRect().top + (window.scrollY || window.pageYOffset);
-            const startPosition = (window.scrollY || window.pageYOffset);
+            const startPosition = window.scrollY || window.pageYOffset;
             const distance = targetPosition - startPosition;
             const startTime = performance.now();
             function scrollStep(currentTime) {
@@ -5053,7 +5363,7 @@ var M = (function (exports) {
         percentOpen;
         constructor(el, options) {
             super(el, options, Sidenav);
-            this.el.M_Sidenav = this;
+            this.el['M_Sidenav'] = this;
             this.options = {
                 ...Sidenav.defaults,
                 ...options
@@ -5084,14 +5394,14 @@ var M = (function (exports) {
             return super.init(els, options, Sidenav);
         }
         static getInstance(el) {
-            return el.M_Sidenav;
+            return el['M_Sidenav'];
         }
         destroy() {
             this._removeEventHandlers();
             this._enableBodyScrolling();
             this._overlay.parentNode.removeChild(this._overlay);
             this.dragTarget.parentNode.removeChild(this.dragTarget);
-            this.el.M_Sidenav = undefined;
+            this.el['M_Sidenav'] = undefined;
             this.el.style.transform = '';
             const index = Sidenav._sidenavs.indexOf(this);
             if (index >= 0) {
@@ -5108,12 +5418,12 @@ var M = (function (exports) {
             if (Sidenav._sidenavs.length === 0) {
                 document.body.addEventListener('click', this._handleTriggerClick);
             }
-            var passiveIfSupported = null;
+            const passiveIfSupported = null;
             this.dragTarget.addEventListener('touchmove', this._handleDragTargetDrag, passiveIfSupported);
             this.dragTarget.addEventListener('touchend', this._handleDragTargetRelease);
             this._overlay.addEventListener('touchmove', this._handleCloseDrag, passiveIfSupported);
             this._overlay.addEventListener('touchend', this._handleCloseRelease);
-            this.el.addEventListener('touchmove', this._handleCloseDrag, passiveIfSupported);
+            this.el.addEventListener('touchmove', this._handleCloseDrag); // , passiveIfSupported);
             this.el.addEventListener('touchend', this._handleCloseRelease);
             this.el.addEventListener('click', this._handleCloseTriggerClick);
             // Add resize for side nav fixed
@@ -5144,9 +5454,9 @@ var M = (function (exports) {
             const trigger = e.target.closest('.sidenav-trigger');
             if (e.target && trigger) {
                 const sidenavId = Utils.getIdFromTrigger(trigger);
-                const sidenavInstance = document.getElementById(sidenavId).M_Sidenav;
+                const sidenavInstance = document.getElementById(sidenavId)['M_Sidenav'];
                 if (sidenavInstance) {
-                    sidenavInstance.open(trigger);
+                    sidenavInstance.open();
                 }
                 e.preventDefault();
             }
@@ -5177,18 +5487,9 @@ var M = (function (exports) {
         }
         _handleDragTargetDrag = (e) => {
             // Check if draggable
-            if (!this.options.draggable || this._isCurrentlyFixed() || this._verticallyScrolling) {
+            if (!this._isDraggable())
                 return;
-            }
-            // If not being dragged, set initial drag start variables
-            if (!this.isDragged) {
-                this._startDrag(e);
-            }
-            // Run touchmove updates
-            this._dragMoveUpdate(e);
-            // Calculate raw deltaX
-            let totalDeltaX = this._xPos - this._startingXpos;
-            // dragDirection is the attempted user drag direction
+            let totalDeltaX = this._calculateDelta(e);
             const dragDirection = totalDeltaX > 0 ? 'right' : 'left';
             // Don't allow totalDeltaX to exceed Sidenav width or be dragged in the opposite direction
             totalDeltaX = Math.min(this._width, Math.abs(totalDeltaX));
@@ -5225,36 +5526,35 @@ var M = (function (exports) {
             }
         };
         _handleCloseDrag = (e) => {
-            if (this.isOpen) {
-                // Check if draggable
-                if (!this.options.draggable || this._isCurrentlyFixed() || this._verticallyScrolling) {
-                    return;
-                }
-                // If not being dragged, set initial drag start variables
-                if (!this.isDragged) {
-                    this._startDrag(e);
-                }
-                // Run touchmove updates
-                this._dragMoveUpdate(e);
-                // Calculate raw deltaX
-                let totalDeltaX = this._xPos - this._startingXpos;
-                // dragDirection is the attempted user drag direction
-                let dragDirection = totalDeltaX > 0 ? 'right' : 'left';
-                // Don't allow totalDeltaX to exceed Sidenav width or be dragged in the opposite direction
-                totalDeltaX = Math.min(this._width, Math.abs(totalDeltaX));
-                if (this.options.edge !== dragDirection) {
-                    totalDeltaX = 0;
-                }
-                let transformX = -totalDeltaX;
-                if (this.options.edge === 'right') {
-                    transformX = -transformX;
-                }
-                // Calculate open/close percentage of sidenav, with open = 1 and close = 0
-                this.percentOpen = Math.min(1, 1 - totalDeltaX / this._width);
-                // Set transform and opacity styles
-                this.el.style.transform = `translateX(${transformX}px)`;
-                this._overlay.style.opacity = this.percentOpen.toString();
+            // Check if open and draggable
+            if (!this.isOpen || !this._isDraggable())
+                return;
+            let totalDeltaX = this._calculateDelta(e);
+            // dragDirection is the attempted user drag direction
+            const dragDirection = totalDeltaX > 0 ? 'right' : 'left';
+            totalDeltaX = Math.min(this._width, Math.abs(totalDeltaX));
+            if (this.options.edge !== dragDirection) {
+                totalDeltaX = 0;
             }
+            let transformX = -totalDeltaX;
+            if (this.options.edge === 'right') {
+                transformX = -transformX;
+            }
+            // Calculate open/close percentage of sidenav, with open = 1 and close = 0
+            this.percentOpen = Math.min(1, 1 - totalDeltaX / this._width);
+            // Set transform and opacity styles
+            this.el.style.transform = `translateX(${transformX}px)`;
+            this._overlay.style.opacity = this.percentOpen.toString();
+        };
+        _calculateDelta = (e) => {
+            // If not being dragged, set initial drag start variables
+            if (!this.isDragged) {
+                this._startDrag(e);
+            }
+            // Run touchmove updates
+            this._dragMoveUpdate(e);
+            // Calculate raw deltaX
+            return this._xPos - this._startingXpos;
         };
         _handleCloseRelease = () => {
             if (this.isOpen && this.isDragged) {
@@ -5301,6 +5601,9 @@ var M = (function (exports) {
         _setupFixed() {
             if (this._isCurrentlyFixed())
                 this.open();
+        }
+        _isDraggable() {
+            return this.options.draggable && !this._isCurrentlyFixed() && !this._verticallyScrolling;
         }
         _isCurrentlyFixed() {
             return this.isFixed && window.innerWidth > 992;
@@ -5396,7 +5699,7 @@ var M = (function (exports) {
             const duration = this.options.inDuration;
             // from
             this.el.style.transition = 'none';
-            this.el.style.transform = 'translateX(' + (slideOutPercent * 100) + '%)';
+            this.el.style.transform = 'translateX(' + slideOutPercent * 100 + '%)';
             setTimeout(() => {
                 this.el.style.transition = `transform ${duration}ms ease`; // easeOutQuad
                 // to
@@ -5409,15 +5712,18 @@ var M = (function (exports) {
         }
         _animateSidenavOut() {
             const endPercent = this.options.edge === 'left' ? -1 : 1;
-            if (this.isDragged) {
-                this.options.edge === 'left'
-                        ? endPercent + this.percentOpen
-                        : endPercent - this.percentOpen;
-            }
+            // let slideOutPercent = 0;
+            // if (this.isDragged) {
+            //   // @todo unused variable
+            //   slideOutPercent =
+            //     this.options.edge === 'left'
+            //       ? endPercent + this.percentOpen
+            //       : endPercent - this.percentOpen;
+            // }
             const duration = this.options.outDuration;
             this.el.style.transition = `transform ${duration}ms ease`; // easeOutQuad
             // to
-            this.el.style.transform = 'translateX(' + (endPercent * 100) + '%)';
+            this.el.style.transform = 'translateX(' + endPercent * 100 + '%)';
             setTimeout(() => {
                 if (typeof this.options.onCloseEnd === 'function')
                     this.options.onCloseEnd.call(this, this.el);
@@ -5455,22 +5761,26 @@ var M = (function (exports) {
             this.el.ariaHidden = this.isOpen ? 'false' : 'true';
             const navWrapper = document.querySelector('.nav-wrapper ul');
             if (navWrapper)
-                navWrapper.ariaHidden = this.isOpen;
+                navWrapper.ariaHidden = this.isOpen.toString();
         };
         _setTabIndex = () => {
             const navLinks = document.querySelectorAll('.nav-wrapper ul li a');
             const sideNavLinks = document.querySelectorAll('.sidenav li a');
             if (navLinks)
-                navLinks.forEach((navLink) => { navLink.tabIndex = this.isOpen ? -1 : 0; });
+                navLinks.forEach((navLink) => {
+                    navLink.tabIndex = this.isOpen ? -1 : 0;
+                });
             if (sideNavLinks)
-                sideNavLinks.forEach((sideNavLink) => { sideNavLink.tabIndex = this.isOpen ? 0 : -1; });
+                sideNavLinks.forEach((sideNavLink) => {
+                    sideNavLink.tabIndex = this.isOpen ? 0 : -1;
+                });
         };
         static {
             Sidenav._sidenavs = [];
         }
     }
 
-    let _defaults$7 = {
+    const _defaults$7 = {
         duration: 300,
         onShow: null,
         swipeable: false,
@@ -5487,7 +5797,7 @@ var M = (function (exports) {
         _content;
         constructor(el, options) {
             super(el, options, Tabs);
-            this.el.M_Tabs = this;
+            this.el['M_Tabs'] = this;
             this.options = {
                 ...Tabs.defaults,
                 ...options
@@ -5518,7 +5828,7 @@ var M = (function (exports) {
             return super.init(els, options, Tabs);
         }
         static getInstance(el) {
-            return el.M_Tabs;
+            return el['M_Tabs'];
         }
         destroy() {
             this._removeEventHandlers();
@@ -5529,12 +5839,14 @@ var M = (function (exports) {
             else {
                 this._teardownNormalTabs();
             }
-            this.el.M_Tabs = undefined;
+            this.el['M_Tabs'] = undefined;
         }
         /**
          * The index of tab that is currently shown.
          */
-        get index() { return this._index; }
+        get index() {
+            return this._index;
+        }
         _setupEventHandlers() {
             window.addEventListener('resize', this._handleWindowResize);
             this.el.addEventListener('click', this._handleTabClick);
@@ -5554,7 +5866,7 @@ var M = (function (exports) {
             let tabLink = e.target;
             if (!tabLink)
                 return;
-            var tab = tabLink.parentElement;
+            let tab = tabLink.parentElement;
             while (tab && !tab.classList.contains('tab')) {
                 tabLink = tabLink.parentElement;
                 tab = tab.parentElement;
@@ -5621,10 +5933,11 @@ var M = (function (exports) {
             this._activeTabLink = Array.from(this._tabLinks).find((a) => a.getAttribute('href') === location.hash);
             // If no match is found, use the first link or any with class 'active' as the initial active tab.
             if (!this._activeTabLink) {
-                this._activeTabLink = this.el.querySelector('li.tab a.active');
-            }
-            if (this._activeTabLink.length === 0) {
-                this._activeTabLink = this.el.querySelector('li.tab a');
+                let activeTabLink = this.el.querySelector('li.tab a.active');
+                if (!activeTabLink) {
+                    activeTabLink = this.el.querySelector('li.tab a');
+                }
+                this._activeTabLink = activeTabLink;
             }
             Array.from(this._tabLinks).forEach((a) => a.classList.remove('active'));
             this._activeTabLink.classList.add('active');
@@ -5640,7 +5953,7 @@ var M = (function (exports) {
             if (window.innerWidth > this.options.responsiveThreshold)
                 this.options.swipeable = false;
             const tabsContent = [];
-            this._tabLinks.forEach(a => {
+            this._tabLinks.forEach((a) => {
                 if (a.hash) {
                     const currContent = document.querySelector(a.hash);
                     currContent.classList.add('carousel-item');
@@ -5652,7 +5965,7 @@ var M = (function (exports) {
             tabsWrapper.classList.add('tabs-content', 'carousel', 'carousel-slider');
             // Wrap around
             tabsContent[0].parentElement.insertBefore(tabsWrapper, tabsContent[0]);
-            tabsContent.forEach(tabContent => {
+            tabsContent.forEach((tabContent) => {
                 tabsWrapper.appendChild(tabContent);
                 tabContent.style.display = '';
             });
@@ -5680,7 +5993,7 @@ var M = (function (exports) {
             const tabsWrapper = this._tabsCarousel.el;
             this._tabsCarousel.destroy();
             // Unwrap
-            tabsWrapper.after(tabsWrapper.children);
+            tabsWrapper.append(tabsWrapper.parentElement);
             tabsWrapper.remove();
         }
         _setupNormalTabs() {
@@ -5725,7 +6038,7 @@ var M = (function (exports) {
         }
         _animateIndicator(prevIndex) {
             let leftDelay = 0, rightDelay = 0;
-            const isMovingLeftOrStaying = (this._index - prevIndex >= 0);
+            const isMovingLeftOrStaying = this._index - prevIndex >= 0;
             if (isMovingLeftOrStaying)
                 leftDelay = 90;
             else
@@ -5748,7 +6061,7 @@ var M = (function (exports) {
         }
     }
 
-    let _defaults$6 = {
+    const _defaults$6 = {
         onOpen: null,
         onClose: null
     };
@@ -5765,7 +6078,7 @@ var M = (function (exports) {
         contentEl;
         constructor(el, options) {
             super(el, options, TapTarget);
-            this.el.M_TapTarget = this;
+            this.el['M_TapTarget'] = this;
             this.options = {
                 ...TapTarget.defaults,
                 ...options
@@ -5791,11 +6104,11 @@ var M = (function (exports) {
             return super.init(els, options, TapTarget);
         }
         static getInstance(el) {
-            return el.M_TapTarget;
+            return el['M_TapTarget'];
         }
         destroy() {
             this._removeEventHandlers();
-            this.el.TapTarget = undefined;
+            this.el['M_TapTarget'] = undefined;
             const index = TapTarget._taptargets.indexOf(this);
             if (index >= 0) {
                 TapTarget._taptargets.splice(index, 1);
@@ -5814,14 +6127,17 @@ var M = (function (exports) {
             // this.originEl.removeEventListener('click', this._handleOriginClick);
             window.removeEventListener('resize', this._handleThrottledResize);
         }
-        _handleThrottledResize = Utils.throttle(function () { this._handleResize(); }, 200).bind(this);
+        _handleThrottledResize = () => Utils.throttle(this._handleResize, 200).bind(this);
         _handleKeyboardInteraction = (e) => {
             if (Utils.keys.ENTER.includes(e.key)) {
                 this._handleTargetToggle();
             }
         };
         _handleTargetToggle = () => {
-            !this.isOpen ? this.open() : this.close();
+            if (!this.isOpen)
+                this.open();
+            else
+                this.close();
         };
         /*_handleOriginClick = () => {
           this.close();
@@ -5885,6 +6201,7 @@ var M = (function (exports) {
             // Element or parent is fixed position?
             let isFixed = getComputedStyle(this.originEl).position === 'fixed';
             if (!isFixed) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 let currentElem = this.originEl;
                 const parents = [];
                 while ((currentElem = currentElem.parentNode) && currentElem !== document)
@@ -5898,8 +6215,12 @@ var M = (function (exports) {
             // Calculating origin
             const originWidth = this.originEl.offsetWidth;
             const originHeight = this.originEl.offsetHeight;
-            const originTop = isFixed ? this._offset(this.originEl).top - Utils.getDocumentScrollTop() : this._offset(this.originEl).top;
-            const originLeft = isFixed ? this._offset(this.originEl).left - Utils.getDocumentScrollLeft() : this._offset(this.originEl).left;
+            const originTop = isFixed
+                ? this._offset(this.originEl).top - Utils.getDocumentScrollTop()
+                : this._offset(this.originEl).top;
+            const originLeft = isFixed
+                ? this._offset(this.originEl).left - Utils.getDocumentScrollLeft()
+                : this._offset(this.originEl).left;
             // Calculating screen
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
@@ -5933,8 +6254,12 @@ var M = (function (exports) {
             const tapTargetWaveLeft = tapTargetWidth / 2 - tapTargetWaveWidth / 2;
             // Setting tap target
             this.wrapper.style.top = isTop ? tapTargetTop + 'px' : '';
-            this.wrapper.style.right = isRight ? windowWidth - tapTargetLeft - tapTargetWidth - scrollBarWidth + 'px' : '';
-            this.wrapper.style.bottom = isBottom ? windowHeight - tapTargetTop - tapTargetHeight + 'px' : '';
+            this.wrapper.style.right = isRight
+                ? windowWidth - tapTargetLeft - tapTargetWidth - scrollBarWidth + 'px'
+                : '';
+            this.wrapper.style.bottom = isBottom
+                ? windowHeight - tapTargetTop - tapTargetHeight + 'px'
+                : '';
             this.wrapper.style.left = isLeft ? tapTargetLeft + 'px' : '';
             this.wrapper.style.position = tapTargetPosition;
             // Setting content
@@ -5991,7 +6316,7 @@ var M = (function (exports) {
         }
     }
 
-    let _defaults$5 = {
+    const _defaults$5 = {
         dialRadius: 135,
         outerRadius: 105,
         innerRadius: 70,
@@ -6001,6 +6326,7 @@ var M = (function (exports) {
         defaultTime: 'now', // default time, 'now' or '13:14' e.g.
         fromNow: 0, // Millisecond offset from the defaultTime
         showClearBtn: false,
+        autoSubmit: true,
         // internationalization
         i18n: {
             cancel: 'Cancel',
@@ -6010,11 +6336,16 @@ var M = (function (exports) {
         twelveHour: true, // change to 12 hour AM/PM clock from 24 hour
         vibrate: true, // vibrate the device when dragging clock hand
         // Callbacks
-        onSelect: null
+        onSelect: null,
+        onInputInteraction: null,
+        onDone: null,
+        onCancel: null,
+        displayPlugin: null,
+        displayPluginOptions: null,
     };
     class Timepicker extends Component {
         id;
-        modalEl;
+        containerEl;
         plate;
         digitalClock;
         inputHours;
@@ -6053,11 +6384,11 @@ var M = (function (exports) {
         bearing;
         g;
         toggleViewTimer;
-        canvas;
         vibrateTimer;
+        displayPlugin;
         constructor(el, options) {
             super(el, options, Timepicker);
-            this.el.M_Timepicker = this;
+            this.el['M_Timepicker'] = this;
             this.options = {
                 ...Timepicker.defaults,
                 ...options
@@ -6068,6 +6399,10 @@ var M = (function (exports) {
             this._setupEventHandlers();
             this._clockSetup();
             this._pickerSetup();
+            if (this.options.displayPlugin) {
+                if (this.options.displayPlugin === 'docked')
+                    this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
+            }
         }
         static get defaults() {
             return _defaults$5;
@@ -6084,7 +6419,7 @@ var M = (function (exports) {
             return (num < 10 ? '0' : '') + num;
         }
         static _createSVGEl(name) {
-            let svgNS = 'http://www.w3.org/2000/svg';
+            const svgNS = 'http://www.w3.org/2000/svg';
             return document.createElementNS(svgNS, name);
         }
         static _Pos(e) {
@@ -6098,12 +6433,12 @@ var M = (function (exports) {
             return { x: e.clientX, y: e.clientY };
         }
         static getInstance(el) {
-            return el.M_Timepicker;
+            return el['M_Timepicker'];
         }
         destroy() {
             this._removeEventHandlers();
-            this.modalEl.remove();
-            this.el.M_Timepicker = undefined;
+            this.containerEl.remove();
+            this.el['M_Timepicker'] = undefined;
         }
         _setupEventHandlers() {
             this.el.addEventListener('click', this._handleInputClick);
@@ -6121,12 +6456,20 @@ var M = (function (exports) {
             this.el.removeEventListener('keydown', this._handleInputKeydown);
         }
         _handleInputClick = () => {
-            this.open();
+            this.inputHours.focus();
+            if (typeof this.options.onInputInteraction === 'function')
+                this.options.onInputInteraction.call(this);
+            if (this.displayPlugin)
+                this.displayPlugin.show();
         };
         _handleInputKeydown = (e) => {
             if (Utils.keys.ENTER.includes(e.key)) {
                 e.preventDefault();
-                this.open();
+                this.inputHours.focus();
+                if (typeof this.options.onInputInteraction === 'function')
+                    this.options.onInputInteraction.call(this);
+                if (this.displayPlugin)
+                    this.displayPlugin.show();
             }
         };
         _handleTimeInputEnterKey = (e) => {
@@ -6137,12 +6480,12 @@ var M = (function (exports) {
         };
         _handleClockClickStart = (e) => {
             e.preventDefault();
-            let clockPlateBR = this.plate.getBoundingClientRect();
-            let offset = { x: clockPlateBR.left, y: clockPlateBR.top };
+            const clockPlateBR = this.plate.getBoundingClientRect();
+            const offset = { x: clockPlateBR.left, y: clockPlateBR.top };
             this.x0 = offset.x + this.options.dialRadius;
             this.y0 = offset.y + this.options.dialRadius;
             this.moved = false;
-            let clickPos = Timepicker._Pos(e);
+            const clickPos = Timepicker._Pos(e);
             this.dx = clickPos.x - this.x0;
             this.dy = clickPos.y - this.y0;
             // Set clock hands
@@ -6156,9 +6499,9 @@ var M = (function (exports) {
         };
         _handleDocumentClickMove = (e) => {
             e.preventDefault();
-            let clickPos = Timepicker._Pos(e);
-            let x = clickPos.x - this.x0;
-            let y = clickPos.y - this.y0;
+            const clickPos = Timepicker._Pos(e);
+            const x = clickPos.x - this.x0;
+            const y = clickPos.y - this.y0;
             this.moved = true;
             this.setHand(x, y, false);
         };
@@ -6166,19 +6509,21 @@ var M = (function (exports) {
             e.preventDefault();
             document.removeEventListener('mouseup', this._handleDocumentClickEnd);
             document.removeEventListener('touchend', this._handleDocumentClickEnd);
-            let clickPos = Timepicker._Pos(e);
-            let x = clickPos.x - this.x0;
-            let y = clickPos.y - this.y0;
+            const clickPos = Timepicker._Pos(e);
+            const x = clickPos.x - this.x0;
+            const y = clickPos.y - this.y0;
             if (this.moved && x === this.dx && y === this.dy) {
                 this.setHand(x, y);
             }
             if (this.currentView === 'hours') {
+                this.inputMinutes.focus();
                 this.showView('minutes', this.options.duration / 2);
             }
             else {
-                this.minutesView.classList.add('timepicker-dial-out');
+                // this.minutesView.classList.add('timepicker-dial-out');
                 setTimeout(() => {
-                    this.done();
+                    if (this.options.autoSubmit)
+                        this.done();
                 }, this.options.duration / 2);
             }
             if (typeof this.options.onSelect === 'function') {
@@ -6191,61 +6536,68 @@ var M = (function (exports) {
         _insertHTMLIntoDOM() {
             const template = document.createElement('template');
             template.innerHTML = Timepicker._template.trim();
-            this.modalEl = template.content.firstChild;
-            this.modalEl.id = 'modal-' + this.id;
+            this.containerEl = template.content.firstChild;
+            this.containerEl.id = 'container-' + this.id;
             // Append popover to input by default
             const optEl = this.options.container;
             const containerEl = optEl instanceof HTMLElement ? optEl : document.querySelector(optEl);
             if (this.options.container && !!containerEl) {
-                containerEl.append(this.modalEl);
+                containerEl.append(this.containerEl);
             }
             else {
-                this.el.parentElement.appendChild(this.modalEl);
+                this.el.parentElement.appendChild(this.containerEl);
             }
         }
         _setupVariables() {
             this.currentView = 'hours';
             this.vibrate = navigator.vibrate
                 ? 'vibrate'
-                : navigator.webkitVibrate
+                : navigator['webkitVibrate']
                     ? 'webkitVibrate'
                     : null;
-            this._canvas = this.modalEl.querySelector('.timepicker-canvas');
-            this.plate = this.modalEl.querySelector('.timepicker-plate');
-            this.digitalClock = this.modalEl.querySelector('.timepicker-display-column');
-            this.hoursView = this.modalEl.querySelector('.timepicker-hours');
-            this.minutesView = this.modalEl.querySelector('.timepicker-minutes');
-            this.inputHours = this.modalEl.querySelector('.timepicker-input-hours');
-            this.inputMinutes = this.modalEl.querySelector('.timepicker-input-minutes');
-            this.spanAmPm = this.modalEl.querySelector('.timepicker-span-am-pm');
-            this.footer = this.modalEl.querySelector('.timepicker-footer');
+            this._canvas = this.containerEl.querySelector('.timepicker-canvas');
+            this.plate = this.containerEl.querySelector('.timepicker-plate');
+            this.digitalClock = this.containerEl.querySelector('.timepicker-display-column');
+            this.hoursView = this.containerEl.querySelector('.timepicker-hours');
+            this.minutesView = this.containerEl.querySelector('.timepicker-minutes');
+            this.inputHours = this.containerEl.querySelector('.timepicker-input-hours');
+            this.inputMinutes = this.containerEl.querySelector('.timepicker-input-minutes');
+            this.spanAmPm = this.containerEl.querySelector('.timepicker-span-am-pm');
+            this.footer = this.containerEl.querySelector('.timepicker-footer');
             this.amOrPm = 'PM';
         }
-        _createButton(text, visibility) {
-            const button = document.createElement('button');
-            button.classList.add('btn', 'btn-flat', 'waves-effect', 'text');
-            button.style.visibility = visibility;
-            button.type = 'button';
-            button.tabIndex = -1;
-            button.innerText = text;
-            return button;
-        }
+        /*private _createButton(text: string, visibility: string): HTMLButtonElement {
+          const button = document.createElement('button');
+          button.classList.add('btn', 'waves-effect', 'text');
+          button.style.visibility = visibility;
+          button.type = 'button';
+          button.tabIndex = -1;
+          button.innerText = text;
+          return button;
+        }*/
         _pickerSetup() {
-            const clearButton = this._createButton(this.options.i18n.clear, this.options.showClearBtn ? '' : 'hidden');
-            clearButton.classList.add('timepicker-clear');
-            clearButton.addEventListener('click', this.clear);
-            this.footer.appendChild(clearButton);
-            const confirmationBtnsContainer = document.createElement('div');
-            confirmationBtnsContainer.classList.add('confirmation-btns');
-            this.footer.append(confirmationBtnsContainer);
-            const cancelButton = this._createButton(this.options.i18n.cancel, '');
-            cancelButton.classList.add('timepicker-close');
-            cancelButton.addEventListener('click', this.close);
-            confirmationBtnsContainer.appendChild(cancelButton);
-            const doneButton = this._createButton(this.options.i18n.done, '');
-            doneButton.classList.add('timepicker-close');
-            doneButton.addEventListener('click', this.done);
-            confirmationBtnsContainer.appendChild(doneButton);
+            // clearButton.classList.add('timepicker-clear');
+            // clearButton.addEventListener('click', this.clear);
+            // this.footer.appendChild(clearButton);
+            Utils.createButton(this.footer, this.options.i18n.clear, ['timepicker-clear'], this.options.showClearBtn, this.clear);
+            if (!this.options.autoSubmit) {
+                /*const confirmationBtnsContainer = document.createElement('div');
+                confirmationBtnsContainer.classList.add('confirmation-btns');
+                this.footer.append(confirmationBtnsContainer);
+            
+                const cancelButton = this._createButton(this.options.i18n.cancel, '');
+                cancelButton.classList.add('timepicker-close');
+                cancelButton.addEventListener('click', this.close);
+                confirmationBtnsContainer.appendChild(cancelButton);
+            
+                const doneButton = this._createButton(this.options.i18n.done, '');
+                doneButton.classList.add('timepicker-close');
+                //doneButton.addEventListener('click', this._finishSelection);
+                confirmationBtnsContainer.appendChild(doneButton);*/
+                Utils.createConfirmationContainer(this.footer, this.options.i18n.done, this.options.i18n.cancel, this.confirm, this.cancel);
+            }
+            this._updateTimeFromInput();
+            this.showView('hours');
         }
         _clockSetup() {
             if (this.options.twelveHour) {
@@ -6253,13 +6605,17 @@ var M = (function (exports) {
                 this._amBtn = document.createElement('div');
                 this._amBtn.classList.add('am-btn', 'btn');
                 this._amBtn.innerText = 'AM';
+                this._amBtn.tabIndex = 0;
                 this._amBtn.addEventListener('click', this._handleAmPmClick);
+                this._amBtn.addEventListener('keypress', this._handleAmPmKeypress);
                 this.spanAmPm.appendChild(this._amBtn);
                 // PM Button
                 this._pmBtn = document.createElement('div');
                 this._pmBtn.classList.add('pm-btn', 'btn');
                 this._pmBtn.innerText = 'PM';
+                this._pmBtn.tabIndex = 0;
                 this._pmBtn.addEventListener('click', this._handleAmPmClick);
+                this._pmBtn.addEventListener('keypress', this._handleAmPmKeypress);
                 this.spanAmPm.appendChild(this._pmBtn);
             }
             this._buildHoursView();
@@ -6268,24 +6624,24 @@ var M = (function (exports) {
         }
         _buildSVGClock() {
             // Draw clock hands and others
-            let dialRadius = this.options.dialRadius;
-            let tickRadius = this.options.tickRadius;
-            let diameter = dialRadius * 2;
-            let svg = Timepicker._createSVGEl('svg');
+            const dialRadius = this.options.dialRadius;
+            const tickRadius = this.options.tickRadius;
+            const diameter = dialRadius * 2;
+            const svg = Timepicker._createSVGEl('svg');
             svg.setAttribute('class', 'timepicker-svg');
             svg.setAttribute('width', diameter.toString());
             svg.setAttribute('height', diameter.toString());
-            let g = Timepicker._createSVGEl('g');
+            const g = Timepicker._createSVGEl('g');
             g.setAttribute('transform', 'translate(' + dialRadius + ',' + dialRadius + ')');
-            let bearing = Timepicker._createSVGEl('circle');
+            const bearing = Timepicker._createSVGEl('circle');
             bearing.setAttribute('class', 'timepicker-canvas-bearing');
             bearing.setAttribute('cx', '0');
             bearing.setAttribute('cy', '0');
             bearing.setAttribute('r', '4');
-            let hand = Timepicker._createSVGEl('line');
+            const hand = Timepicker._createSVGEl('line');
             hand.setAttribute('x1', '0');
             hand.setAttribute('y1', '0');
-            let bg = Timepicker._createSVGEl('circle');
+            const bg = Timepicker._createSVGEl('circle');
             bg.setAttribute('class', 'timepicker-canvas-bg');
             bg.setAttribute('r', tickRadius.toString());
             g.appendChild(hand);
@@ -6299,38 +6655,36 @@ var M = (function (exports) {
             this.g = g;
         }
         _buildHoursView() {
-            const $tick = document.createElement('div');
-            $tick.classList.add('timepicker-tick');
+            // const $tick = document.createElement('div');
+            // $tick.classList.add('timepicker-tick');
             // Hours view
             if (this.options.twelveHour) {
                 for (let i = 1; i < 13; i += 1) {
-                    const tick = $tick.cloneNode(true);
+                    // const tick = <HTMLElement>$tick.cloneNode(true);
                     const radian = (i / 6) * Math.PI;
                     const radius = this.options.outerRadius;
-                    tick.style.left =
-                        this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
-                    tick.style.top =
-                        this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
-                    tick.innerHTML = i === 0 ? '00' : i.toString();
-                    this.hoursView.appendChild(tick);
-                    // tick.on(mousedownEvent, mousedown);
+                    this._buildHoursTick(i, radian, radius);
                 }
             }
             else {
                 for (let i = 0; i < 24; i += 1) {
-                    const tick = $tick.cloneNode(true);
+                    // const tick = <HTMLElement>$tick.cloneNode(true);
                     const radian = (i / 6) * Math.PI;
                     const inner = i > 0 && i < 13;
                     const radius = inner ? this.options.innerRadius : this.options.outerRadius;
-                    tick.style.left =
-                        this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
-                    tick.style.top =
-                        this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
-                    tick.innerHTML = i === 0 ? '00' : i.toString();
-                    this.hoursView.appendChild(tick);
-                    // tick.on(mousedownEvent, mousedown);
+                    this._buildHoursTick(i, radian, radius);
                 }
             }
+        }
+        _buildHoursTick(i, radian, radius) {
+            const tick = document.createElement('div');
+            tick.classList.add('timepicker-tick');
+            tick.style.left =
+                this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
+            tick.style.top =
+                this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
+            tick.innerHTML = i === 0 ? '00' : i.toString();
+            this.hoursView.appendChild(tick);
         }
         _buildMinutesView() {
             const _tick = document.createElement('div');
@@ -6354,8 +6708,15 @@ var M = (function (exports) {
             }
         }
         _handleAmPmClick = (e) => {
-            const btnClicked = e.target;
-            this.amOrPm = btnClicked.classList.contains('am-btn') ? 'AM' : 'PM';
+            this._handleAmPmInteraction(e.target);
+        };
+        _handleAmPmKeypress = (e) => {
+            if (Utils.keys.ENTER.includes(e.key)) {
+                this._handleAmPmInteraction(e.target);
+            }
+        };
+        _handleAmPmInteraction = (e) => {
+            this.amOrPm = e.classList.contains('am-btn') ? 'AM' : 'PM';
             this._updateAmPmView();
         };
         _updateAmPmView() {
@@ -6383,7 +6744,7 @@ var M = (function (exports) {
                 value[1] = value[1].replace('AM', '').replace('PM', '');
             }
             if (value[0] === 'now') {
-                let now = new Date(+new Date() + this.options.fromNow);
+                const now = new Date(+new Date() + this.options.fromNow);
                 value = [now.getHours().toString(), now.getMinutes().toString()];
                 if (this.options.twelveHour) {
                     this.amOrPm = parseInt(value[0]) >= 12 && parseInt(value[0]) < 24 ? 'PM' : 'AM';
@@ -6398,19 +6759,19 @@ var M = (function (exports) {
         /**
          * Show hours or minutes view on timepicker.
          * @param view The name of the view you want to switch to, 'hours' or 'minutes'.
+         * @param delay
          */
         showView = (view, delay = null) => {
             if (view === 'minutes' && getComputedStyle(this.hoursView).visibility === 'visible') ;
-            let isHours = view === 'hours', nextView = isHours ? this.hoursView : this.minutesView, hideView = isHours ? this.minutesView : this.hoursView;
+            const isHours = view === 'hours', nextView = isHours ? this.hoursView : this.minutesView, hideView = isHours ? this.minutesView : this.hoursView;
             this.currentView = view;
-            if (isHours) {
-                this.inputHours.classList.add('text-primary');
-                this.inputMinutes.classList.remove('text-primary');
-            }
-            else {
-                this.inputHours.classList.remove('text-primary');
-                this.inputMinutes.classList.add('text-primary');
-            }
+            /*if (isHours) {
+              this.inputHours.classList.add('text-primary');
+              this.inputMinutes.classList.remove('text-primary');
+            } else {
+              this.inputHours.classList.remove('text-primary');
+              this.inputMinutes.classList.add('text-primary');
+            }*/
             // Transition view
             hideView.classList.add('timepicker-dial-out');
             nextView.style.visibility = 'visible';
@@ -6424,12 +6785,12 @@ var M = (function (exports) {
             }, this.options.duration);
         };
         resetClock(delay) {
-            let view = this.currentView, value = this[view], isHours = view === 'hours', unit = Math.PI / (isHours ? 6 : 30), radian = value * unit, radius = isHours && value > 0 && value < 13 ? this.options.innerRadius : this.options.outerRadius, x = Math.sin(radian) * radius, y = -Math.cos(radian) * radius, self = this;
+            const view = this.currentView, value = this[view], isHours = view === 'hours', unit = Math.PI / (isHours ? 6 : 30), radian = value * unit, radius = isHours && value > 0 && value < 13 ? this.options.innerRadius : this.options.outerRadius, x = Math.sin(radian) * radius, y = -Math.cos(radian) * radius;
             if (delay) {
-                this.canvas?.classList.add('timepicker-canvas-out');
+                this._canvas?.classList.add('timepicker-canvas-out');
                 setTimeout(() => {
-                    self.canvas?.classList.remove('timepicker-canvas-out');
-                    self.setHand(x, y);
+                    this._canvas?.classList.remove('timepicker-canvas-out');
+                    this.setHand(x, y);
                 }, delay);
             }
             else {
@@ -6455,7 +6816,7 @@ var M = (function (exports) {
                 }
                 else {
                     this.minutes = new Date().getMinutes();
-                    this.inputMinutes.value = this.minutes;
+                    this.inputMinutes.value = this.minutes.toString();
                 }
                 this.drawClockFromTimeInput(this.minutes, isHours);
             }
@@ -6474,7 +6835,8 @@ var M = (function (exports) {
             this.setClockAttributes(radian, radius);
         }
         setHand(x, y, roundBy5 = false) {
-            let radian = Math.atan2(x, -y), isHours = this.currentView === 'hours', unit = Math.PI / (isHours || roundBy5 ? 6 : 30), z = Math.sqrt(x * x + y * y), inner = isHours && z < (this.options.outerRadius + this.options.innerRadius) / 2, radius = inner ? this.options.innerRadius : this.options.outerRadius;
+            const isHours = this.currentView === 'hours', unit = Math.PI / (isHours || roundBy5 ? 6 : 30), z = Math.sqrt(x * x + y * y), inner = isHours && z < (this.options.outerRadius + this.options.innerRadius) / 2;
+            let radian = Math.atan2(x, -y), radius = inner ? this.options.innerRadius : this.options.outerRadius;
             if (this.options.twelveHour) {
                 radius = this.options.outerRadius;
             }
@@ -6538,7 +6900,7 @@ var M = (function (exports) {
             this.setClockAttributes(radian, radius);
         }
         setClockAttributes(radian, radius) {
-            let cx1 = Math.sin(radian) * (radius - this.options.tickRadius), cy1 = -Math.cos(radian) * (radius - this.options.tickRadius), cx2 = Math.sin(radian) * radius, cy2 = -Math.cos(radian) * radius;
+            const cx1 = Math.sin(radian) * (radius - this.options.tickRadius), cy1 = -Math.cos(radian) * (radius - this.options.tickRadius), cx2 = Math.sin(radian) * radius, cy2 = -Math.cos(radian) * radius;
             this.hand.setAttribute('x2', cx1.toString());
             this.hand.setAttribute('y2', cy1.toString());
             this.bg.setAttribute('cx', cx2.toString());
@@ -6558,9 +6920,9 @@ var M = (function (exports) {
             this.hours = new Date().getHours();
             this.inputHours.value = (this.hours % (this.options.twelveHour ? 12 : 24)).toString();
         }
-        done = (e = null, clearValue = null) => {
+        done = (clearValue = null) => {
             // Set input value
-            let last = this.el.value;
+            const last = this.el.value;
             let value = clearValue
                 ? ''
                 : Timepicker._addLeadingZero(this.hours) + ':' + Timepicker._addLeadingZero(this.minutes);
@@ -6573,15 +6935,23 @@ var M = (function (exports) {
             if (value !== last) {
                 this.el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true, composed: true }));
             }
-            //this.el.focus();
+        };
+        confirm = () => {
+            this.done();
+            if (typeof this.options.onDone === 'function')
+                this.options.onDone.call(this);
+        };
+        cancel = () => {
+            // not logical clearing the input field on cancel, since the end user might want to make use of the previously submitted value
+            // this.clear();
+            if (typeof this.options.onCancel === 'function')
+                this.options.onCancel.call(this);
         };
         clear = () => {
-            this.done(null, true);
+            this.done(true);
         };
         // deprecated
         open() {
-            // this._updateTimeFromInput();
-            // this.showView('hours');
             console.warn('Timepicker.close() is deprecated. Remove this method and wrap in modal yourself.');
             return this;
         }
@@ -6590,14 +6960,12 @@ var M = (function (exports) {
             return this;
         }
         static {
-            Timepicker._template = `
-      <div class="modal timepicker-modal">
-        <div class="modal-content timepicker-container">
+            Timepicker._template = `<div class="timepicker-container">
           <div class="timepicker-digital-display">
             <div class="timepicker-text-container">
-              <div class="timepicker-display-column">
+              <div class="timepicker-display-column timepicker-display-digital-clock">
                 <div class="timepicker-input-hours-wrapper">
-                  <input type="text" maxlength="2" autofocus class="timepicker-input-hours text-primary" />
+                  <input type="text" maxlength="2" class="timepicker-input-hours text-primary" />
                 </div>
                 <div class="timepicker-input-divider-wrapper">
                   <span class="timepicker-input-divider">:</span>
@@ -6619,8 +6987,7 @@ var M = (function (exports) {
             </div>
             <div class="timepicker-footer"></div>
           </div>
-        </div>
-      </div>`;
+        </div>`;
         }
     }
 
@@ -6655,7 +7022,7 @@ var M = (function (exports) {
         yMovement;
         constructor(el, options) {
             super(el, options, Tooltip);
-            this.el.M_Tooltip = this;
+            this.el['M_Tooltip'] = this;
             this.options = {
                 ...Tooltip.defaults,
                 ...this._getAttributeOptions(),
@@ -6679,12 +7046,12 @@ var M = (function (exports) {
             return super.init(els, options, Tooltip);
         }
         static getInstance(el) {
-            return el.M_Tooltip;
+            return el['M_Tooltip'];
         }
         destroy() {
             this.tooltipEl.remove();
             this._removeEventHandlers();
-            this.el.M_Tooltip = undefined;
+            this.el['M_Tooltip'] = undefined;
         }
         _appendTooltipEl() {
             this.tooltipEl = document.createElement('div');
@@ -6693,7 +7060,7 @@ var M = (function (exports) {
                 ? document.getElementById(this.options.tooltipId)
                 : document.createElement('div');
             this.tooltipEl.append(tooltipContentEl);
-            tooltipContentEl.style.display = "";
+            tooltipContentEl.style.display = '';
             tooltipContentEl.classList.add('tooltip-content');
             this._setTooltipContent(tooltipContentEl);
             this.tooltipEl.appendChild(tooltipContentEl);
@@ -6762,7 +7129,8 @@ var M = (function (exports) {
         _positionTooltip() {
             const tooltip = this.tooltipEl;
             const origin = this.el, originHeight = origin.offsetHeight, originWidth = origin.offsetWidth, tooltipHeight = tooltip.offsetHeight, tooltipWidth = tooltip.offsetWidth, margin = this.options.margin;
-            (this.xMovement = 0), (this.yMovement = 0);
+            this.xMovement = 0;
+            this.yMovement = 0;
             let targetTop = origin.getBoundingClientRect().top + Utils.getDocumentScrollTop();
             let targetLeft = origin.getBoundingClientRect().left + Utils.getDocumentScrollLeft();
             if (this.options.position === 'top') {
@@ -6875,7 +7243,7 @@ var M = (function (exports) {
             this.close();
         };
         _getAttributeOptions() {
-            let attributeOptions = {};
+            const attributeOptions = {};
             const tooltipTextOption = this.el.getAttribute('data-tooltip');
             const tooltipId = this.el.getAttribute('data-tooltip-id');
             const positionOption = this.el.getAttribute('data-position');
@@ -6912,11 +7280,22 @@ var M = (function (exports) {
                 }
                 const frame = timestamp - animationStart;
                 if (frame < duration) {
-                    const easing = (frame / duration) * (2 - (frame / duration));
-                    const circle = isCentered ? 'circle at 50% 50%' : `circle at ${position.x}px ${position.y}px`;
+                    const easing = (frame / duration) * (2 - frame / duration);
+                    const circle = isCentered
+                        ? 'circle at 50% 50%'
+                        : `circle at ${position.x}px ${position.y}px`;
                     const waveColor = `rgba(${color?.r || 0}, ${color?.g || 0}, ${color?.b || 0}, ${0.3 * (1 - easing)})`;
-                    const stop = 90 * easing + "%";
-                    targetElement.style.backgroundImage = "radial-gradient(" + circle + ", " + waveColor + " " + stop + ", transparent " + stop + ")";
+                    const stop = 90 * easing + '%';
+                    targetElement.style.backgroundImage =
+                        'radial-gradient(' +
+                            circle +
+                            ', ' +
+                            waveColor +
+                            ' ' +
+                            stop +
+                            ', transparent ' +
+                            stop +
+                            ')';
                     animationFrame = window.requestAnimationFrame(animationStep);
                 }
                 else {
@@ -6928,8 +7307,8 @@ var M = (function (exports) {
         }
         static Init() {
             if (typeof document !== 'undefined')
-                document?.addEventListener("DOMContentLoaded", () => {
-                    document.body.addEventListener('click', e => {
+                document?.addEventListener('DOMContentLoaded', () => {
+                    document.body.addEventListener('click', (e) => {
                         const trigger = e.target;
                         const el = trigger.closest('.waves-effect');
                         if (el && el.contains(trigger)) {
@@ -6954,7 +7333,7 @@ var M = (function (exports) {
         thumb;
         constructor(el, options) {
             super(el, options, Range);
-            this.el.M_Range = this;
+            this.el['M_Range'] = this;
             this.options = {
                 ...Range.defaults,
                 ...options
@@ -6975,12 +7354,12 @@ var M = (function (exports) {
             return super.init(els, options, Range);
         }
         static getInstance(el) {
-            return el.M_Range;
+            return el['M_Range'];
         }
         destroy() {
             this._removeEventHandlers();
             this._removeThumb();
-            this.el.M_Range = undefined;
+            this.el['M_Range'] = undefined;
         }
         _setupEventHandlers() {
             this.el.addEventListener('change', this._handleRangeChange);
@@ -7061,7 +7440,7 @@ var M = (function (exports) {
             top ${duration}ms ease,
             margin ${duration}ms ease
           `;
-                        // to          
+                        // to
                         this.thumb.style.height = '0';
                         this.thumb.style.width = '0';
                         this.thumb.style.top = '0';
@@ -7111,7 +7490,7 @@ var M = (function (exports) {
          */
         static Init() {
             if (typeof document !== 'undefined')
-                Range.init((document?.querySelectorAll('input[type=range]')), {});
+                Range.init(document?.querySelectorAll('input[type=range]'), {});
         }
     }
 
@@ -7125,7 +7504,7 @@ var M = (function (exports) {
         isValidLength;
         constructor(el, options) {
             super(el, {}, CharacterCounter);
-            this.el.M_CharacterCounter = this;
+            this.el['M_CharacterCounter'] = this;
             this.options = {
                 ...CharacterCounter.defaults,
                 ...options
@@ -7147,11 +7526,11 @@ var M = (function (exports) {
             return super.init(els, options, CharacterCounter);
         }
         static getInstance(el) {
-            return el.M_CharacterCounter;
+            return el['M_CharacterCounter'];
         }
         destroy() {
             this._removeEventHandlers();
-            this.el.CharacterCounter = undefined;
+            this.el['CharacterCounter'] = undefined;
             this._removeCounter();
         }
         _setupEventHandlers() {
@@ -7174,7 +7553,7 @@ var M = (function (exports) {
             this.counterEl.remove();
         }
         updateCounter = () => {
-            let maxLength = parseInt(this.el.getAttribute('maxlength')), actualLength = this.el.value.length;
+            const maxLength = parseInt(this.el.getAttribute('maxlength')), actualLength = this.el.value.length;
             this.isValidLength = actualLength <= maxLength;
             let counterString = actualLength.toString();
             if (maxLength) {
@@ -7196,7 +7575,7 @@ var M = (function (exports) {
         }
     }
 
-    let _defaults$1 = {
+    const _defaults$1 = {
         indicators: true,
         height: 400,
         duration: 500,
@@ -7220,7 +7599,7 @@ var M = (function (exports) {
         _sliderId;
         constructor(el, options) {
             super(el, options, Slider);
-            this.el.M_Slider = this;
+            this.el['M_Slider'] = this;
             this.options = {
                 ...Slider.defaults,
                 ...options
@@ -7234,7 +7613,7 @@ var M = (function (exports) {
             // setup
             this._slider = this.el.querySelector('.slides');
             this._slides = Array.from(this._slider.querySelectorAll('li'));
-            this.activeIndex = this._slides.findIndex(li => li.classList.contains('active'));
+            this.activeIndex = this._slides.findIndex((li) => li.classList.contains('active'));
             if (this.activeIndex !== -1) {
                 this._activeSlide = this._slides[this.activeIndex];
             }
@@ -7248,7 +7627,7 @@ var M = (function (exports) {
             }
             const placeholderBase64 = 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
             // Set initial positions of captions
-            this._slides.forEach(slide => {
+            this._slides.forEach((slide) => {
                 // Caption
                 //const caption = <HTMLElement|null>slide.querySelector('.caption');
                 //if (caption) this._animateCaptionIn(caption, 0);
@@ -7299,13 +7678,13 @@ var M = (function (exports) {
             return super.init(els, options, Slider);
         }
         static getInstance(el) {
-            return el.M_Slider;
+            return el['M_Slider'];
         }
         destroy() {
             this.pause();
             this._removeIndicators();
             this._removeEventHandlers();
-            this.el.M_Slider = undefined;
+            this.el['M_Slider'] = undefined;
         }
         _setupEventHandlers() {
             if (this.options.pauseOnFocus) {
@@ -7410,7 +7789,7 @@ var M = (function (exports) {
             if (!this.el.classList.contains('fullscreen')) {
                 if (this.options.indicators) {
                     // Add height if indicators are present
-                    this.el.style.height = (this.options.height + 40) + 'px'; //.css('height', this.options.height + 40 + 'px');
+                    this.el.style.height = this.options.height + 40 + 'px'; //.css('height', this.options.height + 40 + 'px');
                 }
                 else {
                     this.el.style.height = this.options.height + 'px';
@@ -7453,11 +7832,11 @@ var M = (function (exports) {
             const _caption = this._activeSlide.querySelector('.caption');
             this._activeSlide.classList.remove('active');
             // Enables every slide
-            this._slides.forEach(slide => slide.style.visibility = 'visible');
+            this._slides.forEach((slide) => (slide.style.visibility = 'visible'));
             //--- Hide active Slide + Caption
             this._activeSlide.style.opacity = '0';
             setTimeout(() => {
-                this._slides.forEach(slide => {
+                this._slides.forEach((slide) => {
                     if (slide.classList.contains('active'))
                         return;
                     slide.style.opacity = '0';
@@ -7475,7 +7854,7 @@ var M = (function (exports) {
                 const nextIndicator = this._indicators[index].children[0];
                 activeIndicator.classList.remove('active');
                 nextIndicator.classList.add('active');
-                if (typeof this.options.indicatorLabelFunc === "function") {
+                if (typeof this.options.indicatorLabelFunc === 'function') {
                     activeIndicator.ariaLabel = this.options.indicatorLabelFunc.call(this, this.activeIndex, false);
                     nextIndicator.ariaLabel = this.options.indicatorLabelFunc.call(this, index, true);
                 }
@@ -7535,7 +7914,7 @@ var M = (function (exports) {
         };
     }
 
-    let _defaults = {
+    const _defaults = {
         text: '',
         displayLength: 4000,
         inDuration: 300,
@@ -7581,8 +7960,8 @@ var M = (function (exports) {
             }
             // Create new toast
             Toast._toasts.push(this);
-            let toastElement = this._createToast();
-            toastElement.M_Toast = this;
+            const toastElement = this._createToast();
+            toastElement['M_Toast'] = this;
             this.el = toastElement;
             this._animateIn();
             this._setTimer();
@@ -7591,7 +7970,7 @@ var M = (function (exports) {
             return _defaults;
         }
         static getInstance(el) {
-            return el.M_Toast;
+            return el['M_Toast'];
         }
         static _createContainer() {
             const container = document.createElement('div');
@@ -7615,7 +7994,7 @@ var M = (function (exports) {
         static _onDragStart(e) {
             if (e.target && e.target.closest('.toast')) {
                 const toastElem = e.target.closest('.toast');
-                const toast = toastElem.M_Toast;
+                const toast = toastElem['M_Toast'];
                 toast.panning = true;
                 Toast._draggedToast = toast;
                 toast.el.classList.add('panning');
@@ -7641,12 +8020,12 @@ var M = (function (exports) {
         }
         static _onDragEnd() {
             if (!!Toast._draggedToast) {
-                let toast = Toast._draggedToast;
+                const toast = Toast._draggedToast;
                 toast.panning = false;
                 toast.el.classList.remove('panning');
-                let totalDeltaX = toast.xPos - toast.startingXPos;
-                let activationDistance = toast.el.offsetWidth * toast.options.activationPercent;
-                let shouldBeDismissed = Math.abs(totalDeltaX) > activationDistance || toast.velocityX > 1;
+                const totalDeltaX = toast.xPos - toast.startingXPos;
+                const activationDistance = toast.el.offsetWidth * toast.options.activationPercent;
+                const shouldBeDismissed = Math.abs(totalDeltaX) > activationDistance || toast.velocityX > 1;
                 // Remove toast
                 if (shouldBeDismissed) {
                     toast.wasSwiped = true;
@@ -7662,7 +8041,7 @@ var M = (function (exports) {
             }
         }
         static _xPos(e) {
-            if (e.type.startsWith("touch") && e.targetTouches.length >= 1) {
+            if (e.type.startsWith('touch') && e.targetTouches.length >= 1) {
                 return e.targetTouches[0].clientX;
             }
             // mouse event
@@ -7672,7 +8051,7 @@ var M = (function (exports) {
          * dismiss all toasts.
          */
         static dismissAll() {
-            for (let toastIndex in Toast._toasts) {
+            for (const toastIndex in Toast._toasts) {
                 Toast._toasts[toastIndex].dismiss();
             }
         }
@@ -7699,7 +8078,7 @@ var M = (function (exports) {
         }
         _animateIn() {
             // Animate toast in
-            this.el.style.display = "";
+            this.el.style.display = '';
             this.el.style.opacity = '0';
             // easeOutCubic
             this.el.style.transition = `
@@ -7733,8 +8112,8 @@ var M = (function (exports) {
          * Dismiss toast with animation.
          */
         dismiss() {
-            window.clearInterval(this.counterInterval);
-            let activationDistance = this.el.offsetWidth * this.options.activationPercent;
+            clearInterval(this.counterInterval);
+            const activationDistance = this.el.offsetWidth * this.options.activationPercent;
             if (this.wasSwiped) {
                 this.el.style.transition = 'transform .05s, opacity .05s';
                 this.el.style.transform = `translateX(${activationDistance}px)`;
@@ -7770,20 +8149,15 @@ var M = (function (exports) {
         }
     }
 
-    const version = '2.2.0';
-    const Grid = (children = '') => {
-        return `<div class="row">${children}</row>`;
-    };
-    function Button(children = '') {
-        return `<button class="btn">${children}</button>`;
-    }
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    const version = '2.2.2';
     /**
      * Automatically initialize components.
      * @param context Root element to initialize. Defaults to `document.body`.
      * @param options Options for each component.
      */
     function AutoInit(context = document.body, options) {
-        let registry = {
+        const registry = {
             Autocomplete: context.querySelectorAll('.autocomplete:not(.no-autoinit)'),
             Cards: context.querySelectorAll('.cards:not(.no-autoinit)'),
             Carousel: context.querySelectorAll('.carousel:not(.no-autoinit)'),
@@ -7835,10 +8209,10 @@ var M = (function (exports) {
     Chips.Init();
     Waves.Init();
     Range.Init();
+    Cards.Init();
 
     exports.AutoInit = AutoInit;
     exports.Autocomplete = Autocomplete;
-    exports.Button = Button;
     exports.Cards = Cards;
     exports.Carousel = Carousel;
     exports.CharacterCounter = CharacterCounter;
@@ -7849,7 +8223,6 @@ var M = (function (exports) {
     exports.FloatingActionButton = FloatingActionButton;
     exports.FormSelect = FormSelect;
     exports.Forms = Forms;
-    exports.Grid = Grid;
     exports.Materialbox = Materialbox;
     exports.Modal = Modal;
     exports.Parallax = Parallax;

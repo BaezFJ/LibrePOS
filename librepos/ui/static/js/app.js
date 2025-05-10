@@ -118,4 +118,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize datepicker
     initializeDatepicker();
 
+    // Function to initialize tooltips
+    const initializeTooltips = () => {
+        const tooltipElements = document.querySelectorAll('.tooltipped');
+        return M.Tooltip.init(tooltipElements, {
+            // Tooltip options can be specified here
+            // enterDelay: 200,
+            // exitDelay: 100,
+            // etc.
+        });
+    };
+
+    // Initialize tooltips
+    initializeTooltips();
+
+
 });
