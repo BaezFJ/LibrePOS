@@ -1,3 +1,7 @@
+from typing import List
+
+from sqlalchemy.orm import Mapped, relationship
+
 from librepos.extensions import db
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -24,7 +28,7 @@ class Role(db.Model):
 
     # Relationships
     users = db.relationship("User", back_populates="role")
-    role_policies = db.relationship(
+    role_policies: Mapped[List["RolePolicy"]] = relationship(
         "RolePolicy", back_populates="role", cascade="all, delete-orphan"
     )
 
@@ -55,10 +59,10 @@ class Policy(db.Model):
     description = db.Column(db.String(255))
 
     # Relationships
-    role_policies = db.relationship(
+    role_policies: Mapped[List["RolePolicy"]] = relationship(
         "RolePolicy", back_populates="policy", cascade="all, delete-orphan"
     )
-    policy_permissions = db.relationship(
+    policy_permissions: Mapped[List["PolicyPermission"]] = relationship(
         "PolicyPermission", back_populates="policy", cascade="all, delete-orphan"
     )
 
@@ -88,7 +92,7 @@ class Permission(db.Model):
     )
     active = db.Column(db.Boolean, nullable=False, default=False)
 
-    policy_permissions = db.relationship(
+    policy_permissions: Mapped[List["PolicyPermission"]] = relationship(
         "PolicyPermission", back_populates="permission", cascade="all, delete-orphan"
     )
 
