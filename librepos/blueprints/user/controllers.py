@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for
+from flask import Blueprint, render_template, url_for, flash
 from flask_login import current_user, login_required, fresh_login_required
 
 from librepos.utils.decorators import permission_required
@@ -51,16 +51,8 @@ def profile():
     if form.validate_on_submit():
         sanitized_form_data = sanitize_form_data(form)
         user_service.update_profile(current_user.id, **sanitized_form_data)
+        flash("Profile updated successfully.", "success")
     return render_template("user/profile.html", **context)
-
-
-@user_bp.get("/settings/account")
-def account():
-    context = {
-        "title": "Account",
-        "back_url": url_for("user.settings"),
-    }
-    return render_template("user/account.html", **context)
 
 
 @user_bp.get("/settings/appearance")

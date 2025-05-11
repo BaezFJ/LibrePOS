@@ -128,12 +128,8 @@ def seed_role_policies():
 
 
 def seed_users() -> None:
-    admin_user = User(
-        username="admin", email="admin@mail.com", password="librepos", role_id=1
-    )
-    manager_user = User(
-        username="manager", email="manager@mail.com", password="librepos", role_id=2
-    )
+    admin_user = User(username="admin", password="librepos", role_id=1)
+    manager_user = User(username="manager", password="librepos", role_id=2)
     db.session.add_all(
         [
             admin_user,

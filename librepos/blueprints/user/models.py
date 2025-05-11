@@ -1,5 +1,3 @@
-import enum
-
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 
@@ -7,26 +5,15 @@ from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
 
 
-class UserStatus(enum.Enum):
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-    SUSPENDED = "suspended"
-    FIRED = "fired"
-    PENDING = "pending"
-    DELETED = "deleted"
-    LOCKED = "locked"
-
-
 class User(db.Model, UserMixin):
     """User model."""
 
     __tablename__ = "users"
 
-    def __init__(self, username: str, email: str, password: str, **kwargs):
+    def __init__(self, username: str, password: str, **kwargs):
         super(User, self).__init__(**kwargs)
         """Create instance."""
         self.username = username.lower()
-        self.email = email.lower()
         self.password = self._hash_password(password)
         self.created_at = timezone_aware_datetime()
 
@@ -36,10 +23,8 @@ class User(db.Model, UserMixin):
     # Columns
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), unique=True, nullable=False, index=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean, nullable=False, default=False)
-    email_confirmed = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, nullable=False)
 
     # Relationships
@@ -62,6 +47,10 @@ class User(db.Model, UserMixin):
 
         return self.role.has_permission(permission_name)
 
+    @property
+    def email(self) -> str | None:
+        return self.profile.email if self.profile else None
+
 
 class UserProfile(db.Model):
     """UserProfile model."""
@@ -71,6 +60,7 @@ class UserProfile(db.Model):
     def __init__(self, user_id: int, **kwargs):
         super(UserProfile, self).__init__(**kwargs)
         self.user_id = user_id
+        self._set_default_image()
 
     # ForeignKeys
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
@@ -79,7 +69,15 @@ class UserProfile(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     middle_name = db.Column(db.String(50), nullable=True)
     last_name = db.Column(db.String(50), nullable=False)
+    gender = db.Column(db.String(10), nullable=True)
+    marital_status = db.Column(db.String(10), nullable=True)
+    birthday = db.Column(db.Date, nullable=True)
+    image = db.Column(db.String(255), nullable=True)
+
+    # ContactInfo
     phone_number = db.Column(db.String(15), nullable=True)
+    email = db.Column(db.String(120), nullable=False)
+    email_confirmed = db.Column(db.Boolean, nullable=False, default=False)
     address = db.Column(db.String(255), nullable=True)
     city = db.Column(db.String(50), nullable=True)
     state = db.Column(db.String(50), nullable=True)
@@ -95,3 +93,10 @@ class UserProfile(db.Model):
 
     # Relationships
     user = db.relationship("User", back_populates="profile")
+
+    def _set_default_image(self):
+        if not self.image and self.gender:
+            if self.gender == "male":
+                self.image = "images/default_male_user.png"
+            else:
+                self.image = "images/default_female_user.png"

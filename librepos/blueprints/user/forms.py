@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SelectField, SubmitField, DateField
+from wtforms.validators import DataRequired, Email
 
 field_kwargs = {"placeholder": " "}
 
@@ -13,7 +13,21 @@ class UserProfileForm(FlaskForm):
     last_name = StringField(
         "Last Name", validators=[DataRequired()], render_kw=field_kwargs
     )
+    gender = SelectField("Gender", choices=[("male", "Male"), ("female", "Female")])
+    birthday = DateField("Birthday", format="%Y-%m-%d", render_kw=field_kwargs)
+    marital_status = SelectField(
+        "Marital Status",
+        choices=[
+            ("single", "Single"),
+            ("married", "Married"),
+            ("divorced", "Divorced"),
+            ("widowed", "Widowed"),
+        ],
+    )
     phone_number = StringField("Phone Number", render_kw=field_kwargs)
+    email = StringField(
+        "Email", validators=[DataRequired(), Email()], render_kw=field_kwargs
+    )
     address = StringField("Address", render_kw=field_kwargs)
     city = StringField("City", render_kw=field_kwargs)
     state = StringField("State", render_kw=field_kwargs)
