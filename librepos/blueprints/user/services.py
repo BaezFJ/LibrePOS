@@ -10,3 +10,6 @@ class UserService:
 
     def update_profile(self, user_id: int, **kwargs):
         return self._user_repo.update_profile(user_id, **kwargs)
+
+    def update_password(self, user_id: int, new_password: str):
+        return self._user_repo.update_password(user_id, new_password)

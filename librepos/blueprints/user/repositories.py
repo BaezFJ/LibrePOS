@@ -36,3 +36,13 @@ class UserRepository:
     @staticmethod
     def find_user_profile(user_id: int):
         return UserProfile.query.filter_by(user_id=user_id).first()
+    
+    
+    @staticmethod
+    def update_password(user_id: int, password: str):
+        user = UserRepository.get_by_id(user_id)
+        if user:
+            user.password = User.hash_password(password)
+            db.session.commit()
+            return True
+        return False

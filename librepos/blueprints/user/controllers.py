@@ -3,7 +3,7 @@ from flask_login import current_user, login_required, fresh_login_required
 
 from librepos.utils.decorators import permission_required
 from librepos.utils import sanitize_form_data
-from librepos.blueprints.auth.forms import PasswordResetForm
+from librepos.blueprints.auth.forms import PasswordUpdateForm
 
 from .repositories import UserRepository
 from .services import UserService
@@ -85,12 +85,16 @@ def security():
 @user_bp.route("/settings/security/password", methods=["GET", "POST"])
 @fresh_login_required
 def password():
-    form = PasswordResetForm()
+    form = PasswordUpdateForm()
     context = {
         "title": "Password",
         "back_url": url_for("user.security"),
         "form": form,
     }
+    if form.validate_on_submit():
+        new_password = str(form.new_password.data)
+        user_service.update_password(current_user.id, new_password)
+        flash("Password updated successfully.", "success")
     return render_template("user/password.html", **context)
 
 

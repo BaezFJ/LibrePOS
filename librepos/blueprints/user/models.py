@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
         super(User, self).__init__(**kwargs)
         """Create instance."""
         self.username = username.lower()
-        self.password = self._hash_password(password)
+        self.password = self.hash_password(password)
         self.created_at = timezone_aware_datetime()
 
     # ForeignKeys
@@ -37,7 +37,7 @@ class User(db.Model, UserMixin):
     )
 
     @staticmethod
-    def _hash_password(password: str) -> str:
+    def hash_password(password: str) -> str:
         hashed_password = generate_password_hash(password)
         return hashed_password
 
