@@ -26,9 +26,15 @@ class PasswordResetForm(FlaskForm):
 
 
 class PasswordUpdateForm(FlaskForm):
-    current_password = PasswordField("Current Password", validators=[DataRequired()], render_kw=field_kwargs)
-    new_password = PasswordField("New Password", validators=[DataRequired()], render_kw=field_kwargs)
-    confirm_new_password = PasswordField("Confirm New Password", validators=[DataRequired()], render_kw=field_kwargs)
+    current_password = PasswordField(
+        "Current Password", validators=[DataRequired()], render_kw=field_kwargs
+    )
+    new_password = PasswordField(
+        "New Password", validators=[DataRequired()], render_kw=field_kwargs
+    )
+    confirm_new_password = PasswordField(
+        "Confirm New Password", validators=[DataRequired()], render_kw=field_kwargs
+    )
     submit = SubmitField("Update Password")
 
 
