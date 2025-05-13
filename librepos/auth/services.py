@@ -1,4 +1,4 @@
-from ..user.repositories import UserRepository
+from librepos.users.repositories import UserRepository
 from werkzeug.security import check_password_hash
 from flask_login import login_user
 

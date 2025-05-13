@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, logout_user
 
-from ..user.repositories import UserRepository
+from librepos.users.repositories import UserRepository
 from .services import AuthService
 from .forms import LoginForm, ReauthenticateForm
 
-auth_bp = Blueprint("auth", __name__, template_folder="templates", url_prefix="/auth")
+auth_bp = Blueprint("auth", __name__, template_folder="templates")
 
 auth_service = AuthService(UserRepository())
 

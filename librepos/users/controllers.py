@@ -3,13 +3,14 @@ from flask_login import current_user, login_required, fresh_login_required
 
 from librepos.utils.decorators import permission_required
 from librepos.utils import sanitize_form_data
-from librepos.blueprints.auth.forms import PasswordUpdateForm
+from librepos.auth.forms import PasswordUpdateForm
+
 
 from .repositories import UserRepository
 from .services import UserService
 from .forms import UserProfileForm
 
-user_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/users")
+user_bp = Blueprint("user", __name__, template_folder="templates")
 
 user_service = UserService(UserRepository())
 

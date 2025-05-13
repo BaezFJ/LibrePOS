@@ -1,7 +1,7 @@
 from flask import Flask
 
 from .manage import add_cli_commands
-from librepos.blueprints import blueprints
+from .router import register_routes
 
 
 def create_app():
@@ -23,8 +23,7 @@ def create_app():
     custom_jinja_filters(app)
 
     # register blueprints
-    for bp in blueprints:
-        app.register_blueprint(bp)
+    register_routes(app)
 
     # load cli commands
     add_cli_commands(app)
@@ -34,7 +33,7 @@ def create_app():
 
 def init_extensions(app):
     from .extensions import db, login_manager, mail, csrf
-    from librepos.blueprints.user.models import User
+    from librepos.users.models import User
 
     db.init_app(app)
     mail.init_app(app)
