@@ -1,5 +1,6 @@
 from ..user.repositories import UserRepository
 from werkzeug.security import check_password_hash
+from flask_login import logout_user, login_user
 
 
 class AuthService:
@@ -12,4 +13,10 @@ class AuthService:
             raise ValueError("Invalid credentials please try again.")
         if not user.is_active:
             raise ValueError("User is not active")
+        login_user(user, fresh=True)
         return user
+
+    @staticmethod
+    def logout():
+        logout_user()
+        return None
