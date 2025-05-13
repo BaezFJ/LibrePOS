@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, logout_user
 
 from ..user.repositories import UserRepository
 from .services import AuthService
@@ -42,7 +42,7 @@ def login():
 @auth_bp.route("/logout")
 @login_required
 def logout():
-    auth_service.logout()
+    logout_user()
     flash("You have been logged out.", "info")
     return redirect(url_for("auth.login"))
 
