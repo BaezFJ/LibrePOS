@@ -1,10 +1,61 @@
 from typing import List
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash
 from sqlalchemy.orm import Mapped, relationship
 
 from librepos.extensions import db
-from datetime import datetime
-from zoneinfo import ZoneInfo
+from librepos.utils import timezone_aware_datetime
+
+
+
+class User(db.Model, UserMixin):
+    """User model."""
+
+    __tablename__ = "users"
+
+    def __init__(self, username: str, password: str, **kwargs):
+        super(User, self).__init__(**kwargs)
+        """Create instance."""
+        self.username = username.lower()
+        self.password = self.hash_password(password)
+        self.created_at = timezone_aware_datetime()
+
+    # ForeignKeys
+    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"), nullable=True)
+
+    # Columns
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(20), unique=True, nullable=False, index=True)
+    password = db.Column(db.String(128), nullable=False)
+    active = db.Column(db.Boolean, nullable=False, default=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+    # Relationships
+    role = db.relationship("Role", back_populates="users")
+    profile = db.relationship(
+        "UserProfile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
+    @staticmethod
+    def hash_password(password: str) -> str:
+        hashed_password = generate_password_hash(password)
+        return hashed_password
+
+    def has_permission(self, permission_name: str) -> bool:
+        if not self.role:
+            return False
+
+        return self.role.has_permission(permission_name)
+
+    @property
+    def email(self) -> str | None:
+        return self.profile.email if self.profile else None
 
 
 class Role(db.Model):

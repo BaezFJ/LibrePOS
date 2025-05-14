@@ -1,18 +1,20 @@
 from flask import Blueprint, render_template, url_for, flash
 from flask_login import current_user, login_required, fresh_login_required
 
-from librepos.utils.decorators import permission_required
-from librepos.utils import sanitize_form_data
 from librepos.auth.forms import PasswordUpdateForm
-
-
-from .repositories import UserRepository
-from .services import UserService
+from librepos.auth.repositories import UserRepository
+from librepos.auth.services import AuthService
+from librepos.utils import sanitize_form_data
+from librepos.utils.decorators import permission_required
 from .forms import UserProfileForm
+from .repositories import ProfileRepository
+from .services import UserService, ProfileService
 
 user_bp = Blueprint("user", __name__, template_folder="templates")
 
 user_service = UserService(UserRepository())
+profile_service = ProfileService(ProfileRepository())
+auth_service = AuthService(UserRepository())
 
 
 @user_bp.before_request
@@ -27,7 +29,7 @@ def authenticate_user_request():
 def list_users():
     context = {
         "title": "Users",
-        "users": user_service.get_all_users(),
+        "users": user_service.list_all_users(),
     }
     return render_template("user/list_users.html", **context)
 
@@ -50,8 +52,9 @@ def profile():
         "back_url": url_for("user.settings"),
     }
     if form.validate_on_submit():
+        print(form.data)
         sanitized_form_data = sanitize_form_data(form)
-        user_service.update_profile(current_user.id, **sanitized_form_data)
+        profile_service.update_profile(current_user.id, form.data)
         flash("Profile updated successfully.", "success")
     return render_template("user/profile.html", **context)
 
@@ -93,8 +96,8 @@ def password():
         "form": form,
     }
     if form.validate_on_submit():
-        new_password = str(form.new_password.data)
-        user_service.update_password(current_user.id, new_password)
+        # new_password = str(form.new_password.data)
+        # auth_service.update_password(username=str(current_user.username), new_password=new_password)
         flash("Password updated successfully.", "success")
     return render_template("user/password.html", **context)
 

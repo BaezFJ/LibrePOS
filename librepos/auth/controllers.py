@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_required, current_user, logout_user
+from flask_login import login_required, current_user, logout_user, login_user
 
-from librepos.users.repositories import UserRepository
 from .services import AuthService
+from .repositories import UserRepository
 from .forms import LoginForm, ReauthenticateForm
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates")
@@ -28,13 +28,12 @@ def login():
     if form.validate_on_submit():
         username = str(form.username.data)
         password = str(form.password.data)
-        try:
-            user = auth_service.authenticate(username, password)
+        user = auth_service.authenticate(username, password)
+        if user:
+            login_user(user, fresh=True)
             flash(f"Welcome back! {user.username}")
             return redirect(request.args.get("next") or url_for("user.list_users"))
-        except ValueError as e:
-            flash(str(e), "error")
-            return redirect(url_for("auth.login"))
+        flash("Invalid username or password.", "danger")
 
     return render_template("auth/login.html", **context)
 

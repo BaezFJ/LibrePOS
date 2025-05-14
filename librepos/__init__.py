@@ -33,7 +33,7 @@ def create_app():
 
 def init_extensions(app):
     from .extensions import db, login_manager, mail, csrf
-    from librepos.users.models import User
+    from librepos.auth.models import User
 
     db.init_app(app)
     mail.init_app(app)
