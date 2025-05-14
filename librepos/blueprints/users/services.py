@@ -1,6 +1,6 @@
 from librepos.extensions import db
-from librepos.auth.models import User
-from librepos.auth.repositories import UserRepository
+from librepos.blueprints.auth.models import User
+from librepos.blueprints.auth.repositories import UserRepository
 
 from .repositories import ProfileRepository
 from .models import UserProfile
@@ -29,6 +29,7 @@ class ProfileService:
             if field in data:
                 setattr(profile, field, data[field])
             db.session.commit()
+        self._profile_repo.set_profile_image(user_id, data.get('image'))
         return profile
 
 

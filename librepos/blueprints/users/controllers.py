@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template, url_for, flash
 from flask_login import current_user, login_required, fresh_login_required
 
-from librepos.auth.forms import PasswordUpdateForm
-from librepos.auth.repositories import UserRepository
-from librepos.auth.services import AuthService
-from librepos.utils import sanitize_form_data
+from librepos.blueprints.auth.forms import PasswordUpdateForm
+from librepos.blueprints.auth.repositories import UserRepository
+from librepos.blueprints.auth.services import AuthService
 from librepos.utils.decorators import permission_required
 from .forms import UserProfileForm
 from .repositories import ProfileRepository
@@ -53,7 +52,6 @@ def profile():
     }
     if form.validate_on_submit():
         print(form.data)
-        sanitized_form_data = sanitize_form_data(form)
         profile_service.update_profile(current_user.id, form.data)
         flash("Profile updated successfully.", "success")
     return render_template("user/profile.html", **context)

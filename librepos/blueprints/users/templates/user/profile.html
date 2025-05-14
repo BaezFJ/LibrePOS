@@ -13,7 +13,7 @@
                         <div class="card-content">
                             <div class="center-align">
                                 <img class="profile-img"
-                                     src="{{ url_for('static', filename=current_user.profile.image) }}" alt="">
+                                     src="{{ url_for('static', filename=current_user.profile.image|safe) }}" alt="">
                                 <h5><b>{{ current_user.username.title() }}</b></h5>
                                 <p class="grey-text">{{ current_user.primary_email }}</p>
                             </div>

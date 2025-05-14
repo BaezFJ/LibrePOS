@@ -10,7 +10,6 @@ class UserProfile(db.Model):
     def __init__(self, user_id: int, **kwargs):
         super(UserProfile, self).__init__(**kwargs)
         self.user_id = user_id
-        self._set_default_image()
 
     # ForeignKeys
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
@@ -43,10 +42,3 @@ class UserProfile(db.Model):
 
     # Relationships
     user = db.relationship("User", back_populates="profile")
-
-    def _set_default_image(self):
-        if not self.image and self.gender:
-            if self.gender == "male":
-                self.image = "images/default_male_user.png"
-            else:
-                self.image = "images/default_female_user.png"
