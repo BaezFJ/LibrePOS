@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
 
-main_bp = Blueprint('main', __name__, template_folder='templates')
+main_bp = Blueprint("main", __name__, template_folder="templates")
 
 
 @main_bp.before_request
@@ -11,9 +11,7 @@ def before_request():
     pass
 
 
-@main_bp.route('/')
+@main_bp.route("/")
 def settings():
-    context = {
-        "title": "Settings"
-    }
+    context = {"title": "Settings"}
     return render_template("main/settings.html", **context)

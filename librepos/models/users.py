@@ -10,7 +10,15 @@ class User(db.Model, UserMixin):
 
     __tablename__ = "users"
 
-    def __init__(self, first_name: str, middle_name: str | None, last_name: str, email: str, password: str, **kwargs):
+    def __init__(
+        self,
+        first_name: str,
+        middle_name: str | None,
+        last_name: str,
+        email: str,
+        password: str,
+        **kwargs,
+    ):
         super(User, self).__init__(**kwargs)
         """Create instance."""
         self.first_name = first_name.title()
@@ -71,4 +79,3 @@ class User(db.Model, UserMixin):
 
         if self.gender == "female":
             self.image = "images/default_female_user.png"
-        

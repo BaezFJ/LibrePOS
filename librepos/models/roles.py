@@ -4,7 +4,8 @@ from sqlalchemy.orm import Mapped, relationship
 
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
-from librepos.models.role_policies import RolePolicy
+
+from .role_policies import RolePolicy
 
 
 class Role(db.Model):

@@ -2,7 +2,6 @@ from .repository import UserRepository
 
 
 class UserService:
-
     def __init__(self, repo=None):
         self.repo = repo or UserRepository()
 

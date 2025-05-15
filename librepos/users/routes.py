@@ -7,7 +7,7 @@ from librepos.auth.decorators import permission_required
 from .service import UserService
 from .forms import NewUserForm
 
-users_bp = Blueprint('user', __name__, template_folder='templates', url_prefix='/users')
+users_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/users")
 
 user_service = UserService()
 
@@ -19,14 +19,14 @@ def before_request():
     pass
 
 
-@users_bp.route('/', methods=['GET', 'POST'])
-@permission_required('list_users')
+@users_bp.route("/", methods=["GET", "POST"])
+@permission_required("list_users")
 def list_users():
     users = user_service.list_users()
     form = NewUserForm()
     context = {
         "title": "Users",
-        "back_url": url_for('main.settings'),
+        "back_url": url_for("main.settings"),
         "users": users,
         "form": form,
     }
@@ -35,17 +35,17 @@ def list_users():
         sanitized_data = sanitize_form_data(form)
         new_user = user_service.create_user(sanitized_data)
         flash(f"User {new_user.email} created successfully.", "success")
-        return redirect(url_for('user.list_users'))
+        return redirect(url_for("user.list_users"))
 
     return render_template("users/list_users.html", **context)
 
 
-@users_bp.get('/<int:user_id>')
-@permission_required('get_user')
+@users_bp.get("/<int:user_id>")
+@permission_required("get_user")
 def get_user(user_id):
     context = {
         "title": "User",
-        "back_url": url_for('user.list_users'),
+        "back_url": url_for("user.list_users"),
         "user": user_service.get_user(user_id),
     }
     return render_template("users/get_user.html", **context)

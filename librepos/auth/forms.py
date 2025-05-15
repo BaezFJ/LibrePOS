@@ -4,6 +4,10 @@ from wtforms.validators import DataRequired, Email
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"placeholder": " "})
-    password = PasswordField('Password', validators=[DataRequired()], render_kw={"placeholder": " "})
-    submit = SubmitField('Login')
+    email = StringField(
+        "Email", validators=[DataRequired(), Email()], render_kw={"placeholder": " "}
+    )
+    password = PasswordField(
+        "Password", validators=[DataRequired()], render_kw={"placeholder": " "}
+    )
+    submit = SubmitField("Login")

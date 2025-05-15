@@ -1,11 +1,9 @@
-from librepos.models import (
-    User,
-    Role,
-    Permission,
-    Policy,
-    PolicyPermission,
-    RolePolicy,
-)
+from librepos.models.users import User
+from librepos.models.roles import Role
+from librepos.models.permissions import Permission
+from librepos.models.policies import Policy
+from librepos.models.policy_permissions import PolicyPermission
+from librepos.models.role_policies import RolePolicy
 
 from librepos.extensions import db
 
@@ -129,10 +127,28 @@ def seed_role_policies():
 
 
 def seed_users() -> None:
-    admin_user = User(first_name="john", middle_name=None, last_name="doe", email="admin@librepos.com",
-                      password="librepos", gender="male", marital_status="married", phone="1234567890", role_id=1)
-    manager_user = User(first_name="jane", middle_name=None, last_name="doe", email="manager@librepos.com",
-                        password="librepos", gender="female", marital_status="married", phone="9991234567", role_id=2)
+    admin_user = User(
+        first_name="john",
+        middle_name=None,
+        last_name="doe",
+        email="admin@librepos.com",
+        password="librepos",
+        gender="male",
+        marital_status="married",
+        phone="1234567890",
+        role_id=1,
+    )
+    manager_user = User(
+        first_name="jane",
+        middle_name=None,
+        last_name="doe",
+        email="manager@librepos.com",
+        password="librepos",
+        gender="female",
+        marital_status="married",
+        phone="9991234567",
+        role_id=2,
+    )
     db.session.add_all(
         [
             admin_user,
