@@ -1,20 +1,19 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_required, current_user, logout_user, login_user
+from flask_login import login_required, current_user
 
 from .services import AuthService
-from .repositories import UserRepository
 from .forms import LoginForm, ReauthenticateForm
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates")
 
-auth_service = AuthService(UserRepository())
+auth_service = AuthService()
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     """Render the login page."""
 
-    if current_user.is_authenticated:
+    if auth_service.authenticated_user():
         flash("You are already logged in.", "info")
         return redirect(url_for("user.list_users"))
 
@@ -30,7 +29,6 @@ def login():
         password = str(form.password.data)
         user = auth_service.authenticate(username, password)
         if user:
-            login_user(user, fresh=True)
             flash(f"Welcome back! {user.username}")
             return redirect(request.args.get("next") or url_for("user.list_users"))
         flash("Invalid username or password.", "danger")
@@ -41,7 +39,7 @@ def login():
 @auth_bp.route("/logout")
 @login_required
 def logout():
-    logout_user()
+    auth_service.logout()
     flash("You have been logged out.", "info")
     return redirect(url_for("auth.login"))
 

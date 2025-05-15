@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, url_for, flash
 from flask_login import current_user, login_required, fresh_login_required
 
 from librepos.blueprints.auth.forms import PasswordUpdateForm
-from librepos.blueprints.auth.repositories import UserRepository
+from librepos.blueprints.users.repositories import UserRepository
 from librepos.blueprints.auth.services import AuthService
 from librepos.utils.decorators import permission_required
 from .forms import UserProfileForm
@@ -11,9 +11,9 @@ from .services import UserService, ProfileService
 
 user_bp = Blueprint("user", __name__, template_folder="templates")
 
-user_service = UserService(UserRepository())
+user_service = UserService()
 profile_service = ProfileService(ProfileRepository())
-auth_service = AuthService(UserRepository())
+auth_service = AuthService()
 
 
 @user_bp.before_request

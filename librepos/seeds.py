@@ -1,6 +1,5 @@
-# from librepos.users.models import User
+from librepos.blueprints.users.models import User
 from librepos.blueprints.auth.models import (
-    User,
     Role,
     Permission,
     Policy,

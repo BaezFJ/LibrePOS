@@ -1,9 +1,7 @@
 from librepos.extensions import db
-from librepos.blueprints.auth.models import User
-from librepos.blueprints.auth.repositories import UserRepository
 
-from .repositories import ProfileRepository
-from .models import UserProfile
+from .repositories import ProfileRepository, UserRepository
+from .models import User, UserProfile
 
 
 class ProfileService:
@@ -34,11 +32,11 @@ class ProfileService:
 
 
 class UserService:
-    def __init__(self, user_repo: UserRepository):
-        self._user_repo = user_repo
+    def __init__(self, repo=None):
+        self.repo = repo or UserRepository()
 
     def list_all_users(self) -> list[User] | None:
-        return self._user_repo.list_users()
+        return self.repo.list_users()
 
     def get_user(self, username: str) -> User | None:
-        return self._user_repo.get_by_username(username)
+        return self.repo.get_by_username(username)
