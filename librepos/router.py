@@ -1,0 +1,9 @@
+from librepos.main.routes import main_bp
+from librepos.auth.routes import auth_bp
+from librepos.users.routes import users_bp
+
+
+def register_blueprints(app):
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(users_bp)

@@ -6,36 +6,44 @@
     <section>
 
         <div class="container">
-
             <div class="row">
-
-                <div class="col s12 m4 offset-m4">
-                    <div class="card">
+                <div class="col s12">
+                    <div class="card z-depth-2">
                         <div class="card-content">
+
                             <table class="striped highlight">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Username</th>
+                                    <th>Photo</th>
+                                    <th>FullName</th>
                                     <th>Role</th>
+                                    <th>Last Active</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for user in users %}
                                     <tr>
                                         <td>{{ user.id }}</td>
-                                        <td><a href="">{{ user.username.title() }}</a></td>
-                                        <td>{{ user.role.name.title() if user.role else "N/A" }}</td>
+                                        <td>
+                                            <a href="{{ url_for('user.get_user', user_id=user.id) }}">
+                                                <img class="circle"
+                                                     src="{{ url_for('static', filename=user.image|safe) }}"
+                                                     alt="default" style="width: 50px; height: 50px;">
+                                            </a>
+                                        </td>
+                                        <td>{{ user.full_name }}</td>
+                                        <td>{{ user.role.name|title }}</td>
+                                        <td>Today</td>
                                     </tr>
                                 {% endfor %}
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
     </section>

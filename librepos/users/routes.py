@@ -1,0 +1,40 @@
+from flask import Blueprint, render_template, url_for
+from flask_login import login_required
+
+from librepos.auth.decorators import permission_required
+
+from .service import UserService
+
+users_bp = Blueprint('user', __name__, template_folder='templates', url_prefix='/users')
+
+user_service = UserService()
+
+
+@users_bp.before_request
+@login_required
+def before_request():
+    """Force the user to log in before accessing any page."""
+    pass
+
+
+@users_bp.get('/')
+@permission_required('list_users')
+def list_users():
+    users = user_service.list_users()
+    context = {
+        "title": "Users",
+        "back_url": url_for('main.settings'),
+        "users": users
+    }
+    return render_template("users/list_users.html", **context)
+
+
+@users_bp.get('/<int:user_id>')
+@permission_required('get_user')
+def get_user(user_id):
+    context = {
+        "title": "User",
+        "back_url": url_for('user.list_users'),
+        "user": user_service.get_user(user_id),
+    }
+    return render_template("users/get_user.html", **context)

@@ -8,11 +8,11 @@
                     <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
                 </div>
                 <a href="">
-                    <img class="circle" src="{{ url_for('static', filename='images/default_male_user.png') }}"
+                    <img class="circle" src="{{ url_for('static', filename=current_user.image|safe) }}"
                          alt="default">
                 </a>
                 <a href="">
-                    <span class="white-text name">{{ current_user.username }}</span>
+                    <span class="white-text name">{{ current_user.full_name }}</span>
                 </a>
                 <a><span class="white-text email">{{ current_user.email }}</span></a>
             </div>
@@ -20,13 +20,18 @@
 
         {{ render_list_link("", "Dashboard", "dashboard") }}
         {{ render_list_link("", "Inventory", "inventory") }}
-        {{ render_list_link(url_for('user.list_users'), "Users", "people") }}
+
+        {% if current_user.has_permission("list_users") %}
+            {{ render_list_link(url_for('user.list_users'), "Users", "people") }}
+        {% endif %}
+
         {{ render_list_link("", "Orders", "list_alt") }}
         {{ render_list_link("", "Customers", "groups") }}
 
+
         <div class="divider"></div>
 
-        {{ render_list_link(url_for("user.settings"), "Settings", "settings") }}
+        {{ render_list_link("", "Settings", "settings") }}
         {{ render_list_link("", "Schedule", "schedule") }}
 
         {{ render_list_link(url_for("auth.logout"), "Logout", "logout") }}

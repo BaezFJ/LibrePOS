@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col s12">
+                    <div class="card z-depth-2">
+                        <div class="card-content center-align">
+                            <h4 class="mt-0 ">{{ user.role.name|title }}</h4>
+                            <img src="{{ url_for('static', filename=user.image|safe) }}" alt="Profile Photo"
+                                 class="profile-img">
+                            <h5 class="white-text"><b>{{ user.full_name }}</b></h5>
+                            <p class="grey-text">{{ user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12">
+
+                    <div class="card z-depth-2">
+                        <div class="card-content">
+                            <span class="card-title">Info</span>
+                            <p>
+                                <strong>Name:</strong> {{ user.full_name }}<br>
+                                <strong>Email:</strong> {{ user.email }}<br>
+                                <strong>Phone:</strong> {{ user.phone|phone if user.phone else "N/A" }}<br>
+                                <strong>Role:</strong> {{ user.role.name|title }}<br>
+                                <strong>Last Active:</strong> Today
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

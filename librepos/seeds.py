@@ -1,11 +1,12 @@
-from librepos.blueprints.users.models import User
-from librepos.blueprints.auth.models import (
+from librepos.models import (
+    User,
     Role,
     Permission,
     Policy,
     PolicyPermission,
     RolePolicy,
 )
+
 from librepos.extensions import db
 
 
@@ -128,8 +129,10 @@ def seed_role_policies():
 
 
 def seed_users() -> None:
-    admin_user = User(username="admin", password="librepos", role_id=1)
-    manager_user = User(username="manager", password="librepos", role_id=2)
+    admin_user = User(first_name="john", middle_name=None, last_name="doe", email="admin@librepos.com",
+                      password="librepos", gender="male", marital_status="married", phone="1234567890", role_id=1)
+    manager_user = User(first_name="jane", middle_name=None, last_name="doe", email="manager@librepos.com",
+                        password="librepos", gender="female", marital_status="married", phone="9991234567", role_id=2)
     db.session.add_all(
         [
             admin_user,
