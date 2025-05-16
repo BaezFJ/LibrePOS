@@ -21,7 +21,9 @@ def login():
         "form": form,
     }
     if form.validate_on_submit():
-        user = auth_service.authenticate(form.email.data, form.password.data, form.remember.data)
+        user = auth_service.authenticate(
+            form.email.data, form.password.data, form.remember.data
+        )
         if user:
             user.record_sign_in(
                 ip=str(request.remote_addr), agent=str(request.user_agent)[:255]
