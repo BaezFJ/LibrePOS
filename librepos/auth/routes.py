@@ -4,13 +4,17 @@ from flask_login import login_required
 
 from .forms import LoginForm
 
-auth_bp = Blueprint("auth", __name__, template_folder="templates")
+auth_bp = Blueprint("auth", __name__, template_folder="templates", url_prefix="/auth")
 
 auth_service = AuthService()
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+    if auth_service.current_user().is_authenticated:
+        flash("You are already logged in.", "info")
+        return redirect(url_for("main.settings"))
+
     form = LoginForm()
     context = {
         "title": "Login",
@@ -19,6 +23,9 @@ def login():
     if form.validate_on_submit():
         user = auth_service.authenticate(form.email.data, form.password.data)
         if user:
+            user.record_sign_in(
+                ip=str(request.remote_addr), agent=str(request.user_agent)[:255]
+            )
             return redirect(request.args.get("next") or url_for("main.settings"))
     return render_template("auth/login.html", **context)
 

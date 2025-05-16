@@ -136,6 +136,7 @@ def seed_users() -> None:
         gender="male",
         marital_status="married",
         phone="1234567890",
+        active=True,
         role_id=1,
     )
     manager_user = User(
@@ -147,6 +148,7 @@ def seed_users() -> None:
         gender="female",
         marital_status="married",
         phone="9991234567",
+        active=True,
         role_id=2,
     )
     db.session.add_all(
