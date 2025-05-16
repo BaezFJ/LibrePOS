@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+
+            {% if products %}
+                <div class="row">
+
+                    {% for product in products %}
+                        <div class="col s6">
+                            <a href="{{ url_for('product.get_product', product_id=product.id) }}" class="inherit-color">
+                                <div class="card z-depth-2">
+                                    <div class="card-content center-align">
+                                        <h5 class="m-0">{{ product.name }}</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+            {% else %}
+                <h1 class="center-align">No Products Found.</h1>
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    {% if current_user.has_permission("create_product") %}
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large z-depth-2 {{ 'pulse' if not products }}"
+               href="javascript:addProductModal.showPopover()">
+                <i class="large material-symbols-rounded">add</i>
+            </a>
+        </div>
+
+        <div id="addProductModal" class="modal bottom-sheet" popover>
+            <div class="modal-header">
+                <h4>Add Product</h4>
+            </div>
+            <div class="modal-content">
+                <form action="" method="POST" class="row">
+                    {{ form.hidden_tag() }}
+                    <div class="col s12 input-field">
+                        {{ form.name() }}
+                        {{ form.name.label }}
+                    </div>
+                    <div class="col s12 input-field">
+                        {{ form.description() }}
+                        {{ form.description.label }}
+                    </div>
+                    <div class="col s12 input-field">
+                        {{ form.price() }}
+                        {{ form.price.label }}
+                    </div>
+                    <div class="col s12 center-block">
+                        <button type="submit" class="btn btn-block">Add Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
