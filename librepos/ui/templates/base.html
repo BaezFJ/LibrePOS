@@ -25,15 +25,15 @@
     <!--HTMX-->
     <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
 
-    <!--Google Icon Font-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/material-icons.min.css') }}">
+    <!-- Material Symbols - Rounded Set -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet"/>
 
     <!--Theme switcher-->
     <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
 
     <!--MaterializeCSS-->
-    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"
-          media="screen,projection"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.2.2/dist/css/materialize.min.css">
     <!--MaterializeCSS overrides-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/override.min.css') }}">
     <!--MaterializeCSS theme-->
@@ -73,7 +73,7 @@
 
 {% endblock %}
 <!--MaterializeCSS JavaScript-->
-<script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.2.2/dist/js/materialize.min.js"></script>
 <!--Application JavaScript-->
 <script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
 <!-- Flask Message -->
