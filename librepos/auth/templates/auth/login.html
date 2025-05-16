@@ -20,8 +20,18 @@
                                     {{ form.password() }}
                                     {{ form.password.label }}
                                 </div>
+                                <div class="input-field center-align mt-4">
+                                    <p>
+                                        <label>
+                                            {{ form.remember() }}
+                                            <span>Remember Me</span>
+                                        </label>
+                                    </p>
+                                </div>
                                 <div class="mt-4">
-                                    {{ form.submit(class="btn") }}
+                                    <button type="submit" class="btn waves-effect waves-light">
+                                        Login
+                                    </button>
                                 </div>
                             </form>
                         </div>

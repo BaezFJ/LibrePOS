@@ -7,7 +7,7 @@ class AuthService:
     def __init__(self, repo=None):
         self.repo = repo or AuthRepository()
 
-    def authenticate(self, email, password):
+    def authenticate(self, email, password, remember):
         user = self.repo.get_user_by_email(email)
         if not user:
             flash("Invalid email or password.", "error")
@@ -16,7 +16,7 @@ class AuthService:
             flash("Your account has been deactivated. Please contact support.", "error")
             return None
         if user.check_password(password):
-            login_user(user, force=True, remember=False)
+            login_user(user, remember=remember)
             if user.failed_login_count > 0:
                 user.reset_failed_login_count()
             flash("Logged in successfully.", "success")
