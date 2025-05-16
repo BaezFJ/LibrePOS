@@ -31,7 +31,8 @@
 
         <div class="divider"></div>
 
-        {{ render_list_link("", "Settings", "settings") }}
+        {{ render_list_link(url_for('user.profile'), "Profile", "person") }}
+        {{ render_list_link(url_for('main.settings'), "Settings", "settings") }}
         {{ render_list_link("", "Schedule", "schedule") }}
 
         {{ render_list_link(url_for("auth.logout"), "Logout", "logout") }}

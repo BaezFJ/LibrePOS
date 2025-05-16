@@ -35,3 +35,15 @@ class NewUserForm(FlaskForm):
 
         active_roles = Role.query.filter_by(active=True).all()
         self.role_id.choices = [(r.id, r.name.title()) for r in active_roles]
+
+
+class UserContactDetailsForm(FlaskForm):
+    email = StringField(
+        "Email", validators=[DataRequired(), Email()], render_kw={"placeholder": " "}
+    )
+    phone = StringField("Phone", render_kw={"placeholder": " "})
+    address = StringField("Address", render_kw={"placeholder": " "})
+    city = StringField("City", render_kw={"placeholder": " "})
+    state = StringField("State", render_kw={"placeholder": " "})
+    zipcode = StringField("Zipcode", render_kw={"placeholder": " "})
+    submit = SubmitField("Update Contact Details")

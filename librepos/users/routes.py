@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, url_for, flash, redirect
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from librepos.utils import sanitize_form_data
 from librepos.auth.decorators import permission_required
 
 from .service import UserService
-from .forms import NewUserForm
+from .forms import NewUserForm, UserContactDetailsForm
 
 users_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/users")
 
@@ -49,3 +49,20 @@ def get_user(user_id):
         "user": user_service.get_user(user_id),
     }
     return render_template("users/get_user.html", **context)
+
+
+@users_bp.route("/profile", methods=["GET", "POST"])
+def profile():
+    """Render the user's profile page."""
+    form = UserContactDetailsForm(obj=current_user)
+    context = {
+        "title": "Profile",
+        "back_url": url_for("main.settings"),
+        "form": form,
+    }
+    if form.validate_on_submit():
+        sanitized_data = sanitize_form_data(form)
+        user_service.update_user(current_user.id, sanitized_data)
+        flash("Profile updated successfully.", "success")
+        return redirect(url_for("user.profile"))
+    return render_template("users/profile.html", **context)

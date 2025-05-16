@@ -13,3 +13,6 @@ class UserService:
 
     def create_user(self, data):
         return self.repo.create(data)
+
+    def update_user(self, user_id, data):
+        return self.repo.update(user_id, data)
