@@ -109,3 +109,7 @@ class User(UserMixin, db.Model):
         if self.failed_login_count >= 3:
             self.active = False
         db.session.commit()
+    
+    def reset_failed_login_count(self):
+        self.failed_login_count = 0
+        db.session.commit()

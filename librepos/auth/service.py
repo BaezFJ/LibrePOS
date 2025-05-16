@@ -17,6 +17,8 @@ class AuthService:
             return None
         if user.check_password(password):
             login_user(user, force=True, remember=False)
+            if user.failed_login_count > 0:
+                user.reset_failed_login_count()
             flash("Logged in successfully.", "success")
             return user
         user.handle_failed_login()
