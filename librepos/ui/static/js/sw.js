@@ -3,13 +3,9 @@ const dynamicCacheName = 'dynamic-cache-v1';
 const staticAssets = [
     '/',
     '/offline.html',
-    '/static/css/materialize.min.css',
-    '/static/css/materialize.min.css.map',
     '/static/css/override.min.css',
     '/static/css/theme.min.css',
     '/static/css/style.min.css',
-    '/static/css/material-icons.min.css',
-    '/static/js/materialize.min.js',
     '/static/js/app.js',
     '/static/js/ui.js',
     '/static/js/theme-switcher.js',
