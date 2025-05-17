@@ -1,6 +1,6 @@
 from librepos.main.routes import main_bp
 from librepos.auth.routes import auth_bp
-from librepos.users.routes import users_bp
+from librepos.user.routes import users_bp
 from librepos.products.routes import product_bp
 
 

@@ -37,7 +37,7 @@ def list_users():
         flash(f"User {new_user.email} created successfully.", "success")
         return redirect(url_for("user.list_users"))
 
-    return render_template("users/list_users.html", **context)
+    return render_template("user/list_users.html", **context)
 
 
 @users_bp.get("/<int:user_id>")
@@ -48,7 +48,7 @@ def get_user(user_id):
         "back_url": url_for("user.list_users"),
         "user": user_service.get_user(user_id),
     }
-    return render_template("users/get_user.html", **context)
+    return render_template("user/get_user.html", **context)
 
 
 @users_bp.route("/profile", methods=["GET", "POST"])
@@ -65,4 +65,4 @@ def profile():
         user_service.update_user(current_user.id, sanitized_data)
         flash("Profile updated successfully.", "success")
         return redirect(url_for("user.profile"))
-    return render_template("users/profile.html", **context)
+    return render_template("user/profile.html", **context)
