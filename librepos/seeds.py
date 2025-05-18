@@ -65,22 +65,34 @@ def seed_permissions():
     delete_user_permission = Permission(
         name="delete_user", description="Delete user from system."
     )
-    create_product = Permission(name="create_product", description="Add product")
-    get_product = Permission(name="get_product", description="View product details")
-    list_products = Permission(name="list_products", description="View products")
-    update_product = Permission(name="update_product", description="Edit product")
-    delete_product = Permission(name="delete_product", description="Delete product")
+    # Menu Permissions
+    create_menu_category = Permission(
+        name="create_menu_category", description="Add category"
+    )
+    get_menu_category = Permission(
+        name="get_menu_category", description="View category details"
+    )
+    list_menu_categories = Permission(
+        name="list_menu_categories", description="View categories"
+    )
+    update_menu_category = Permission(
+        name="update_menu_category", description="Edit category"
+    )
+    delete_menu_category = Permission(
+        name="delete_menu_category", description="Delete category"
+    )
+
     return [
         create_user_permission,
         get_user_permission,
         list_users_permission,
         update_user_permission,
         delete_user_permission,
-        create_product,
-        get_product,
-        list_products,
-        update_product,
-        delete_product,
+        create_menu_category,
+        get_menu_category,
+        list_menu_categories,
+        update_menu_category,
+        delete_menu_category,
     ]
 
 
