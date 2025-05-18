@@ -2,6 +2,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from flask import current_app
+from slugify import slugify
 
 
 def timezone_aware_datetime():
@@ -36,3 +37,7 @@ def sanitize_form_data(form, exclude_fields: list[str] | None = None):
             sanitized_data.pop(field, None)
 
     return sanitized_data
+
+
+def slugify_string(string: str, max_length: int = 50, word_boundary: bool = True):
+    return slugify(string, max_length=max_length, word_boundary=word_boundary)
