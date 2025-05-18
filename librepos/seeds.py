@@ -65,7 +65,7 @@ def seed_permissions():
     delete_user_permission = Permission(
         name="delete_user", description="Delete user from system."
     )
-    # Menu Permissions
+    # MenuCategory Permissions
     create_menu_category = Permission(
         name="create_menu_category", description="Add category"
     )
@@ -81,6 +81,12 @@ def seed_permissions():
     delete_menu_category = Permission(
         name="delete_menu_category", description="Delete category"
     )
+    # MenuGroup Permissions
+    create_menu_group = Permission(name="create_menu_group", description="Add group")
+    get_menu_group = Permission(name="get_menu_group", description="View group details")
+    list_menu_groups = Permission(name="list_menu_groups", description="View groups")
+    update_menu_group = Permission(name="update_menu_group", description="Edit group")
+    delete_menu_group = Permission(name="delete_menu_group", description="Delete group")
 
     return [
         create_user_permission,
@@ -93,6 +99,11 @@ def seed_permissions():
         list_menu_categories,
         update_menu_category,
         delete_menu_category,
+        create_menu_group,
+        get_menu_group,
+        list_menu_groups,
+        update_menu_group,
+        delete_menu_group,
     ]
 
 

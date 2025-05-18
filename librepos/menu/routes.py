@@ -5,7 +5,7 @@ from librepos.utils import sanitize_form_data
 from librepos.auth.decorators import permission_required
 
 from .service import MenuService
-from .forms import CategoryForm
+from .forms import CategoryForm, GroupForm
 
 menu_bp = Blueprint("menu", __name__, template_folder="templates", url_prefix="/menu")
 
@@ -98,12 +98,72 @@ def delete_category(category_id):
 
 
 # ================================
+#            CREATE
+# ================================
+@menu_bp.post("/create-group")
+@permission_required("create_menu_group")
+def create_group():
+    form = GroupForm()
+    if form.validate_on_submit():
+        sanitized_data = sanitize_form_data(form)
+        menu_service.create_menu_group(sanitized_data)
+        flash("Group created successfully.", "success")
+    return redirect(url_for("menu.list_groups"))
+
+
+# ================================
 #            READ
 # ================================
 @menu_bp.get("/groups")
+@permission_required("list_menu_groups")
 def list_groups():
-    context = {"title": "Groups", "groups": menu_service.list_menu_groups()}
+    form = GroupForm()
+    context = {
+        "title": "Groups",
+        "groups": menu_service.list_menu_groups(),
+        "form": form,
+    }
     return render_template("menu/list_groups.html", **context)
+
+
+@menu_bp.get("/group/<int:group_id>")
+@permission_required("get_menu_group")
+def get_group(group_id):
+    group = menu_service.get_menu_group(group_id)
+    form = GroupForm(obj=group)
+    context = {
+        "title": group.name if group else "Group",
+        "back_url": url_for("menu.list_groups"),
+        "group": menu_service.get_menu_group(group_id),
+        "form": form,
+    }
+    return render_template("menu/get_group.html", **context)
+
+
+# ================================
+#            UPDATE
+# ================================
+@menu_bp.post("/update-group/<int:group_id>")
+@permission_required("update_menu_group")
+def update_group(group_id):
+    form = GroupForm()
+    if form.validate_on_submit():
+        sanitized_data = sanitize_form_data(form)
+        menu_service.update_menu_group(group_id, sanitized_data)
+        flash("Group updated successfully.", "success")
+    return redirect(url_for("menu.get_group", group_id=group_id))
+
+
+# ================================
+#            DELETE
+# ================================
+@menu_bp.delete("/delete-group/<int:group_id>")
+@permission_required("delete_menu_group")
+def delete_group(group_id):
+    menu_service.delete_menu_group(group_id)
+    response = jsonify(success=True)
+    response.headers["HX-Redirect"] = url_for("menu.list_groups")
+    return response
 
 
 # ======================================================================================================================

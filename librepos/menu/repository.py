@@ -6,6 +6,9 @@ from librepos.models.menu_items import MenuItem
 
 
 class MenuRepository:
+    # ======================================================
+    #                   MENU - CATEGORY
+    # ======================================================
     @staticmethod
     def create_category(data):
         category = MenuCategory(**data)
@@ -38,10 +41,45 @@ class MenuRepository:
         db.session.commit()
         return True
 
+    # ======================================================
+    #                   MENU - GROUP
+    # ======================================================
+
+    @staticmethod
+    def create_group(data):
+        group = MenuGroup(**data)
+        db.session.add(group)
+        db.session.commit()
+        return group
+
     @staticmethod
     def get_all_groups():
         return MenuGroup.query.order_by(MenuGroup.name).all()
 
+    @staticmethod
+    def get_group_by_id(group_id):
+        return MenuGroup.query.get(group_id)
+
+    def update_group(self, group_id, data):
+        group = self.get_group_by_id(group_id)
+        if not group:
+            return None
+        for key, value in data.items():
+            setattr(group, key, value)
+        db.session.commit()
+        return group
+
+    def delete_group(self, group_id):
+        group = self.get_group_by_id(group_id)
+        if not group:
+            return False
+        db.session.delete(group)
+        db.session.commit()
+        return True
+
+    # ======================================================
+    #                   MENU - ITEM
+    # ======================================================
     @staticmethod
     def get_all_items():
         return MenuItem.query.order_by(MenuItem.name).all()
