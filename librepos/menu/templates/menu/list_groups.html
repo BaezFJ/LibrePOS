@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col s12">
+                    <div class="card z-depth-2">
+                        <div class="card-content">
+                            {% if groups %}
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Name</th>
+                                        <th>Active</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for group in groups %}
+                                        <tr>
+                                            <td>{{ group.category.name }}</td>
+                                            <td>{{ group.name }}</td>
+                                            <td>
+                                                {% if group.active %}
+                                                    <span class="material-symbols-rounded green-text">
+                                                        radio_button_checked
+                                                    </span>
+                                                {% else %}
+                                                    <span class="material-symbols-rounded">
+                                                        radio_button_unchecked
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="" class="btn-small tonal">
+                                                    <span class="material-symbols-rounded">edit</span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}

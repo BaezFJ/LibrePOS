@@ -19,7 +19,7 @@
         </li>
 
         {{ render_list_link("", "Dashboard", "dashboard") }}
-        {{ render_list_link(url_for('product.list_products'), "Products", "inventory_2") }}
+        {{ render_list_link(url_for("product.list_products"), "Products", "inventory_2") }}
         {{ render_list_link("", "Inventory", "inventory") }}
 
         {% if current_user.has_permission("list_users") %}
@@ -29,11 +29,26 @@
         {{ render_list_link("", "Orders", "list_alt") }}
         {{ render_list_link("", "Customers", "groups") }}
 
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header"><i class="material-symbols-rounded">menu_book</i>Menu</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            {{ render_list_link(url_for("menu.list_categories"), "Categories", "restaurant") }}
+                            {{ render_list_link(url_for("menu.list_groups"), "Groups", "list_alt") }}
+                            {{ render_list_link(url_for("menu.list_items"), "Items", "fastfood") }}
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+
 
         <div class="divider"></div>
 
-        {{ render_list_link(url_for('user.profile'), "Profile", "person") }}
-        {{ render_list_link(url_for('main.settings'), "Settings", "settings") }}
+        {{ render_list_link(url_for("user.profile"), "Profile", "person") }}
+        {{ render_list_link(url_for("main.settings"), "Settings", "settings") }}
         {{ render_list_link("", "Schedule", "schedule") }}
 
         {{ render_list_link(url_for("auth.logout"), "Logout", "logout") }}

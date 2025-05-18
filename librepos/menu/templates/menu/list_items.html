@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col s12">
+
+                    <div class="card z-depth-2">
+                        <div class="card-content">
+                            {% if items %}
+                                <table class="striped highlight centered">
+                                    <thead>
+                                    <tr>
+                                        <th>Group</th>
+                                        <th>Name</th>
+                                        <th>Active</th>
+                                        <th>Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td>{{ item.group.name }}</td>
+                                            <td>{{ item.name }}</td>
+                                            <td>
+                                                {% if item.active %}
+                                                    <span class="material-symbols-rounded green-text">
+                                                        radio_button_checked
+                                                    </span>
+                                                {% else %}
+                                                    <span class="material-symbols-rounded">
+                                                        radio_button_unchecked
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ item.price|currency }}</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

@@ -4,6 +4,9 @@ from librepos.models.permissions import Permission
 from librepos.models.policies import Policy
 from librepos.models.policy_permissions import PolicyPermission
 from librepos.models.role_policies import RolePolicy
+from librepos.models.menu_categories import MenuCategory
+from librepos.models.menu_groups import MenuGroup
+from librepos.models.menu_items import MenuItem
 
 from librepos.extensions import db
 
@@ -170,6 +173,44 @@ def seed_users() -> None:
     db.session.commit()
 
 
+def load_menu_data():
+    categories = ["Drinks", "Entrees", "Desserts"]
+    drinks_groups = ["Can", "Bottle", "Hot"]
+    items = [
+        {
+            "group_id": 1,
+            "name": "Soda1",
+            "description": "Soda 1 description",
+            "price": 100,
+        },
+        {
+            "group_id": 1,
+            "name": "Soda2",
+            "description": "Soda 2 description",
+            "price": 150,
+        },
+    ]
+    for category in categories:
+        menu_category = MenuCategory(name=category)
+        db.session.add(menu_category)
+        db.session.commit()
+
+    for group in drinks_groups:
+        menu_group = MenuGroup(name=group, category_id=1)
+        db.session.add(menu_group)
+        db.session.commit()
+
+    for item in items:
+        menu_item = MenuItem(
+            name=item["name"],
+            description=item["description"],
+            price=item["price"],
+            group_id=item["group_id"],
+        )
+        db.session.add(menu_item)
+        db.session.commit()
+
+
 def seed_all():
     roles = seed_roles()
     policies = seed_policies()
@@ -181,6 +222,7 @@ def seed_all():
     seed_policy_permissions()
     seed_role_policies()
     seed_users()
+    load_menu_data()
 
 
 MENU_GROUPS = [
