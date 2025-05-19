@@ -13,7 +13,7 @@ class MenuItem(db.Model):
         super(MenuItem, self).__init__(**kwargs)
         """Create instance."""
         self.group_id = group_id
-        self.name = name.capitalize()
+        self.name = name.title()
         self.slug = slugify_string(name)
         self.description = description.capitalize()
         self.price = price

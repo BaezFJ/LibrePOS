@@ -2,6 +2,7 @@ from flask import Flask
 
 from .manage import add_cli_commands
 from .router import register_blueprints
+from .utils import convert_cents_to_dollars
 
 
 def create_app():
@@ -73,6 +74,7 @@ def custom_jinja_filters(app):
 
     @app.template_filter("currency")
     def format_currency(value):
+        value = convert_cents_to_dollars(value)
         return f"${value:.2f}"
 
     @app.template_filter("phone")

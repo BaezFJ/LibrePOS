@@ -5,7 +5,7 @@ from librepos.utils import sanitize_form_data
 from librepos.auth.decorators import permission_required
 
 from .service import MenuService
-from .forms import CategoryForm, GroupForm
+from .forms import CategoryForm, GroupForm, MenuItemForm
 
 menu_bp = Blueprint("menu", __name__, template_folder="templates", url_prefix="/menu")
 
@@ -172,9 +172,65 @@ def delete_group(group_id):
 
 
 # ================================
+#            CREATE
+# ================================
+@menu_bp.post("/create-item")
+@permission_required("create_menu_item")
+def create_item():
+    form = MenuItemForm()
+    if form.validate_on_submit():
+        sanitized_data = sanitize_form_data(form)
+        menu_service.create_menu_item(sanitized_data)
+        flash("Item created successfully.", "success")
+    return redirect(url_for("menu.list_items"))
+
+
+# ================================
 #            READ
 # ================================
 @menu_bp.get("/items")
+@permission_required("list_menu_items")
 def list_items():
-    context = {"title": "Items", "items": menu_service.list_menu_items()}
+    form = MenuItemForm()
+    context = {"title": "Items", "items": menu_service.list_menu_items(), "form": form}
     return render_template("menu/list_items.html", **context)
+
+
+@menu_bp.get("/item/<int:item_id>")
+@permission_required("get_menu_item")
+def get_item(item_id):
+    item = menu_service.get_menu_item(item_id)
+    form = MenuItemForm(obj=item)
+    context = {
+        "title": item.name if item else "Item",
+        "back_url": url_for("menu.list_items"),
+        "item": menu_service.get_menu_item(item_id),
+        "form": form,
+    }
+    return render_template("menu/get_item.html", **context)
+
+
+# ================================
+#            UPDATE
+# ================================
+@menu_bp.post("/update-item/<int:item_id>")
+@permission_required("update_menu_item")
+def update_item(item_id):
+    form = MenuItemForm()
+    if form.validate_on_submit():
+        sanitized_data = sanitize_form_data(form)
+        menu_service.update_menu_item(item_id, sanitized_data)
+        flash("Item updated successfully.", "success")
+    return redirect(url_for("menu.get_item", item_id=item_id))
+
+
+# ================================
+#            DELETE
+# ================================
+@menu_bp.delete("/delete-item/<int:item_id>")
+@permission_required("delete_menu_item")
+def delete_item(item_id):
+    menu_service.delete_menu_item(item_id)
+    response = jsonify(success=True)
+    response.headers["HX-Redirect"] = url_for("menu.list_items")
+    return response

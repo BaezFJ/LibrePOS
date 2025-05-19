@@ -81,5 +81,33 @@ class MenuRepository:
     #                   MENU - ITEM
     # ======================================================
     @staticmethod
+    def create_item(data):
+        item = MenuItem(**data)
+        db.session.add(item)
+        db.session.commit()
+        return item
+
+    @staticmethod
     def get_all_items():
         return MenuItem.query.order_by(MenuItem.name).all()
+
+    @staticmethod
+    def get_item_by_id(item_id):
+        return MenuItem.query.get(item_id)
+
+    def update_item(self, item_id, data):
+        item = self.get_item_by_id(item_id)
+        if not item:
+            return None
+        for key, value in data.items():
+            setattr(item, key, value)
+        db.session.commit()
+        return item
+
+    def delete_item(self, item_id):
+        item = self.get_item_by_id(item_id)
+        if not item:
+            return False
+        db.session.delete(item)
+        db.session.commit()
+        return True

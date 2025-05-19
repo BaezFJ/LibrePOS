@@ -16,7 +16,6 @@
                                 <table class="striped highlight centered">
                                     <thead>
                                     <tr>
-                                        <th>Group</th>
                                         <th>Name</th>
                                         <th>Active</th>
                                         <th>Price</th>
@@ -25,8 +24,15 @@
                                     <tbody>
                                     {% for item in items %}
                                         <tr>
-                                            <td>{{ item.group.name }}</td>
-                                            <td>{{ item.name }}</td>
+                                            <td>
+                                                {% if current_user.has_permission("get_menu_item") %}
+                                                    <a href="{{ url_for('menu.get_item', item_id=item.id) }}">
+                                                        {{ item.name }}
+                                                    </a>
+                                                {% else %}
+                                                    {{ item.name }}
+                                                {% endif %}
+                                            </td>
                                             <td>
                                                 {% if item.active %}
                                                     <span class="material-symbols-rounded green-text">
@@ -54,5 +60,56 @@
         </div>
 
     </section>
+
+    {% if current_user.has_permission("create_menu_item") %}
+        <div class="fixed-action-btn">
+            <a href="javascript:addItemModal.showPopover()" class="btn-floating btn-large">
+                <i class="large material-symbols-rounded">add</i>
+            </a>
+        </div>
+        <div id="addItemModal" class="modal bottom-sheet" popover>
+            <div class="modal-header center-align">
+                <h4>Add Item</h4>
+            </div>
+            <div class="modal-content">
+                <form action="{{ url_for("menu.create_item") }}" method="POST" class="row">
+                    {{ form.hidden_tag() }}
+                    <div class="col s12 input-field">
+                        {{ form.group_id() }}
+                        {{ form.group_id.label }}
+                    </div>
+                    <div class="col s12 input-field">
+                        {{ form.name() }}
+                        {{ form.name.label }}
+                    </div>
+                    <div class="col s12 input-field">
+                        {{ form.description() }}
+                        {{ form.description.label }}
+                    </div>
+                    <div class="col s12 input-field">
+                        {{ form.price() }}
+                        {{ form.price.label }}
+                    </div>
+                    <div class="col s12 input-field">
+                        <div class="switch">
+                            <label>
+                                Off
+                                {{ form.active() }}
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col s12 center-block">
+                        <button type="submit" class="btn tonal waves-effect waves-light">Add Item</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button tabindex="0" class="btn-flat grey-text" popovertarget="addItemModal">cancel
+                </button>
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}

@@ -1,3 +1,5 @@
+from librepos.utils import convert_dollars_to_cents
+
 from .repository import MenuRepository
 
 
@@ -47,5 +49,23 @@ class MenuService:
     #                   MENU - ITEM
     # ======================================================
 
+    def create_menu_item(self, data):
+        menu_group = self.get_menu_group(data["group_id"])
+        item_name = data["name"]
+        data["price"] = convert_dollars_to_cents(data["price"])
+        if menu_group and item_name:
+            data["name"] = f"{menu_group.name} - {item_name}"
+        return self.repo.create_item(data)
+
     def list_menu_items(self):
         return self.repo.get_all_items()
+
+    def get_menu_item(self, item_id):
+        return self.repo.get_item_by_id(item_id)
+
+    def update_menu_item(self, item_id, data):
+        data["price"] = convert_dollars_to_cents(data["price"])
+        return self.repo.update_item(item_id, data)
+
+    def delete_menu_item(self, item_id):
+        return self.repo.delete_item(item_id)

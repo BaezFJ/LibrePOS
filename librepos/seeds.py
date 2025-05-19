@@ -88,6 +88,13 @@ def seed_permissions():
     update_menu_group = Permission(name="update_menu_group", description="Edit group")
     delete_menu_group = Permission(name="delete_menu_group", description="Delete group")
 
+    # MenuItem Permissions
+    create_menu_item = Permission(name="create_menu_item", description="Add item")
+    get_menu_item = Permission(name="get_menu_item", description="View item details")
+    list_menu_items = Permission(name="list_menu_items", description="View items")
+    update_menu_item = Permission(name="update_menu_item", description="Edit item")
+    delete_menu_item = Permission(name="delete_menu_item", description="Delete item")
+
     return [
         create_user_permission,
         get_user_permission,
@@ -104,6 +111,11 @@ def seed_permissions():
         list_menu_groups,
         update_menu_group,
         delete_menu_group,
+        create_menu_item,
+        get_menu_item,
+        list_menu_items,
+        update_menu_item,
+        delete_menu_item,
     ]
 
 
