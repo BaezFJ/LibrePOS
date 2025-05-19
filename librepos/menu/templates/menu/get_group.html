@@ -46,7 +46,7 @@
                         <h4 class="danger-text">Delete {{ group.name }}</h4>
                         <hr>
                         {% if group.menu_items %}
-                            <p>This category is used by [{% for menu_item in group.menu_items %}
+                            <p>This group is used by [{% for menu_item in group.menu_items %}
                                 <a href="">{{ menu_item.name }},</a>
                             {% endfor %}].</p>
                             <p class="grey-text">You must remove any Items before you can delete this Group.</p>
