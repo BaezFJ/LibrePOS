@@ -111,6 +111,10 @@ main > :first-child {
     padding: 0.25rem 0.5rem;
 }
 
+.danger-text {
+    color: var(--danger-color);
+}
+
 .info {
     background-color: var(--info-color);
 }

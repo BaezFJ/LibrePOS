@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <meta name="description" content="Open Source web-based point of sale system for restaurants.">
-    <meta property="og:title" content="OpenWebPOS">
+    <meta property="og:title" content="LibrePOS">
     <meta property="og:type" content="">
     <meta property="og:url" content="">
     <meta property="og:image" content="">
@@ -20,20 +20,21 @@
 
     <meta name="theme-color" content="#000000">
 
-    <title>{{ title if title else "OpenWebPOS" }}</title>
+    <title>{{ title if title else "LibrePOS" }}</title>
 
     <!--HTMX-->
-    <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!--Google Icon Font-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/material-icons.min.css') }}">
+    <!-- Material Symbols - Rounded Set -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet"/>
 
     <!--Theme switcher-->
     <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
 
     <!--MaterializeCSS-->
-    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"
-          media="screen,projection"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.2.2/dist/css/materialize.min.css">
     <!--MaterializeCSS overrides-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/override.min.css') }}">
     <!--MaterializeCSS theme-->
@@ -73,9 +74,9 @@
 
 {% endblock %}
 <!--MaterializeCSS JavaScript-->
-<script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.2.2/dist/js/materialize.min.js"></script>
 <!--Application JavaScript-->
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
 <!-- Flask Message -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -86,6 +87,12 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+    });
+</script>
+<script>
+    document.body.addEventListener("htmx:configRequest", (event) => {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        event.detail.headers['X-CSRFToken'] = csrfToken;
     });
 </script>
 </body>

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col s12">
+
+                    <div class="card z-depth-2">
+                        <div class="card-content">
+
+                            {% if categories %}
+                                <table class="striped highlight centered">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Active</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for category in categories %}
+                                        <tr>
+                                            <td>
+                                                {% if current_user.has_permission("get_menu_category") %}
+                                                    <a href="{{ url_for("menu.get_category", category_id=category.id) }}">
+                                                        {{ category.name }}
+                                                    </a>
+                                                {% else %}
+                                                    {{ category.name }}
+                                                {% endif %}
+
+                                            </td>
+                                            <td>
+                                                {% if category.active %}
+                                                    <span class="material-symbols-rounded green-text">
+                                                        radio_button_checked
+                                                    </span>
+                                                {% else %}
+                                                    <span class="material-symbols-rounded">
+                                                        radio_button_unchecked
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {% if current_user.has_permission("create_menu_category") %}
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large" href="javascript:addCategoryModal.showPopover()">
+                <i class="large material-symbols-rounded">mode_edit</i>
+            </a>
+        </div>
+
+
+        <div id="addCategoryModal" class="modal bottom-sheet" popover>
+            <div class="modal-header center-align">
+                <h4>Add Category</h4>
+            </div>
+            <div class="modal-content">
+                <form action="{{ url_for("menu.create_category") }}" method="POST" class="row">
+                    {{ form.hidden_tag() }}
+                    <div class="col s12 input-field">
+                        {{ form.name() }}
+                        {{ form.name.label }}
+                    </div>
+                    <div class="col s12 input-field">
+                        <div class="switch">
+                            <label>
+                                Off
+                                {{ form.active() }}
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col s12 center-block">
+                        <button type="submit" class="btn tonal waves-effect waves-light">Add Category</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                {#            <button tabindex="0" class="waves-effect btn-flat" popovertarget="modal1">cancel</button>#}
+            </div>
+        </div>
+    {% endif %}
+
+
+
+{% endblock %}

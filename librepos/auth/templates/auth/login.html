@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card z-depth-2">
+                        <div class="card-content">
+                            <form action="" method="POST">
+                                {{ form.hidden_tag() }}
+                                <div class="input-field">
+                                    {{ form.email() }}
+                                    {{ form.email.label }}
+                                </div>
+                                <div class="input-field">
+                                    {{ form.password() }}
+                                    {{ form.password.label }}
+                                </div>
+                                <div class="input-field center-align mt-4">
+                                    <p>
+                                        <label>
+                                            {{ form.remember() }}
+                                            <span>Remember Me</span>
+                                        </label>
+                                    </p>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="submit" class="btn waves-effect waves-light">
+                                        Login
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}

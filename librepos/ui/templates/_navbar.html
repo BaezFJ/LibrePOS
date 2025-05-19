@@ -1,15 +1,17 @@
 <div class="navbar-fixed">
-    <nav>
+    <nav class="nav navbar">
         <div class="nav-wrapper">
             {#  ========== Left Menu ========== #}
-            {% if current_user.is_authenticated and request.endpoint != 'user.dashboard' %}
-                <ul>
-                    <li>
-                        <a href="{{ back_url if back_url else url_for('user.dashboard') }}">
-                            <i class="material-icons">{{ 'arrow_back' if back_url else 'home' }}</i>
-                        </a>
-                    </li>
-                </ul>
+            {% if current_user.is_authenticated %}
+                {% if back_url %}
+                    <ul>
+                        <li>
+                            <a href="{{ back_url }}">
+                                <i class="material-symbols-rounded">arrow_back</i>
+                            </a>
+                        </li>
+                    </ul>
+                {% endif %}
             {% endif %}
 
             {#  ========== Menu Title ========== #}
@@ -22,7 +24,7 @@
                 {% if current_user.is_authenticated %}
                     <li>
                         <a href="" data-target="user-sidenav" class="sidenav-trigger">
-                            <i class="material-icons">account_circle</i>
+                            <i class="material-symbols-rounded">account_circle</i>
                         </a>
                     </li>
                 {% endif %}

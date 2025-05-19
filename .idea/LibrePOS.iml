@@ -9,14 +9,19 @@
     </content>
     <orderEntry type="jdk" jdkName="uv (LibrePOS)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="@materializecss/materialize" level="application" />
+    <orderEntry type="library" name="htmx.org" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/librepos/ui/templates" />
-        <option value="$MODULE_DIR$/librepos/blueprints/user/templates" />
-        <option value="$MODULE_DIR$/librepos/blueprints/dashboard/templates" />
+        <option value="$MODULE_DIR$/librepos/main/templates" />
+        <option value="$MODULE_DIR$/librepos/auth/templates" />
+        <option value="$MODULE_DIR$/librepos/products/templates" />
+        <option value="$MODULE_DIR$/librepos/user/templates" />
+        <option value="$MODULE_DIR$/librepos/menu/templates" />
       </list>
     </option>
   </component>

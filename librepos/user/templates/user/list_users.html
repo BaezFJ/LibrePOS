@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card z-depth-2">
+                        <div class="card-content">
+
+                            <table class="striped highlight">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Photo</th>
+                                    <th>FullName</th>
+                                    <th>Role</th>
+                                    <th>Last Active</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>
+                                            <a href="{{ url_for('user.get_user', user_id=user.id) }}">
+                                                <img class="circle"
+                                                     src="{{ url_for('static', filename=user.image|safe) }}"
+                                                     alt="default" style="width: 50px; height: 50px;">
+                                            </a>
+                                        </td>
+                                        <td>{{ user.full_name }}</td>
+                                        <td>{{ user.role.name|title }}</td>
+                                        <td>Today</td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% if current_user.has_permission('create_user') %}
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large" href="javascript:addUserModal.showPopover()">
+                    <i class="large material-icons">add</i>
+                </a>
+            </div>
+
+            <div id="addUserModal" class="modal bottom-sheet" popover>
+                <div class="modal-header">
+                    <h4>Add User</h4>
+                </div>
+                <div class="modal-content">
+                    <form action="" method="POST" class="row">
+                        {{ form.hidden_tag() }}
+                        <div class="col s6 input-field">
+                            {{ form.role_id() }}
+                            {{ form.role_id.label }}
+                        </div>
+                        <div class="col s6 input-field">
+                            {{ form.gender() }}
+                            {{ form.gender.label }}
+                        </div>
+                        <div class="col s12 input-field">
+                            {{ form.first_name() }}
+                            {{ form.first_name.label }}
+                        </div>
+                        <div class="col s12 input-field">
+                            {{ form.middle_name() }}
+                            {{ form.middle_name.label }}
+                        </div>
+                        <div class="col s12 input-field">
+                            {{ form.last_name() }}
+                            {{ form.last_name.label }}
+                        </div>
+                        <div class="col s12 input-field">
+                            {{ form.email() }}
+                            {{ form.email.label }}
+                        </div>
+                        <div class="col s12 input-field">
+                            {{ form.password() }}
+                            {{ form.password.label }}
+                        </div>
+                        <div class="col s12 center-block">
+                            {{ form.submit(class='btn') }}
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button tabindex="0" class="waves-effect btn-flat" popovertarget="modal1">Agree</button>
+                </div>
+            </div>
+        {% endif %}
+
+    </section>
+
+{% endblock %}
