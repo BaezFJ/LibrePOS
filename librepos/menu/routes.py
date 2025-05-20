@@ -82,7 +82,7 @@ def update_category(category_id):
 # ================================
 #            DELETE
 # ================================
-@menu_bp.delete("/delete-category/<int:category_id>")
+@menu_bp.post("/delete-category/<int:category_id>")
 @permission_required("delete_menu_category")
 def delete_category(category_id):
     menu_service.delete_menu_category(category_id)
@@ -157,7 +157,7 @@ def update_group(group_id):
 # ================================
 #            DELETE
 # ================================
-@menu_bp.delete("/delete-group/<int:group_id>")
+@menu_bp.post("/delete-group/<int:group_id>")
 @permission_required("delete_menu_group")
 def delete_group(group_id):
     menu_service.delete_menu_group(group_id)
@@ -227,7 +227,7 @@ def update_item(item_id):
 # ================================
 #            DELETE
 # ================================
-@menu_bp.delete("/delete-item/<int:item_id>")
+@menu_bp.post("/delete-item/<int:item_id>")
 @permission_required("delete_menu_item")
 def delete_item(item_id):
     menu_service.delete_menu_item(item_id)
