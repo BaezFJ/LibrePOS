@@ -50,6 +50,8 @@
 
                                     </tbody>
                                 </table>
+                            {% else %}
+                                <h4 class="center-align">No Items found.</h4>
                             {% endif %}
                         </div>
                     </div>
@@ -63,7 +65,7 @@
 
     {% if current_user.has_permission("create_menu_item") %}
         <div class="fixed-action-btn">
-            <a href="javascript:addItemModal.showPopover()" class="btn-floating btn-large">
+            <a href="javascript:addItemModal.showPopover()" class="btn-floating btn-large{{ ' pulse' if not items }}">
                 <i class="large material-symbols-rounded">add</i>
             </a>
         </div>
