@@ -1,14 +1,7 @@
 from decimal import Decimal
 from typing import Union
 
-from datetime import datetime
-from zoneinfo import ZoneInfo
-
-from flask import current_app
-from slugify import slugify
-
 CENTS_PER_DOLLAR = 100
-
 
 class InvalidAmountError(ValueError):
     """Raised when the amount is invalid (negative or non-numeric)."""
@@ -75,41 +68,3 @@ def convert_cents_to_dollars(cents: Union[int, None]) -> Decimal:
         return Decimal(str(cents)) / CENTS_PER_DOLLAR
     except (TypeError, ValueError):
         raise InvalidAmountError("Invalid amount format")
-
-
-def timezone_aware_datetime():
-    timezone = current_app.config["TIMEZONE"]
-
-    if not timezone:
-        return datetime.now(ZoneInfo("UTC"))
-
-    return datetime.now(ZoneInfo(timezone))
-
-
-def sanitize_form_data(form, exclude_fields: list[str] | None = None):
-    """
-    Sanitizes form data by removing specified fields, including default fields such as
-    CSRF token and submit button. This function is used to clean up unnecessary form data
-    before further processing or saving.
-
-    :param form: A form object that contains the data to be sanitized.
-    :type form: Any
-    :param exclude_fields: Optional list of field names to be excluded from the sanitized data.
-    :type exclude_fields: list[str] | None
-    :return: A dictionary with the sanitized form data, excluding the specified fields.
-    :rtype: dict
-    """
-    sanitized_data = form.data
-
-    sanitized_data.pop("csrf_token", None)
-    sanitized_data.pop("submit", None)
-
-    if exclude_fields:
-        for field in exclude_fields:
-            sanitized_data.pop(field, None)
-
-    return sanitized_data
-
-
-def slugify_string(string: str, max_length: int = 50, word_boundary: bool = True):
-    return slugify(string, max_length=max_length, word_boundary=word_boundary)
