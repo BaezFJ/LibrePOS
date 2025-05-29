@@ -2,7 +2,7 @@ from flask import Flask
 
 from .manage import add_cli_commands
 from .router import register_blueprints
-from .utils import convert_cents_to_dollars
+from .utils.formatters import datetime_formatter, phone_formatter, currency_formatter
 
 
 def create_app():
@@ -55,28 +55,14 @@ def init_extensions(app):
 
 
 def custom_jinja_filters(app):
-    datetime_formats = {
-        "short-date": "%y-%m-%d",
-        "full-date": "%Y-%m-%d",
-        "time": "%I:%M %p",
-        "time-24": "%H:%M",
-        "datetime": "%Y-%m-%d %H:%M:%S",
-    }
-    default_datetime_format = "full-date"
-
     @app.template_filter("datetime")
-    def format_datetime(value, format_spec=default_datetime_format):
-        if value is None:
-            return "N/A"
-        if format_spec in datetime_formats:
-            format_spec = datetime_formats[format_spec]
-        return value.strftime(format_spec)
+    def format_date(value, format_spec="short-date"):
+        return datetime_formatter(value, format_spec)
 
     @app.template_filter("currency")
     def format_currency(value):
-        value = convert_cents_to_dollars(value)
-        return f"${value:.2f}"
+        return currency_formatter(value)
 
     @app.template_filter("phone")
     def format_phone(value):
-        return f"({value[:3]}) {value[3:6]}-{value[6:]}"
+        return phone_formatter(value)
