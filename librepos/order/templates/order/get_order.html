@@ -18,9 +18,14 @@
     </section>
 
     <div class="fixed-action-btn">
-        <a class="btn-floating btn-large">
+        <button class="btn-floating btn-large" popovertarget="menuModal" hx-trigger="click"
+                hx-get="{{ url_for('menu.get_hx_categories') }}" hx-target="#menuModal" hx-swap="innerHTML">
             <i class="large material-symbols-rounded">add</i>
-        </a>
+        </button>
+    </div>
+
+    <div id="menuModal" class="modal bottom-sheet" popover>
+
     </div>
 
 {% endblock %}

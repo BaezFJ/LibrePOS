@@ -65,6 +65,26 @@ def get_category(category_id):
     return render_template("menu/get_category.html", **context)
 
 
+@menu_bp.get("hx/categories")
+def get_hx_categories():
+    categories = menu_service.get_active_menu_categories()
+    return render_template("menu/hx_categories.html", categories=categories)
+
+
+@menu_bp.get("hx/groups/<int:category_id>")
+def get_hx_groups(category_id):
+    groups = menu_service.get_menu_category_groups(category_id)
+    category = menu_service.get_menu_category(category_id)
+    return render_template("menu/htmx_groups.html", groups=groups, category=category)
+
+
+@menu_bp.get("hx/items/<int:group_id>")
+def get_hx_items(group_id):
+    group = menu_service.get_menu_group(group_id)
+    items = menu_service.list_group_menu_items(group_id)
+    return render_template("menu/htmx_items.html", items=items, group=group)
+
+
 # ================================
 #            UPDATE
 # ================================

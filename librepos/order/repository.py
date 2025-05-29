@@ -1,13 +1,12 @@
 from librepos.extensions import db
 from librepos.models.shop_orders import ShopOrder
-from librepos.utils.enums import OrderStateEnum
 
 
 class OrderRepository:
     @staticmethod
     def get_all_orders():
         return ShopOrder.query.order_by().all()
-    
+
     @staticmethod
     def get_all_orders_by_user_and_status(user_id, status):
         return ShopOrder.query.filter_by(user_id=user_id, status=status).all()

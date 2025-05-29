@@ -6,7 +6,6 @@ from .repository import OrderRepository
 
 
 class OrderService:
-
     def __init__(self, repo=None):
         self.repo = repo or OrderRepository()
 
@@ -20,7 +19,9 @@ class OrderService:
         return self.repo.get_all_orders()
 
     def list_user_pending_orders(self):
-        return self.repo.get_all_orders_by_user_and_status(user_id=current_user.id, status=OrderStateEnum.PENDING.value)
+        return self.repo.get_all_orders_by_user_and_status(
+            user_id=current_user.id, status=OrderStateEnum.PENDING.value
+        )
 
     def get_order(self, order_id):
         return self.repo.get_by_id(order_id)

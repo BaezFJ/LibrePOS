@@ -21,6 +21,14 @@ class MenuRepository:
         return MenuCategory.query.order_by(MenuCategory.name).all()
 
     @staticmethod
+    def get_active_categories():
+        return MenuCategory.query.filter_by(active=True).order_by(MenuCategory.name).all()
+
+    @staticmethod
+    def get_category_groups(category_id):
+        return MenuGroup.query.filter_by(category_id=category_id).order_by(MenuGroup.name).all()
+
+    @staticmethod
     def get_category_by_id(category_id):
         return MenuCategory.query.get(category_id)
 
@@ -90,6 +98,10 @@ class MenuRepository:
     @staticmethod
     def get_all_items():
         return MenuItem.query.order_by(MenuItem.name).all()
+
+    @staticmethod
+    def get_all_items_by_group(group_id):
+        return MenuItem.query.filter_by(group_id=group_id).order_by(MenuItem.name).all()
 
     @staticmethod
     def get_item_by_id(item_id):

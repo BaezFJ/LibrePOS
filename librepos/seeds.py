@@ -7,6 +7,8 @@ from librepos.models.role_policies import RolePolicy
 from librepos.models.menu_categories import MenuCategory
 from librepos.models.menu_groups import MenuGroup
 from librepos.models.menu_items import MenuItem
+from librepos.models.shop_orders import ShopOrder
+from librepos.models.shop_order_items import ShopOrderItem
 
 from librepos.extensions import db
 

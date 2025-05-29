@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, url_for, jsonify
 from flask_login import login_required
 
 from librepos.auth.decorators import permission_required
+from librepos.menu.service import MenuService
 
 from .service import OrderService
 
@@ -10,6 +11,7 @@ order_bp = Blueprint(
 )
 
 order_service = OrderService()
+menu_service = MenuService()
 
 
 @order_bp.before_request
@@ -48,11 +50,13 @@ def list_orders():
 @permission_required("get_order")
 def get_order(order_id):
     order = order_service.get_order(order_id)
+    menu_categories = menu_service.list_menu_categories()
     context = {
         "title": str(order.order_number),
         "back_url": url_for("order.list_orders"),
         "sidenav": {"template": "order/_sidenav.html", "icon": "shopping_cart"},
         "order": order,
+        "menu_categories": menu_categories,
     }
     return render_template("order/get_order.html", **context)
 

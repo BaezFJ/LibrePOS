@@ -42,6 +42,11 @@ class ShopOrder(db.Model):
 
     # Relationships
     user = db.relationship("User", back_populates="orders")
+    items = db.relationship(
+        "ShopOrderItem", back_populates="shop_order", cascade="all, delete-orphan"
+    )
+
+    # payment = db.relationship("ShopOrderPayment", back_populates="shop_order")
 
     @staticmethod
     def get_next_order_number():
