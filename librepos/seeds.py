@@ -95,6 +95,14 @@ def seed_permissions():
     update_menu_item = Permission(name="update_menu_item", description="Edit item")
     delete_menu_item = Permission(name="delete_menu_item", description="Delete item")
 
+    # Order Permissions
+    create_order = Permission(name="create_order", description="Add order")
+    get_order = Permission(name="get_order", description="View order details")
+    list_orders = Permission(name="list_orders", description="View orders")
+    update_order = Permission(name="update_order", description="Edit order")
+    void_order = Permission(name="void_order", description="Void order")
+    delete_order = Permission(name="delete_order", description="Delete order")
+
     return [
         create_user_permission,
         get_user_permission,
@@ -116,6 +124,12 @@ def seed_permissions():
         list_menu_items,
         update_menu_item,
         delete_menu_item,
+        create_order,
+        get_order,
+        list_orders,
+        update_order,
+        void_order,
+        delete_order,
     ]
 
 

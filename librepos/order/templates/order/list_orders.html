@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+            {% if orders %}
+                <div class="row">
+
+                    {% for order in orders %}
+                        <div class="col s6">
+                            <a href="{{ url_for('order.get_order', order_id=order.id) }}" class="inherit-color">
+                                <div class="card z-depth-2">
+                                    <div class="card-content center-align">
+                                        <h3 class="m-0">{{ order.order_number }}</h3>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+        </div>
+
+    </section>
+
+    <div class="fixed-action-btn">
+        <button hx-post="{{ url_for('order.create_order') }}" class="btn-floating btn-large pulse">
+            <i class="large material-symbols-rounded">add</i>
+        </button>
+    </div>
+
+{% endblock %}

@@ -2,7 +2,6 @@ from librepos.utils.financial import (
     convert_dollars_to_cents,
     convert_cents_to_dollars,
     InvalidAmountError,
-    CENTS_PER_DOLLAR,
 )
 from librepos.utils.datetime import timezone_aware_datetime
 from librepos.utils.form import sanitize_form_data

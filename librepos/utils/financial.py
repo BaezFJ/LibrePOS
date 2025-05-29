@@ -3,6 +3,7 @@ from typing import Union
 
 CENTS_PER_DOLLAR = 100
 
+
 class InvalidAmountError(ValueError):
     """Raised when the amount is invalid (negative or non-numeric)."""
 

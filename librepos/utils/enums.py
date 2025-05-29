@@ -1,7 +1,7 @@
 from enum import StrEnum
 
 
-class OrderStatus(StrEnum):
+class OrderStateEnum(StrEnum):
     PENDING = "pending"
     COMPLETED = "completed"
-    FAILED = "failed"
+    VOIDED = "voided"

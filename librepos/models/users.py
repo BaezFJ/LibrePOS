@@ -1,8 +1,13 @@
+from typing import List
+
+from sqlalchemy.orm import Mapped, relationship
+
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
+from librepos.models.shop_orders import ShopOrder
 
 
 class User(UserMixin, db.Model):
@@ -73,6 +78,7 @@ class User(UserMixin, db.Model):
 
     # Relationships
     role = db.relationship("Role", back_populates="users")
+    orders: Mapped[List["ShopOrder"]] = relationship("ShopOrder", back_populates="user")
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password, password)
