@@ -22,11 +22,17 @@ class MenuRepository:
 
     @staticmethod
     def get_active_categories():
-        return MenuCategory.query.filter_by(active=True).order_by(MenuCategory.name).all()
+        return (
+            MenuCategory.query.filter_by(active=True).order_by(MenuCategory.name).all()
+        )
 
     @staticmethod
     def get_category_groups(category_id):
-        return MenuGroup.query.filter_by(category_id=category_id).order_by(MenuGroup.name).all()
+        return (
+            MenuGroup.query.filter_by(category_id=category_id)
+            .order_by(MenuGroup.name)
+            .all()
+        )
 
     @staticmethod
     def get_category_by_id(category_id):

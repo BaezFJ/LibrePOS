@@ -16,16 +16,16 @@ class MenuService:
 
     def list_menu_categories(self):
         return self.repo.get_all_categories()
-    
+
     def list_active_menu_categories(self):
         return self.repo.get_all_categories()
 
     def get_menu_category(self, category_id):
         return self.repo.get_category_by_id(category_id)
-    
+
     def get_active_menu_categories(self):
         return self.repo.get_active_categories()
-    
+
     def get_menu_category_groups(self, category_id):
         return self.repo.get_category_groups(category_id)
 
@@ -68,7 +68,7 @@ class MenuService:
 
     def list_menu_items(self):
         return self.repo.get_all_items()
-    
+
     def list_group_menu_items(self, group_id):
         return self.repo.get_all_items_by_group(group_id)
 
