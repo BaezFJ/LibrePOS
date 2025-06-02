@@ -1,4 +1,6 @@
+import click
 from flask import Flask
+from flask.cli import FlaskGroup
 
 from .manage import add_cli_commands
 from .router import register_blueprints
@@ -66,3 +68,9 @@ def custom_jinja_filters(app):
     @app.template_filter("phone")
     def format_phone(value):
         return phone_formatter(value)
+
+
+@click.group(cls=FlaskGroup, create_app=create_app)
+def cli():
+    """Management script for the librepos application."""
+    pass
