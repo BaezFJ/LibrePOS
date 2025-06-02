@@ -72,6 +72,13 @@ def void_order(order_id):
     response.headers["HX-Redirect"] = url_for("order.list_orders")
     return response
 
+@order_bp.post("/add-item-to-order/<int:order_id>/<int:item_id>")
+def add_item_to_order(order_id, item_id):
+    order_service.add_item_to_order(order_id, item_id)
+    response = jsonify(success=True)
+    response.headers["HX-Redirect"] = url_for("order.get_order", order_id=order_id)
+    return response
+
 # ================================
 #            DELETE
 # ================================

@@ -8,7 +8,7 @@ class MenuItem(db.Model):
     __tablename__ = "menu_items"
 
     def __init__(
-        self, group_id: int, name: str, description: str, price: int, **kwargs
+            self, group_id: int, name: str, description: str, price: int, **kwargs
     ):
         super(MenuItem, self).__init__(**kwargs)
         """Create instance."""
@@ -31,3 +31,7 @@ class MenuItem(db.Model):
 
     # Relationships
     group = db.relationship("MenuGroup", back_populates="menu_items")
+
+    @property
+    def item_name_with_group(self):
+        return f"{self.group.name} - {self.name}"

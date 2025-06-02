@@ -6,6 +6,13 @@ class ShopOrderItem(db.Model):
 
     __tablename__ = "shop_order_items"
 
+    def __init__(self, shop_order_id: int, menu_item_id: int, item_name: str, **kwargs):
+        super(ShopOrderItem, self).__init__(**kwargs)
+        """Create instance."""
+        self.shop_order_id = shop_order_id
+        self.menu_item_id = menu_item_id
+        self.item_name = item_name.title()
+
     # ForeignKeys
     shop_order_id = db.Column(db.Integer, db.ForeignKey("shop_orders.id"))
     menu_item_id = db.Column(db.Integer, db.ForeignKey("menu_items.id"))

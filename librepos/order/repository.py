@@ -1,5 +1,6 @@
 from librepos.extensions import db
 from librepos.models.shop_orders import ShopOrder
+from librepos.models.shop_order_items import ShopOrderItem
 
 
 class OrderRepository:
@@ -21,6 +22,13 @@ class OrderRepository:
         db.session.add(order)
         db.session.commit()
         return order
+
+    @staticmethod
+    def add_item_to_order(order_id, item_id, item_name):
+        item = ShopOrderItem(shop_order_id=order_id, menu_item_id=item_id, item_name=item_name)
+        db.session.add(item)
+        db.session.commit()
+        return item
 
     def update_order(self, order_id, data):
         order = self.get_by_id(order_id)
