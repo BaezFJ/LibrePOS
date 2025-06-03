@@ -35,12 +35,12 @@ Ensure you have the following installed:
 
 4. Set up the database:
    ```bash
-   librepos initdb
+   flask initdb
    ```
 
 5. Run the application:
    ```bash
-   librepos run
+   waitress-serve --call librepos:create_app
    ```
 
 6. Open your browser and navigate to:
@@ -65,12 +65,12 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 3. After installation, set up the database:
    ```bash
-   librepos initdb
+   flask initdb
    ```
 
 4. Start the application:
    ```bash
-   librepos run
+   waitress-serve --call librepos:create_app
    ```
 
 5. Open your browser and navigate to:
@@ -131,8 +131,8 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 3. Run the application in Poetry's virtual environment:
    ```bash
-   poetry run librepos initdb
-   poetry run librepos run
+   poetry run flask initdb
+   poetry run waitress-serve --call librepos:create_app
    ```
 
 4. Open your browser and navigate to:
@@ -162,12 +162,12 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 2. Set up the database:
    ```bash
-   librepos initdb
+   flask initdb
    ```
 
 3. Run the LibrePOS application:
    ```bash
-   librepos run
+   waitress-serve --call librepos:create_app
    ```
 
 4. Access the application in your browser at:

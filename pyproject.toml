@@ -22,6 +22,7 @@ dependencies = [
     "python-slugify>=8.0.4",
     "python-usernames>=1.0.0",
     "pytz>=2025.1",
+    "waitress>=3.0.2",
 ]
 classifiers = [
     "Development Status :: 1 - Planning",
@@ -46,6 +47,3 @@ dev = [
     "pytest-cov>=6.1.1",
     "ruff>=0.11.11",
 ]
-
-[project.scripts]
-librepos = "librepos:cli"
