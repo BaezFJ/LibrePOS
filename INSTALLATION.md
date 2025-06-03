@@ -2,7 +2,13 @@
 
 This guide explains how to install LibrePOS using different methods, including Git and PyPI. It also covers installation using `venv`, `poetry`, and the `uv` package manager from Astral.
 
----
+## Important: Environment Configuration
+
+Before proceeding with any installation method, you must create a `.env` file in the root directory of the project. This
+file is required for the application to run properly.
+
+Please refer to the [Environment Configuration](ENVIRONMENT_CONFIGURATION.md) file for detailed information about
+required environment variables and how to configure them. This step is crucial for the proper functioning of LibrePOS.
 
 ## 1. Installing LibrePOS from GitHub
 
@@ -10,9 +16,11 @@ This guide explains how to install LibrePOS using different methods, including G
 
 Ensure you have the following installed:
 
-- Python 3.9 or higher
+- Python 3.12 or higher
 - pip (Python package installer)
 - Git
+
+Remember to create the `.env` file as described in the [Environment Configuration](ENVIRONMENT_CONFIGURATION.md) before proceeding.
 
 ### Steps
 
@@ -56,7 +64,7 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 ### Steps
 
-1. Ensure you have Python 3.9 or higher and pip installed.
+1. Ensure you have Python 3.12 or higher and pip installed.
 
 2. Install the LibrePOS package from PyPI:
    ```bash
