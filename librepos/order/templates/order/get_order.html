@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col s12">
+                    <h1>Order</h1>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <div class="fixed-action-btn">
+        <button class="btn-floating btn-large" popovertarget="menuModal" hx-trigger="click"
+                hx-get="{{ url_for('menu.get_hx_categories') }}" hx-target="#menuModal" hx-swap="innerHTML">
+            <i class="large material-symbols-rounded">add</i>
+        </button>
+    </div>
+
+    <div id="menuModal" class="modal bottom-sheet" popover>
+
+    </div>
+
+{% endblock %}

@@ -23,8 +23,8 @@
             <ul class="right">
                 {% if current_user.is_authenticated %}
                     <li>
-                        <a href="" data-target="user-sidenav" class="sidenav-trigger">
-                            <i class="material-symbols-rounded">account_circle</i>
+                        <a href="" data-target="sidenav" class="sidenav-trigger">
+                            <i class="material-symbols-rounded">{{ sidenav.icon if sidenav else "account_circle" }}</i>
                         </a>
                     </li>
                 {% endif %}
@@ -34,5 +34,5 @@
 </div>
 
 {% if current_user.is_authenticated %}
-    {% include "_sidenav.html" %}
+    {% include sidenav.template if sidenav else "_sidenav.html" %}
 {% endif %}

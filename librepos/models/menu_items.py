@@ -31,3 +31,7 @@ class MenuItem(db.Model):
 
     # Relationships
     group = db.relationship("MenuGroup", back_populates="menu_items")
+
+    @property
+    def item_name_with_group(self):
+        return f"{self.group.name} - {self.name}"

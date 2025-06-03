@@ -101,6 +101,10 @@ main > :first-child {
     padding: 0.25rem 0.5rem;
 }
 
+.success-text {
+    color: var(--success-color);
+}
+
 .danger {
     background-color: var(--danger-color);
 }
@@ -125,6 +129,10 @@ main > :first-child {
     padding: 0.25rem 0.5rem;
 }
 
+.info-text {
+    color: var(--info-color);
+}
+
 .warning {
     background-color: var(--warning-color);
 }
@@ -133,6 +141,10 @@ main > :first-child {
     border: 2px solid var(--warning-color);
     border-radius: .75rem;
     padding: 0.25rem 0.5rem;
+}
+
+.warning-text {
+    color: var(--warning-color);
 }
 
 .btn.outlined.danger {

@@ -1,7 +1,7 @@
 {% from "components.html" import render_list_link %}
 
 {% if current_user.is_authenticated %}
-    <ul id="user-sidenav" class="sidenav right">
+    <ul id="sidenav" class="sidenav right">
         <li>
             <div class="user-view">
                 <div class="background">
@@ -25,7 +25,7 @@
             {{ render_list_link(url_for('user.list_users'), "Users", "people") }}
         {% endif %}
 
-        {{ render_list_link("", "Orders", "list_alt") }}
+        {{ render_list_link(url_for('order.list_orders'), "Orders", "list_alt") }}
         {{ render_list_link("", "Customers", "groups") }}
 
         <li class="no-padding">

@@ -1,0 +1,52 @@
+{% macro infoModal() %}
+    <div id="infoModal" class="modal info-border" popover>
+        <div class="modal-header info-text center-align">
+            <i class="large material-symbols-rounded">info</i>
+            <h5>Information</h5>
+        </div>
+        <div class="modal-content">
+            {{ caller() }}
+        </div>
+        <div class="modal-footer">
+            <button class="btn-flat inherit-color" popovertarget="infoModal">OK</button>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro warningModal(url) %}
+    <div id="warningModal" class="modal warning-border" popover>
+        <div class="modal-header warning-text center-align">
+            <i class="large material-symbols-rounded">warning</i>
+            <h5>Warning</h5>
+        </div>
+        <div class="modal-content">
+            {{ caller() }}
+        </div>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="col s6 center-align">
+                    <button class="btn-flat inherit-color" popovertarget="warningModal">Cancel</button>
+                </div>
+                <div class="col s6 center-align">
+                    <button hx-post="{{ url }}" class="btn warning black-text">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro errorModal() %}
+    <div id="errorModal" class="modal danger-border" popover>
+        <div class="modal-header danger-text center-align">
+            <i class="large material-symbols-rounded">error</i>
+            <h5>Error</h5>
+        </div>
+        <div class="modal-content">
+            {{ caller() }}
+        </div>
+        <div class="modal-footer">
+            <button class="btn-flat inherit-color" popovertarget="infoModal">Dismiss</button>
+        </div>
+    </div>
+{% endmacro %}

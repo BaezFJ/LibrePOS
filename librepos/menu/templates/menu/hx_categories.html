@@ -1,0 +1,26 @@
+{% if categories %}
+    <div class="modal-header">
+        <h4 class="center-align">Menu</h4>
+    </div>
+    <div class="modal-content pb-2" id="menu-content">
+        <div class="row">
+            {% for category in categories %}
+                {% if category.menu_groups %}
+                    <div class="col s6">
+                        <div class="card z-depth-2 hoverable grey darken-4"
+                             hx-get="{{ url_for('menu.get_hx_groups', category_id=category.id) }}"
+                             hx-target="#menuModal"
+                             hx-swap="innerHTML" hx-trigger="click">
+                            <div class="card-content center-align">
+                                <span class="card-title">{{ category.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="waves-effect btn-flat white-text" popovertarget="menuModal">close</button>
+    </div>
+{% endif %}

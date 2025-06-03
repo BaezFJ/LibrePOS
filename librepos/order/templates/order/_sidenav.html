@@ -1,0 +1,39 @@
+{% from "components.html" import render_list_link %}
+{% from "macros/_modals.html" import warningModal %}
+
+{% if current_user.is_authenticated %}
+    <ul id="sidenav" class="sidenav right">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
+                </div>
+                <h5>Total: $100.99</h5>
+                <h6># Guest: 2</h6>
+            </div>
+        </li>
+
+        {{ render_list_link("", "Search Customer", "person_search") }}
+
+        <div class="divider"></div>
+
+        {{ render_list_link("", "Add Guest", "person_add") }}
+        {{ render_list_link("", "Check-out", "shopping_cart_checkout") }}
+
+        <div class="divider"></div>
+
+        {% if current_user.has_permission("void_order") %}
+            {{ render_list_link("javascript:warningModal.showPopover()", "Void Order", "cancel") }}
+
+            {% call warningModal(url_for('order.void_order', order_id=order.id)) %}
+                <h5 class="center-align">Void Order Confirmation</h5>
+                <p class="flow-text"><b>Warning</b>: Voiding this order will permanently remove it from active orders.
+                    This action cannot be
+                    undone. All items and guest information will be marked as voided in the system.</p>
+                <p class="flow-text">Are you sure you want to proceed?</p>
+            {% endcall %}
+
+        {% endif %}
+
+    </ul>
+{% endif %}

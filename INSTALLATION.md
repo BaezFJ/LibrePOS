@@ -35,7 +35,7 @@ Ensure you have the following installed:
 
 4. Set up the database:
    ```bash
-   librepos db upgrade
+   librepos initdb
    ```
 
 5. Run the application:
@@ -65,7 +65,7 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 3. After installation, set up the database:
    ```bash
-   librepos db upgrade
+   librepos initdb
    ```
 
 4. Start the application:
@@ -131,7 +131,7 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 3. Run the application in Poetry's virtual environment:
    ```bash
-   poetry run librepos db upgrade
+   poetry run librepos initdb
    poetry run librepos run
    ```
 
@@ -162,7 +162,7 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 2. Set up the database:
    ```bash
-   librepos db upgrade
+   librepos initdb
    ```
 
 3. Run the LibrePOS application:
