@@ -249,7 +249,7 @@ wheels = [
 
 [[package]]
 name = "librepos"
-version = "0.1a1.dev1"
+version = "1.0.0.dev2"
 source = { editable = "." }
 dependencies = [
     { name = "better-profanity" },

@@ -73,7 +73,7 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 3. After installation, set up the database:
    ```bash
-   flask initdb
+   flask --app librepos initdb
    ```
 
 4. Start the application:
@@ -139,7 +139,7 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 3. Run the application in Poetry's virtual environment:
    ```bash
-   poetry run flask initdb
+   poetry run flask --app librepos initdb
    poetry run waitress-serve --call librepos:create_app
    ```
 
@@ -170,7 +170,7 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 2. Set up the database:
    ```bash
-   flask initdb
+   flask --app librepos initdb
    ```
 
 3. Run the LibrePOS application:

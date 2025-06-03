@@ -1,6 +1,6 @@
 [project]
 name = "librepos"
-version = "0.1a1.dev1"
+version = "1.0.0.dev2"
 description = "LibrePOS is an open-source, web-based Point of Sale system for restaurants and mobile food vendors. Built with Flask, MaterializeCSS, and HTMX, it offers product management, order tracking, and user authentication. "
 authors = [
     { name = "BaezFJ", email = "baezdevs@gmail.com" }
