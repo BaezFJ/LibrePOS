@@ -1,5 +1,13 @@
+from typing import TYPE_CHECKING
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+
 from librepos.extensions import db
 from librepos.utils import slugify_string
+
+if TYPE_CHECKING:
+    from librepos.models.menu_groups import MenuGroup
 
 
 class MenuItem(db.Model):
@@ -19,18 +27,18 @@ class MenuItem(db.Model):
         self.price = price
 
     # ForeignKeys
-    group_id = db.Column(db.Integer, db.ForeignKey("menu_groups.id"), nullable=False)
+    group_id: Mapped[int] = mapped_column(ForeignKey("menu_groups.id"))
 
     # Columns
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, index=True, nullable=False)
-    slug = db.Column(db.String(50), unique=True, nullable=False)
-    description = db.Column(db.String(255))
-    price = db.Column(db.Integer, nullable=False, default=0)
-    active = db.Column(db.Boolean, nullable=False, default=True)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(unique=True, index=True)
+    slug: Mapped[str] = mapped_column(unique=True)
+    description: Mapped[str]
+    price: Mapped[int] = mapped_column(default=0)
+    active: Mapped[bool] = mapped_column(default=True)
 
     # Relationships
-    group = db.relationship("MenuGroup", back_populates="menu_items")
+    group: Mapped["MenuGroup"] = relationship(back_populates="menu_items")
 
     @property
     def item_name_with_group(self):

@@ -1,13 +1,17 @@
-from typing import List
-
-from sqlalchemy.orm import Mapped, relationship
+from datetime import datetime
+from typing import List, Optional, TYPE_CHECKING
 
 from flask_login import UserMixin
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
-from librepos.models.shop_orders import ShopOrder
+
+if TYPE_CHECKING:
+    from librepos.models.roles import Role
+    from librepos.models.shop_orders import ShopOrder
 
 
 class User(UserMixin, db.Model):
@@ -36,48 +40,51 @@ class User(UserMixin, db.Model):
         self.set_default_image()
 
     # ForeignKeys
-    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"), nullable=True)
+    role_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("roles.id"), nullable=True
+    )
 
     # Columns
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    active = db.Column(db.Boolean, nullable=False, default=False)
-    created_at = db.Column(db.DateTime, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
+    active: Mapped[bool] = mapped_column(default=False)
+    created_at: Mapped[datetime]
 
     # Authentication
-    password = db.Column(db.String(128), nullable=False)
-    failed_login_count = db.Column(db.Integer, nullable=False, default=0)
+    password: Mapped[str]
+    failed_login_count: Mapped[int] = mapped_column(default=0)
 
     # Details
-    first_name = db.Column(db.String(50), nullable=False)
-    middle_name = db.Column(db.String(50), nullable=True)
-    last_name = db.Column(db.String(50), nullable=False)
-    gender = db.Column(db.String(10), nullable=True)
-    marital_status = db.Column(db.String(10), nullable=True)
-    birthday = db.Column(db.Date, nullable=True)
-    image = db.Column(db.String(255), nullable=True)
+    first_name: Mapped[str]
+    middle_name: Mapped[Optional[str]]
+    last_name: Mapped[str]
+    gender: Mapped[Optional[str]]
+    marital_status: Mapped[Optional[str]]
+    birthday: Mapped[Optional[datetime]]
+    image: Mapped[Optional[str]]
 
     # ContactInfo
-    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
-    email_confirmed = db.Column(db.Boolean, nullable=False, default=False)
-    phone = db.Column(db.String(15), nullable=True)
-    phone_confirmed = db.Column(db.Boolean, nullable=False, default=False)
-    address = db.Column(db.String(255), nullable=True)
-    city = db.Column(db.String(50), nullable=True)
-    state = db.Column(db.String(50), nullable=True)
-    zip_code = db.Column(db.String(10), nullable=True)
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    email_confirmed: Mapped[bool] = mapped_column(default=False)
+    phone: Mapped[str] = mapped_column(unique=True, index=True)
+    phone_confirmed: Mapped[bool] = mapped_column(default=False)
+    address: Mapped[Optional[str]]
+    city: Mapped[Optional[str]]
+    state: Mapped[Optional[str]]
+    zip_code: Mapped[Optional[str]]
 
     # ActivityTracking
-    sign_in_count = db.Column(db.Integer, nullable=False, default=0)
-    current_sign_in_on = db.Column(db.DateTime, nullable=True)
-    current_sign_in_ip = db.Column(db.String(45), nullable=True)
-    current_user_agent = db.Column(db.String(255), nullable=True)
-    last_sign_in_on = db.Column(db.DateTime, nullable=True)
-    last_sign_in_ip = db.Column(db.String(45), nullable=True)
-    last_user_agent = db.Column(db.String(255), nullable=True)
-    last_password_change = db.Column(db.DateTime, nullable=True)
+    sign_in_count: Mapped[int] = mapped_column(default=0)
+    current_sign_in_on: Mapped[Optional[datetime]]
+    current_sign_in_ip: Mapped[Optional[str]]
+    current_user_agent: Mapped[Optional[str]]
+    last_sign_in_on: Mapped[Optional[datetime]]
+    last_sign_in_ip: Mapped[Optional[str]]
+    last_user_agent: Mapped[Optional[str]]
+    last_password_change: Mapped[Optional[datetime]]
 
     # Relationships
-    role = db.relationship("Role", back_populates="users")
+    # role = db.relationship("Role", back_populates="users")
+    role: Mapped["Role"] = relationship(back_populates="users")
     orders: Mapped[List["ShopOrder"]] = relationship("ShopOrder", back_populates="user")
 
     def check_password(self, password: str) -> bool:

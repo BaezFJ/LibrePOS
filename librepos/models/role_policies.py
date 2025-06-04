@@ -1,5 +1,15 @@
+from typing import TYPE_CHECKING
+from datetime import datetime
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
+
+if TYPE_CHECKING:
+    from librepos.models.roles import Role
+    from librepos.models.policies import Policy
 
 
 # Association table with metadata: role <-> policy
@@ -17,13 +27,13 @@ class RolePolicy(db.Model):
         self.assigned_at = timezone_aware_datetime()
 
     # ForeignKeys
-    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"), primary_key=True)
-    policy_id = db.Column(db.Integer, db.ForeignKey("policies.id"), primary_key=True)
+    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), primary_key=True)
+    policy_id: Mapped[int] = mapped_column(ForeignKey("policies.id"), primary_key=True)
 
     # Columns
-    assigned_by = db.Column(db.String(64))
-    assigned_at = db.Column(db.DateTime)
+    assigned_by: Mapped[str]
+    assigned_at: Mapped[datetime]
 
     # Relationships
-    role = db.relationship("Role", back_populates="role_policies")
-    policy = db.relationship("Policy", back_populates="role_policies")
+    role: Mapped["Role"] = relationship(back_populates="role_policies")
+    policy: Mapped["Policy"] = relationship(back_populates="role_policies")

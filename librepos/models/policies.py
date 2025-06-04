@@ -1,12 +1,14 @@
-from typing import List
+from datetime import datetime
+from typing import List, TYPE_CHECKING
 
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
 
-from .role_policies import RolePolicy
-from .policy_permissions import PolicyPermission
+if TYPE_CHECKING:
+    from librepos.models.role_policies import RolePolicy
+    from librepos.models.policy_permissions import PolicyPermission
 
 
 class Policy(db.Model):
@@ -22,10 +24,10 @@ class Policy(db.Model):
         self.created_at = timezone_aware_datetime()
 
     # Columns
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True, nullable=False)
-    description = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
+    name: Mapped[str] = mapped_column(unique=True, index=True)
+    description: Mapped[str]
+    created_at: Mapped[datetime]
 
     # Relationships
     role_policies: Mapped[List["RolePolicy"]] = relationship(

@@ -1,6 +1,16 @@
+from datetime import date, time
+from typing import Optional, List, TYPE_CHECKING
+
+from sqlalchemy import ForeignKey, Enum
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
 from librepos.utils.enums import OrderStateEnum
+
+if TYPE_CHECKING:
+    from librepos.models.shop_order_items import ShopOrderItem
+    from librepos.models.users import User
 
 
 class ShopOrder(db.Model):
@@ -16,34 +26,32 @@ class ShopOrder(db.Model):
         self.created_time = timezone_aware_datetime().time()
 
     # ForeignKeys
-    user_id = db.Column(
-        db.Integer, db.ForeignKey("users.id"), nullable=False, index=True
-    )
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
 
     # Columns
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    order_number = db.Column(db.Integer, nullable=False)
-    status = db.Column(
-        db.Enum(OrderStateEnum), nullable=False, default=OrderStateEnum.PENDING
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    order_number: Mapped[int]
+    status: Mapped[OrderStateEnum] = mapped_column(
+        Enum(OrderStateEnum), default=OrderStateEnum.PENDING
     )
-    guest_count = db.Column(db.SmallInteger, nullable=False, default=1)
+    guest_count: Mapped[int] = mapped_column(default=1)
 
-    subtotal_amount = db.Column(db.Integer, nullable=False, default=0)
-    discount_amount = db.Column(db.Integer, nullable=False, default=0)
-    tax_amount = db.Column(db.Integer, nullable=False, default=0)
-    total_amount = db.Column(db.Integer, nullable=False, default=0)
-    paid_amount = db.Column(db.Integer, nullable=False, default=0)
-    due_amount = db.Column(db.Integer, nullable=False, default=0)
+    subtotal_amount: Mapped[int] = mapped_column(default=0)
+    discount_amount: Mapped[int] = mapped_column(default=0)
+    tax_amount: Mapped[int] = mapped_column(default=0)
+    total_amount: Mapped[int] = mapped_column(default=0)
+    paid_amount: Mapped[int] = mapped_column(default=0)
+    due_amount: Mapped[int] = mapped_column(default=0)
 
-    created_date = db.Column(db.Date, nullable=False)
-    created_time = db.Column(db.Time, nullable=False)
-    closed_date = db.Column(db.Date, nullable=True)
-    closed_time = db.Column(db.Time, nullable=True)
+    created_date: Mapped[date]
+    created_time: Mapped[time]
+    closed_date: Mapped[Optional[date]]
+    closed_time: Mapped[Optional[time]]
 
     # Relationships
-    user = db.relationship("User", back_populates="orders")
-    items = db.relationship(
-        "ShopOrderItem", back_populates="shop_order", cascade="all, delete-orphan"
+    user: Mapped["User"] = relationship(back_populates="orders")
+    items: Mapped[List["ShopOrderItem"]] = relationship(
+        back_populates="shop_order", cascade="all, delete-orphan"
     )
 
     # payment = db.relationship("ShopOrderPayment", back_populates="shop_order")

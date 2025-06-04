@@ -1,11 +1,13 @@
-from typing import List
+from datetime import datetime
+from typing import List, TYPE_CHECKING
 
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
 
-from .policy_permissions import PolicyPermission
+if TYPE_CHECKING:
+    from librepos.models.policy_permissions import PolicyPermission
 
 
 class Permission(db.Model):
@@ -19,11 +21,11 @@ class Permission(db.Model):
         self.name = name.lower()
         self.created_at = timezone_aware_datetime()
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-    description = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, nullable=False)
-    active = db.Column(db.Boolean, nullable=False, default=False)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
+    name: Mapped[str] = mapped_column(unique=True)
+    description: Mapped[str]
+    created_at: Mapped[datetime]
+    active: Mapped[bool] = mapped_column(default=False)
 
     policy_permissions: Mapped[List["PolicyPermission"]] = relationship(
         "PolicyPermission", back_populates="permission", cascade="all, delete-orphan"
