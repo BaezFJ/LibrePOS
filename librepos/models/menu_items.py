@@ -4,7 +4,6 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from librepos.extensions import db
-from librepos.utils import slugify_string
 
 if TYPE_CHECKING:
     from librepos.models.menu_groups import MenuGroup
@@ -22,7 +21,6 @@ class MenuItem(db.Model):
         """Create instance."""
         self.group_id = group_id
         self.name = name.title()
-        self.slug = slugify_string(name)
         self.description = description.capitalize()
         self.price = price
 
@@ -31,8 +29,7 @@ class MenuItem(db.Model):
 
     # Columns
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str] = mapped_column(unique=True, index=True)
-    slug: Mapped[str] = mapped_column(unique=True)
+    name: Mapped[str] = mapped_column(unique=False, index=True)
     description: Mapped[str]
     price: Mapped[int] = mapped_column(default=0)
     active: Mapped[bool] = mapped_column(default=True)

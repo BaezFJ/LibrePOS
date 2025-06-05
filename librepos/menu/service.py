@@ -62,8 +62,8 @@ class MenuService:
         menu_group = self.get_menu_group(data["group_id"])
         item_name = data["name"]
         data["price"] = convert_dollars_to_cents(data["price"])
-        if menu_group and item_name:
-            data["name"] = f"{menu_group.name} - {item_name}"
+        # if menu_group and item_name:
+        #     data["name"] = f"{menu_group.name} - {item_name}"
         return self.repo.create_item(data)
 
     def list_menu_items(self):
