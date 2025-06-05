@@ -17,14 +17,14 @@ class OrderService:
 
     def add_item_to_order(self, order_id, item_id, quantity, price):
         item = MenuRepository.get_item_by_id(item_id)
-        item_name = item.group.name + ' - ' + item.name if item else ""
+        item_name = item.group.name + " - " + item.name if item else ""
         return self.repo.add_item_to_order(
             order_id, item_id, item_name=item_name, quantity=quantity, price=price
         )
-    
+
     def remove_item_from_order(self, order_item_id):
         return self.repo.remove_item_from_order(order_item_id)
-    
+
     def update_subtotal(self, order_id):
         return self.repo.update_subtotal(order_id)
 

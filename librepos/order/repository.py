@@ -35,7 +35,7 @@ class OrderRepository:
         db.session.commit()
         self.update_subtotal(order_id)
         return item
-    
+
     def remove_item_from_order(self, order_item_id: int):
         item = ShopOrderItem.query.get(order_item_id)
         if item:
@@ -58,15 +58,9 @@ class OrderRepository:
     def update_subtotal(self, order_id):
         """Update subtotals for a given order."""
         items = ShopOrderItem.query.filter_by(shop_order_id=order_id).all()
-        order = self.get_by_id(order_id)
         subtotal = 0
-        discount = 0
-        tax = 0
         for item in items:
-            print(f"{item.price} * {item.quantity} = {item.price * item.quantity}")
             subtotal += item.price * item.quantity
-            # discount += item.discount_amount
-            # tax += item.tax_amount
         self.update_order(order_id, {"subtotal_amount": subtotal})
 
     def delete_order(self, order_id):

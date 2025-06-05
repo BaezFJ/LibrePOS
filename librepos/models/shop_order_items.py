@@ -32,9 +32,15 @@ class ShopOrderItem(db.Model):
     price: Mapped[int] = mapped_column(default=0)  # price per unit at time of sale
     total: Mapped[int] = mapped_column(default=0)  # quantity * price
     item_name: Mapped[str]  # store item-name in case the menu changes later
-    voided: Mapped[bool] = mapped_column(default=False)  # manager removed item after completion
-    completed: Mapped[bool] = mapped_column(default=False)  # the kitchen is done preparing
-    send_to_prep: Mapped[bool] = mapped_column(default=False)  # item was sent to the kitchen / bar
+    voided: Mapped[bool] = mapped_column(
+        default=False
+    )  # manager removed item after completion
+    completed: Mapped[bool] = mapped_column(
+        default=False
+    )  # the kitchen is done preparing
+    send_to_prep: Mapped[bool] = mapped_column(
+        default=False
+    )  # item was sent to the kitchen / bar
 
     # Relationships
     shop_order: Mapped["ShopOrder"] = relationship(back_populates="items")

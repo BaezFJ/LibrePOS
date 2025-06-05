@@ -8,8 +8,14 @@
                 <div class="background">
                     <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
                 </div>
-                <h5>Total: $100.99</h5>
-                <h6># Guest: 2</h6>
+                <div class="card-panel">
+                    <h5>Subtotal: {{ order.subtotal_amount|currency }}</h5>
+                    <h5>Tax: {{ order.tax_amount|currency }}</h5>
+                    <h5>Discount: {{ order.discount_amount|currency }}</h5>
+                    {% set order_total = (order.subtotal_amount + order.tax_amount) - order.discount_amount %}
+                    <h5>Total: {{ order_total|currency }}</h5>
+                </div>
+                <h6># Guest: {{ order.guest_count }}</h6>
             </div>
         </li>
 

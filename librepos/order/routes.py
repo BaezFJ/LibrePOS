@@ -80,19 +80,16 @@ def add_item_to_order():
 
     item = menu_service.get_menu_item(item_id)
     price = item.price if item else 0
-    
+
     order_service.add_item_to_order(order_id, item_id, quantity, price)
 
-    # order_service.add_item_to_order(order_id, item_id)
-    # response = jsonify(success=True)
-    # response.headers["HX-Redirect"] = url_for("order.get_order", order_id=order_id)
-    # return response
     return redirect(url_for("order.get_order", order_id=order_id))
 
 
 # ================================
 #            DELETE
 # ================================
+
 
 @order_bp.post("/remove-item-from-order")
 def remove_item_from_order():
