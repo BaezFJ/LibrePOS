@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, jsonify
+from flask import Blueprint, render_template, flash, redirect, url_for, jsonify, request
 from flask_login import login_required
 
 from librepos.auth.decorators import permission_required
@@ -66,22 +66,42 @@ def get_category(category_id):
 
 @menu_bp.get("hx/categories")
 def get_hx_categories():
+    order_id = request.args.get("order_id")
     categories = menu_service.get_active_menu_categories()
-    return render_template("menu/hx_categories.html", categories=categories)
+    return render_template(
+        "menu/hx_categories.html", categories=categories, order_id=order_id
+    )
 
 
 @menu_bp.get("hx/groups/<int:category_id>")
 def get_hx_groups(category_id):
+    order_id = request.args.get("order_id")
     groups = menu_service.get_menu_category_groups(category_id)
     category = menu_service.get_menu_category(category_id)
-    return render_template("menu/htmx_groups.html", groups=groups, category=category)
+    return render_template(
+        "menu/hx_groups.html", groups=groups, category=category, order_id=order_id
+    )
 
 
-@menu_bp.get("hx/items/<int:group_id>")
-def get_hx_items(group_id):
+@menu_bp.get("hx/group/items/<int:group_id>")
+def get_hx_group_items(group_id):
+    order_id = request.args.get("order_id")
     group = menu_service.get_menu_group(group_id)
     items = menu_service.list_group_menu_items(group_id)
-    return render_template("menu/htmx_items.html", items=items, group=group)
+    return render_template(
+        "menu/hx_group_items.html", items=items, group=group, order_id=order_id
+    )
+
+
+@menu_bp.get("hx/numpad")
+def get_hx_numpad():
+    order_id = request.args.get("order_id")
+    item_id = request.args.get("item_id")
+    context = {
+        "item_id": item_id,
+        "order_id": order_id,
+    }
+    return render_template("menu/hx_numpad.html", **context)
 
 
 # ================================

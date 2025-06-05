@@ -55,10 +55,7 @@ def update_restaurant():
     form = RestaurantForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        print(sanitized_data)
         for key, value in sanitized_data.items():
             print(f"key: {key} -> value: {value}")
         main_service.update_restaurant(sanitized_data)
-    else:
-        print(form.errors)
     return redirect(url_for(".settings"))

@@ -6,20 +6,63 @@
     <section>
 
         <div class="container">
-            <div class="row">
 
-                <div class="col s12">
-                    <h1>Order</h1>
-                </div>
+            <!-- Order Items List -->
+            {% if order.items %}
+                <ul class="collection" id="order-items">
+                    <!-- Example item -->
+                    {% for item in order.items %}
+                        <li class="collection-item order-item" data-id="1">
+                            <div class="row">
+                                <div class="col s9" style="margin-top: 12px;">
+                                    <p class="m-0 flow-text">
+                                        {{ item.item_name }}
+                                        <span class="badge quantity-badge"
+                                              style="font-size: large;">x <b>{{ item.quantity }}</b></span>
+                                    </p>
+                                </div>
+                                <div class="col s3 right-align">
+                                    <button type="button" class="btn-flat secondary-content danger-text"
+                                            popovertarget="confirmDeleteModal-item-{{ item.id }}">
+                                        <i class="material-symbols-rounded">delete</i>
+                                    </button>
 
-            </div>
+                                    <div class="modal warning-border" id="confirmDeleteModal-item-{{ item.id }}"
+                                         popover>
+                                        <div class="modal-header center-align">
+                                            <span class="large material-symbols-rounded">warning</span>
+                                            <h5>Confirm Delete</h5>
+                                        </div>
+                                        <div class="modal-content">
+                                            <p class="flow-text center-align">Are you sure you want to remove
+                                                "{{ item.item_name }}"
+                                                from this
+                                                order?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button tabindex="0" class="waves-effect btn tonal"
+                                                    popovertarget="confirmDeleteModal-item-{{ item.id }}"
+                                                    hx-post="{{ url_for('order.remove_item_from_order', order_id=order.id, order_item_id=item.id) }}"
+                                                    hx-trigger="click">
+                                                Remove Item
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            {% endif %}
         </div>
 
     </section>
 
     <div class="fixed-action-btn">
         <button class="btn-floating btn-large" popovertarget="menuModal" hx-trigger="click"
-                hx-get="{{ url_for('menu.get_hx_categories') }}" hx-target="#menuModal" hx-swap="innerHTML">
+                hx-get="{{ url_for('menu.get_hx_categories', order_id=order.id) }}" hx-target="#menuModal"
+                hx-swap="innerHTML">
             <i class="large material-symbols-rounded">add</i>
         </button>
     </div>

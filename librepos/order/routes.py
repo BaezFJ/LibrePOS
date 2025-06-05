@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, jsonify
+from flask import Blueprint, render_template, url_for, jsonify, request, redirect
 from flask_login import login_required
 
 from librepos.auth.decorators import permission_required
@@ -72,14 +72,30 @@ def void_order(order_id):
     return response
 
 
-@order_bp.post("/add-item-to-order/<int:order_id>/<int:item_id>")
-def add_item_to_order(order_id, item_id):
-    order_service.add_item_to_order(order_id, item_id)
-    response = jsonify(success=True)
-    response.headers["HX-Redirect"] = url_for("order.get_order", order_id=order_id)
-    return response
+@order_bp.post("/add-item-to-order")
+def add_item_to_order():
+    order_id = request.form.get("order_id")
+    item_id = request.form.get("item_id")
+    quantity = request.form.get("quantity")
+
+    item = menu_service.get_menu_item(item_id)
+    price = item.price if item else 0
+
+    order_service.add_item_to_order(order_id, item_id, quantity, price)
+
+    return redirect(url_for("order.get_order", order_id=order_id))
 
 
 # ================================
 #            DELETE
 # ================================
+
+
+@order_bp.post("/remove-item-from-order")
+def remove_item_from_order():
+    order_id = request.args.get("order_id")
+    order_item_id = request.args.get("order_item_id")
+    order_service.remove_item_from_order(order_item_id)
+    response = jsonify(success=True)
+    response.headers["HX-Redirect"] = url_for("order.get_order", order_id=order_id)
+    return response

@@ -176,3 +176,42 @@ main > :first-child {
     border: 4px solid #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.numpad-btn {
+    width: 100%;
+    height: 64px;
+    font-size: 1.5rem;
+}
+
+#keypadQuantity {
+    height: 5rem;
+    font-size: 4rem;
+    text-align: center;
+}
+
+.order-summary {
+    font-size: 1.1rem;
+    line-height: 2rem;
+}
+
+.summary-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.summary-line span {
+    white-space: nowrap;
+}
+
+.summary-line .dots {
+    flex: 1;
+    border-bottom: 1px dotted #ccc;
+    margin: 0 10px;
+    height: 1px;
+}
+
+.summary-line.total {
+    font-weight: 600;
+    font-size: 1.2rem;
+}

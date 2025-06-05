@@ -13,6 +13,8 @@ class MainRepository:
         if not restaurant:
             return None
         for key, value in data.items():
+            if key == "tax_percentage":
+                value = int(value * 100)
             setattr(restaurant, key, value)
         db.session.commit()
         return restaurant

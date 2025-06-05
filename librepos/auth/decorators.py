@@ -20,7 +20,7 @@ def permission_required(permission_name: str):
 
             if not current_user.has_permission(permission_name):
                 FlashMessageHandler.error("You don't have the required permission.")
-                return redirect(url_for("dashboard.index"))
+                return redirect(url_for("order.list_orders"))
 
             return view_func(*args, **kwargs)
 
