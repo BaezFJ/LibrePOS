@@ -59,9 +59,14 @@ class OrderRepository:
         """Update subtotals for a given order."""
         items = ShopOrderItem.query.filter_by(shop_order_id=order_id).all()
         subtotal = 0
+        tax = 0
+        TAX_PERCENT = 825  # 8.25% represented as integer
         for item in items:
             subtotal += item.price * item.quantity
-        self.update_order(order_id, {"subtotal_amount": subtotal})
+            tax = (
+                subtotal * TAX_PERCENT
+            ) // 10000  # Divide by 10000 to adjust for two percentage conversions
+        self.update_order(order_id, {"subtotal_amount": subtotal, "tax_amount": tax})
 
     def delete_order(self, order_id):
         order = self.get_by_id(order_id)

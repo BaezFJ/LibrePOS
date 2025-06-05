@@ -7,12 +7,6 @@
 
         <div class="container">
 
-
-            <!-- Order Section Header -->
-            <div class="section">
-                <h5><i class="material-symbols-rounded">shopping_cart</i> Current Order</h5>
-            </div>
-
             <!-- Order Items List -->
             {% if order.items %}
                 <ul class="collection" id="order-items">
@@ -33,7 +27,8 @@
                                         <i class="material-symbols-rounded">delete</i>
                                     </button>
 
-                                    <div class="modal warning-border" id="confirmDeleteModal-item-{{ item.id }}" popover>
+                                    <div class="modal warning-border" id="confirmDeleteModal-item-{{ item.id }}"
+                                         popover>
                                         <div class="modal-header center-align">
                                             <span class="large material-symbols-rounded">warning</span>
                                             <h5>Confirm Delete</h5>

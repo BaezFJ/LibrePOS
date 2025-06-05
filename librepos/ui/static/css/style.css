@@ -188,3 +188,30 @@ main > :first-child {
     font-size: 4rem;
     text-align: center;
 }
+
+.order-summary {
+    font-size: 1.1rem;
+    line-height: 2rem;
+}
+
+.summary-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.summary-line span {
+    white-space: nowrap;
+}
+
+.summary-line .dots {
+    flex: 1;
+    border-bottom: 1px dotted #ccc;
+    margin: 0 10px;
+    height: 1px;
+}
+
+.summary-line.total {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
