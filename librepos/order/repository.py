@@ -1,6 +1,6 @@
 from librepos.extensions import db
-from librepos.models.shop_orders import ShopOrder
 from librepos.models.shop_order_items import ShopOrderItem
+from librepos.models.shop_orders import ShopOrder
 
 
 class OrderRepository:

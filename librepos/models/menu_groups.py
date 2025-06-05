@@ -1,5 +1,14 @@
+from typing import List, TYPE_CHECKING
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+
 from librepos.extensions import db
 from librepos.utils import slugify_string
+
+if TYPE_CHECKING:
+    from librepos.models.menu_categories import MenuCategory
+    from librepos.models.menu_items import MenuItem
 
 
 class MenuGroup(db.Model):
@@ -15,16 +24,19 @@ class MenuGroup(db.Model):
         self.slug = slugify_string(name)
 
     # ForeignKeys
-    category_id = db.Column(
-        db.Integer, db.ForeignKey("menu_categories.id"), nullable=False
-    )
+    category_id: Mapped[int] = mapped_column(ForeignKey("menu_categories.id"))
 
     # Columns
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False, index=True)
-    slug = db.Column(db.String(50), unique=True, nullable=False)
-    active = db.Column(db.Boolean, default=True, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(unique=True, index=True)
+    slug: Mapped[str] = mapped_column(unique=True)
+    active: Mapped[bool] = mapped_column(default=True)
 
     # Relationships
-    category = db.relationship("MenuCategory", back_populates="menu_groups")
-    menu_items = db.relationship("MenuItem", back_populates="group")
+    # category:Mapped["MenuGroup"] = relationship(back_populates="menu_groups", viewonly=True, order_by="MenuGroup.name")
+    category: Mapped["MenuCategory"] = relationship(
+        back_populates="menu_groups", order_by="MenuGroup.name"
+    )
+    menu_items: Mapped[List["MenuItem"]] = relationship(
+        back_populates="group", cascade="all, delete-orphan"
+    )

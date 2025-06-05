@@ -1,5 +1,15 @@
+from datetime import datetime
+from typing import TYPE_CHECKING
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
+
+if TYPE_CHECKING:
+    from librepos.models.policies import Policy
+    from librepos.models.permissions import Permission
 
 
 # Association table with metadata: policy <-> permission
@@ -17,15 +27,15 @@ class PolicyPermission(db.Model):
         self.added_at = timezone_aware_datetime()
 
     # ForeignKeys
-    policy_id = db.Column(db.Integer, db.ForeignKey("policies.id"), primary_key=True)
-    permission_id = db.Column(
-        db.Integer, db.ForeignKey("permissions.id"), primary_key=True
+    policy_id: Mapped[int] = mapped_column(ForeignKey("policies.id"), primary_key=True)
+    permission_id: Mapped[int] = mapped_column(
+        ForeignKey("permissions.id"), primary_key=True
     )
 
     # Columns
-    added_by = db.Column(db.String(64))
-    added_at = db.Column(db.DateTime)
+    added_by: Mapped[str]
+    added_at: Mapped[datetime]
 
     # Relationships
-    policy = db.relationship("Policy", back_populates="policy_permissions")
-    permission = db.relationship("Permission", back_populates="policy_permissions")
+    policy: Mapped["Policy"] = relationship(back_populates="policy_permissions")
+    permission: Mapped["Permission"] = relationship(back_populates="policy_permissions")

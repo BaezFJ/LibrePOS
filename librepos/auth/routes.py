@@ -1,9 +1,11 @@
 from urllib.parse import urlparse
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .service import AuthService
-from flask_login import login_required
 
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import login_required, current_user
+
+from librepos.utils import FlashMessageHandler
 from .forms import LoginForm
+from .service import AuthService
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates", url_prefix="/auth")
 
@@ -12,8 +14,8 @@ auth_service = AuthService()
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
-    if auth_service.current_user().is_authenticated:
-        flash("You are already logged in.", "info")
+    if current_user.is_authenticated:
+        FlashMessageHandler.warning("You are already logged in.")
         return redirect(url_for("main.settings"))
 
     form = LoginForm()
@@ -41,5 +43,4 @@ def login():
 @login_required
 def logout():
     auth_service.logout()
-    flash("Logged out successfully.", "success")
     return redirect(url_for(".login"))

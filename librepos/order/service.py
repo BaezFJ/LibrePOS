@@ -1,8 +1,7 @@
 from flask_login import current_user
 
-from librepos.models.shop_orders import OrderStateEnum
 from librepos.menu.repository import MenuRepository
-
+from librepos.models.shop_orders import OrderStateEnum
 from .repository import OrderRepository
 
 

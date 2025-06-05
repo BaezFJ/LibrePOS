@@ -1,5 +1,12 @@
+from typing import List, TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+
 from librepos.extensions import db
 from librepos.utils import slugify_string
+
+if TYPE_CHECKING:
+    from librepos.models.menu_groups import MenuGroup
 
 
 class MenuCategory(db.Model):
@@ -12,10 +19,11 @@ class MenuCategory(db.Model):
         self.name = name.capitalize()
         self.slug = slugify_string(name)
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-    slug = db.Column(db.String(50), unique=True, nullable=False)
-    active = db.Column(db.Boolean, nullable=False, default=True)
+    # Columns
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(unique=True)
+    slug: Mapped[str] = mapped_column(unique=True)
+    active: Mapped[bool] = mapped_column(default=True)
 
     # Relationships
-    menu_groups = db.relationship("MenuGroup", back_populates="category")
+    menu_groups: Mapped[List["MenuGroup"]] = relationship(back_populates="category")

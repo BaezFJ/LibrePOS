@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, jsonify
 from flask_login import login_required
 
-from librepos.utils import sanitize_form_data
 from librepos.auth.decorators import permission_required
-
-from .service import MenuService
+from librepos.utils import sanitize_form_data
 from .forms import CategoryForm, GroupForm, MenuItemForm
+from .service import MenuService
 
 menu_bp = Blueprint("menu", __name__, template_folder="templates", url_prefix="/menu")
 

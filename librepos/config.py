@@ -6,8 +6,6 @@ load_dotenv()
 
 # Application Settings
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-TIMEZONE = os.getenv("TIMEZONE", "America/Chicago")
-COMPANY_NAME = os.getenv("COMPANY_NAME", "LibrePOS")
 
 # Flask Settings
 DEBUG = os.getenv("DEBUG", False)

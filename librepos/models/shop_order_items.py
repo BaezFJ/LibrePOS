@@ -1,4 +1,13 @@
+from typing import TYPE_CHECKING
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+
 from librepos.extensions import db
+
+if TYPE_CHECKING:
+    from librepos.models.shop_orders import ShopOrder
+    from librepos.models.menu_items import MenuItem
 
 
 class ShopOrderItem(db.Model):
@@ -14,21 +23,16 @@ class ShopOrderItem(db.Model):
         self.item_name = item_name.title()
 
     # ForeignKeys
-    shop_order_id = db.Column(db.Integer, db.ForeignKey("shop_orders.id"))
-    menu_item_id = db.Column(db.Integer, db.ForeignKey("menu_items.id"))
+    shop_order_id: Mapped[int] = mapped_column(ForeignKey("shop_orders.id"))
+    menu_item_id: Mapped[int] = mapped_column(ForeignKey("menu_items.id"))
 
     # Columns
-    id = db.Column(db.Integer, primary_key=True)
-
-    quantity = db.Column(db.Integer, nullable=False, default=1)
-    price = db.Column(
-        db.Integer, nullable=False, default=0
-    )  # price per unit at time of sale
-    total = db.Column(db.Integer, nullable=False, default=0)  # quantity * price
-    item_name = db.Column(
-        db.String(255), nullable=False
-    )  # store item-name in case the menu changes later
+    id: Mapped[int] = mapped_column(primary_key=True)
+    quantity: Mapped[int] = mapped_column(default=1)
+    price: Mapped[int] = mapped_column(default=0)  # price per unit at time of sale
+    total: Mapped[int] = mapped_column(default=0)  # quantity * price
+    item_name = Mapped[str]  # store item-name in case the menu changes later
 
     # Relationships
-    shop_order = db.relationship("ShopOrder", back_populates="items")
-    menu_item = db.relationship("MenuItem")
+    shop_order: Mapped["ShopOrder"] = relationship(back_populates="items")
+    menu_item: Mapped["MenuItem"] = relationship()
