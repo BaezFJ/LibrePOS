@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
@@ -37,7 +37,5 @@ class PolicyPermission(db.Model):
     added_at: Mapped[datetime]
 
     # Relationships
-    policy: Mapped[List["Policy"]] = relationship(back_populates="policy_permissions")
-    permission: Mapped[List["Permission"]] = relationship(
-        back_populates="policy_permissions"
-    )
+    policy: Mapped["Policy"] = relationship(back_populates="policy_permissions")
+    permission: Mapped["Permission"] = relationship(back_populates="policy_permissions")
