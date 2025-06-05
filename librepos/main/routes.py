@@ -3,9 +3,8 @@ from flask_login import login_required
 
 from librepos.auth.decorators import permission_required
 from librepos.utils import sanitize_form_data
-
-from .service import MainService
 from .forms import RestaurantForm
+from .service import MainService
 
 main_bp = Blueprint("main", __name__, template_folder="templates")
 

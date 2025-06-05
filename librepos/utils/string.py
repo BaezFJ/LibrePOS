@@ -1,4 +1,5 @@
 import uuid
+
 from slugify import slugify
 
 

@@ -1,6 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
-from librepos.utils.message_handlers import FlashMessageHandler
 
+from librepos.utils.message_handlers import FlashMessageHandler
 from .repository import MainRepository
 
 

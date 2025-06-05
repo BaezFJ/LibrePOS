@@ -1,4 +1,5 @@
 from typing import Optional
+
 from flask import flash
 
 
@@ -50,6 +51,5 @@ class FlashMessageHandler:
             error: Optional exception that occurred
             category: Message category (defaults to 'error')
         """
-        message = f"{message}"
         full_message = f"{message}: {str(error)}" if error else message
         flash(full_message, category)

@@ -3,7 +3,6 @@ from flask_login import login_required
 
 from librepos.auth.decorators import permission_required
 from librepos.menu.service import MenuService
-
 from .service import OrderService
 
 order_bp = Blueprint(

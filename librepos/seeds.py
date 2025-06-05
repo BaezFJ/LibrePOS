@@ -1,15 +1,14 @@
-from librepos.models.users import User
-from librepos.models.roles import Role
-from librepos.models.permissions import Permission
-from librepos.models.policies import Policy
-from librepos.models.policy_permissions import PolicyPermission
-from librepos.models.role_policies import RolePolicy
+from librepos.extensions import db
 from librepos.models.menu_categories import MenuCategory
 from librepos.models.menu_groups import MenuGroup
 from librepos.models.menu_items import MenuItem
+from librepos.models.permissions import Permission
+from librepos.models.policies import Policy
+from librepos.models.policy_permissions import PolicyPermission
 from librepos.models.restaurant import Restaurant
-
-from librepos.extensions import db
+from librepos.models.role_policies import RolePolicy
+from librepos.models.roles import Role
+from librepos.models.users import User
 
 
 def seed_restaurant():

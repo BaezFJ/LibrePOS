@@ -1,8 +1,8 @@
-from librepos.main.routes import main_bp
 from librepos.auth.routes import auth_bp
-from librepos.user.routes import users_bp
+from librepos.main.routes import main_bp
 from librepos.menu.routes import menu_bp
 from librepos.order.routes import order_bp
+from librepos.user.routes import users_bp
 
 
 def register_blueprints(app):
