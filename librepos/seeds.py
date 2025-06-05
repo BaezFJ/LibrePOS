@@ -7,8 +7,28 @@ from librepos.models.role_policies import RolePolicy
 from librepos.models.menu_categories import MenuCategory
 from librepos.models.menu_groups import MenuGroup
 from librepos.models.menu_items import MenuItem
+from librepos.models.restaurant import Restaurant
 
 from librepos.extensions import db
+
+
+def seed_restaurant():
+    restaurant = Restaurant(
+        name="LibrePOS",
+        address="123 Main St",
+        city="New York",
+        state="NY",
+        zipcode="10001",
+        country="USA",
+        phone="9991234567",
+        email="info@librepos.com",
+        website="https://demo.librepos.com",
+        currency="USD",
+        timezone="America/New_York",
+    )
+    db.session.add(restaurant)
+    db.session.commit()
+    return restaurant
 
 
 def seed_roles():
@@ -103,6 +123,17 @@ def seed_permissions():
     void_order = Permission(name="void_order", description="Void order")
     delete_order = Permission(name="delete_order", description="Delete order")
 
+    # Settings Permissions
+    get_settings = Permission(
+        name="get_settings", description="View application settings"
+    )
+    get_restaurant = Permission(
+        name="get_restaurant", description="View restaurant details"
+    )
+    update_restaurant = Permission(
+        name="update_restaurant", description="Edit restaurant details"
+    )
+
     return [
         create_user_permission,
         get_user_permission,
@@ -130,6 +161,9 @@ def seed_permissions():
         update_order,
         void_order,
         delete_order,
+        get_settings,
+        get_restaurant,
+        update_restaurant,
     ]
 
 
@@ -261,6 +295,8 @@ def load_menu_data():
 
 
 def seed_all():
+    seed_restaurant()
+
     roles = seed_roles()
     policies = seed_policies()
     permissions = seed_permissions()
