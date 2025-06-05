@@ -105,7 +105,8 @@ main > :first-child {
     color: var(--success-color);
 }
 
-.danger {
+.danger,
+.error {
     background-color: var(--danger-color);
 }
 

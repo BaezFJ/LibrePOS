@@ -1,5 +1,6 @@
-from flask_login import login_user, logout_user, current_user
-from flask import flash
+from flask_login import login_user, logout_user
+
+from librepos.utils import FlashMessageHandler
 from .repository import AuthRepository
 
 
@@ -10,35 +11,28 @@ class AuthService:
     def authenticate(self, email, password, remember):
         user = self.repo.get_user_by_email(email)
         if not user:
-            flash("Invalid email or password.", "error")
+            FlashMessageHandler.error("Invalid email or password.")
             return None
         if not user.active:
-            flash("Your account has been deactivated. Please contact support.", "error")
+            FlashMessageHandler.error("Your account has been deactivated.")
+            FlashMessageHandler.info("Please contact the administrator.")
             return None
         if user.check_password(password):
             login_user(user, remember=remember)
             if user.failed_login_count > 0:
                 user.reset_failed_login_count()
-            flash("Logged in successfully.", "success")
+            FlashMessageHandler.info("Welcome back!")
             return user
         user.handle_failed_login()
         attempts_left = 3 - user.failed_login_count
         if attempts_left > 0:
-            flash(
-                f"Invalid password. {attempts_left} attempts remaining before account lockout.",
-                "warning",
-            )
+            _message = f"Invalid password. {attempts_left} attempts remaining."
+            FlashMessageHandler.warning(_message)
         else:
-            flash(
-                "Account locked due to too many failed login attempts. Please contact support.",
-                "error",
-            )
+            FlashMessageHandler.error("Account locked!.")
         return None
 
     @staticmethod
     def logout():
+        FlashMessageHandler.info("You have been logged out.")
         logout_user()
-
-    @staticmethod
-    def current_user():
-        return current_user

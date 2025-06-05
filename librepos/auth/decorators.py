@@ -1,7 +1,9 @@
 from functools import wraps
 
-from flask import redirect, url_for, flash
+from flask import redirect, url_for
 from flask_login import current_user
+
+from librepos.utils import FlashMessageHandler
 
 
 def permission_required(permission_name: str):
@@ -13,14 +15,11 @@ def permission_required(permission_name: str):
         @wraps(view_func)
         def wrapped_view(*args, **kwargs):
             if not current_user.is_authenticated:
-                flash("Authentication required to access this page.", "warning")
+                FlashMessageHandler.error("Authentication required.")
                 return redirect(url_for("auth.login"))
 
             if not current_user.has_permission(permission_name):
-                flash(
-                    "You don't have the required permission to access this page. Contact a manager for assistance.",
-                    "danger",
-                )
+                FlashMessageHandler.error("You don't have the required permission.")
                 return redirect(url_for("dashboard.index"))
 
             return view_func(*args, **kwargs)
