@@ -24,9 +24,12 @@ class OrderRepository:
         return order
 
     @staticmethod
-    def add_item_to_order(order_id, item_id, item_name):
+    def add_item_to_order(order_id, item_id, item_name, quantity):
         item = ShopOrderItem(
-            shop_order_id=order_id, menu_item_id=item_id, item_name=item_name
+            shop_order_id=order_id,
+            menu_item_id=item_id,
+            item_name=item_name,
+            quantity=quantity,
         )
         db.session.add(item)
         db.session.commit()

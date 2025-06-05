@@ -9,7 +9,32 @@
             <div class="row">
 
                 <div class="col s12">
-                    <h1>Order</h1>
+                    {% if order.items %}
+                        <table class="striped highlight centered">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>QT</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in order.items %}
+                                <tr>
+                                    <td class="left">{{ item.menu_item.name }}</td>
+                                    <td>
+                                        <button class="btn tonal">{{ item.quantity }}</button>
+                                    </td>
+                                    <td class="right-align">
+                                        <button class="btn-flat danger-text"><span
+                                                class="small material-symbols-rounded">remove</span></button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    {% endif %}
                 </div>
 
             </div>
@@ -19,7 +44,8 @@
 
     <div class="fixed-action-btn">
         <button class="btn-floating btn-large" popovertarget="menuModal" hx-trigger="click"
-                hx-get="{{ url_for('menu.get_hx_categories') }}" hx-target="#menuModal" hx-swap="innerHTML">
+                hx-get="{{ url_for('menu.get_hx_categories', order_id=order.id) }}" hx-target="#menuModal"
+                hx-swap="innerHTML">
             <i class="large material-symbols-rounded">add</i>
         </button>
     </div>

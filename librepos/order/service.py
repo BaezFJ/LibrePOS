@@ -15,10 +15,12 @@ class OrderService:
         }
         return self.repo.create_order(data)
 
-    def add_item_to_order(self, order_id, item_id):
+    def add_item_to_order(self, order_id, item_id, quantity):
         item = MenuRepository.get_item_by_id(item_id)
         item_name = item.item_name_with_group if item else ""
-        return self.repo.add_item_to_order(order_id, item_id, item_name=item_name)
+        return self.repo.add_item_to_order(
+            order_id, item_id, item_name=item_name, quantity=quantity
+        )
 
     def list_orders(self):
         return self.repo.get_all_orders()

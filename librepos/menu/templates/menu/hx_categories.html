@@ -8,7 +8,7 @@
                 {% if category.menu_groups %}
                     <div class="col s6">
                         <div class="card z-depth-2 hoverable grey darken-4"
-                             hx-get="{{ url_for('menu.get_hx_groups', category_id=category.id) }}"
+                             hx-get="{{ url_for('menu.get_hx_groups', category_id=category.id, order_id=order_id) }}"
                              hx-target="#menuModal"
                              hx-swap="innerHTML" hx-trigger="click">
                             <div class="card-content center-align">
