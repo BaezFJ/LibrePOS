@@ -1,6 +1,12 @@
 from datetime import datetime
 
+from babel.numbers import get_currency_symbol
+
+from librepos.main.repository import MainRepository
+
 from .financial import convert_cents_to_dollars
+
+main_repo = MainRepository()
 
 
 def receipt_number_formatter(prefix: str, counter: int, suffix: str = "") -> str:
@@ -29,7 +35,9 @@ def datetime_formatter(value: datetime | None, format_spec: str) -> str:
 
 def currency_formatter(value: int) -> str:
     dollar_amount = convert_cents_to_dollars(value)
-    return f"${dollar_amount:.2f}"
+    currency_code = main_repo.get_restaurant_currency()
+    currency_symbol = get_currency_symbol(currency_code)
+    return f"{currency_symbol} {dollar_amount:.2f}"
 
 
 def phone_formatter(value: str) -> str:

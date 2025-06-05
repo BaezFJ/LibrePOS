@@ -6,6 +6,7 @@ from librepos.utils.financial import (
 from librepos.utils.datetime import timezone_aware_datetime
 from librepos.utils.form import sanitize_form_data
 from librepos.utils.string import slugify_string, generate_uuid
+from librepos.utils.message_handlers import FlashMessageHandler
 
 __all__ = [
     "convert_dollars_to_cents",
@@ -15,4 +16,5 @@ __all__ = [
     "sanitize_form_data",
     "slugify_string",
     "generate_uuid",
+    "FlashMessageHandler",
 ]
