@@ -11,16 +11,16 @@ class Restaurant(db.Model):
     __tablename__ = "restaurant"
 
     def __init__(
-            self,
-            name: str,
-            address: str,
-            city: str,
-            state: str,
-            zipcode: str,
-            country: str,
-            phone: str,
-            email: str,
-            **kwargs,
+        self,
+        name: str,
+        address: str,
+        city: str,
+        state: str,
+        zipcode: str,
+        country: str,
+        phone: str,
+        email: str,
+        **kwargs,
     ):
         super(Restaurant, self).__init__(**kwargs)
         self.name = name.title()

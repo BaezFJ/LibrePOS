@@ -21,5 +21,7 @@ class MainService:
             self.message_handler.error("Error while updating restaurant information", e)
             return False
         except Exception as e:
-            self.message_handler.error("Unexpected error occurred while updating restaurant information", e)
+            self.message_handler.error(
+                "Unexpected error occurred while updating restaurant information", e
+            )
             return False

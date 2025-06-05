@@ -15,10 +15,18 @@ def timezone_aware_datetime():
 
 def get_all_timezones():
     """Return a sorted list of valid IANA time zone names."""
-    import tzdata
     VALID_REGION_PREFIXES = {
-        "Africa", "America", "Antarctica", "Asia", "Atlantic",
-        "Australia", "Europe", "Indian", "Pacific", "Etc", "UTC"
+        "Africa",
+        "America",
+        "Antarctica",
+        "Asia",
+        "Atlantic",
+        "Australia",
+        "Europe",
+        "Indian",
+        "Pacific",
+        "Etc",
+        "UTC",
     }
     with importlib.resources.path("tzdata", "zoneinfo") as zoneinfo_dir:
         zones = []

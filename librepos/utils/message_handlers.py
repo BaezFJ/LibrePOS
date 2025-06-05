@@ -20,7 +20,7 @@ class FlashMessageHandler:
     def success(message: str, category: str = "success") -> None:
         """
         Display a success flash message.
-        
+
         Args:
             message: Success message to display
             category: Message category (defaults to 'success')
@@ -31,7 +31,7 @@ class FlashMessageHandler:
     def warning(message: str, category: str = "warning") -> None:
         """
         Display a warning flash message.
-        
+
         Args:
             message: Warning message to display
             category: Message category (defaults to 'warning')
@@ -39,10 +39,12 @@ class FlashMessageHandler:
         flash(message, category)
 
     @staticmethod
-    def error(message: str, error: Optional[Exception] = None, category: str = "error") -> None:
+    def error(
+        message: str, error: Optional[Exception] = None, category: str = "error"
+    ) -> None:
         """
         Display an error flash message.
-        
+
         Args:
             message: Base error message to display
             error: Optional exception that occurred

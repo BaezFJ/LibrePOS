@@ -16,7 +16,7 @@ class MainRepository:
             setattr(restaurant, key, value)
         db.session.commit()
         return restaurant
-    
+
     def get_restaurant_currency(self):
         restaurant = self.retrieve_restaurant()
         return restaurant.currency
