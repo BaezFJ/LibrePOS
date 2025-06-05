@@ -24,6 +24,7 @@ def seed_restaurant():
         website="https://demo.librepos.com",
         currency="USD",
         timezone="America/New_York",
+        tax_percentage="825",
     )
     db.session.add(restaurant)
     db.session.commit()

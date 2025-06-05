@@ -45,3 +45,4 @@ class Restaurant(db.Model):
     website: Mapped[Optional[str]]
     currency: Mapped[str]
     timezone: Mapped[str]
+    tax_percentage: Mapped[int]

@@ -1,6 +1,6 @@
 from babel.numbers import list_currencies
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField
+from wtforms import StringField, SelectField, FloatField
 from wtforms.validators import DataRequired
 
 from librepos.utils.datetime import get_all_timezones
@@ -44,6 +44,9 @@ class RestaurantForm(FlaskForm):
         validators=[DataRequired()],
         render_kw={"placeholder": " "},
     )
+    tax_percentage = FloatField(
+        "Tax Percentage", render_kw={"placeholder": "0.00"}, default=0.00
+    )
 
     def __init__(self, **kwargs):
         super(RestaurantForm, self).__init__(**kwargs)
@@ -51,3 +54,5 @@ class RestaurantForm(FlaskForm):
         all_currencies = list_currencies()
         self.timezone.choices = all_timezones
         self.currency.choices = [(currency, currency) for currency in all_currencies]
+        if "obj" in kwargs and kwargs["obj"] is not None:
+            self.tax_percentage.data = float(kwargs["obj"].tax_percentage) / 100

@@ -1,6 +1,7 @@
 from librepos.extensions import db
 from librepos.models.shop_order_items import ShopOrderItem
 from librepos.models.shop_orders import ShopOrder
+from librepos.models.restaurant import Restaurant
 
 
 class OrderRepository:
@@ -58,13 +59,16 @@ class OrderRepository:
     def update_subtotal(self, order_id):
         """Update subtotals for a given order."""
         items = ShopOrderItem.query.filter_by(shop_order_id=order_id).all()
+        restaurant = Restaurant.query.get(1)
         subtotal = 0
         tax = 0
-        TAX_PERCENT = 825  # 8.25% represented as integer
+        tax_percent = (
+            restaurant.tax_percentage if restaurant else 825
+        )  # 8.25% represented as integer
         for item in items:
             subtotal += item.price * item.quantity
             tax = (
-                subtotal * TAX_PERCENT
+                subtotal * tax_percent
             ) // 10000  # Divide by 10000 to adjust for two percentage conversions
         self.update_order(order_id, {"subtotal_amount": subtotal, "tax_amount": tax})
 
