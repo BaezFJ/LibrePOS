@@ -1,4 +1,4 @@
-from librepos.auth.routes import auth_bp
+from librepos.controllers.auth_controller import auth_bp
 from librepos.settings.routes import settings_bp
 from librepos.menu.routes import menu_bp
 from librepos.order.routes import order_bp

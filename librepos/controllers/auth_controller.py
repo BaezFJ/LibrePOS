@@ -5,9 +5,9 @@ from flask_login import login_required, current_user
 
 from librepos.utils import FlashMessageHandler
 from librepos.forms import UserLoginForm
-from .service import AuthService
+from librepos.services.auth_service import AuthService
 
-auth_bp = Blueprint("auth", __name__, template_folder="templates", url_prefix="/auth")
+auth_bp = Blueprint("auth", __name__, template_folder="templates")
 
 auth_service = AuthService()
 

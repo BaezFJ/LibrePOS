@@ -1,15 +1,16 @@
 from flask_login import login_user, logout_user
 
 from librepos.utils import FlashMessageHandler
-from .repository import AuthRepository
+from librepos.repositories.user_repository import UserRepository
 
 
 class AuthService:
+
     def __init__(self, repo=None):
-        self.repo = repo or AuthRepository()
+        self.repo = repo or UserRepository
 
     def authenticate(self, email, password, remember):
-        user = self.repo.get_user_by_email(email)
+        user = self.repo.find_by_email(email)
         if not user:
             FlashMessageHandler.error("Invalid email or password.")
             return None
