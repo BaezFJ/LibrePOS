@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 
 from librepos.utils import FlashMessageHandler
-from .forms import LoginForm
+from librepos.forms import UserLoginForm
 from .service import AuthService
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates", url_prefix="/auth")
@@ -18,7 +18,7 @@ def login():
         FlashMessageHandler.warning("You are already logged in.")
         return redirect(url_for("order.list_orders"))
 
-    form = LoginForm()
+    form = UserLoginForm()
     context = {
         "title": "Login",
         "form": form,

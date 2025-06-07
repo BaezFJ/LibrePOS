@@ -3,7 +3,7 @@ from flask_login import login_required
 
 from librepos.auth.decorators import permission_required
 from librepos.utils import sanitize_form_data
-from .forms import CategoryForm, GroupForm, MenuItemForm
+from librepos.forms import MenuCategoryForm, MenuGroupForm, MenuItemForm
 from .service import MenuService
 
 menu_bp = Blueprint("menu", __name__, template_folder="templates", url_prefix="/menu")
@@ -29,7 +29,7 @@ def before_request():
 @menu_bp.post("/create-category")
 @permission_required("create_menu_category")
 def create_category():
-    form = CategoryForm()
+    form = MenuCategoryForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         menu_service.create_menu_category(sanitized_data)
@@ -46,7 +46,7 @@ def list_categories():
     context = {
         "title": "Categories",
         "categories": menu_service.list_menu_categories(),
-        "form": CategoryForm(),
+        "form": MenuCategoryForm(),
     }
     return render_template("menu/list_categories.html", **context)
 
@@ -58,7 +58,7 @@ def get_category(category_id):
     context = {
         "title": category.name if category else "Category",
         "back_url": url_for("menu.list_categories"),
-        "form": CategoryForm(obj=category),
+        "form": MenuCategoryForm(obj=category),
         "category": menu_service.get_menu_category(category_id),
     }
     return render_template("menu/get_category.html", **context)
@@ -110,7 +110,7 @@ def get_hx_numpad():
 @menu_bp.post("/update-category/<int:category_id>")
 @permission_required("update_menu_category")
 def update_category(category_id):
-    form = CategoryForm()
+    form = MenuCategoryForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         menu_service.update_menu_category(category_id, sanitized_data)
@@ -142,7 +142,7 @@ def delete_category(category_id):
 @menu_bp.post("/create-group")
 @permission_required("create_menu_group")
 def create_group():
-    form = GroupForm()
+    form = MenuGroupForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         menu_service.create_menu_group(sanitized_data)
@@ -156,7 +156,7 @@ def create_group():
 @menu_bp.get("/groups")
 @permission_required("list_menu_groups")
 def list_groups():
-    form = GroupForm()
+    form = MenuGroupForm()
     context = {
         "title": "Groups",
         "groups": menu_service.list_menu_groups(),
@@ -169,7 +169,7 @@ def list_groups():
 @permission_required("get_menu_group")
 def get_group(group_id):
     group = menu_service.get_menu_group(group_id)
-    form = GroupForm(obj=group)
+    form = MenuGroupForm(obj=group)
     context = {
         "title": group.name if group else "Group",
         "back_url": url_for("menu.list_groups"),
@@ -185,7 +185,7 @@ def get_group(group_id):
 @menu_bp.post("/update-group/<int:group_id>")
 @permission_required("update_menu_group")
 def update_group(group_id):
-    form = GroupForm()
+    form = MenuGroupForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         menu_service.update_menu_group(group_id, sanitized_data)

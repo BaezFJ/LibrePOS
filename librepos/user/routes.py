@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from librepos.auth.decorators import permission_required
 from librepos.utils import sanitize_form_data
-from .forms import NewUserForm, UserContactDetailsForm
+from librepos.forms import UserRegistrationForm, UserContactDetailsForm
 from .service import UserService
 
 users_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/users")
@@ -22,10 +22,10 @@ def before_request():
 @permission_required("list_users")
 def list_users():
     users = user_service.list_users()
-    form = NewUserForm()
+    form = UserRegistrationForm()
     context = {
         "title": "Users",
-        "back_url": url_for("settings.settings"),
+        "back_url": url_for("settings.system_settings"),
         "users": users,
         "form": form,
     }
