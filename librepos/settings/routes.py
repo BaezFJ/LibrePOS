@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, url_for, redirect
 from flask_login import login_required
 
-from librepos.auth.decorators import permission_required
 from librepos.utils import sanitize_form_data
+from librepos.utils.decorators import permission_required
 from librepos.forms import RestaurantForm
 
 from .service import MainService
