@@ -25,7 +25,7 @@ def list_users():
     form = NewUserForm()
     context = {
         "title": "Users",
-        "back_url": url_for("main.settings"),
+        "back_url": url_for("settings.settings"),
         "users": users,
         "form": form,
     }
@@ -56,7 +56,7 @@ def profile():
     form = UserContactDetailsForm(obj=current_user)
     context = {
         "title": "Profile",
-        "back_url": url_for("main.settings"),
+        "back_url": url_for("settings.index"),
         "form": form,
     }
     if form.validate_on_submit():

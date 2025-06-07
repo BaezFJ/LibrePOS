@@ -2,7 +2,7 @@ from datetime import datetime
 
 from babel.numbers import get_currency_symbol
 
-from librepos.main.repository import MainRepository
+from librepos.settings.repository import MainRepository
 from .financial import convert_cents_to_dollars
 
 main_repo = MainRepository()

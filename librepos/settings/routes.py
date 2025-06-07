@@ -6,23 +6,38 @@ from librepos.utils import sanitize_form_data
 from .forms import RestaurantForm
 from .service import MainService
 
-main_bp = Blueprint("main", __name__, template_folder="templates")
+settings_bp = Blueprint(
+    "settings", __name__, template_folder="templates", url_prefix="/settings"
+)
 
 main_service = MainService()
 
 
-@main_bp.before_request
+@settings_bp.before_request
 @login_required
 def before_request():
     """Force the user to log in before accessing any page."""
     pass
 
 
-@main_bp.route("/")
-@permission_required("get_settings")
-def settings():
-    context = {"title": "Settings"}
-    return render_template("main/settings.html", **context)
+@settings_bp.get("/")
+def index():
+    context = {
+        "title": "Settings",
+    }
+    return render_template("settings/index.html", **context)
+
+
+# ======================================================================================================================
+#                                              SYSTEM SETTINGS ROUTES
+# ======================================================================================================================
+@settings_bp.get("/system-settings")
+def system_settings():
+    context = {
+        "title": "System",
+        "back_url": url_for(".index"),
+    }
+    return render_template("settings/system_settings.html", **context)
 
 
 # ======================================================================================================================
@@ -33,7 +48,7 @@ def settings():
 # ================================
 #            READ
 # ================================
-@main_bp.get("/restaurant")
+@settings_bp.get("/restaurant")
 @permission_required("get_restaurant")
 def get_restaurant():
     form = RestaurantForm(obj=main_service.get_restaurant())
@@ -43,13 +58,13 @@ def get_restaurant():
         "restaurant": main_service.get_restaurant(),
         "form": form,
     }
-    return render_template("main/get_restaurant.html", **context)
+    return render_template("settings/get_restaurant.html", **context)
 
 
 # ================================
 #            UPDATE
 # ================================
-@main_bp.post("/update-restaurant")
+@settings_bp.post("/update-restaurant")
 @permission_required("update_restaurant")
 def update_restaurant():
     form = RestaurantForm()

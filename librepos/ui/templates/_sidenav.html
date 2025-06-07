@@ -42,9 +42,8 @@
                 </li>
             </ul>
         </li>
-        {% if current_user.has_permission("get_settings") %}
-            {{ render_list_link(url_for("main.settings"), "Settings", "settings") }}
-        {% endif %}
+
+        {{ render_list_link(url_for("settings.index"), "Settings", "settings") }}
 
 
         <div class="divider"></div>

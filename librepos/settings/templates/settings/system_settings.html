@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+    <section>
+        <div class="container">
+            <h4><i class="material-symbols-rounded left">admin_panel_settings</i> System Settings</h4>
+            <p class="grey-text text-darken-1">Manage global preferences such as timezone, currency, and formatting
+                rules.</p>
+
+            <form>
+
+                <!-- Timezone Setting -->
+                <div class="row valign-wrapper">
+                    <div class="col s1">
+                        <span class="material-symbols-rounded">schedule</span>
+                    </div>
+                    <div class="col s4">
+                        <p class="flow-text">Timezone</p>
+                    </div>
+                    <div class="col s7">
+                        <select id="timezone" class="browser-default">
+                            <option value="" disabled selected>Choose timezone</option>
+                            <option value="America/New_York">America/New_York</option>
+                            <option value="Europe/London">Europe/London</option>
+                            <option value="Asia/Tokyo">Asia/Tokyo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Currency Setting -->
+                <div class="row valign-wrapper">
+                    <div class="col s1">
+                        <span class="material-symbols-rounded">payments</span>
+                    </div>
+                    <div class="col s4">
+                        <p class="flow-text">Currency</p>
+                    </div>
+                    <div class="col s7">
+                        <select id="currency" class="browser-default">
+                            <option value="" disabled selected>Choose currency</option>
+                            <option value="USD">$ - US Dollar</option>
+                            <option value="EUR">€ - Euro</option>
+                            <option value="JPY">¥ - Japanese Yen</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Date Format Setting -->
+                <div class="row valign-wrapper">
+                    <div class="col s1">
+                        <span class="material-symbols-rounded">calendar_month</span>
+                    </div>
+                    <div class="col s4">
+                        <p class="flow-text">Date Format</p>
+                    </div>
+                    <div class="col s7">
+                        <select id="date-format" class="browser-default">
+                            <option value="" disabled selected>Choose Date format</option>
+                            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Time Format Setting -->
+                <div class="row valign-wrapper">
+                    <div class="col s1">
+                        <span class="material-symbols-rounded">access_time</span>
+                    </div>
+                    <div class="col s4">
+                        <p class="flow-text">Time Format</p>
+                    </div>
+                    <div class="col s7">
+                        <select id="time-format" class="browser-default">
+                            <option value="" disabled selected>Choose Time format</option>
+                            <option value="12h">12-Hour (AM/PM)</option>
+                            <option value="24h">24-Hour</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- System Language Setting -->
+                <div class="row valign-wrapper">
+                    <div class="col s1">
+                        <span class="material-symbols-rounded">translate</span>
+                    </div>
+                    <div class="col s4">
+                        <p class="flow-text">System Language</p>
+                    </div>
+                    <div class="col s7">
+                        <select id="language" class="browser-default">
+                            <option value="" disabled selected>Choose language</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <!-- Save Button -->
+                <div class="center-align mt-4">
+                    <button class="btn tonal" type="submit">
+                        <i class="material-symbols-rounded left">save</i>
+                        Save Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </section>
+
+{% endblock %}
