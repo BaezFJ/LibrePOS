@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from librepos.forms import UserRegistrationForm, UserContactDetailsForm
-from .service import UserService
+from librepos.services.user_service import UserService
 
 users_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/users")
 
@@ -61,7 +61,7 @@ def profile():
     }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        user_service.update_user(current_user.id, sanitized_data)
+        user_service.update_user(current_user, sanitized_data)
         flash("Profile updated successfully.", "success")
         return redirect(url_for("user.profile"))
     return render_template("user/profile.html", **context)
