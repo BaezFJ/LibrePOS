@@ -61,7 +61,6 @@ def profile():
     }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        user_service.update_user(current_user, sanitized_data)
-        flash("Profile updated successfully.", "success")
+        user_service.update_user(current_user.id, sanitized_data)
         return redirect(url_for("user.profile"))
     return render_template("user/profile.html", **context)
