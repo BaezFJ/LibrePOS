@@ -1,5 +1,4 @@
 from typing import TypeVar, Generic, Type, Optional, List
-from sqlalchemy.orm import DeclarativeBase
 from flask_sqlalchemy.model import Model
 
 from librepos.extensions import db
