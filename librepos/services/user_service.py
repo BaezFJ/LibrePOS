@@ -4,6 +4,7 @@ from librepos.repositories import UserRepository
 from librepos.utils.model_utils import update_model_fields
 from librepos.utils import FlashMessageHandler
 
+
 class UserService:
     def __init__(self, user_repository=None):
         self.user_repository = user_repository or UserRepository()

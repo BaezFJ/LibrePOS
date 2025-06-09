@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SelectField
 from wtforms.validators import DataRequired
 
+
 class MenuGroupForm(FlaskForm):
     category_id = SelectField(
         "Category",

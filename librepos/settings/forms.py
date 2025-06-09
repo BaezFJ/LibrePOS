@@ -2,10 +2,10 @@
 # from flask_wtf import FlaskForm
 # from wtforms import StringField, SelectField, FloatField
 # from wtforms.validators import DataRequired
-# 
+#
 # from librepos.utils.datetime import get_all_timezones
-# 
-# 
+#
+#
 # class RestaurantForm(FlaskForm):
 #     name = StringField(
 #         "Name", validators=[DataRequired()], render_kw={"placeholder": " "}
@@ -47,7 +47,7 @@
 #     tax_percentage = FloatField(
 #         "Tax Percentage", render_kw={"placeholder": "0.00"}, default=0.00
 #     )
-# 
+#
 #     def __init__(self, **kwargs):
 #         super(RestaurantForm, self).__init__(**kwargs)
 #         all_timezones = get_all_timezones()

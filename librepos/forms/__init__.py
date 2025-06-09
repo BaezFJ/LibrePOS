@@ -6,5 +6,12 @@ from .menu_group_form import MenuGroupForm
 from .menu_item_form import MenuItemForm
 from .restaurant_form import RestaurantForm
 
-__all__ = ['UserRegistrationForm', 'UserContactDetailsForm', 'UserLoginForm', 'MenuCategoryForm', 'MenuGroupForm', 'MenuItemForm',
-           'RestaurantForm']
+__all__ = [
+    "UserRegistrationForm",
+    "UserContactDetailsForm",
+    "UserLoginForm",
+    "MenuCategoryForm",
+    "MenuGroupForm",
+    "MenuItemForm",
+    "RestaurantForm",
+]

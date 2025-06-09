@@ -2,15 +2,18 @@ from flask import Blueprint, render_template, url_for, jsonify, request, redirec
 from flask_login import login_required
 
 from librepos.utils.decorators import permission_required
-from librepos.menu.service import MenuService
+from librepos.services.menu_category_service import MenuCategoryService
+from librepos.services.menu_item_service import MenuItemService
 from .service import OrderService
+# from ..menu.routes import menu_item_service
 
 order_bp = Blueprint(
     "order", __name__, template_folder="templates", url_prefix="/orders"
 )
 
 order_service = OrderService()
-menu_service = MenuService()
+menu_category_service = MenuCategoryService()
+menu_item_service = MenuItemService()
 
 
 @order_bp.before_request
@@ -49,7 +52,7 @@ def list_orders():
 @permission_required("get_order")
 def get_order(order_id):
     order = order_service.get_order(order_id)
-    menu_categories = menu_service.list_menu_categories()
+    menu_categories = menu_category_service.list_categories()
     context = {
         "title": str(order.order_number),
         "back_url": url_for("order.list_orders"),
@@ -78,7 +81,7 @@ def add_item_to_order():
     item_id = request.form.get("item_id")
     quantity = request.form.get("quantity")
 
-    item = menu_service.get_menu_item(item_id)
+    item = menu_item_service.get_item_by_id(item_id)
     price = item.price if item else 0
 
     order_service.add_item_to_order(order_id, item_id, quantity, price)

@@ -4,11 +4,15 @@ from flask_login import login_required
 from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from librepos.forms import MenuCategoryForm, MenuGroupForm, MenuItemForm
-from .service import MenuService
+from librepos.services.menu_category_service import MenuCategoryService
+from librepos.services.menu_group_service import MenuGroupService
+from librepos.services.menu_item_service import MenuItemService
 
 menu_bp = Blueprint("menu", __name__, template_folder="templates", url_prefix="/menu")
 
-menu_service = MenuService()
+menu_category_service = MenuCategoryService()
+menu_group_service = MenuGroupService()
+menu_item_service = MenuItemService()
 
 
 @menu_bp.before_request
@@ -32,7 +36,7 @@ def create_category():
     form = MenuCategoryForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_service.create_menu_category(sanitized_data)
+        menu_category_service.create_category(sanitized_data)
         flash("Category created successfully.", "success")
     return redirect(url_for("menu.list_categories"))
 
@@ -45,7 +49,7 @@ def create_category():
 def list_categories():
     context = {
         "title": "Categories",
-        "categories": menu_service.list_menu_categories(),
+        "categories": menu_category_service.list_categories(),
         "form": MenuCategoryForm(),
     }
     return render_template("menu/list_categories.html", **context)
@@ -54,12 +58,12 @@ def list_categories():
 @menu_bp.get("/category/<int:category_id>")
 @permission_required("get_menu_category")
 def get_category(category_id):
-    category = menu_service.get_menu_category(category_id)
+    category = menu_category_service.get_category_by_id(category_id)
     context = {
         "title": category.name if category else "Category",
         "back_url": url_for("menu.list_categories"),
         "form": MenuCategoryForm(obj=category),
-        "category": menu_service.get_menu_category(category_id),
+        "category": menu_category_service.get_category_by_id(category_id),
     }
     return render_template("menu/get_category.html", **context)
 
@@ -67,7 +71,7 @@ def get_category(category_id):
 @menu_bp.get("hx/categories")
 def get_hx_categories():
     order_id = request.args.get("order_id")
-    categories = menu_service.get_active_menu_categories()
+    categories = menu_category_service.list_active_categories()
     return render_template(
         "menu/hx_categories.html", categories=categories, order_id=order_id
     )
@@ -76,8 +80,8 @@ def get_hx_categories():
 @menu_bp.get("hx/groups/<int:category_id>")
 def get_hx_groups(category_id):
     order_id = request.args.get("order_id")
-    groups = menu_service.get_menu_category_groups(category_id)
-    category = menu_service.get_menu_category(category_id)
+    groups = menu_group_service.list_groups_by_category(category_id)
+    category = menu_category_service.get_category_by_id(category_id)
     return render_template(
         "menu/hx_groups.html", groups=groups, category=category, order_id=order_id
     )
@@ -86,8 +90,8 @@ def get_hx_groups(category_id):
 @menu_bp.get("hx/group/items/<int:group_id>")
 def get_hx_group_items(group_id):
     order_id = request.args.get("order_id")
-    group = menu_service.get_menu_group(group_id)
-    items = menu_service.list_group_menu_items(group_id)
+    group = menu_group_service.get_group_by_id(group_id)
+    items = menu_item_service.list_items_by_group(group_id)
     return render_template(
         "menu/hx_group_items.html", items=items, group=group, order_id=order_id
     )
@@ -113,8 +117,7 @@ def update_category(category_id):
     form = MenuCategoryForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_service.update_menu_category(category_id, sanitized_data)
-        flash("Category updated successfully.", "success")
+        menu_category_service.update_category(category_id, sanitized_data)
     return redirect(url_for("menu.get_category", category_id=category_id))
 
 
@@ -124,7 +127,8 @@ def update_category(category_id):
 @menu_bp.post("/delete-category/<int:category_id>")
 @permission_required("delete_menu_category")
 def delete_category(category_id):
-    menu_service.delete_menu_category(category_id)
+    _category = menu_category_service.get_category_by_id(category_id)
+    menu_category_service.delete_category(category_id)
     # Return a redirect header HTMX understands
     response = jsonify(success=True)
     response.headers["HX-Redirect"] = url_for("menu.list_categories")
@@ -145,8 +149,7 @@ def create_group():
     form = MenuGroupForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_service.create_menu_group(sanitized_data)
-        flash("Group created successfully.", "success")
+        menu_group_service.create_group(sanitized_data)
     return redirect(url_for("menu.list_groups"))
 
 
@@ -159,7 +162,7 @@ def list_groups():
     form = MenuGroupForm()
     context = {
         "title": "Groups",
-        "groups": menu_service.list_menu_groups(),
+        "groups": menu_group_service.list_groups(),
         "form": form,
     }
     return render_template("menu/list_groups.html", **context)
@@ -168,12 +171,12 @@ def list_groups():
 @menu_bp.get("/group/<int:group_id>")
 @permission_required("get_menu_group")
 def get_group(group_id):
-    group = menu_service.get_menu_group(group_id)
+    group = menu_group_service.get_group_by_id(group_id)
     form = MenuGroupForm(obj=group)
     context = {
         "title": group.name if group else "Group",
         "back_url": url_for("menu.list_groups"),
-        "group": menu_service.get_menu_group(group_id),
+        "group": group,
         "form": form,
     }
     return render_template("menu/get_group.html", **context)
@@ -188,8 +191,7 @@ def update_group(group_id):
     form = MenuGroupForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_service.update_menu_group(group_id, sanitized_data)
-        flash("Group updated successfully.", "success")
+        menu_group_service.update_group(group_id, sanitized_data)
     return redirect(url_for("menu.get_group", group_id=group_id))
 
 
@@ -199,7 +201,7 @@ def update_group(group_id):
 @menu_bp.post("/delete-group/<int:group_id>")
 @permission_required("delete_menu_group")
 def delete_group(group_id):
-    menu_service.delete_menu_group(group_id)
+    menu_group_service.delete_group(group_id)
     response = jsonify(success=True)
     response.headers["HX-Redirect"] = url_for("menu.list_groups")
     return response
@@ -219,8 +221,7 @@ def create_item():
     form = MenuItemForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_service.create_menu_item(sanitized_data)
-        flash("Item created successfully.", "success")
+        menu_item_service.create_menu_item(sanitized_data)
     return redirect(url_for("menu.list_items"))
 
 
@@ -231,19 +232,23 @@ def create_item():
 @permission_required("list_menu_items")
 def list_items():
     form = MenuItemForm()
-    context = {"title": "Items", "items": menu_service.list_menu_items(), "form": form}
+    context = {
+        "title": "Items",
+        "items": menu_item_service.list_menu_items(),
+        "form": form,
+    }
     return render_template("menu/list_items.html", **context)
 
 
 @menu_bp.get("/item/<int:item_id>")
 @permission_required("get_menu_item")
 def get_item(item_id):
-    item = menu_service.get_menu_item(item_id)
+    item = menu_item_service.get_item_by_id(item_id)
     form = MenuItemForm(obj=item)
     context = {
         "title": item.name if item else "Item",
         "back_url": url_for("menu.list_items"),
-        "item": menu_service.get_menu_item(item_id),
+        "item": item,
         "form": form,
     }
     return render_template("menu/get_item.html", **context)
@@ -258,8 +263,7 @@ def update_item(item_id):
     form = MenuItemForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_service.update_menu_item(item_id, sanitized_data)
-        flash("Item updated successfully.", "success")
+        menu_item_service.update_menu_item(item_id, sanitized_data)
     return redirect(url_for("menu.get_item", item_id=item_id))
 
 
@@ -269,7 +273,7 @@ def update_item(item_id):
 @menu_bp.post("/delete-item/<int:item_id>")
 @permission_required("delete_menu_item")
 def delete_item(item_id):
-    menu_service.delete_menu_item(item_id)
+    menu_item_service.delete_menu_item(item_id)
     response = jsonify(success=True)
     response.headers["HX-Redirect"] = url_for("menu.list_items")
     return response

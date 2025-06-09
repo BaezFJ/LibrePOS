@@ -1,6 +1,7 @@
 from .entity_repo import EntityRepository
 from .menu_category_repo import MenuCategoryRepository
 from .menu_group_repo import MenuGroupRepository
+from .menu_item_repo import MenuItemRepository
 from .user_repository import UserRepository
 
 __all__ = [
@@ -8,4 +9,5 @@ __all__ = [
     "MenuCategoryRepository",
     "MenuGroupRepository",
     "UserRepository",
+    "MenuItemRepository",
 ]

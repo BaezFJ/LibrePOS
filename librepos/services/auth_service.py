@@ -5,7 +5,6 @@ from librepos.repositories.user_repository import UserRepository
 
 
 class AuthService:
-
     def __init__(self, repo=None):
         self.repo = repo or UserRepository
 

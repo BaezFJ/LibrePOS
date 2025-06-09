@@ -1,13 +1,14 @@
 from flask_login import current_user
 
-from librepos.menu.repository import MenuRepository
 from librepos.models.shop_orders import OrderStateEnum
+from librepos.repositories.menu_item_repo import MenuItemRepository
 from .repository import OrderRepository
 
 
 class OrderService:
     def __init__(self, repo=None):
         self.repo = repo or OrderRepository()
+        self.menu_item_repo = MenuItemRepository()
 
     def create_order(self):
         data = {
@@ -16,7 +17,7 @@ class OrderService:
         return self.repo.create_order(data)
 
     def add_item_to_order(self, order_id, item_id, quantity, price):
-        item = MenuRepository.get_item_by_id(item_id)
+        item = self.menu_item_repo.get_by_id(item_id)
         item_name = item.group.name + " - " + item.name if item else ""
         return self.repo.add_item_to_order(
             order_id, item_id, item_name=item_name, quantity=quantity, price=price

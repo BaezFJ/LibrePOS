@@ -1,6 +1,6 @@
 from typing import Dict, Any, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def update_model_fields(model, data: Dict[str, Any]) -> None:
