@@ -13,6 +13,8 @@ settings_bp = Blueprint(
 restaurant_service = RestaurantService()
 system_settings_service = SystemSettingsService()
 
+nav_title = "Settings"
+
 
 @settings_bp.before_request
 @login_required
@@ -42,7 +44,7 @@ def system_settings():
     settings = system_settings_service.repository.get_by_id(1)
     form = SystemSettingsForm(obj=settings)
     context = {
-        "title": "System",
+        "title": nav_title,
         "back_url": url_for(".index"),
         "form": form,
         "settings": settings,
@@ -77,7 +79,7 @@ def get_restaurant():
     restaurant = restaurant_service.repository.get_by_id(1)
     form = RestaurantForm(obj=restaurant)
     context = {
-        "title": "Restaurant",
+        "title": nav_title,
         "back_url": url_for(".index"),
         "restaurant": restaurant,
         "form": form,
