@@ -8,7 +8,22 @@ from librepos.models.policy_permissions import PolicyPermission
 from librepos.models.restaurant import Restaurant
 from librepos.models.role_policies import RolePolicy
 from librepos.models.roles import Role
+from librepos.models.system_settings import SystemSettings
 from librepos.models.users import User
+
+
+def seed_system_settings():
+    system_settings = SystemSettings(
+        timezone="America/New_York",
+        currency="USD",
+        date_format="%m/%d/%Y",
+        time_format="%I:%M %p",
+        language="en",
+        locale="en_US",
+    )
+    db.session.add(system_settings)
+    db.session.commit()
+    return system_settings
 
 
 def seed_restaurant():
@@ -134,6 +149,14 @@ def seed_permissions():
         name="update_restaurant", description="Edit restaurant details"
     )
 
+    # Settings/System Permissions
+    view_system_settings = Permission(
+        name="view_system_settings", description="View system settings"
+    )
+    update_system_settings = Permission(
+        name="update_system_settings", description="Update system settings"
+    )
+
     return [
         create_user_permission,
         get_user_permission,
@@ -164,6 +187,8 @@ def seed_permissions():
         get_settings,
         get_restaurant,
         update_restaurant,
+        view_system_settings,
+        update_system_settings,
     ]
 
 
@@ -296,6 +321,7 @@ def load_menu_data():
 
 def seed_all():
     seed_restaurant()
+    seed_system_settings()
 
     roles = seed_roles()
     policies = seed_policies()

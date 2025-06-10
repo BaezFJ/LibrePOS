@@ -2,7 +2,12 @@ from flask import Flask
 
 from .manage import add_cli_commands
 from .router import register_blueprints
-from .utils.formatters import datetime_formatter, phone_formatter, currency_formatter
+from .utils.formatters import (
+    phone_formatter,
+    currency_formatter,
+    date_formatter,
+    time_formatter,
+)
 
 
 def create_app():
@@ -55,9 +60,13 @@ def init_extensions(app):
 
 
 def custom_jinja_filters(app):
-    @app.template_filter("datetime")
-    def format_date(value, format_spec="short-date"):
-        return datetime_formatter(value, format_spec)
+    @app.template_filter("date")
+    def format_date(value):
+        return date_formatter(value)
+
+    @app.template_filter("time")
+    def format_time(value):
+        return time_formatter(value)
 
     @app.template_filter("currency")
     def format_currency(value):

@@ -27,7 +27,7 @@ class Role(db.Model):
     name: Mapped[str] = mapped_column(unique=True, index=True)
     description: Mapped[str]
     created_at: Mapped[datetime]
-    active: Mapped[bool] = mapped_column(default=False)
+    active: Mapped[bool] = mapped_column(default=True)
 
     # Relationships
     users: Mapped[List["User"]] = relationship(back_populates="role")

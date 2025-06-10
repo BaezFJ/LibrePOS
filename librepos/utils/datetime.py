@@ -5,10 +5,9 @@ from zoneinfo import ZoneInfo
 
 
 def timezone_aware_datetime():
-    from librepos.main.repository import MainRepository
+    from librepos.repositories import SystemSettingsRepository
 
-    restaurant = MainRepository.retrieve_restaurant()
-    timezone = restaurant.timezone if restaurant else "UTC"
+    timezone = SystemSettingsRepository().get_timezone()
 
     return datetime.now(ZoneInfo(timezone))
 
