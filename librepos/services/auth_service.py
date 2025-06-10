@@ -1,7 +1,7 @@
 from flask_login import login_user, logout_user
 
-from librepos.utils import FlashMessageHandler
 from librepos.repositories.user_repository import UserRepository
+from librepos.utils import FlashMessageHandler
 
 
 class AuthService:

@@ -3,9 +3,9 @@ from urllib.parse import urlparse
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 
-from librepos.utils import FlashMessageHandler
 from librepos.forms import UserLoginForm
-from librepos.services.auth_service import AuthService
+from librepos.services import AuthService
+from librepos.utils import FlashMessageHandler
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates")
 

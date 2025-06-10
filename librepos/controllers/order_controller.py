@@ -1,14 +1,14 @@
 from flask import Blueprint, render_template, url_for, jsonify, request, redirect
 from flask_login import login_required, current_user
 
-from librepos.utils.decorators import permission_required
-from librepos.utils.enums import OrderStateEnum
 from librepos.services import (
     MenuCategoryService,
     MenuItemService,
     OrderService,
     OrderItemService,
 )
+from librepos.utils.decorators import permission_required
+from librepos.utils.enums import OrderStateEnum
 
 order_bp = Blueprint(
     "order", __name__, template_folder="templates", url_prefix="/orders"

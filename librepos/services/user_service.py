@@ -1,8 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
 
 from librepos.repositories import UserRepository
-from librepos.utils.model_utils import update_model_fields
 from librepos.utils import FlashMessageHandler
+from librepos.utils.model_utils import update_model_fields
 
 
 class UserService:

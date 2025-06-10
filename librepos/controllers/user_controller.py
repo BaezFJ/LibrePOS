@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, url_for, flash, redirect
 from flask_login import login_required, current_user
 
+from librepos.forms import UserRegistrationForm, UserContactDetailsForm
+from librepos.services import UserService
 from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
-from librepos.forms import UserRegistrationForm, UserContactDetailsForm
-from librepos.services.user_service import UserService
 
 users_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/users")
 

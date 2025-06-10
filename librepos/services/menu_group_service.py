@@ -2,8 +2,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from librepos.models.menu_groups import MenuGroup
 from librepos.repositories import MenuGroupRepository
-from librepos.utils.model_utils import update_model_fields
 from librepos.utils import FlashMessageHandler
+from librepos.utils.model_utils import update_model_fields
 
 
 class MenuGroupService:

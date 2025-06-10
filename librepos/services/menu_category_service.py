@@ -1,9 +1,9 @@
 from sqlalchemy.exc import SQLAlchemyError
 
-from librepos.repositories import MenuCategoryRepository
 from librepos.models.menu_categories import MenuCategory
-from librepos.utils.model_utils import update_model_fields
+from librepos.repositories import MenuCategoryRepository
 from librepos.utils import FlashMessageHandler
+from librepos.utils.model_utils import update_model_fields
 
 
 class MenuCategoryService:

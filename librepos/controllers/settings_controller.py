@@ -1,17 +1,16 @@
 from flask import Blueprint, render_template, url_for, redirect
 from flask_login import login_required
 
+from librepos.forms import RestaurantForm
+from librepos.services import RestaurantService
 from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
-from librepos.forms import RestaurantForm
-
-from .service import MainService
 
 settings_bp = Blueprint(
     "settings", __name__, template_folder="templates", url_prefix="/settings"
 )
 
-main_service = MainService()
+restaurant_service = RestaurantService()
 
 
 @settings_bp.before_request
@@ -22,17 +21,21 @@ def before_request():
 
 
 @settings_bp.get("/")
+@permission_required("get_settings")
 def index():
-    context = {
-        "title": "Settings",
-    }
-    return render_template("settings/index.html", **context)
+    return render_template("settings/index.html", title="Settings")
 
 
 # ======================================================================================================================
-#                                              SYSTEM SETTINGS ROUTES
+#                                            SYSTEM SETTINGS ROUTES
 # ======================================================================================================================
-@settings_bp.get("/system-settings")
+
+
+# ================================
+#            READ
+# ================================
+@settings_bp.get("/system")
+@permission_required("view_system_settings")
 def system_settings():
     context = {
         "title": "System",
@@ -52,11 +55,12 @@ def system_settings():
 @settings_bp.get("/restaurant")
 @permission_required("get_restaurant")
 def get_restaurant():
-    form = RestaurantForm(obj=main_service.get_restaurant())
+    restaurant = restaurant_service.repository.get_by_id(1)
+    form = RestaurantForm(obj=restaurant)
     context = {
         "title": "Restaurant",
-        "back_url": url_for(".settings"),
-        "restaurant": main_service.get_restaurant(),
+        "back_url": url_for(".index"),
+        "restaurant": restaurant,
         "form": form,
     }
     return render_template("settings/get_restaurant.html", **context)
@@ -71,7 +75,5 @@ def update_restaurant():
     form = RestaurantForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        for key, value in sanitized_data.items():
-            print(f"key: {key} -> value: {value}")
-        main_service.update_restaurant(sanitized_data)
-    return redirect(url_for(".settings"))
+        restaurant_service.update_restaurant(sanitized_data)
+    return redirect(url_for(".get_restaurant"))

@@ -1,9 +1,9 @@
 from sqlalchemy.exc import SQLAlchemyError
 
-from librepos.repositories import MenuItemRepository
 from librepos.models.menu_items import MenuItem
-from librepos.utils.model_utils import update_model_fields
+from librepos.repositories import MenuItemRepository
 from librepos.utils import FlashMessageHandler, convert_dollars_to_cents
+from librepos.utils.model_utils import update_model_fields
 
 
 class MenuItemService:

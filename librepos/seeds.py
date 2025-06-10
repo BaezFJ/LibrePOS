@@ -8,8 +8,8 @@ from librepos.models.policy_permissions import PolicyPermission
 from librepos.models.restaurant import Restaurant
 from librepos.models.role_policies import RolePolicy
 from librepos.models.roles import Role
-from librepos.models.users import User
 from librepos.models.system_settings import SystemSettings
+from librepos.models.users import User
 
 
 def seed_system_settings():
