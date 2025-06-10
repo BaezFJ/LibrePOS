@@ -15,6 +15,7 @@ class SystemSettings(db.Model):
         date_format: str,
         time_format: str,
         language: str,
+        locale: str,
     ):
         super(SystemSettings, self).__init__()
         self.timezone = timezone
@@ -22,6 +23,7 @@ class SystemSettings(db.Model):
         self.date_format = date_format
         self.time_format = time_format
         self.language = language
+        self.locale = locale
 
     # Columns
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
@@ -30,3 +32,4 @@ class SystemSettings(db.Model):
     date_format: Mapped[str]
     time_format: Mapped[str]
     language: Mapped[str]
+    locale: Mapped[str]

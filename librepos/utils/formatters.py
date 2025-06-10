@@ -5,11 +5,27 @@ from babel.numbers import get_currency_symbol
 from librepos.repositories import SystemSettingsRepository
 from .financial import convert_cents_to_dollars
 
+system_settings_repo = SystemSettingsRepository()
+
 
 def receipt_number_formatter(prefix: str, counter: int, suffix: str = "") -> str:
     prefix = f"{prefix:02d}"
     number_part = f"{counter:04d}"
     return f"{prefix}-{number_part}{suffix}" if suffix else f"{prefix}-{number_part}"
+
+
+def date_formatter(value: datetime | None) -> str:
+    if value is None:
+        return "N/A"
+    system_date_format = system_settings_repo.get_date_format()
+    return value.strftime(system_date_format)
+
+
+def time_formatter(value: datetime | None) -> str:
+    if value is None:
+        return "N/A"
+    system_time_format = system_settings_repo.get_time_format()
+    return value.strftime(system_time_format)
 
 
 def datetime_formatter(value: datetime | None, format_spec: str) -> str:
@@ -32,8 +48,9 @@ def datetime_formatter(value: datetime | None, format_spec: str) -> str:
 
 def currency_formatter(value: int) -> str:
     dollar_amount = convert_cents_to_dollars(value)
-    currency_code = SystemSettingsRepository().get_currency()
-    currency_symbol = get_currency_symbol(currency_code)
+    currency_code = system_settings_repo.get_currency()
+    locale = system_settings_repo.get_locale()
+    currency_symbol = get_currency_symbol(currency_code, locale=locale)
     return f"{currency_symbol} {dollar_amount:.2f}"
 
 

@@ -19,6 +19,7 @@ def seed_system_settings():
         date_format="%m/%d/%Y",
         time_format="%I:%M %p",
         language="en",
+        locale="en_US",
     )
     db.session.add(system_settings)
     db.session.commit()
@@ -152,6 +153,9 @@ def seed_permissions():
     view_system_settings = Permission(
         name="view_system_settings", description="View system settings"
     )
+    update_system_settings = Permission(
+        name="update_system_settings", description="Update system settings"
+    )
 
     return [
         create_user_permission,
@@ -184,6 +188,7 @@ def seed_permissions():
         get_restaurant,
         update_restaurant,
         view_system_settings,
+        update_system_settings,
     ]
 
 
@@ -316,6 +321,7 @@ def load_menu_data():
 
 def seed_all():
     seed_restaurant()
+    seed_system_settings()
 
     roles = seed_roles()
     policies = seed_policies()

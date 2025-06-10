@@ -5,11 +5,22 @@
 
     <section>
         <div class="container">
-            <h4><i class="material-symbols-rounded left">admin_panel_settings</i> System Settings</h4>
-            <p class="grey-text text-darken-1">Manage global preferences such as timezone, currency, and formatting
-                rules.</p>
+            <div class="row">
+                <div class="col s2">
+                    <i class="large material-symbols-rounded pr-4">admin_panel_settings</i>
+                </div>
+                <div class="col s10">
+                    <h4 class="center-align">System Settings</h4>
+                    <p class="grey-text text-darken-1 flow-text">Manage global preferences such as timezone, currency,
+                        and
+                        formatting
+                        rules.</p>
+                </div>
+            </div>
 
-            <form>
+
+            <form action="{{ url_for('settings.update_system_settings') }}" method="POST">
+                {{ form.hidden_tag() }}
 
                 <!-- Timezone Setting -->
                 <div class="row valign-wrapper">
@@ -20,12 +31,7 @@
                         <p class="flow-text">Timezone</p>
                     </div>
                     <div class="col s7">
-                        <select id="timezone" class="browser-default">
-                            <option value="" disabled selected>Choose timezone</option>
-                            <option value="America/New_York">America/New_York</option>
-                            <option value="Europe/London">Europe/London</option>
-                            <option value="Asia/Tokyo">Asia/Tokyo</option>
-                        </select>
+                        {{ form.timezone(class="browser-default") }}
                     </div>
                 </div>
 
@@ -38,12 +44,7 @@
                         <p class="flow-text">Currency</p>
                     </div>
                     <div class="col s7">
-                        <select id="currency" class="browser-default">
-                            <option value="" disabled selected>Choose currency</option>
-                            <option value="USD">$ - US Dollar</option>
-                            <option value="EUR">€ - Euro</option>
-                            <option value="JPY">¥ - Japanese Yen</option>
-                        </select>
+                        {{ form.currency(class="browser-default") }}
                     </div>
                 </div>
 
@@ -56,12 +57,7 @@
                         <p class="flow-text">Date Format</p>
                     </div>
                     <div class="col s7">
-                        <select id="date-format" class="browser-default">
-                            <option value="" disabled selected>Choose Date format</option>
-                            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                        </select>
+                        {{ form.date_format(class="browser-default") }}
                     </div>
                 </div>
 
@@ -74,11 +70,7 @@
                         <p class="flow-text">Time Format</p>
                     </div>
                     <div class="col s7">
-                        <select id="time-format" class="browser-default">
-                            <option value="" disabled selected>Choose Time format</option>
-                            <option value="12h">12-Hour (AM/PM)</option>
-                            <option value="24h">24-Hour</option>
-                        </select>
+                        {{ form.time_format(class="browser-default") }}
                     </div>
                 </div>
 
@@ -91,12 +83,20 @@
                         <p class="flow-text">System Language</p>
                     </div>
                     <div class="col s7">
-                        <select id="language" class="browser-default">
-                            <option value="" disabled selected>Choose language</option>
-                            <option value="en">English</option>
-                            <option value="es">Español</option>
-                            <option value="fr">Français</option>
-                        </select>
+                        {{ form.language(class="browser-default") }}
+                    </div>
+                </div>
+
+                <!-- Babel Locale Setting -->
+                <div class="row valign-wrapper">
+                    <div class="col s1">
+                        <span class="material-symbols-rounded">globe</span>
+                    </div>
+                    <div class="col s4">
+                        <p class="flow-text">Locale</p>
+                    </div>
+                    <div class="col s7">
+                        {{ form.locale(class="browser-default") }}
                     </div>
                 </div>
 
