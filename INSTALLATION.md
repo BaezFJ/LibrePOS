@@ -10,6 +10,16 @@ file is required for the application to run properly.
 Please refer to the [Environment Configuration](ENVIRONMENT_CONFIGURATION.md) file for detailed information about
 required environment variables and how to configure them. This step is crucial for the proper functioning of LibrePOS.
 
+## Default Admin Credentials
+
+After installation, you can log in to the system using these default administrator credentials:
+
+- Email: admin@librepos.com
+- Password: librepos
+
+**Important**: It is strongly recommended to change these credentials immediately after your first login for security
+purposes.
+
 ## 1. Installing LibrePOS from GitHub
 
 ### Prerequisites
