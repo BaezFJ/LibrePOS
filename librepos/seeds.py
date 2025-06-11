@@ -66,16 +66,16 @@ def seed_restaurant():
 def seed_roles() -> List[Role]:
     all_roles = []
     for role in ROLES_FIXTURE:
-        all_roles.append([
-            create_role(name, description) for name, description in role
-        ])
+        all_roles.extend([create_role(name, description) for name, description in role])
     return all_roles
 
 
 def seed_policies() -> List[Policy]:
     all_policies = []
     for policy in POLICIES_FIXTURE:
-        all_policies.append([create_policy(name, description) for name, description in policy])
+        all_policies.extend(
+            [create_policy(name, description) for name, description in policy]
+        )
     return all_policies
 
 
