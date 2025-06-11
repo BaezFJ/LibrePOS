@@ -29,7 +29,7 @@ def before_request():
 #            CREATE
 # ================================
 @menu_bp.post("/create-category")
-@permission_required("create_menu_category")
+@permission_required("menu_category.create")
 def create_category():
     form = MenuCategoryForm()
     if form.validate_on_submit():
@@ -43,7 +43,7 @@ def create_category():
 #            READ
 # ================================
 @menu_bp.get("/categories")
-@permission_required("list_menu_categories")
+@permission_required("menu_category.list")
 def list_categories():
     context = {
         "title": "Categories",
@@ -54,7 +54,7 @@ def list_categories():
 
 
 @menu_bp.get("/category/<int:category_id>")
-@permission_required("get_menu_category")
+@permission_required("menu_category.read")
 def get_category(category_id):
     category = menu_category_service.get_category_by_id(category_id)
     context = {
@@ -110,7 +110,7 @@ def get_hx_numpad():
 #            UPDATE
 # ================================
 @menu_bp.post("/update-category/<int:category_id>")
-@permission_required("update_menu_category")
+@permission_required("menu_category.update")
 def update_category(category_id):
     form = MenuCategoryForm()
     if form.validate_on_submit():
@@ -123,7 +123,7 @@ def update_category(category_id):
 #            DELETE
 # ================================
 @menu_bp.post("/delete-category/<int:category_id>")
-@permission_required("delete_menu_category")
+@permission_required("menu_category.delete")
 def delete_category(category_id):
     _category = menu_category_service.get_category_by_id(category_id)
     menu_category_service.delete_category(category_id)
@@ -142,7 +142,7 @@ def delete_category(category_id):
 #            CREATE
 # ================================
 @menu_bp.post("/create-group")
-@permission_required("create_menu_group")
+@permission_required("menu_group.create")
 def create_group():
     form = MenuGroupForm()
     if form.validate_on_submit():
@@ -155,7 +155,7 @@ def create_group():
 #            READ
 # ================================
 @menu_bp.get("/groups")
-@permission_required("list_menu_groups")
+@permission_required("menu_group.list")
 def list_groups():
     form = MenuGroupForm()
     context = {
@@ -167,7 +167,7 @@ def list_groups():
 
 
 @menu_bp.get("/group/<int:group_id>")
-@permission_required("get_menu_group")
+@permission_required("menu_group.read")
 def get_group(group_id):
     group = menu_group_service.get_group_by_id(group_id)
     form = MenuGroupForm(obj=group)
@@ -184,7 +184,7 @@ def get_group(group_id):
 #            UPDATE
 # ================================
 @menu_bp.post("/update-group/<int:group_id>")
-@permission_required("update_menu_group")
+@permission_required("menu_group.update")
 def update_group(group_id):
     form = MenuGroupForm()
     if form.validate_on_submit():
@@ -197,7 +197,7 @@ def update_group(group_id):
 #            DELETE
 # ================================
 @menu_bp.post("/delete-group/<int:group_id>")
-@permission_required("delete_menu_group")
+@permission_required("menu_group.delete")
 def delete_group(group_id):
     menu_group_service.delete_group(group_id)
     response = jsonify(success=True)
@@ -214,7 +214,7 @@ def delete_group(group_id):
 #            CREATE
 # ================================
 @menu_bp.post("/create-item")
-@permission_required("create_menu_item")
+@permission_required("menu_item.create")
 def create_item():
     form = MenuItemForm()
     if form.validate_on_submit():
@@ -227,7 +227,7 @@ def create_item():
 #            READ
 # ================================
 @menu_bp.get("/items")
-@permission_required("list_menu_items")
+@permission_required("menu_item.list")
 def list_items():
     form = MenuItemForm()
     context = {
@@ -239,7 +239,7 @@ def list_items():
 
 
 @menu_bp.get("/item/<int:item_id>")
-@permission_required("get_menu_item")
+@permission_required("menu_item.read")
 def get_item(item_id):
     item = menu_item_service.get_item_by_id(item_id)
     form = MenuItemForm(obj=item)
@@ -256,7 +256,7 @@ def get_item(item_id):
 #            UPDATE
 # ================================
 @menu_bp.post("/update-item/<int:item_id>")
-@permission_required("update_menu_item")
+@permission_required("menu_item.update")
 def update_item(item_id):
     form = MenuItemForm()
     if form.validate_on_submit():
@@ -269,7 +269,7 @@ def update_item(item_id):
 #            DELETE
 # ================================
 @menu_bp.post("/delete-item/<int:item_id>")
-@permission_required("delete_menu_item")
+@permission_required("menu_item.delete")
 def delete_item(item_id):
     menu_item_service.delete_menu_item(item_id)
     response = jsonify(success=True)

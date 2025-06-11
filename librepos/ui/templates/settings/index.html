@@ -10,7 +10,7 @@
 
         <div class="row">
 
-            {% if current_user.has_permission('view_system_settings') %}
+            {% if current_user.has_permission('system_settings.read') %}
                 <!-- System Settings -->
                 <div class="col s6 m4 l3">
                     <div class="card hoverable">

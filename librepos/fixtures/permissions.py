@@ -23,6 +23,7 @@ USER_PERMISSIONS = [
         "user.update",
         "Modify existing user accounts including username, email, role assignments and permissions",
     ),
+    ("user.update.own", "Modify own user profile and permissions"),
     ("user.delete", "Permanently remove user accounts from the system"),
 ]
 

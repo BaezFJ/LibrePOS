@@ -19,7 +19,7 @@ def before_request():
 
 
 @users_bp.route("/", methods=["GET", "POST"])
-@permission_required("list_users")
+@permission_required("user.list")
 def list_users():
     users = user_service.list_users()
     form = UserRegistrationForm()
@@ -40,7 +40,7 @@ def list_users():
 
 
 @users_bp.get("/<int:user_id>")
-@permission_required("get_user")
+@permission_required("user.read")
 def get_user(user_id):
     context = {
         "title": "User",
@@ -51,6 +51,7 @@ def get_user(user_id):
 
 
 @users_bp.route("/profile", methods=["GET", "POST"])
+@permission_required("user.update.own")
 def profile():
     """Render the user's profile page."""
     form = UserContactDetailsForm(obj=current_user)

@@ -24,13 +24,13 @@ def before_request():
 
 
 @settings_bp.get("/")
-@permission_required("get_settings")
+@permission_required("settings.read")
 def index():
     return render_template("settings/index.html", title="Settings")
 
 
 # ======================================================================================================================
-#                                            SYSTEM SETTINGS ROUTES
+#                                            SYSTEM ROUTES
 # ======================================================================================================================
 
 
@@ -38,7 +38,7 @@ def index():
 #            READ
 # ================================
 @settings_bp.get("/system")
-@permission_required("view_system_settings")
+@permission_required("system_settings.read")
 def system_settings():
     """Render the system settings page."""
     settings = system_settings_service.repository.get_by_id(1)
@@ -56,7 +56,7 @@ def system_settings():
 #            UPDATE
 # ================================
 @settings_bp.post("/update-system-settings")
-@permission_required("update_system_settings")
+@permission_required("system_settings.update")
 def update_system_settings():
     form = SystemSettingsForm()
     if form.validate_on_submit():
@@ -74,7 +74,7 @@ def update_system_settings():
 #            READ
 # ================================
 @settings_bp.get("/restaurant")
-@permission_required("get_restaurant")
+@permission_required("restaurant.read")
 def get_restaurant():
     restaurant = restaurant_service.repository.get_by_id(1)
     form = RestaurantForm(obj=restaurant)
@@ -91,7 +91,7 @@ def get_restaurant():
 #            UPDATE
 # ================================
 @settings_bp.post("/update-restaurant")
-@permission_required("update_restaurant")
+@permission_required("restaurant.update")
 def update_restaurant():
     form = RestaurantForm()
     if form.validate_on_submit():
