@@ -4,9 +4,9 @@
     <!-- Icon Card -->
     {% if href %}
         <a href="{{ href }}" class="inherit-color">
-            {% call card_block(classes="center-align") %}
-                <i class="large material-icons">{{ icon }}</i>
-                <h5 class="my-0">{{ text|truncate(length=8) }}</h5>
+            {% call card_block(classes="center-align hoverable") %}
+                <i class="medium material-symbols-rounded">{{ icon }}</i>
+                <h6>{{ text|truncate(length=12) }}</h6>
             {% endcall %}
         </a>
     {% else %}
