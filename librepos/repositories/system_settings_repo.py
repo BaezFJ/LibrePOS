@@ -1,4 +1,4 @@
-from librepos.models.system_settings import SystemSettings
+from librepos.models import SystemSettings
 
 from . import EntityRepository
 

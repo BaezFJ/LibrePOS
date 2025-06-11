@@ -1,4 +1,4 @@
-from librepos.models.shop_order_items import ShopOrderItem
+from librepos.models import ShopOrderItem
 
 from . import EntityRepository
 
