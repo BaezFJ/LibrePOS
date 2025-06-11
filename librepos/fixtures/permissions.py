@@ -78,11 +78,21 @@ SETTINGS_PERMISSIONS = [
         "system_settings.update",
         "Modify system-wide configuration, behavior, and technical parameters",
     ),
+    ("settings_permissions.read", "View all permission-related settings"),
+]
+
+ROLE_PERMISSIONS = [
+    ("role.create", "Create new roles with assigned permissions and settings"),
+    ("role.read", "View detailed role information including permissions and settings"),
+    ("role.list", "Access and view the complete list of roles"),
+    ("role.update", "Modify existing role details and permissions"),
+    ("role.delete", "Remove roles from the system"),
 ]
 
 # Group all permissions for easy access
 ALL_PERMISSION_FIXTURES = [
     USER_PERMISSIONS,
+    ROLE_PERMISSIONS,
     MENU_CATEGORY_PERMISSIONS,
     MENU_GROUP_PERMISSIONS,
     MENU_ITEM_PERMISSIONS,
