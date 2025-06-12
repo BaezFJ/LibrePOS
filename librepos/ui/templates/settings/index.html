@@ -22,7 +22,7 @@
             <!-- Permission Settings -->
             {% if current_user.has_permission('settings_permissions.read') %}
                 <div class="col s6 m4 l3">
-                    {{ icon_card("lock_person", "Permissions", url_for('settings.permissions')) }}
+                    {{ icon_card("lock_person", "User Roles", url_for('settings.list_user_roles')) }}
                 </div>
             {% endif %}
         </div>
