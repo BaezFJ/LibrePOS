@@ -28,6 +28,7 @@ class Policy(db.Model):
     name: Mapped[str] = mapped_column(unique=True, index=True)
     description: Mapped[str]
     created_at: Mapped[datetime]
+    active: Mapped[bool] = mapped_column(default=True, nullable=False)
 
     # Relationships
     role_policies: Mapped[List["RolePolicy"]] = relationship(

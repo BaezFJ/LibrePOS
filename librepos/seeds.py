@@ -116,15 +116,13 @@ def seed_role_policies():
     manger_policy = Policy.query.filter_by(name="manager").first()
 
     if admin_role and admin_policy:
-        admin_role_policy = RolePolicy(
-            role_id=admin_role.id, policy_id=admin_policy.id, assigned_by="system"
-        )
+        admin_role_policy = RolePolicy(role_id=admin_role.id, policy_id=admin_policy.id)
         db.session.add(admin_role_policy)
         db.session.commit()
 
     if manager_role and manger_policy:
         manager_role_policy = RolePolicy(
-            role_id=manager_role.id, policy_id=manger_policy.id, assigned_by="system"
+            role_id=manager_role.id, policy_id=manger_policy.id
         )
         db.session.add(manager_role_policy)
         db.session.commit()

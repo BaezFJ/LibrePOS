@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% from "macros/_cards.html" import icon_card %}
+
+{% block main %}
+
+    <section class="section">
+        <div class="container">
+            <h4>
+                <i class="material-symbols-rounded medium left pr-4">lock_person</i>
+                Role & Permission Settings
+            </h4>
+            <p class="grey-text text-darken-1 flow-text">
+                Define roles, assign access levels, and configure permissions across the system.
+            </p>
+
+            <!-- Roles Overview Table -->
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Existing Roles</span>
+                    <table class="highlight striped">
+                        <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for role in roles %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for('settings.get_user_role', role_id=role.id) }}">
+                                        <strong>{{ role.name.replace("_", " ")|title }}</strong>
+                                    </a>
+                                </td>
+                                <td>{{ role.description|capitalize }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="fixed-action-btn">
+        <button class="btn-floating btn-large" popovertarget="addRoleModal">
+            <i class="large material-symbols-rounded">add</i>
+        </button>
+    </div>
+
+    <div id="addRoleModal" class="modal bottom-sheet" popover>
+        <div class="modal-header center-align">
+            <h5><i class="material-symbols-rounded left">add</i>Add New Role</h5>
+        </div>
+        <div class="modal-content">
+            <form action="{{ url_for('settings.create_role') }}" method="POST" class="row">
+                {{ form.hidden_tag() }}
+                <div class="input-field col s12 m6">
+                    <i class="material-symbols-rounded prefix">badge</i>
+                    {{ form.name() }}
+                    {{ form.name.label }}
+                </div>
+
+                <div class="input-field col s12 m6">
+                    <i class="material-symbols-rounded prefix">description</i>
+                    {{ form.description() }}
+                    {{ form.description.label }}
+                </div>
+
+                <!-- Submit -->
+                <div class="col s12">
+                    <button class="btn filled waves-effect center-block" type="submit">
+                        <i class="material-symbols-rounded left">save</i> Save Changes
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button tabindex="0" class="waves-effect btn-flat white-text" popovertarget="addRoleModal">Close</button>
+        </div>
+    </div>
+
+{% endblock %}
