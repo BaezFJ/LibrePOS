@@ -1,13 +1,281 @@
 """Policies definitions for database seeding."""
 
+# Modular policies based on functional areas
+# Each policy groups related permissions for specific management areas
+
+# User Management Policies
+USER_MANAGEMENT_FULL_POLICY = [
+    "user.create",
+    "user.read",
+    "user.list",
+    "user.update",
+    "user.delete",
+]
+
+USER_MANAGEMENT_LIMITED_POLICY = [
+    "user.read",
+    "user.list",
+    "user.update",
+]
+
+USER_MANAGEMENT_VIEW_ONLY_POLICY = [
+    "user.read",
+    "user.list",
+]
+
+USER_SELF_MANAGEMENT_POLICY = [
+    "user.update.own",
+]
+
+# Role Management Policies
+ROLE_MANAGEMENT_FULL_POLICY = [
+    "role.create",
+    "role.read",
+    "role.list",
+    "role.update",
+    "role.delete",
+]
+
+ROLE_MANAGEMENT_VIEW_ONLY_POLICY = [
+    "role.read",
+    "role.list",
+]
+
+# Menu Category Management Policies
+MENU_CATEGORY_MANAGEMENT_FULL_POLICY = [
+    "menu_category.create",
+    "menu_category.read",
+    "menu_category.list",
+    "menu_category.update",
+    "menu_category.delete",
+]
+
+MENU_CATEGORY_MANAGEMENT_LIMITED_POLICY = [
+    "menu_category.read",
+    "menu_category.list",
+    "menu_category.update",
+]
+
+MENU_CATEGORY_VIEW_ONLY_POLICY = [
+    "menu_category.read",
+    "menu_category.list",
+]
+
+# Menu Group Management Policies
+MENU_GROUP_MANAGEMENT_FULL_POLICY = [
+    "menu_group.create",
+    "menu_group.read",
+    "menu_group.list",
+    "menu_group.update",
+    "menu_group.delete",
+]
+
+MENU_GROUP_MANAGEMENT_LIMITED_POLICY = [
+    "menu_group.read",
+    "menu_group.list",
+    "menu_group.update",
+]
+
+MENU_GROUP_VIEW_ONLY_POLICY = [
+    "menu_group.read",
+    "menu_group.list",
+]
+
+# Menu Item Management Policies
+MENU_ITEM_MANAGEMENT_FULL_POLICY = [
+    "menu_item.create",
+    "menu_item.read",
+    "menu_item.list",
+    "menu_item.update",
+    "menu_item.delete",
+]
+
+MENU_ITEM_MANAGEMENT_LIMITED_POLICY = [
+    "menu_item.read",
+    "menu_item.list",
+    "menu_item.update",
+]
+
+MENU_ITEM_VIEW_ONLY_POLICY = [
+    "menu_item.read",
+    "menu_item.list",
+]
+
+# Order Management Policies
+ORDER_MANAGEMENT_FULL_POLICY = [
+    "order.create",
+    "order.read",
+    "order.list",
+    "order.update",
+    "order.void",
+    "order.delete",
+]
+
+ORDER_MANAGEMENT_OPERATIONAL_POLICY = [
+    "order.create",
+    "order.read",
+    "order.list",
+    "order.update",
+    "order.void",
+]
+
+ORDER_MANAGEMENT_LIMITED_POLICY = [
+    "order.create",
+    "order.read",
+    "order.list",
+    "order.update",
+]
+
+ORDER_VIEW_ONLY_POLICY = [
+    "order.read",
+    "order.list",
+]
+
+# Settings Management Policies
+SYSTEM_SETTINGS_FULL_POLICY = [
+    "settings.read",
+    "system_settings.read",
+    "system_settings.update",
+    "settings_permissions.read",
+]
+
+RESTAURANT_SETTINGS_FULL_POLICY = [
+    "settings.read",
+    "restaurant.read",
+    "restaurant.update",
+]
+
+RESTAURANT_SETTINGS_VIEW_ONLY_POLICY = [
+    "settings.read",
+    "restaurant.read",
+]
+
+BASIC_SETTINGS_VIEW_POLICY = [
+    "settings.read",
+]
+
+# Complete policy definitions with metadata
 POLICIES_FIXTURE = [
-    [
-        ("administrator", "Allows full access to LibrePOS system."),
-        (
-            "manager",
-            "Limited access to reports, inventory, and staff management (without system-level settings)",
-        ),
-        ("cashier", "Limited access to reports (e.g., daily sales summary)."),
-        ("waiter", "Limited visibility of sales or reports."),
-    ]
+    # User Management Policies
+    (
+        "user_management_full",
+        "Complete user account management including creation and deletion",
+        USER_MANAGEMENT_FULL_POLICY,
+    ),
+    (
+        "user_management_limited",
+        "User account management without creation and deletion capabilities",
+        USER_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
+        "user_management_view_only",
+        "Read-only access to user account information",
+        USER_MANAGEMENT_VIEW_ONLY_POLICY,
+    ),
+    (
+        "user_self_management",
+        "Permission to manage own user profile only",
+        USER_SELF_MANAGEMENT_POLICY,
+    ),
+    # Role Management Policies
+    (
+        "role_management_full",
+        "Complete role and permission management capabilities",
+        ROLE_MANAGEMENT_FULL_POLICY,
+    ),
+    (
+        "role_management_view_only",
+        "Read-only access to role and permission information",
+        ROLE_MANAGEMENT_VIEW_ONLY_POLICY,
+    ),
+    # Menu Category Management Policies
+    (
+        "menu_category_management_full",
+        "Complete menu category management including creation and deletion",
+        MENU_CATEGORY_MANAGEMENT_FULL_POLICY,
+    ),
+    (
+        "menu_category_management_limited",
+        "Menu category management without creation and deletion",
+        MENU_CATEGORY_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
+        "menu_category_view_only",
+        "Read-only access to menu category information",
+        MENU_CATEGORY_VIEW_ONLY_POLICY,
+    ),
+    # Menu Group Management Policies
+    (
+        "menu_group_management_full",
+        "Complete menu group management including creation and deletion",
+        MENU_GROUP_MANAGEMENT_FULL_POLICY,
+    ),
+    (
+        "menu_group_management_limited",
+        "Menu group management without creation and deletion",
+        MENU_GROUP_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
+        "menu_group_view_only",
+        "Read-only access to menu group information",
+        MENU_GROUP_VIEW_ONLY_POLICY,
+    ),
+    # Menu Item Management Policies
+    (
+        "menu_item_management_full",
+        "Complete menu item management including creation and deletion",
+        MENU_ITEM_MANAGEMENT_FULL_POLICY,
+    ),
+    (
+        "menu_item_management_limited",
+        "Menu item management without creation and deletion",
+        MENU_ITEM_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
+        "menu_item_view_only",
+        "Read-only access to menu item information",
+        MENU_ITEM_VIEW_ONLY_POLICY,
+    ),
+    # Order Management Policies
+    (
+        "order_management_full",
+        "Complete order management including deletion capabilities",
+        ORDER_MANAGEMENT_FULL_POLICY,
+    ),
+    (
+        "order_management_operational",
+        "Operational order management including void but not delete",
+        ORDER_MANAGEMENT_OPERATIONAL_POLICY,
+    ),
+    (
+        "order_management_limited",
+        "Basic order processing without void or delete capabilities",
+        ORDER_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
+        "order_view_only",
+        "Read-only access to order information",
+        ORDER_VIEW_ONLY_POLICY,
+    ),
+    # Settings Management Policies
+    (
+        "system_settings_full",
+        "Complete system configuration and settings management",
+        SYSTEM_SETTINGS_FULL_POLICY,
+    ),
+    (
+        "restaurant_settings_full",
+        "Complete restaurant profile and operational settings management",
+        RESTAURANT_SETTINGS_FULL_POLICY,
+    ),
+    (
+        "restaurant_settings_view_only",
+        "Read-only access to restaurant settings and profile",
+        RESTAURANT_SETTINGS_VIEW_ONLY_POLICY,
+    ),
+    (
+        "basic_settings_view",
+        "Basic read access to general application settings",
+        BASIC_SETTINGS_VIEW_POLICY,
+    ),
 ]

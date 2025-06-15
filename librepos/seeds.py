@@ -1,5 +1,3 @@
-from typing import List
-
 from librepos.extensions import db
 from librepos.fixtures import ALL_PERMISSION_FIXTURES, ROLES_FIXTURE, POLICIES_FIXTURE
 from librepos.models import (
@@ -8,7 +6,6 @@ from librepos.models import (
     MenuItem,
     Permission,
     Policy,
-    PolicyPermission,
     Restaurant,
     RolePolicy,
     Role,
@@ -63,69 +60,107 @@ def seed_restaurant():
     return restaurant
 
 
-def seed_roles() -> List[Role]:
+def seed_roles() -> None:
     all_roles = []
     for role in ROLES_FIXTURE:
         all_roles.extend([create_role(name, description) for name, description in role])
-    return all_roles
+    db.session.add_all(all_roles)
+    db.session.commit()
 
 
-def seed_policies() -> List[Policy]:
-    all_policies = []
-    for policy in POLICIES_FIXTURE:
-        all_policies.extend(
-            [create_policy(name, description) for name, description in policy]
-        )
-    return all_policies
-
-
-def seed_permissions() -> List[Permission]:
+def seed_permissions() -> None:
     all_permissions = []
     for permission_group in ALL_PERMISSION_FIXTURES:
+        # Create the permission
         all_permissions.extend(
             [
                 create_permission(name, description)
                 for name, description in permission_group
             ]
         )
-    return all_permissions
+        db.session.add_all(all_permissions)
+        db.session.commit()
 
 
-def seed_policy_permissions() -> None:
-    permissions = Permission.query.all()
-    admin_policy_permissions = permissions
+def seed_policies() -> None:
+    """Seed policies and their associated permissions."""
+    from librepos.models import Permission, PolicyPermission
 
-    admin_policy = Policy.query.filter_by(name="administrator").first()
+    all_policies = []
 
-    if admin_policy:
-        for permission in admin_policy_permissions:
-            admin_policy_permission = PolicyPermission(
-                policy_id=admin_policy.id,
-                permission_id=permission.id,
-                added_by="system",
-            )
-            db.session.add(admin_policy_permission)
-            db.session.commit()
+    for policy_name, policy_description, permission_names in POLICIES_FIXTURE:
+        # Create the policy
+        policy = create_policy(policy_name, policy_description)
+        all_policies.append(policy)
+        db.session.add(policy)
+        db.session.commit()
+
+        # Add permissions to the policy
+        for permission_name in permission_names:
+            # Find the permission by name
+            permission = Permission.query.filter_by(name=permission_name).first()
+
+            if permission:
+                # Create a policy-permission association
+                policy_permission = PolicyPermission(
+                    policy_id=policy.id,
+                    permission_id=permission.id,
+                    added_by="system",  # or whatever identifier you want to use
+                )
+
+                # Add to a database session
+                db.session.add(policy_permission)
+            else:
+                # Log warning if permission doesn't exist
+                print(
+                    f"Warning: Permission '{permission_name}' not found for policy '{policy_name}'"
+                )
+
+    # Commit all policy-permission associations
+    db.session.commit()
 
 
 def seed_role_policies():
     admin_role = Role.query.filter_by(name="admin").first()
-    admin_policy = Policy.query.filter_by(name="administrator").first()
+
+    if admin_role:
+        # Get all policies that end with "_full"
+        full_policies = Policy.query.filter(Policy.name.like("%_full")).all()
+
+        # Add each full policy to an admin role
+        for policy in full_policies:
+            role_policy = RolePolicy(role_id=admin_role.id, policy_id=policy.id)
+            db.session.add(role_policy)
+
+        db.session.commit()
 
     manager_role = Role.query.filter_by(name="manager").first()
-    manger_policy = Policy.query.filter_by(name="manager").first()
-
-    if admin_role and admin_policy:
-        admin_role_policy = RolePolicy(role_id=admin_role.id, policy_id=admin_policy.id)
-        db.session.add(admin_role_policy)
+    if manager_role:
+        # Get policies for managers
+        manager_policies = [
+            "user_management_limited",
+            "role_management_view_only",
+            "restaurant_settings_full",
+        ]
+        for policy_name in manager_policies:
+            policy = Policy.query.filter_by(name=policy_name).first()
+            if policy:
+                role_policy = RolePolicy(role_id=manager_role.id, policy_id=policy.id)
+                db.session.add(role_policy)
         db.session.commit()
 
-    if manager_role and manger_policy:
-        manager_role_policy = RolePolicy(
-            role_id=manager_role.id, policy_id=manger_policy.id
-        )
-        db.session.add(manager_role_policy)
-        db.session.commit()
+    # Add the user_self_management_policy for all roles
+    if admin_role and manager_role:
+        user_self_management_policy = Policy.query.filter_by(
+            name="user_self_management"
+        ).first()
+        if user_self_management_policy:
+            for role in Role.query.all():
+                self_management_role_policy = RolePolicy(
+                    role_id=role.id, policy_id=user_self_management_policy.id
+                )
+                db.session.add(self_management_role_policy)
+            db.session.commit()
 
 
 def seed_users() -> None:
@@ -204,15 +239,11 @@ def seed_all():
     seed_restaurant()
     seed_system_settings()
 
-    roles = seed_roles()
-    policies = seed_policies()
-    permissions = seed_permissions()
-
-    db.session.add_all(permissions + list(roles) + policies)
-    db.session.commit()
-
-    seed_policy_permissions()
+    seed_roles()
+    seed_permissions()
+    seed_policies()
     seed_role_policies()
+
     seed_users()
     load_menu_data()
 
