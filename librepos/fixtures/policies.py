@@ -3,7 +3,9 @@
 # Modular policies based on functional areas
 # Each policy groups related permissions for specific management areas
 
-# User Management Policies
+# ======================================================================================================================
+#                                           USER MANAGEMENT POLICIES
+# ======================================================================================================================
 USER_MANAGEMENT_FULL_POLICY = [
     "user.create",
     "user.read",
@@ -27,7 +29,9 @@ USER_SELF_MANAGEMENT_POLICY = [
     "user.update.own",
 ]
 
-# Role Management Policies
+# ======================================================================================================================
+#                                           ROLE MANAGEMENT POLICIES
+# ======================================================================================================================
 ROLE_MANAGEMENT_FULL_POLICY = [
     "role.create",
     "role.read",
@@ -36,12 +40,41 @@ ROLE_MANAGEMENT_FULL_POLICY = [
     "role.delete",
 ]
 
+ROLE_MANAGEMENT_LIMITED_POLICY = [
+    "role.read",
+    "role.list",
+    "role.update",
+]
+
 ROLE_MANAGEMENT_VIEW_ONLY_POLICY = [
     "role.read",
     "role.list",
 ]
+# ======================================================================================================================
+#                                      ROLE POLICIES MANAGEMENT POLICIES
+# ======================================================================================================================
+ROLE_POLICIES_FULL_POLICY = [
+    "role_policies.read",
+    "role_policies.list",
+    "role_policies.update",
+    "role_policies.create",
+    "role_policies.delete",
+]
 
-# Menu Category Management Policies
+ROLE_POLICIES_LIMITED_POLICY = [
+    "role_policies.read",
+    "role_policies.list",
+    "role_policies.update",
+]
+
+ROLE_POLICIES_VIEW_ONLY_POLICY = [
+    "role_policies.read",
+    "role_policies.list",
+]
+
+# ======================================================================================================================
+#                                      MENU CATEGORY MANAGEMENT POLICIES
+# ======================================================================================================================
 MENU_CATEGORY_MANAGEMENT_FULL_POLICY = [
     "menu_category.create",
     "menu_category.read",
@@ -61,7 +94,9 @@ MENU_CATEGORY_VIEW_ONLY_POLICY = [
     "menu_category.list",
 ]
 
-# Menu Group Management Policies
+# ======================================================================================================================
+#                                      MENU GROUP MANAGEMENT POLICIES
+# ======================================================================================================================
 MENU_GROUP_MANAGEMENT_FULL_POLICY = [
     "menu_group.create",
     "menu_group.read",
@@ -81,7 +116,9 @@ MENU_GROUP_VIEW_ONLY_POLICY = [
     "menu_group.list",
 ]
 
-# Menu Item Management Policies
+# ======================================================================================================================
+#                                      MENU ITEM MANAGEMENT POLICIES
+# ======================================================================================================================
 MENU_ITEM_MANAGEMENT_FULL_POLICY = [
     "menu_item.create",
     "menu_item.read",
@@ -101,7 +138,9 @@ MENU_ITEM_VIEW_ONLY_POLICY = [
     "menu_item.list",
 ]
 
-# Order Management Policies
+# ======================================================================================================================
+#                                      ORDER MANAGEMENT POLICIES
+# ======================================================================================================================
 ORDER_MANAGEMENT_FULL_POLICY = [
     "order.create",
     "order.read",
@@ -131,7 +170,9 @@ ORDER_VIEW_ONLY_POLICY = [
     "order.list",
 ]
 
-# Settings Management Policies
+# ======================================================================================================================
+#                                      SETTINGS MANAGEMENT POLICIES
+# ======================================================================================================================
 SYSTEM_SETTINGS_FULL_POLICY = [
     "settings.read",
     "system_settings.read",
@@ -184,9 +225,30 @@ POLICIES_FIXTURE = [
         ROLE_MANAGEMENT_FULL_POLICY,
     ),
     (
+        "role_management_limited",
+        "Role and permission management without creation and deletion capabilities",
+        ROLE_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
         "role_management_view_only",
         "Read-only access to role and permission information",
         ROLE_MANAGEMENT_VIEW_ONLY_POLICY,
+    ),
+    # Role Policies Management Policies
+    (
+        "role_policies_full",
+        "Complete role-related permission management",
+        ROLE_POLICIES_FULL_POLICY,
+    ),
+    (
+        "role_policies_limited",
+        "Role-related permission management without creation and deletion",
+        ROLE_POLICIES_LIMITED_POLICY,
+    ),
+    (
+        "role_policies_view_only",
+        "Read-only access to role-related permission information",
+        ROLE_POLICIES_VIEW_ONLY_POLICY,
     ),
     # Menu Category Management Policies
     (

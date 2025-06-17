@@ -54,6 +54,14 @@ MENU_ITEM_PERMISSIONS = [
     ("menu_item.delete", "Remove menu items from the system"),
 ]
 
+POLICY_PERMISSIONS = [
+    ("policy.create", "Create new policies with assigned permissions"),
+    ("policy.read", "View detailed policy information including permissions"),
+    ("policy.list", "Access and view the complete list of policies"),
+    ("policy.update", "Modify existing policy details and permissions"),
+    ("policy.delete", "Remove policies from the system"),
+]
+
 ORDER_PERMISSIONS = [
     ("order.create", "Create new customer orders with selected menu items"),
     ("order.read", "View detailed order information including items and status"),
@@ -63,8 +71,18 @@ ORDER_PERMISSIONS = [
     ("order.delete", "Permanently remove orders from the system"),
 ]
 
-SETTINGS_PERMISSIONS = [
-    ("settings.read", "Access and view all application configuration settings"),
+ORDER_ITEM_PERMISSIONS = [
+    ("order_item.create", "Add new items to existing orders"),
+    ("order_item.read", "View detailed information about specific order items"),
+    ("order_item.list", "Access and view all items within an order"),
+    ("order_item.update", "Modify order item details, quantities, and prices"),
+    ("order_item.void", "Mark individual order items as voided"),
+    ("order_item.delete", "Permanently remove items from orders"),
+    ("order_item.send_to_prep", "Send order items to kitchen/preparation area"),
+    ("order_item.mark_completed", "Mark order items as completed by kitchen"),
+]
+
+RESTAURANT_PERMISSIONS = [
     (
         "restaurant.read",
         "View restaurant profile, contact information, and business details",
@@ -73,6 +91,13 @@ SETTINGS_PERMISSIONS = [
         "restaurant.update",
         "Modify restaurant information, operating hours, and business settings",
     ),
+    ("restaurant.create", "Create new restaurant profiles and configurations"),
+    ("restaurant.delete", "Remove restaurant profiles from the system"),
+    ("restaurant.list", "Access and view all restaurant configurations"),
+]
+
+SETTINGS_PERMISSIONS = [
+    ("settings.read", "Access and view all application configuration settings"),
     ("system_settings.read", "View system-wide configuration and technical settings"),
     (
         "system_settings.update",
@@ -89,6 +114,26 @@ ROLE_PERMISSIONS = [
     ("role.delete", "Remove roles from the system"),
 ]
 
+ROLE_POLICIES_PERMISSIONS = [
+    ("role_policies.read", "View all role-related permission policies"),
+    (
+        "role_policies.list",
+        "Access and view the complete list of role-related permission policies",
+    ),
+    ("role_policies.update", "Modify role-related permission policies"),
+    ("role_policies.delete", "Remove role-related permission policies"),
+    ("role_policies.create", "Create new role-related permission policies"),
+]
+
+# Permissions for the Policy Permissions junction table
+POLICY_PERMISSION_PERMISSIONS = [
+    ("policy_permission.create", "Assign permissions to policies"),
+    ("policy_permission.read", "View permission assignments for policies"),
+    ("policy_permission.list", "Access and view all policy-permission relationships"),
+    ("policy_permission.update", "Modify permission assignments for policies"),
+    ("policy_permission.delete", "Remove permission assignments from policies"),
+]
+
 # Group all permissions for easy access
 ALL_PERMISSION_FIXTURES = [
     USER_PERMISSIONS,
@@ -97,5 +142,10 @@ ALL_PERMISSION_FIXTURES = [
     MENU_GROUP_PERMISSIONS,
     MENU_ITEM_PERMISSIONS,
     ORDER_PERMISSIONS,
+    ORDER_ITEM_PERMISSIONS,
+    RESTAURANT_PERMISSIONS,
     SETTINGS_PERMISSIONS,
+    POLICY_PERMISSIONS,
+    POLICY_PERMISSION_PERMISSIONS,
+    ROLE_POLICIES_PERMISSIONS,
 ]
