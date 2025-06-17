@@ -18,14 +18,6 @@ def create_permission(name: str, description: str) -> Permission:
     return Permission(name=name, description=description)
 
 
-def create_role(name: str, description: str) -> Role:
-    return Role(name=name, description=description)
-
-
-def create_policy(name: str, description: str) -> Policy:
-    return Policy(name=name, description=description)
-
-
 def seed_system_settings():
     system_settings = SystemSettings(
         timezone="America/New_York",
@@ -63,7 +55,7 @@ def seed_restaurant():
 def seed_roles() -> None:
     all_roles = []
     for role in ROLES_FIXTURE:
-        all_roles.extend([create_role(name, description) for name, description in role])
+        all_roles.extend([Role(name, description) for name, description in role])
     db.session.add_all(all_roles)
     db.session.commit()
 
@@ -90,7 +82,7 @@ def seed_policies() -> None:
 
     for policy_name, policy_description, permission_names in POLICIES_FIXTURE:
         # Create the policy
-        policy = create_policy(policy_name, policy_description)
+        policy = Policy(policy_name, policy_description)
         all_policies.append(policy)
         db.session.add(policy)
         db.session.commit()
