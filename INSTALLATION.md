@@ -175,7 +175,7 @@ LibrePOS can also be installed directly as a Python package from [PyPI](https://
 
 1. Use `uv` to install LibrePOS:
    ```bash
-   uv install librepos
+   uv tool install librepos
    ```
 
 2. Set up the database:
