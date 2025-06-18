@@ -19,10 +19,10 @@
                 </div>
             {% endif %}
 
-            <!-- Permission Settings -->
-            {% if current_user.has_permission('settings_permissions.read') %}
+            {% if current_user.has_permission('role.list') %}
+                <!-- Roles Settings -->
                 <div class="col s6 m4 l3">
-                    {{ icon_card("lock_person", "User Roles", url_for('settings.list_user_roles')) }}
+                    {{ icon_card("lock_person", "Roles", url_for('settings.list_user_roles')) }}
                 </div>
             {% endif %}
         </div>
