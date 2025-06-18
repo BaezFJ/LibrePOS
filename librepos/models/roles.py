@@ -16,8 +16,8 @@ class Role(db.Model):
 
     __tablename__ = "roles"
 
-    def __init__(self, name: str, description: str):
-        super(Role, self).__init__()
+    def __init__(self, name: str, description: str, **kwargs):
+        super(Role, self).__init__(**kwargs)
         """Create instance."""
         self.name = name.lower()
         self.description = description.lower()
