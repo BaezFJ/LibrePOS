@@ -215,3 +215,7 @@ main > :first-child {
     font-weight: 600;
     font-size: 1.2rem;
 }
+
+.fs-small {
+    font-size: 0.8rem;
+}
