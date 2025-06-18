@@ -1,164 +1,159 @@
 {% extends 'base.html' %}
 
-{% from "macros/_modals.html" import warningModal %}
+{% from "macros/_sections.html" import section, section_header %}
+{% from "macros/_modals.html" import warningModal, modal %}
+{% from "macros/_icons.html" import icon %}
+{% from "macros/_buttons.html" import button %}
 
 {% block main %}
 
+    {% call section() %}
+        {% set users_role_count = role.users|length %}
 
-    <section class="section">
+        {% call section_header(role.name|title, role.description|capitalize, icon_name="lock_person") %}
 
-        <div class="container">
-            <h5>
-                <i class="material-symbols-rounded left mr-4">lock_person</i>
-                Role: {{ role.name|title }}
-                <button class="btn-small tonal right" popovertarget="editRoleModal">
-                    <span class="material-symbols-rounded">edit</span>
-                </button>
-            </h5>
-            <p class="grey-text text-darken-1 flow-text">{{ role.description|capitalize }}.</p>
-            <div class="divider"></div>
+            {{ button("delete", theme_classes="outlined", classes="danger") }}
+
+        {% endcall %}
+
+        <div class="card-panel">
+
+            <!-- Role Header -->
+            <div class="row g-1 valign-wrapper">
+                <div class="col s8">
+                    <h5 class="m-0">Summary</h5>
+                </div>
+                <div class="col s4 right-align">
+                    {% if current_user.has_permission("role.update") %}
+                        {{ button("Edit", href="javascript:editRoleModal.showPopover()", classes="right") }}
+                        {% call modal("editRoleModal", "Edit Role") %}
+                            <form action="{{ url_for('settings.update_user_role', role_id=role.id) }}" method="POST"
+                                  class="row">
+                                {{ form.hidden_tag() }}
+                                <div class="input-field col s12 m6">
+                                    <i class="material-symbols-rounded prefix">badge</i>
+                                    {{ form.name() }}
+                                    {{ form.name.label }}
+                                </div>
+                                <div class="input-field col s12 m6">
+                                    <i class="material-symbols-rounded prefix">description</i>
+                                    {{ form.description() }}
+                                    {{ form.description.label }}
+                                </div>
+                                <div class="col s12">
+                                    <div class="switch">
+                                        <label>
+                                            Disable
+                                            {{ form.active() }}
+                                            <span class="lever"></span>
+                                            Active
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col s12">
+                                    <button class="btn filled center-block rounded" type="submit">
+                                        {{ icon("save", classes="mr-2") }}Update Role
+                                    </button>
+                                </div>
+                            </form>
+                        {% endcall %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="divider my-4"></div>
+
+            <!-- Role Metadata -->
+            <div class="row g-1 valign-wrapper">
+                <div class="col s12 m6">
+                    <p class="valign-wrapper flow-text">
+                        {{ icon("calendar_today", classes="mr-2") }}<strong>Creation Date:</strong>
+                        &nbsp; {{ role.created_at|date }}
+                    </p>
+                    <p class="valign-wrapper flow-text">
+                        {{ icon("person", classes="mr-2") }} <strong>Created by:</strong> &nbsp; System
+                    </p>
+                </div>
+
+                <div class="col s12 m6">
+                    <p class="valign-wrapper flow-text">
+                        {{ icon("groups", classes="mr-2") }} <strong>Assigned Users:</strong>
+                        &nbsp; {{ users_role_count }} &nbsp; {{ "users" if users_role_count > 1 else "user" }}
+                    </p>
+                    <p class="valign-wrapper flow-text">
+                        {{ icon("verified_user", classes="mr-2") }} <strong>Status:</strong> &nbsp;
+                        {% if role.active %}
+                            <span class="success-text">Active</span>
+                        {% else %}
+                            <span class="danger-text">Disabled</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
         </div>
-    </section>
+
+    {% endcall %}
 
     <!-- Assigned Policies Section -->
-    <section class="section">
-        <div class="container">
-            <h5>
-                <i class="material-symbols-rounded left mr-4">policy</i>
-                Policies
-                <button class="btn-small tonal right" popovertarget="assignPolicyModal">
-                    <span class="material-symbols-rounded">add</span>
-                </button>
-            </h5>
-            <div class="divider my-4"></div>
-            <ul class="collection with-header z-depth-1">
-                <li class="collection-header">
-                    <h6>Assigned Policies</h6>
-                </li>
 
-                {% for role_policy in role.role_policies %}
-                    <li class="collection-item">
-                        <span>{{ role_policy.policy.name.replace("_", " ")|title }}</span>
-                        <a href="javascript:removePolicyModal_{{ role_policy.policy.name }}.showPopover()"
-                           class="secondary-content red-text tooltipped" data-tooltip="Remove permission">
-                            <i class="material-symbols-rounded">delete</i>
-                        </a>
-                    </li>
-                    <div id="removePolicyModal_{{ role_policy.policy.name }}" class="modal warning-border" popover>
-                        <div class="modal-header warning-text center-align">
-                            <i class="large material-symbols-rounded">warning</i>
-                            <h5>Warning</h5>
-                        </div>
-                        <div class="modal-content">
-                            <h5>Remove <b><u>{{ role_policy.policy.name|title }}</u></b> policy?</h5>
-                            <p class="text-darken-1 flow-text">Removing this policy will revoke all permissions
-                                associated with
-                                it. Users with this role will no longer have access to features granted by this
-                                policy.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="row">
-                                <div class="col s6 center-align">
-                                    <button class="btn-flat inherit-color"
-                                            popovertarget="removePolicyModal_{{ role_policy.policy.name }}">Cancel
-                                    </button>
-                                </div>
-                                <div class="col s6 center-align">
-                                    <button hx-post="{{ url_for('settings.remove_role_policy', role_id=role.id, policy_id=role_policy.policy.id) }}"
-                                            class="btn warning black-text">Continue
-                                    </button>
-                                </div>
+    {% call section() %}
+
+        {% call section_header("Policies", icon_name="policy") %}
+
+            {% if current_user.has_permission("role_policies.create") %}
+
+                {{ button("Assign Policies", href="javascript:assignPolicyModal.showPopover()", classes="right") }}
+
+                {% call modal("assignPolicyModal", "Assign Policies") %}
+
+                    <form action="{{ url_for('settings.update_user_role_policies', role_id=role.id) }}" method="POST"
+                          class="row">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        {% for policy in unassign_policies|sort(attribute="name") %}
+                            {% set policy_name = policy.name.replace("_", " ")|title %}
+
+                            <div class="col s12 left-align">
+                                <p class="my-0 flow-text">
+                                    <label>
+                                        <input type="checkbox" name="policy_{{ policy.id }}" value="{{ policy.id }}"/>
+                                        <span style="font-size: large; letter-spacing: 2px;">{{ policy_name.replace(" ", "") }}</span>
+                                    </label>
+                                </p>
                             </div>
+                        {% endfor %}
+
+
+                        <!-- Submit -->
+                        <div class="col s12">
+                            <button class="btn filled rounded waves-effect center-block" type="submit">
+                                <i class="material-symbols-rounded left mr-2">save</i> Assign Policies
+                            </button>
                         </div>
-                    </div>
-                {% endfor %}
-            </ul>
-        </div>
-    </section>
 
-    <div id="assignPolicyModal" class="modal" popover>
+                    </form>
+                {% endcall %}
+            {% endif %}
+        {% endcall %}
 
-        <div class="modal-header center-align">
-            <h5><i class="material-symbols-rounded left">add</i>Assign Policy</h5>
-        </div>
+        <ul class="collection with-header z-depth-1">
+            {% for role_policy in role.role_policies %}
+                {% set policy_name = role_policy.policy.name.replace("_", " ")|title %}
 
-        <div class="modal-content">
-            <form action="{{ url_for('settings.update_user_role_policies', role_id=role.id) }}" method="POST"
-                  class="row">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <li class="collection-item py-4">
+                    <span>{{ policy_name }}</span>
+                    {% if current_user.has_permission("role_policies.delete") %}
+                        <a href="javascript:removePolicyModal_{{ policy_name.replace(" ","_") }}.showPopover()"
+                           class="secondary-content danger-text tooltipped" data-tooltip="Remove permission">
+                            {{ icon("delete") }}
+                        </a>
+                        {% include "settings/modals/removePolicyModal.html" %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
 
-                {% for policy in unassign_policies %}
-
-                    <div class="col s6">
-                        <p class="my-0">
-                            <label>
-                                <input type="checkbox" name="policy_{{ policy.id }}" value="{{ policy.id }}"/>
-                                <span style="font-size: large; letter-spacing: 2px;">{{ policy.name|title }}</span>
-                            </label>
-                        </p>
-                    </div>
-                {% endfor %}
-
-
-                <!-- Submit -->
-                <div class="col s12">
-                    <button class="btn filled waves-effect center-block" type="submit">
-                        <i class="material-symbols-rounded left mr-2">save</i> Assign Policy
-                    </button>
-                </div>
-
-            </form>
-        </div>
-
-        <div class="modal-footer">
-            <button tabindex="0" class="waves-effect btn-flat white-text" popovertarget="assignPolicyModal">Close
-            </button>
-        </div>
-
-    </div>
-
-    <div id="editRoleModal" class="modal" popover>
-
-        <div class="modal-header">
-            <h5><i class="material-symbols-rounded left mr-2">edit</i>Edit Policy</h5>
-        </div>
-
-        <div class="modal-content">
-            <form action="{{ url_for('settings.update_user_role', role_id=role.id) }}" method="POST" class="row">
-                {{ form.hidden_tag() }}
-                <div class="input-field col s12 m6">
-                    <i class="material-symbols-rounded prefix">badge</i>
-                    {{ form.name() }}
-                    {{ form.name.label }}
-                </div>
-                <div class="input-field col s12 m6">
-                    <i class="material-symbols-rounded prefix">description</i>
-                    {{ form.description() }}
-                    {{ form.description.label }}
-                </div>
-                <div class="col s12">
-                    <div class="switch">
-                        <label>
-                            Disable
-                            {{ form.active() }}
-                            <span class="lever"></span>
-                            Active
-                        </label>
-                    </div>
-                </div>
-                <div class="col s12">
-                    <button class="btn filled center-block" type="submit">
-                        <i class="material-symbols-rounded left mr-2">save</i> Save Changes
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <div class="modal-footer">
-            <button tabindex="0" class="waves-effect btn-flat white-text" popovertarget="editRoleModal">Close
-            </button>
-        </div>
-
-    </div>
+    {% endcall %}
 
 {% endblock %}

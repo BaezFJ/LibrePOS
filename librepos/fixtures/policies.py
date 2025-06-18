@@ -376,5 +376,5 @@ POLICIES_FIXTURE = [
         "policy_policies_view_only",
         "Read-only access to policy-related permission information",
         POLICIES_VIEW_ONLY_POLICY,
-    )
+    ),
 ]
