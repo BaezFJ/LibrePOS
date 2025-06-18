@@ -84,14 +84,15 @@ def create_role():
     form = RoleForm()
     if form.validate_on_submit():
         validated_data = sanitize_form_data(form)
-        permission_service.create_role(validated_data)
+        new_role = permission_service.create_role(validated_data)
+        return redirect(url_for(".get_user_role", role_id=new_role.id))
     return redirect(url_for(".list_user_roles"))
 
 
 # ================================
 #            READ
 # ================================
-@settings_bp.get("/user-roles")
+@settings_bp.get("/roles")
 def list_user_roles():
     """Render the user roles page."""
     context = {
@@ -103,7 +104,7 @@ def list_user_roles():
     return render_template("settings/list_user_roles.html", **context)
 
 
-@settings_bp.get("/user-roles/<int:role_id>")
+@settings_bp.get("/roles/<int:role_id>")
 def get_user_role(role_id):
     """Render the user role page."""
     role = permission_service.get_role(role_id)
@@ -122,7 +123,7 @@ def get_user_role(role_id):
 # ================================
 #            UPDATE
 # ================================
-@settings_bp.post("/user-roles/<int:role_id>/update")
+@settings_bp.post("/roles/<int:role_id>/update")
 def update_user_role(role_id):
     """Update the user role."""
     form = RoleForm()
@@ -132,7 +133,7 @@ def update_user_role(role_id):
     return redirect(url_for(".get_user_role", role_id=role_id))
 
 
-@settings_bp.post("/user-roles/<int:role_id>/update-policies")
+@settings_bp.post("/roles/<int:role_id>/update-policies")
 def update_user_role_policies(role_id):
     """Update role policies."""
     form_data = request.form.items()
@@ -150,7 +151,7 @@ def update_user_role_policies(role_id):
 # ================================
 #            DELETE
 # ================================
-@settings_bp.post("/user-roles/<int:role_id>/unassign-policy/<int:policy_id>")
+@settings_bp.post("/roles/<int:role_id>/remove-policy/<int:policy_id>")
 def remove_role_policy(role_id, policy_id):
     """Update role policies."""
     permission_service.unassign_policy(role_id, policy_id)
