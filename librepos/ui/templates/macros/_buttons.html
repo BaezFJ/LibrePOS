@@ -1,9 +1,21 @@
-{% macro button(label, href='#', size='normal', color='primary', waves='waves-effect', icon=None, classes='') %}
-    <a href="{{ href }}" class="btn {% if size == 'large' %}btn-large{% elif size == 'small' %}btn-small{% endif %}
-        {{ color }} {{ waves }} {{ classes }}">
-        {% if icon %}
-            <i class="material-icons left">{{ icon }}</i>
+{% from "macros/_icons.html" import icon %}
+
+{% macro _get_size_class(size) %}
+    {%- if size == 'large' -%}btn-large
+    {%- elif size == 'small' -%}btn-small
+    {% elif size == 'normal' %}btn
+    {%- endif -%}
+{% endmacro %}
+
+{% macro button(label=None, href='#', size='normal', theme_classes='filled', waves='waves-effect', icon_name=None, classes='', modal=False) %}
+    {% set modalCaller = 'javascript:'+ href +'.showPopover()' %}
+
+    <a href="{{ modalCaller if modal else href }}"
+       class="{{ _get_size_class(size) }} {{ theme_classes }} {{ waves }} {{ classes }}">
+        {% if icon_name %}
+            {% set icon_left = 'left' if label else "" %}
+            {{ icon(icon_name, classes=icon_left) }}
         {% endif %}
-        {{ label }}
+        {{ label if label }}
     </a>
 {% endmacro %}

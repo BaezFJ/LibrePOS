@@ -50,3 +50,19 @@
         </div>
     </div>
 {% endmacro %}
+
+
+{% macro modal(id, title) %}
+    <div id="{{ id }}" class="modal bottom-sheet" popover>
+        <div class="modal-header center-align">
+            <h5>{{ title }}</h5>
+            <hr>
+        </div>
+        <div class="modal-content">
+            {{ caller() }}
+        </div>
+        <div class="modal-footer">
+            <button tabindex="0" class="waves-effect btn-flat white-text" popovertarget="{{ id }}">Close</button>
+        </div>
+    </div>
+{% endmacro %}
