@@ -169,6 +169,27 @@ ORDER_VIEW_ONLY_POLICY = [
     "order.read",
     "order.list",
 ]
+# ======================================================================================================================
+#                                      POLICY POLICIES
+# ======================================================================================================================
+POLICIES_FULL_POLICY = [
+    "policy.create",
+    "policy.read",
+    "policy.list",
+    "policy.update",
+    "policy.delete",
+]
+
+POLICIES_LIMITED_POLICY = [
+    "policy.read",
+    "policy.list",
+    "policy.update",
+]
+
+POLICIES_VIEW_ONLY_POLICY = [
+    "policy.read",
+    "policy.list",
+]
 
 # ======================================================================================================================
 #                                      SETTINGS MANAGEMENT POLICIES
@@ -340,4 +361,20 @@ POLICIES_FIXTURE = [
         "Basic read access to general application settings",
         BASIC_SETTINGS_VIEW_POLICY,
     ),
+    # Policy policies
+    (
+        "policy_policies_full",
+        "Complete policy-related permission management",
+        POLICIES_FULL_POLICY,
+    ),
+    (
+        "policy_policies_limited",
+        "Policy-related permission management without creation and deletion",
+        POLICIES_LIMITED_POLICY,
+    ),
+    (
+        "policy_policies_view_only",
+        "Read-only access to policy-related permission information",
+        POLICIES_VIEW_ONLY_POLICY,
+    )
 ]
