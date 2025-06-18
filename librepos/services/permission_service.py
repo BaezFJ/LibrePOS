@@ -41,12 +41,12 @@ class PermissionService:
 
             if not roles:
                 FlashMessageHandler.error("No roles found.")
-                return None, False
+                return None
 
             return roles
         except SQLAlchemyError as e:
             FlashMessageHandler.error(f"Error retrieving roles: {str(e)}")
-            return None, False
+            return None
 
     def get_role(self, role_id: int):
         try:
@@ -54,12 +54,12 @@ class PermissionService:
 
             if not role:
                 FlashMessageHandler.error("Role not found.")
-                return None, False
+                return None
 
             return role
         except SQLAlchemyError as e:
             FlashMessageHandler.error(f"Error retrieving role: {str(e)}")
-            return None, False
+            return None
 
     def list_unassign_policies(self, role_id):
         """
@@ -162,10 +162,10 @@ class PermissionService:
 
             self.role_repository.add(role)
             FlashMessageHandler.success("Role created successfully.")
-            return role, True
+            return role
         except SQLAlchemyError as e:
             FlashMessageHandler.error(f"Error creating role: {str(e)}")
-            return None, False
+            return None
 
     def update_role(self, role_id, data):
         try:
@@ -173,7 +173,7 @@ class PermissionService:
 
             if not role:
                 FlashMessageHandler.error("Role not found.")
-                return None, False
+                return None
 
             # Update the fields
             update_model_fields(role, data)
@@ -181,7 +181,7 @@ class PermissionService:
             # Perform the update
             self.role_repository.update(role)
             FlashMessageHandler.success("Role updated successfully.")
-            return role, True
+            return role
         except SQLAlchemyError as e:
             FlashMessageHandler.error(f"Error updating role: {str(e)}")
-            return None, False
+            return None
