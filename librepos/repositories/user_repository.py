@@ -1,4 +1,4 @@
-from librepos.models.users import User
+from librepos.models import User
 from .entity_repo import EntityRepository
 
 

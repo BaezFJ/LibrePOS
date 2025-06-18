@@ -1,14 +1,16 @@
-{% macro infoModal() %}
-    <div id="infoModal" class="modal info-border" popover>
+{% macro infoMessageModal(id, title=None, classes=None) %}
+    {% set modal_id = id if id else "infoModal" %}
+
+    <div id="{{ modal_id }}" class="modal info-border" popover>
         <div class="modal-header info-text center-align">
             <i class="large material-symbols-rounded">info</i>
-            <h5>Information</h5>
+            <h5>{{ title if title else "Information" }}</h5>
         </div>
         <div class="modal-content">
             {{ caller() }}
         </div>
         <div class="modal-footer">
-            <button class="btn-flat inherit-color" popovertarget="infoModal">OK</button>
+            <button class="btn-flat inherit-color" popovertarget="{{ modal_id }}">OK</button>
         </div>
     </div>
 {% endmacro %}
@@ -47,6 +49,22 @@
         </div>
         <div class="modal-footer">
             <button class="btn-flat inherit-color" popovertarget="infoModal">Dismiss</button>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro modal(id, title) %}
+    <div id="{{ id }}" class="modal bottom-sheet" popover>
+        <div class="modal-header center-align">
+            <h5>{{ title }}</h5>
+            <hr>
+        </div>
+        <div class="modal-content">
+            {{ caller() }}
+        </div>
+        <div class="modal-footer">
+            <button tabindex="0" class="waves-effect btn-flat white-text" popovertarget="{{ id }}">Close</button>
         </div>
     </div>
 {% endmacro %}

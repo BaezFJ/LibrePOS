@@ -1,4 +1,4 @@
-from librepos.models.menu_groups import MenuGroup
+from librepos.models import MenuGroup
 from . import EntityRepository
 
 

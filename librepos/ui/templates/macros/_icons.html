@@ -1,7 +1,5 @@
-{% macro icon(name, size="", color="", position="", classes="") %}
-    <i class="material-icons {{ size }} {{ color }} {{ position }} {{ classes }}">{{ name }}</i>
-{% endmacro %}
-
-{% macro symbol(name, style="outlined", size="", color="", position="", classes="") %}
-    <i class="material-symbols-{{ style }} {{ size }} {{ color }} {{ position }} {{ classes }}">{{ name }}</i>
+{% macro icon(icon_name, variant="rounded", classes="") %}
+    {% set base_class = "material-symbols-" + variant %}
+    {% set css_classes = base_class + " " + classes %}
+    <i class="{{ css_classes | trim }}">{{ icon_name }}</i>
 {% endmacro %}

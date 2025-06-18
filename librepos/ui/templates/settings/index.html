@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% from "macros/_cards.html" import icon_card %}
+
 {% block main %}
 
     <div class="container">
@@ -10,36 +12,19 @@
 
         <div class="row">
 
-            {% if current_user.has_permission('view_system_settings') %}
+            {% if current_user.has_permission('system_settings.read') %}
                 <!-- System Settings -->
                 <div class="col s6 m4 l3">
-                    <div class="card hoverable">
-                        <div class="card-content center-align">
-                            <i class="material-symbols-rounded large">admin_panel_settings</i>
-                            <h6>System</h6>
-                            <p class="grey-text">System-wide configuration and startup behavior.</p>
-                        </div>
-                        <div class="card-action center-align">
-                            <a href="{{ url_for('settings.system_settings') }}" class="btn filled">Configure</a>
-                        </div>
-                    </div>
+                    {{ icon_card("settings_applications", "System", url_for('settings.system_settings')) }}
                 </div>
             {% endif %}
 
-            <!-- User Settings -->
-            <div class="col s6 m4 l3">
-                <div class="card hoverable">
-                    <div class="card-content center-align">
-                        <i class="material-symbols-rounded large">manage_accounts</i>
-                        <h6>User Settings</h6>
-                        <p class="grey-text">Profile, PIN, email, and personal preferences.</p>
-                    </div>
-                    <div class="card-action center-align">
-                        <a href="!#" class="btn filled">Go to Settings</a>
-                    </div>
+            {% if current_user.has_permission('role.list') %}
+                <!-- Roles Settings -->
+                <div class="col s6 m4 l3">
+                    {{ icon_card("lock_person", "Roles", url_for('settings.list_user_roles')) }}
                 </div>
-            </div>
-
+            {% endif %}
         </div>
     </div>
 

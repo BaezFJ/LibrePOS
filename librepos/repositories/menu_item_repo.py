@@ -1,4 +1,4 @@
-from librepos.models.menu_items import MenuItem
+from librepos.models import MenuItem
 
 from . import EntityRepository
 

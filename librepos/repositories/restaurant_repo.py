@@ -1,4 +1,4 @@
-from librepos.models.restaurant import Restaurant
+from librepos.models import Restaurant
 
 from . import EntityRepository
 

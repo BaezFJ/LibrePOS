@@ -1,15 +1,21 @@
 from librepos.extensions import db
-from librepos.models.menu_categories import MenuCategory
-from librepos.models.menu_groups import MenuGroup
-from librepos.models.menu_items import MenuItem
-from librepos.models.permissions import Permission
-from librepos.models.policies import Policy
-from librepos.models.policy_permissions import PolicyPermission
-from librepos.models.restaurant import Restaurant
-from librepos.models.role_policies import RolePolicy
-from librepos.models.roles import Role
-from librepos.models.system_settings import SystemSettings
-from librepos.models.users import User
+from librepos.fixtures import ALL_PERMISSION_FIXTURES, ROLES_FIXTURE, POLICIES_FIXTURE
+from librepos.models import (
+    MenuCategory,
+    MenuGroup,
+    MenuItem,
+    Permission,
+    Policy,
+    Restaurant,
+    RolePolicy,
+    Role,
+    SystemSettings,
+    User,
+)
+
+
+def create_permission(name: str, description: str) -> Permission:
+    return Permission(name=name, description=description)
 
 
 def seed_system_settings():
@@ -46,205 +52,107 @@ def seed_restaurant():
     return restaurant
 
 
-def seed_roles():
-    admin_role = Role(
-        name="admin",
-        description="Manage all aspects, including employee roles, menus, promotions, and settings.",
-    )
-    manager_role = Role(
-        name="manager",
-        description="Access to reports, inventory, and staff management (without system-level settings)",
-    )
-    cashier_role = Role(
-        name="cashier",
-        description="Process sales, apply discounts (if allowed), and issue receipts.  Limited access to reports (e.g., daily sales summary).",
-    )
-    waiter_role = Role(
-        name="waiter",
-        description="Enter orders, split bills, and send order tickets to kitchen printers or displays. Limited visibility of sales or reports.",
-    )
-    return [admin_role, manager_role, cashier_role, waiter_role]
+def seed_roles() -> None:
+    all_roles = []
+    for role in ROLES_FIXTURE:
+        all_roles.extend([Role(name, description) for name, description in role])
+    db.session.add_all(all_roles)
+    db.session.commit()
 
 
-def seed_policies():
-    admin_policy = Policy(
-        name="administrator", description="Allows full access to LibrePOS system."
-    )
-    manager_policy = Policy(
-        name="manager",
-        description="Limited access to reports, inventory, and staff management (without system-level settings)",
-    )
-    cashier_policy = Policy(
-        name="cashier",
-        description="Limited access to reports (e.g., daily sales summary).",
-    )
-    waiter_policy = Policy(
-        name="waiter", description="Limited visibility of sales or reports."
-    )
-    return [admin_policy, manager_policy, cashier_policy, waiter_policy]
+def seed_permissions() -> None:
+    all_permissions = []
+    for permission_group in ALL_PERMISSION_FIXTURES:
+        # Create the permission
+        all_permissions.extend(
+            [
+                create_permission(name, description)
+                for name, description in permission_group
+            ]
+        )
+        db.session.add_all(all_permissions)
+        db.session.commit()
 
 
-def seed_permissions():
-    create_user_permission = Permission(
-        name="create_user",
-        description="Add user username, email, roles, and permissions",
-    )
-    get_user_permission = Permission(name="get_user", description="View user details")
-    list_users_permission = Permission(
-        name="list_users", description="View users and their roles"
-    )
-    update_user_permission = Permission(
-        name="update_user",
-        description="Edit user username, email, roles, and permissions",
-    )
-    delete_user_permission = Permission(
-        name="delete_user", description="Delete user from system."
-    )
-    # MenuCategory Permissions
-    create_menu_category = Permission(
-        name="create_menu_category", description="Add category"
-    )
-    get_menu_category = Permission(
-        name="get_menu_category", description="View category details"
-    )
-    list_menu_categories = Permission(
-        name="list_menu_categories", description="View categories"
-    )
-    update_menu_category = Permission(
-        name="update_menu_category", description="Edit category"
-    )
-    delete_menu_category = Permission(
-        name="delete_menu_category", description="Delete category"
-    )
-    # MenuGroup Permissions
-    create_menu_group = Permission(name="create_menu_group", description="Add group")
-    get_menu_group = Permission(name="get_menu_group", description="View group details")
-    list_menu_groups = Permission(name="list_menu_groups", description="View groups")
-    update_menu_group = Permission(name="update_menu_group", description="Edit group")
-    delete_menu_group = Permission(name="delete_menu_group", description="Delete group")
+def seed_policies() -> None:
+    """Seed policies and their associated permissions."""
+    from librepos.models import Permission, PolicyPermission
 
-    # MenuItem Permissions
-    create_menu_item = Permission(name="create_menu_item", description="Add item")
-    get_menu_item = Permission(name="get_menu_item", description="View item details")
-    list_menu_items = Permission(name="list_menu_items", description="View items")
-    update_menu_item = Permission(name="update_menu_item", description="Edit item")
-    delete_menu_item = Permission(name="delete_menu_item", description="Delete item")
+    all_policies = []
 
-    # Order Permissions
-    create_order = Permission(name="create_order", description="Add order")
-    get_order = Permission(name="get_order", description="View order details")
-    list_orders = Permission(name="list_orders", description="View orders")
-    update_order = Permission(name="update_order", description="Edit order")
-    void_order = Permission(name="void_order", description="Void order")
-    delete_order = Permission(name="delete_order", description="Delete order")
+    for policy_name, policy_description, permission_names in POLICIES_FIXTURE:
+        # Create the policy
+        policy = Policy(policy_name, policy_description)
+        all_policies.append(policy)
+        db.session.add(policy)
+        db.session.commit()
 
-    # Settings Permissions
-    get_settings = Permission(
-        name="get_settings", description="View application settings"
-    )
-    get_restaurant = Permission(
-        name="get_restaurant", description="View restaurant details"
-    )
-    update_restaurant = Permission(
-        name="update_restaurant", description="Edit restaurant details"
-    )
+        # Add permissions to the policy
+        for permission_name in permission_names:
+            # Find the permission by name
+            permission = Permission.query.filter_by(name=permission_name).first()
 
-    # Settings/System Permissions
-    view_system_settings = Permission(
-        name="view_system_settings", description="View system settings"
-    )
-    update_system_settings = Permission(
-        name="update_system_settings", description="Update system settings"
-    )
+            if permission:
+                # Create a policy-permission association
+                policy_permission = PolicyPermission(
+                    policy_id=policy.id,
+                    permission_id=permission.id,
+                    added_by="system",  # or whatever identifier you want to use
+                )
 
-    return [
-        create_user_permission,
-        get_user_permission,
-        list_users_permission,
-        update_user_permission,
-        delete_user_permission,
-        create_menu_category,
-        get_menu_category,
-        list_menu_categories,
-        update_menu_category,
-        delete_menu_category,
-        create_menu_group,
-        get_menu_group,
-        list_menu_groups,
-        update_menu_group,
-        delete_menu_group,
-        create_menu_item,
-        get_menu_item,
-        list_menu_items,
-        update_menu_item,
-        delete_menu_item,
-        create_order,
-        get_order,
-        list_orders,
-        update_order,
-        void_order,
-        delete_order,
-        get_settings,
-        get_restaurant,
-        update_restaurant,
-        view_system_settings,
-        update_system_settings,
-    ]
+                # Add to a database session
+                db.session.add(policy_permission)
+            else:
+                # Log warning if permission doesn't exist
+                print(
+                    f"Warning: Permission '{permission_name}' not found for policy '{policy_name}'"
+                )
 
-
-def seed_policy_permissions() -> None:
-    permissions = Permission.query.all()
-    admin_policy_permissions = permissions
-    manager_policy_permissions = [
-        p
-        for p in permissions
-        if p.name not in ["delete_user", "update_user", "create_user"]
-    ]
-
-    admin_policy = Policy.query.filter_by(name="administrator").first()
-    manager_policy = Policy.query.filter_by(name="manager").first()
-
-    if admin_policy:
-        for permission in admin_policy_permissions:
-            admin_policy_permission = PolicyPermission(
-                policy_id=admin_policy.id,
-                permission_id=permission.id,
-                added_by="system",
-            )
-            db.session.add(admin_policy_permission)
-            db.session.commit()
-
-    if manager_policy:
-        for permission in manager_policy_permissions:
-            manager_policy_permission = PolicyPermission(
-                policy_id=manager_policy.id,
-                permission_id=permission.id,
-                added_by="system",
-            )
-            db.session.add(manager_policy_permission)
-            db.session.commit()
+    # Commit all policy-permission associations
+    db.session.commit()
 
 
 def seed_role_policies():
     admin_role = Role.query.filter_by(name="admin").first()
-    admin_policy = Policy.query.filter_by(name="administrator").first()
+
+    if admin_role:
+        # Get all policies that end with "_full"
+        full_policies = Policy.query.filter(Policy.name.like("%_full")).all()
+
+        # Add each full policy to an admin role
+        for policy in full_policies:
+            role_policy = RolePolicy(role_id=admin_role.id, policy_id=policy.id)
+            db.session.add(role_policy)
+
+        db.session.commit()
 
     manager_role = Role.query.filter_by(name="manager").first()
-    manger_policy = Policy.query.filter_by(name="manager").first()
-
-    if admin_role and admin_policy:
-        admin_role_policy = RolePolicy(
-            role_id=admin_role.id, policy_id=admin_policy.id, assigned_by="system"
-        )
-        db.session.add(admin_role_policy)
+    if manager_role:
+        # Get policies for managers
+        manager_policies = [
+            "user_management_limited",
+            "role_management_view_only",
+            "restaurant_settings_full",
+        ]
+        for policy_name in manager_policies:
+            policy = Policy.query.filter_by(name=policy_name).first()
+            if policy:
+                role_policy = RolePolicy(role_id=manager_role.id, policy_id=policy.id)
+                db.session.add(role_policy)
         db.session.commit()
 
-    if manager_role and manger_policy:
-        manager_role_policy = RolePolicy(
-            role_id=manager_role.id, policy_id=manger_policy.id, assigned_by="system"
-        )
-        db.session.add(manager_role_policy)
-        db.session.commit()
+    # Add the user_self_management_policy for all roles
+    if admin_role and manager_role:
+        user_self_management_policy = Policy.query.filter_by(
+            name="user_self_management"
+        ).first()
+        if user_self_management_policy:
+            for role in Role.query.all():
+                self_management_role_policy = RolePolicy(
+                    role_id=role.id, policy_id=user_self_management_policy.id
+                )
+                db.session.add(self_management_role_policy)
+            db.session.commit()
 
 
 def seed_users() -> None:
@@ -323,15 +231,11 @@ def seed_all():
     seed_restaurant()
     seed_system_settings()
 
-    roles = seed_roles()
-    policies = seed_policies()
-    permissions = seed_permissions()
-
-    db.session.add_all(permissions + list(roles) + policies)
-    db.session.commit()
-
-    seed_policy_permissions()
+    seed_roles()
+    seed_permissions()
+    seed_policies()
     seed_role_policies()
+
     seed_users()
     load_menu_data()
 

@@ -31,7 +31,7 @@ def before_request():
 #            CREATE
 # ================================
 @order_bp.post("/create-order")
-@permission_required("create_order")
+@permission_required("order.create")
 def create_order():
     new_order = order_service.create_order(data={"user_id": current_user.id})
     response = jsonify(success=True)
@@ -43,7 +43,7 @@ def create_order():
 #            READ
 # ================================
 @order_bp.get("/")
-@permission_required("list_orders")
+@permission_required("order.list")
 def list_orders():
     context = {
         "title": "Orders",
@@ -53,7 +53,7 @@ def list_orders():
 
 
 @order_bp.get("/<int:order_id>")
-@permission_required("get_order")
+@permission_required("order.read")
 def get_order(order_id):
     order = order_service.repository.get_by_id(order_id)
     menu_categories = menu_category_service.list_categories()
@@ -71,7 +71,7 @@ def get_order(order_id):
 #            UPDATE
 # ================================
 @order_bp.post("/void-order/<int:order_id>")
-@permission_required("void_order")
+@permission_required("order.void")
 def void_order(order_id):
     order_service.patch_order_status(order_id, OrderStateEnum.VOIDED)
     response = jsonify(success=True)

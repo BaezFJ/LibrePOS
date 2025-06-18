@@ -1,4 +1,4 @@
-from librepos.models.menu_categories import MenuCategory
+from librepos.models import MenuCategory
 
 from . import EntityRepository
 

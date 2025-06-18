@@ -1,48 +1,40 @@
-{% from "macros/_blocks.html" import card_block %}
+{% macro card_block(title=None, actions=None, classes="") %}
+    <div class="card {{ classes }}">
+        <div class="card-content">
+            {% if title %}
+                <span class="card-title">{{ title|title }}</span>
+            {% endif %}
+            {{ caller() }}
+        </div>
+        {% if actions %}
+            <div class="card-action">
+                {% for action in actions %}
+                    <a href="{{ action.href }}" class="{{ action.classes }}">{{ action.label }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
 
-{% macro icon_card(icon, text, href=None) %}
+{% macro icon_card(icon, text, href=None, truncate_length=12) %}
     <!-- Icon Card -->
-    {% if href %}
+    {% set is_clickable = href is not none %}
+    {% set card_classes = "center-align" + (" hoverable" if is_clickable else "") %}
+    {% set icon_size = "medium" if is_clickable else "large" %}
+    {% set heading_classes = "" if is_clickable else "my-0" %}
+
+    {% if is_clickable %}
         <a href="{{ href }}" class="inherit-color">
-            {% call card_block(classes="center-align") %}
-                <i class="large material-icons">{{ icon }}</i>
-                <h5 class="my-0">{{ text|truncate(length=8) }}</h5>
+            {% call card_block(classes=card_classes) %}
+                <i class="{{ icon_size }} material-symbols-rounded">{{ icon }}</i>
+                <h5 class="{{ heading_classes }}">{{ text|truncate(length=truncate_length) }}</h5>
             {% endcall %}
         </a>
     {% else %}
-        {% call card_block(classes="center-align") %}
-            <i class="large material-icons">{{ icon }}</i>
-            <h5 class="my-0">{{ text|truncate(length=8) }}</h5>
+        {% call card_block(classes=card_classes) %}
+            <i class="{{ icon_size }} material-symbols-rounded">{{ icon }}</i>
+            <{{ heading_tag }} class="{{ heading_classes }}">{{ text|truncate(length=truncate_length) }}</
+            {{ heading_tag }}>
         {% endcall %}
     {% endif %}
-
-{% endmacro %}
-
-
-{% macro profile_card(user) %}
-
-    <!-- Profile Card -->
-    <div class="card">
-        <div class="card-content center-align">
-            <img src="https://placehold.co/120" alt="{{ user.username }}" class="profile-img">
-            <h5 id="username">{{ user.profile.full_name }}</h5>
-            <p class="grey-text">{{ user.profile.email }}</p>
-            {% if user.profile.phone %}
-                <p class="grey-text">{{ user.profile.phone|phone }}</p>
-            {% endif %}
-        </div>
-    </div>
-
-{% endmacro %}
-
-
-{% macro order_card(url, order) %}
-
-    <!-- Order Card -->
-    <a href="{{ url }}">
-        {% call card_block() %}
-
-        {% endcall %}
-    </a>
-
 {% endmacro %}

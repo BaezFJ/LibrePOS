@@ -4,6 +4,7 @@ from .menu_group_service import MenuGroupService
 from .menu_item_service import MenuItemService
 from .order_item_service import OrderItemService
 from .order_service import OrderService
+from .permission_service import PermissionService
 from .restaurant_service import RestaurantService
 from .system_settings_service import SystemSettingsService
 from .user_service import UserService
@@ -18,4 +19,5 @@ __all__ = [
     "RestaurantService",
     "SystemSettingsService",
     "UserService",
+    "PermissionService",
 ]

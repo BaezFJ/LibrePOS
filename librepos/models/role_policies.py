@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
@@ -18,20 +18,20 @@ class RolePolicy(db.Model):
 
     __tablename__ = "role_policies"
 
-    def __init__(self, role_id: int, policy_id: int, assigned_by: str):
-        super(RolePolicy, self).__init__()
+    def __init__(self, role_id: int, policy_id: int, **kwargs):
+        super(RolePolicy, self).__init__(**kwargs)
+        self.assignee_id = kwargs.get("assignee_id", None)
         """Create instance."""
         self.role_id = role_id
         self.policy_id = policy_id
-        self.assigned_by = assigned_by.lower()
         self.assigned_at = timezone_aware_datetime()
 
     # ForeignKeys
     role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), primary_key=True)
     policy_id: Mapped[int] = mapped_column(ForeignKey("policies.id"), primary_key=True)
+    assignee_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"))
 
     # Columns
-    assigned_by: Mapped[str]
     assigned_at: Mapped[datetime]
 
     # Relationships
