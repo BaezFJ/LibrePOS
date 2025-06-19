@@ -30,112 +30,135 @@ USER_SELF_MANAGEMENT_POLICY = [
 ]
 
 # ======================================================================================================================
-#                                           ROLE MANAGEMENT POLICIES
+#                                           IAM ROLE MANAGEMENT POLICIES
 # ======================================================================================================================
-ROLE_MANAGEMENT_FULL_POLICY = [
-    "role.create",
-    "role.read",
-    "role.list",
-    "role.update",
-    "role.delete",
+IAM_ROLE_MANAGEMENT_FULL_POLICY = [
+    "iam.create.role",
+    "iam.read.role",
+    "iam.list.roles",
+    "iam.update.role",
+    "iam.delete.role",
 ]
 
-ROLE_MANAGEMENT_LIMITED_POLICY = [
-    "role.read",
-    "role.list",
-    "role.update",
+IAM_ROLE_MANAGEMENT_LIMITED_POLICY = [
+    "iam.read.role",
+    "iam.list.roles",
+    "iam.update.role",
 ]
 
-ROLE_MANAGEMENT_VIEW_ONLY_POLICY = [
-    "role.read",
-    "role.list",
+IAM_ROLE_MANAGEMENT_VIEW_ONLY_POLICY = [
+    "iam.read.role",
+    "iam.list.roles",
 ]
+
 # ======================================================================================================================
-#                                      ROLE POLICIES MANAGEMENT POLICIES
+#                                      IAM POLICY MANAGEMENT POLICIES
 # ======================================================================================================================
-ROLE_POLICIES_FULL_POLICY = [
-    "role_policies.read",
-    "role_policies.list",
-    "role_policies.update",
-    "role_policies.create",
-    "role_policies.delete",
+IAM_POLICY_MANAGEMENT_FULL_POLICY = [
+    "iam.create.policy",
+    "iam.read.policy",
+    "iam.list.policies",
+    "iam.update.policy",
+    "iam.delete.policy",
 ]
 
-ROLE_POLICIES_LIMITED_POLICY = [
-    "role_policies.read",
-    "role_policies.list",
-    "role_policies.update",
+IAM_POLICY_MANAGEMENT_LIMITED_POLICY = [
+    "iam.read.policy",
+    "iam.list.policies",
+    "iam.update.policy",
 ]
 
-ROLE_POLICIES_VIEW_ONLY_POLICY = [
-    "role_policies.read",
-    "role_policies.list",
+IAM_POLICY_MANAGEMENT_VIEW_ONLY_POLICY = [
+    "iam.read.policy",
+    "iam.list.policies",
+]
+
+# ======================================================================================================================
+#                                      IAM PERMISSION ASSIGNMENT POLICIES
+# ======================================================================================================================
+IAM_PERMISSION_ASSIGNMENT_FULL_POLICY = [
+    "iam.assign.permissions",
+    "iam.read.assignments",
+    "iam.list.assignments",
+    "iam.update.assignments",
+    "iam.remove.assignments",
+]
+
+IAM_PERMISSION_ASSIGNMENT_LIMITED_POLICY = [
+    "iam.read.assignments",
+    "iam.list.assignments",
+    "iam.update.assignments",
+]
+
+IAM_PERMISSION_ASSIGNMENT_VIEW_ONLY_POLICY = [
+    "iam.read.assignments",
+    "iam.list.assignments",
 ]
 
 # ======================================================================================================================
 #                                      MENU CATEGORY MANAGEMENT POLICIES
 # ======================================================================================================================
 MENU_CATEGORY_MANAGEMENT_FULL_POLICY = [
-    "menu_category.create",
-    "menu_category.read",
-    "menu_category.list",
-    "menu_category.update",
-    "menu_category.delete",
+    "menu.create.category",
+    "menu.read.category",
+    "menu.list.categories",
+    "menu.update.category",
+    "menu.delete.category",
 ]
 
 MENU_CATEGORY_MANAGEMENT_LIMITED_POLICY = [
-    "menu_category.read",
-    "menu_category.list",
-    "menu_category.update",
+    "menu.read.category",
+    "menu.list.categories",
+    "menu.update.category",
 ]
 
 MENU_CATEGORY_VIEW_ONLY_POLICY = [
-    "menu_category.read",
-    "menu_category.list",
+    "menu.read.category",
+    "menu.list.categories",
 ]
 
 # ======================================================================================================================
 #                                      MENU GROUP MANAGEMENT POLICIES
 # ======================================================================================================================
 MENU_GROUP_MANAGEMENT_FULL_POLICY = [
-    "menu_group.create",
-    "menu_group.read",
-    "menu_group.list",
-    "menu_group.update",
-    "menu_group.delete",
+    "menu.create.group",
+    "menu.read.group",
+    "menu.list.groups",
+    "menu.update.group",
+    "menu.delete.group",
 ]
 
 MENU_GROUP_MANAGEMENT_LIMITED_POLICY = [
-    "menu_group.read",
-    "menu_group.list",
-    "menu_group.update",
+    "menu.read.group",
+    "menu.list.groups",
+    "menu.update.group",
 ]
 
 MENU_GROUP_VIEW_ONLY_POLICY = [
-    "menu_group.read",
-    "menu_group.list",
+    "menu.read.group",
+    "menu.list.groups",
 ]
 
 # ======================================================================================================================
 #                                      MENU ITEM MANAGEMENT POLICIES
 # ======================================================================================================================
 MENU_ITEM_MANAGEMENT_FULL_POLICY = [
-    "menu_item.create",
-    "menu_item.read",
-    "menu_item.list",
-    "menu_item.update",
-    "menu_item.delete",
+    "menu.create.item",
+    "menu.read.item",
+    "menu.list.items",
+    "menu.update.item",
+    "menu.delete.item",
 ]
 
 MENU_ITEM_MANAGEMENT_LIMITED_POLICY = [
-    "menu_item.read",
-    "menu_item.list",
-    "menu_item.update",
+    "menu.read.item",
+    "menu.list.items",
+    "menu.update.item",
 ]
 
 MENU_ITEM_VIEW_ONLY_POLICY = [
-    "menu_item.read",
-    "menu_item.list",
+    "menu.read.item",
+    "menu.list.items",
 ]
 
 # ======================================================================================================================
@@ -169,26 +192,61 @@ ORDER_VIEW_ONLY_POLICY = [
     "order.read",
     "order.list",
 ]
+
 # ======================================================================================================================
-#                                      POLICY POLICIES
+#                                      ORDER ITEM MANAGEMENT POLICIES
 # ======================================================================================================================
-POLICIES_FULL_POLICY = [
-    "policy.create",
-    "policy.read",
-    "policy.list",
-    "policy.update",
-    "policy.delete",
+ORDER_ITEM_MANAGEMENT_FULL_POLICY = [
+    "order.create.item",
+    "order.read.item",
+    "order.list.items",
+    "order.update.item",
+    "order.void.item",
+    "order.delete.item",
 ]
 
-POLICIES_LIMITED_POLICY = [
-    "policy.read",
-    "policy.list",
-    "policy.update",
+ORDER_ITEM_MANAGEMENT_OPERATIONAL_POLICY = [
+    "order.create.item",
+    "order.read.item",
+    "order.list.items",
+    "order.update.item",
+    "order.void.item",
+    "order.send_to_prep",
+    "order.mark_completed",
 ]
 
-POLICIES_VIEW_ONLY_POLICY = [
-    "policy.read",
-    "policy.list",
+ORDER_ITEM_MANAGEMENT_LIMITED_POLICY = [
+    "order.create.item",
+    "order.read.item",
+    "order.list.items",
+    "order.update.item",
+]
+
+ORDER_ITEM_VIEW_ONLY_POLICY = [
+    "order.read.item",
+    "order.list.items",
+]
+
+# ======================================================================================================================
+#                                      RESTAURANT MANAGEMENT POLICIES
+# ======================================================================================================================
+RESTAURANT_MANAGEMENT_FULL_POLICY = [
+    "restaurant.create",
+    "restaurant.read",
+    "restaurant.list",
+    "restaurant.update",
+    "restaurant.delete",
+]
+
+RESTAURANT_MANAGEMENT_LIMITED_POLICY = [
+    "restaurant.read",
+    "restaurant.list",
+    "restaurant.update",
+]
+
+RESTAURANT_MANAGEMENT_VIEW_ONLY_POLICY = [
+    "restaurant.read",
+    "restaurant.list",
 ]
 
 # ======================================================================================================================
@@ -196,24 +254,36 @@ POLICIES_VIEW_ONLY_POLICY = [
 # ======================================================================================================================
 SYSTEM_SETTINGS_FULL_POLICY = [
     "settings.read",
-    "system_settings.read",
-    "system_settings.update",
-    "settings_permissions.read",
+    "settings.read.system",
+    "settings.update.system",
+    "settings.read.permissions",
 ]
 
-RESTAURANT_SETTINGS_FULL_POLICY = [
+SYSTEM_SETTINGS_LIMITED_POLICY = [
     "settings.read",
-    "restaurant.read",
-    "restaurant.update",
-]
-
-RESTAURANT_SETTINGS_VIEW_ONLY_POLICY = [
-    "settings.read",
-    "restaurant.read",
+    "settings.read.system",
+    "settings.read.permissions",
 ]
 
 BASIC_SETTINGS_VIEW_POLICY = [
     "settings.read",
+]
+
+# ======================================================================================================================
+#                                      IAM ACCESS POLICIES
+# ======================================================================================================================
+IAM_FULL_ACCESS_POLICY = [
+    "iam.access",
+    "iam.dashboard",
+    "iam.audit",
+    "iam.bulk_operations",
+    "iam.export",
+    "iam.import",
+]
+
+IAM_BASIC_ACCESS_POLICY = [
+    "iam.access",
+    "iam.dashboard",
 ]
 
 # Complete policy definitions with metadata
@@ -239,37 +309,53 @@ POLICIES_FIXTURE = [
         "Permission to manage own user profile only",
         USER_SELF_MANAGEMENT_POLICY,
     ),
-    # Role Management Policies
+    # IAM Role Management Policies
     (
-        "role_management_full",
-        "Complete role and permission management capabilities",
-        ROLE_MANAGEMENT_FULL_POLICY,
+        "iam_role_management_full",
+        "Complete IAM role management capabilities",
+        IAM_ROLE_MANAGEMENT_FULL_POLICY,
     ),
     (
-        "role_management_limited",
-        "Role and permission management without creation and deletion capabilities",
-        ROLE_MANAGEMENT_LIMITED_POLICY,
+        "iam_role_management_limited",
+        "IAM role management without creation and deletion capabilities",
+        IAM_ROLE_MANAGEMENT_LIMITED_POLICY,
     ),
     (
-        "role_management_view_only",
-        "Read-only access to role and permission information",
-        ROLE_MANAGEMENT_VIEW_ONLY_POLICY,
+        "iam_role_management_view_only",
+        "Read-only access to IAM role information",
+        IAM_ROLE_MANAGEMENT_VIEW_ONLY_POLICY,
     ),
-    # Role Policies Management Policies
+    # IAM Policy Management Policies
     (
-        "role_policies_full",
-        "Complete role-related permission management",
-        ROLE_POLICIES_FULL_POLICY,
-    ),
-    (
-        "role_policies_limited",
-        "Role-related permission management without creation and deletion",
-        ROLE_POLICIES_LIMITED_POLICY,
+        "iam_policy_management_full",
+        "Complete IAM policy management capabilities",
+        IAM_POLICY_MANAGEMENT_FULL_POLICY,
     ),
     (
-        "role_policies_view_only",
-        "Read-only access to role-related permission information",
-        ROLE_POLICIES_VIEW_ONLY_POLICY,
+        "iam_policy_management_limited",
+        "IAM policy management without creation and deletion capabilities",
+        IAM_POLICY_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
+        "iam_policy_management_view_only",
+        "Read-only access to IAM policy information",
+        IAM_POLICY_MANAGEMENT_VIEW_ONLY_POLICY,
+    ),
+    # IAM Permission Assignment Policies
+    (
+        "iam_permission_assignment_full",
+        "Complete permission assignment management",
+        IAM_PERMISSION_ASSIGNMENT_FULL_POLICY,
+    ),
+    (
+        "iam_permission_assignment_limited",
+        "Permission assignment management without removal capabilities",
+        IAM_PERMISSION_ASSIGNMENT_LIMITED_POLICY,
+    ),
+    (
+        "iam_permission_assignment_view_only",
+        "Read-only access to permission assignment information",
+        IAM_PERMISSION_ASSIGNMENT_VIEW_ONLY_POLICY,
     ),
     # Menu Category Management Policies
     (
@@ -340,6 +426,43 @@ POLICIES_FIXTURE = [
         "Read-only access to order information",
         ORDER_VIEW_ONLY_POLICY,
     ),
+    # Order Item Management Policies
+    (
+        "order_item_management_full",
+        "Complete order item management including deletion capabilities",
+        ORDER_ITEM_MANAGEMENT_FULL_POLICY,
+    ),
+    (
+        "order_item_management_operational",
+        "Operational order item management including kitchen operations",
+        ORDER_ITEM_MANAGEMENT_OPERATIONAL_POLICY,
+    ),
+    (
+        "order_item_management_limited",
+        "Basic order item processing without void or delete capabilities",
+        ORDER_ITEM_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
+        "order_item_view_only",
+        "Read-only access to order item information",
+        ORDER_ITEM_VIEW_ONLY_POLICY,
+    ),
+    # Restaurant Management Policies
+    (
+        "restaurant_management_full",
+        "Complete restaurant profile and configuration management",
+        RESTAURANT_MANAGEMENT_FULL_POLICY,
+    ),
+    (
+        "restaurant_management_limited",
+        "Restaurant management without creation and deletion capabilities",
+        RESTAURANT_MANAGEMENT_LIMITED_POLICY,
+    ),
+    (
+        "restaurant_management_view_only",
+        "Read-only access to restaurant settings and profile",
+        RESTAURANT_MANAGEMENT_VIEW_ONLY_POLICY,
+    ),
     # Settings Management Policies
     (
         "system_settings_full",
@@ -347,34 +470,24 @@ POLICIES_FIXTURE = [
         SYSTEM_SETTINGS_FULL_POLICY,
     ),
     (
-        "restaurant_settings_full",
-        "Complete restaurant profile and operational settings management",
-        RESTAURANT_SETTINGS_FULL_POLICY,
-    ),
-    (
-        "restaurant_settings_view_only",
-        "Read-only access to restaurant settings and profile",
-        RESTAURANT_SETTINGS_VIEW_ONLY_POLICY,
+        "system_settings_limited",
+        "Limited system settings access without modification capabilities",
+        SYSTEM_SETTINGS_LIMITED_POLICY,
     ),
     (
         "basic_settings_view",
         "Basic read access to general application settings",
         BASIC_SETTINGS_VIEW_POLICY,
     ),
-    # Policy policies
+    # IAM Access Policies
     (
-        "policy_policies_full",
-        "Complete policy-related permission management",
-        POLICIES_FULL_POLICY,
+        "iam_full_access",
+        "Complete IAM interface access with advanced operations",
+        IAM_FULL_ACCESS_POLICY,
     ),
     (
-        "policy_policies_limited",
-        "Policy-related permission management without creation and deletion",
-        POLICIES_LIMITED_POLICY,
-    ),
-    (
-        "policy_policies_view_only",
-        "Read-only access to policy-related permission information",
-        POLICIES_VIEW_ONLY_POLICY,
+        "iam_basic_access",
+        "Basic IAM interface access and dashboard viewing",
+        IAM_BASIC_ACCESS_POLICY,
     ),
 ]
