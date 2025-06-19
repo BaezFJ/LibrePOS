@@ -116,8 +116,8 @@ def seed_role_policies():
     admin_role = Role.query.filter_by(name="admin").first()
 
     if admin_role:
-        # Get all policies that end with "_full"
-        full_policies = Policy.query.filter(Policy.name.like("%_full")).all()
+        # Get all policies that contain "full" anywhere in the name
+        full_policies = Policy.query.filter(Policy.name.ilike("%full%")).all()
 
         # Add each full policy to an admin role
         for policy in full_policies:
