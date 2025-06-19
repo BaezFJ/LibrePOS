@@ -9,7 +9,7 @@
 {% endmacro %}
 
 
-{% macro section_header(title, description=None, icon_name=None, info_url=None) %}
+{% macro section_header(title, description=None, icon_name=None, info_url=None, count=None) %}
 
     <div class="row">
         <div class="col s8">
@@ -17,7 +17,10 @@
                 {% if icon_name %}
                     {{ icon(icon_name, classes='left pr-4') }}
                 {% endif %}
-                {{ title|title }}
+                {{ title }}
+                {% if count %}
+                    ({{ count|length }})
+                {% endif %}
                 {% if info_url %}
                     <a href="{{ info_url }}" class="fs-small">info</a>
                 {% endif %}
