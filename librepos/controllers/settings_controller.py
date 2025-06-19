@@ -85,7 +85,9 @@ def create_role():
     if form.validate_on_submit():
         validated_data = sanitize_form_data(form)
         new_role = permission_service.create_role(validated_data)
-        return redirect(url_for(".get_user_role", role_id=new_role.id if new_role else 0))
+        return redirect(
+            url_for(".get_user_role", role_id=new_role.id if new_role else 0)
+        )
     return redirect(url_for(".list_user_roles"))
 
 
