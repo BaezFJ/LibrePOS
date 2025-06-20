@@ -4,29 +4,29 @@
 # Each policy groups related permissions for specific management areas
 
 # ======================================================================================================================
-#                                           USER MANAGEMENT POLICIES
+#                                           IAM USER MANAGEMENT POLICIES
 # ======================================================================================================================
-USER_MANAGEMENT_FULL_POLICY = [
-    "user.create",
-    "user.read",
-    "user.list",
-    "user.update",
-    "user.delete",
+IAM_USER_MANAGEMENT_FULL_POLICY = [
+    "iam.create.user",
+    "iam.read.user",
+    "iam.list.user",
+    "iam.update.user",
+    "iam.delete.user",
 ]
 
-USER_MANAGEMENT_LIMITED_POLICY = [
-    "user.read",
-    "user.list",
-    "user.update",
+IAM_USER_MANAGEMENT_LIMITED_POLICY = [
+    "iam.read.user",
+    "iam.list.user",
+    "iam.update.user",
 ]
 
-USER_MANAGEMENT_VIEW_ONLY_POLICY = [
-    "user.read",
-    "user.list",
+IAM_USER_MANAGEMENT_VIEW_ONLY_POLICY = [
+    "iam.read.user",
+    "iam.list.user",
 ]
 
-USER_SELF_MANAGEMENT_POLICY = [
-    "user.update.own",
+IAM_USER_SELF_MANAGEMENT_POLICY = [
+    "iam.update.user.own",
 ]
 
 # ======================================================================================================================
@@ -74,25 +74,47 @@ IAM_POLICY_MANAGEMENT_VIEW_ONLY_POLICY = [
 ]
 
 # ======================================================================================================================
+#                                      IAM ROLE ASSIGNMENT POLICIES
+# ======================================================================================================================
+IAM_ROLE_ASSIGNMENT_FULL_POLICY = [
+    "iam.assign.policy_to_role",
+    "iam.read.role_policies",
+    "iam.list.role_policies",
+    "iam.update.role_policies",
+    "iam.remove.role_policies",
+]
+
+IAM_ROLE_ASSIGNMENT_LIMITED_POLICY = [
+    "iam.read.role_policies",
+    "iam.list.role_policies",
+    "iam.update.role_policies",
+]
+
+IAM_ROLE_ASSIGNMENT_VIEW_ONLY_POLICY = [
+    "iam.read.role_policies",
+    "iam.list.role_policies",
+]
+
+# ======================================================================================================================
 #                                      IAM PERMISSION ASSIGNMENT POLICIES
 # ======================================================================================================================
 IAM_PERMISSION_ASSIGNMENT_FULL_POLICY = [
-    "iam.assign.permissions",
-    "iam.read.assignments",
-    "iam.list.assignments",
-    "iam.update.assignments",
-    "iam.remove.assignments",
+    "iam.assign.permission_to_policy",
+    "iam.read.policy_permissions",
+    "iam.list.policy_permissions",
+    "iam.update.policy_permissions",
+    "iam.remove.policy_permissions",
 ]
 
 IAM_PERMISSION_ASSIGNMENT_LIMITED_POLICY = [
-    "iam.read.assignments",
-    "iam.list.assignments",
-    "iam.update.assignments",
+    "iam.read.policy_permissions",
+    "iam.list.policy_permissions",
+    "iam.update.policy_permissions",
 ]
 
 IAM_PERMISSION_ASSIGNMENT_VIEW_ONLY_POLICY = [
-    "iam.read.assignments",
-    "iam.list.assignments",
+    "iam.read.policy_permissions",
+    "iam.list.policy_permissions",
 ]
 
 # ======================================================================================================================
@@ -288,26 +310,26 @@ IAM_BASIC_ACCESS_POLICY = [
 
 # Complete policy definitions with metadata
 POLICIES_FIXTURE = [
-    # User Management Policies
+    # IAM User Management Policies 
     (
-        "user_management_full",
-        "Complete user account management including creation and deletion",
-        USER_MANAGEMENT_FULL_POLICY,
+        "iam_user_management_full",
+        "Complete IAM user account management including creation and deletion",
+        IAM_USER_MANAGEMENT_FULL_POLICY,
     ),
     (
-        "user_management_limited",
-        "User account management without creation and deletion capabilities",
-        USER_MANAGEMENT_LIMITED_POLICY,
+        "iam_user_management_limited",
+        "IAM user account management without creation and deletion capabilities",
+        IAM_USER_MANAGEMENT_LIMITED_POLICY,
     ),
     (
-        "user_management_view_only",
-        "Read-only access to user account information",
-        USER_MANAGEMENT_VIEW_ONLY_POLICY,
+        "iam_user_management_view_only",
+        "Read-only access to IAM user account information",
+        IAM_USER_MANAGEMENT_VIEW_ONLY_POLICY,
     ),
     (
-        "user_self_management",
-        "Permission to manage own user profile only",
-        USER_SELF_MANAGEMENT_POLICY,
+        "iam_user_self_management",
+        "Permission to manage own IAM user profile only",
+        IAM_USER_SELF_MANAGEMENT_POLICY,
     ),
     # IAM Role Management Policies
     (
@@ -489,5 +511,21 @@ POLICIES_FIXTURE = [
         "iam_basic_access",
         "Basic IAM interface access and dashboard viewing",
         IAM_BASIC_ACCESS_POLICY,
+    ),
+    # IAM Role Assignment Policies
+    (
+        "iam_role_assignment_full",
+        "Complete role assignment management capabilities",
+        IAM_ROLE_ASSIGNMENT_FULL_POLICY,
+    ),
+    (
+        "iam_role_assignment_limited",
+        "Role assignment management without removal capabilities",
+        IAM_ROLE_ASSIGNMENT_LIMITED_POLICY,
+    ),
+    (
+        "iam_role_assignment_view_only",
+        "Read-only access to role assignment information",
+        IAM_ROLE_ASSIGNMENT_VIEW_ONLY_POLICY,
     ),
 ]

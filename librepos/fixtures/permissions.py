@@ -107,6 +107,14 @@ IAM_PERMISSIONS = [
     # General IAM Access
     ("iam.access", "Access Identity and Access Management interface"),
     ("iam.dashboard", "View IAM dashboard with system overview and statistics"),
+    # User Management
+    ("iam.create.user", "Create new users with assigned roles and permissions"),
+    ("iam.read.user", "View detailed user information including roles and permissions"),
+    ("iam.read.user.own", "View own user profile and roles"),
+    ("iam.list.user", "Access and view the complete list of users with their roles"),
+    ("iam.update.user", "Modify existing user details and roles"),
+    ("iam.update.user.own", "Modify own user profile and roles"),
+    ("iam.delete.user", "Remove users from the system"),
     # Role Management
     ("iam.create.role", "Create new roles with assigned permissions and settings"),
     (
@@ -122,12 +130,18 @@ IAM_PERMISSIONS = [
     ("iam.list.policies", "Access and view the complete list of policies"),
     ("iam.update.policy", "Modify existing policy details and permissions"),
     ("iam.delete.policy", "Remove policies from the system"),
+    # Role-Policy Assignments
+    ("iam.assign.policy_to_role", "Assign policies to roles"),
+    ("iam.read.role_policies", "View policy assignments for roles"),
+    ("iam.list.role_policies", "Access and view all role-policy relationships"),
+    ("iam.update.role_policies", "Modify policy assignments for roles"),
+    ("iam.remove.role_policies", "Remove policy assignments from roles"),
     # Policy-Permission Assignments
-    ("iam.assign.permissions", "Assign permissions to policies"),
-    ("iam.read.assignments", "View permission assignments for policies"),
-    ("iam.list.assignments", "Access and view all policy-permission relationships"),
-    ("iam.update.assignments", "Modify permission assignments for policies"),
-    ("iam.remove.assignments", "Remove permission assignments from policies"),
+    ("iam.assign.permission_to_policy", "Assign permissions to policies"),
+    ("iam.read.policy_permissions", "View permission assignments for policies"),
+    ("iam.list.policy_permissions", "Access and view all policy-permission relationships"),
+    ("iam.update.policy_permissions", "Modify permission assignments for policies"),
+    ("iam.remove.policy_permissions", "Remove permission assignments from policies"),
     # Advanced IAM Operations
     ("iam.audit", "View IAM audit logs and permission changes"),
     ("iam.bulk_operations", "Perform bulk operations on users, roles, and policies"),
