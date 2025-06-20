@@ -93,13 +93,12 @@ RESTAURANT_PERMISSIONS = [
 
 # System Settings Domain
 SETTINGS_PERMISSIONS = [
-    ("settings.read", "Access and view all application configuration settings"),
+    ("settings.access", "Access application configuration settings"),
     ("settings.read.system", "View system-wide configuration and technical settings"),
     (
         "settings.update.system",
         "Modify system-wide configuration, behavior, and technical parameters",
     ),
-    ("settings.read.permissions", "View all permission-related settings"),
 ]
 
 # IAM (Identity and Access Management) Domain

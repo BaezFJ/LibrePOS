@@ -275,20 +275,18 @@ RESTAURANT_MANAGEMENT_VIEW_ONLY_POLICY = [
 #                                      SETTINGS MANAGEMENT POLICIES
 # ======================================================================================================================
 SYSTEM_SETTINGS_FULL_POLICY = [
-    "settings.read",
+    "settings.access",
     "settings.read.system",
     "settings.update.system",
-    "settings.read.permissions",
 ]
 
 SYSTEM_SETTINGS_LIMITED_POLICY = [
-    "settings.read",
+    "settings.access",
     "settings.read.system",
-    "settings.read.permissions",
 ]
 
 BASIC_SETTINGS_VIEW_POLICY = [
-    "settings.read",
+    "settings.access",
 ]
 
 # ======================================================================================================================
