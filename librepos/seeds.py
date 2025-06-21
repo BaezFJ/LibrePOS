@@ -157,8 +157,8 @@ def seed_role_policies():
 
 def seed_users() -> None:
     admin_user = User(
+        username="admin",
         first_name="john",
-        middle_name=None,
         last_name="doe",
         email="admin@librepos.com",
         password="librepos",
@@ -169,8 +169,8 @@ def seed_users() -> None:
         role_id=1,
     )
     manager_user = User(
+        username="manager",
         first_name="jane",
-        middle_name=None,
         last_name="doe",
         email="manager@librepos.com",
         password="librepos",
