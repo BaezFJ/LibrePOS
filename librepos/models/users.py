@@ -20,19 +20,15 @@ class User(UserMixin, db.Model):
     __tablename__ = "users"
 
     def __init__(
-        self,
-        first_name: str,
-        middle_name: str | None,
-        last_name: str,
-        email: str,
-        password: str,
-        **kwargs,
+            self,
+            username: str,
+            email: str,
+            password: str,
+            **kwargs,
     ):
         super(User, self).__init__(**kwargs)
         """Create instance."""
-        self.first_name = first_name.title()
-        self.middle_name = middle_name.title() if middle_name else None
-        self.last_name = last_name.title()
+        self.username = username.lower()
         self.email = email.lower()
         self.password = generate_password_hash(password)
         self.created_at = timezone_aware_datetime()
@@ -50,6 +46,7 @@ class User(UserMixin, db.Model):
     created_at: Mapped[datetime]
 
     # Authentication
+    username: Mapped[str] = mapped_column(unique=True, index=True)
     password: Mapped[str]
     failed_login_count: Mapped[int] = mapped_column(default=0)
 
@@ -83,9 +80,14 @@ class User(UserMixin, db.Model):
     last_password_change: Mapped[Optional[datetime]]
 
     # Relationships
-    # role = db.relationship("Role", back_populates="users")
     role: Mapped["Role"] = relationship(back_populates="users")
     orders: Mapped[List["ShopOrder"]] = relationship("ShopOrder", back_populates="user")
+
+    # TODO (6/21/25): Move authentication, activity logging, and access control related functions to corresponding repositories
+    # Functions to move:
+    # - check_password(): Move to AuthenticationRepository
+    # - record_sign_in(), handle_failed_login(), reset_failed_login_count(): Move to ActivityTrackingRepository  
+    # - has_permission(): Move to AccessControlRepository
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password, password)
