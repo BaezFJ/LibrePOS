@@ -12,4 +12,5 @@ class UserContactDetailsForm(FlaskForm):
     city = StringField("City", render_kw={"placeholder": " "})
     state = StringField("State", render_kw={"placeholder": " "})
     zipcode = StringField("Zipcode", render_kw={"placeholder": " "})
+    country = StringField("Country", render_kw={"placeholder": " "})
     submit = SubmitField("Update Contact Details")
