@@ -21,6 +21,7 @@ class User(UserMixin, db.Model):
 
     def __init__(
             self,
+            role_id: int,
             username: str,
             email: str,
             password: str,
@@ -28,6 +29,7 @@ class User(UserMixin, db.Model):
     ):
         super(User, self).__init__(**kwargs)
         """Create instance."""
+        self.role_id = role_id
         self.username = username.lower()
         self.email = email.lower()
         self.password = generate_password_hash(password)
@@ -36,13 +38,11 @@ class User(UserMixin, db.Model):
         self.set_default_image()
 
     # ForeignKeys
-    role_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("roles.id"), nullable=True
-    )
+    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), nullable=True)
 
     # Columns
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
-    active: Mapped[bool] = mapped_column(default=False)
+    active: Mapped[bool] = mapped_column(default=True)
     created_at: Mapped[datetime]
 
     # Authentication
@@ -51,9 +51,9 @@ class User(UserMixin, db.Model):
     failed_login_count: Mapped[int] = mapped_column(default=0)
 
     # Details
-    first_name: Mapped[str]
+    first_name: Mapped[Optional[str]]
     middle_name: Mapped[Optional[str]]
-    last_name: Mapped[str]
+    last_name: Mapped[Optional[str]]
     gender: Mapped[Optional[str]]
     marital_status: Mapped[Optional[str]]
     birthday: Mapped[Optional[datetime]]
@@ -62,12 +62,13 @@ class User(UserMixin, db.Model):
     # ContactInfo
     email: Mapped[str] = mapped_column(unique=True, index=True)
     email_confirmed: Mapped[bool] = mapped_column(default=False)
-    phone: Mapped[str] = mapped_column(unique=True, index=True)
+    phone: Mapped[Optional[str]] = mapped_column(unique=True, index=True)
     phone_confirmed: Mapped[bool] = mapped_column(default=False)
     address: Mapped[Optional[str]]
     city: Mapped[Optional[str]]
     state: Mapped[Optional[str]]
-    zip_code: Mapped[Optional[str]]
+    zipcode: Mapped[Optional[str]]
+    country: Mapped[Optional[str]]
 
     # ActivityTracking
     sign_in_count: Mapped[int] = mapped_column(default=0)
@@ -86,7 +87,7 @@ class User(UserMixin, db.Model):
     # TODO (6/21/25): Move authentication, activity logging, and access control related functions to corresponding repositories
     # Functions to move:
     # - check_password(): Move to AuthenticationRepository
-    # - record_sign_in(), handle_failed_login(), reset_failed_login_count(): Move to ActivityTrackingRepository  
+    # - record_sign_in(), handle_failed_login(), reset_failed_login_count(): Move to ActivityTrackingRepository
     # - has_permission(): Move to AccessControlRepository
 
     def check_password(self, password: str) -> bool:
