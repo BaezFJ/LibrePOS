@@ -167,6 +167,11 @@ def seed_users() -> None:
         phone="1234567890",
         active=True,
         role_id=1,
+        address="123 Main St",
+        city="New York",
+        state="NY",
+        zipcode="10001",
+        country="USA",
     )
     manager_user = User(
         username="manager",
@@ -179,6 +184,11 @@ def seed_users() -> None:
         phone="9991234567",
         active=True,
         role_id=2,
+        address="123 Main St",
+        city="New York",
+        state="NY",
+        zipcode="10001",
+        country="USA",
     )
     db.session.add_all(
         [

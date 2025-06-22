@@ -138,7 +138,10 @@ IAM_PERMISSIONS = [
     # Policy-Permission Assignments
     ("iam.assign.permission_to_policy", "Assign permissions to policies"),
     ("iam.read.policy_permissions", "View permission assignments for policies"),
-    ("iam.list.policy_permissions", "Access and view all policy-permission relationships"),
+    (
+        "iam.list.policy_permissions",
+        "Access and view all policy-permission relationships",
+    ),
     ("iam.update.policy_permissions", "Modify permission assignments for policies"),
     ("iam.remove.policy_permissions", "Remove permission assignments from policies"),
     # Advanced IAM Operations

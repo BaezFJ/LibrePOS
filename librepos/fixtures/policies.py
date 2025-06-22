@@ -308,7 +308,7 @@ IAM_BASIC_ACCESS_POLICY = [
 
 # Complete policy definitions with metadata
 POLICIES_FIXTURE = [
-    # IAM User Management Policies 
+    # IAM User Management Policies
     (
         "iam_user_management_full",
         "Complete IAM user account management including creation and deletion",
