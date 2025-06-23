@@ -1,11 +1,11 @@
 :root[theme="dark"] {
 
     /* Theme colors */
-    --foreground-color: #F8F8F2;
+    --foreground-color: #cdd6f4;
     --primary-color: #6200ea;
-    --primary-background-color: #282A36;
-    --secondary-background-color: #44475A;
-    --error-color: #FF5555;
+    --primary-background-color: #1e1e2e;
+    --secondary-background-color: #11111b;
+    --error-color: #f38ba8;
 
     /* btn filled and links */
     --md-sys-color-primary: var(--primary-color);
@@ -32,7 +32,7 @@
     --md-sys-color-on-background: var(--foreground-color);
 
     /* background color for cards, modals and sidenav */
-    --md-sys-color-surface: #22212C; /*rgb(20 19 24)*/
+    --md-sys-color-surface: #11111b;
 
     /* disabled color */
     --md-sys-color-on-surface: #6272A4;
@@ -47,7 +47,7 @@
     --md-sys-color-outline: var(--primary-color);
 
     /* divider color */
-    --md-sys-color-outline-variant: #44475A;
+    --md-sys-color-outline-variant: #313244;
 
 
     /* unknown */
