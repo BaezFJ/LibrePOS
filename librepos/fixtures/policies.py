@@ -12,6 +12,7 @@ IAM_USER_MANAGEMENT_FULL_POLICY = [
     "iam.list.user",
     "iam.update.user",
     "iam.delete.user",
+    "iam.suspend.user",
 ]
 
 IAM_USER_MANAGEMENT_LIMITED_POLICY = [

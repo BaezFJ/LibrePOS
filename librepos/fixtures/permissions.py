@@ -114,6 +114,7 @@ IAM_PERMISSIONS = [
     ("iam.update.user", "Modify existing user details and roles"),
     ("iam.update.user.own", "Modify own user profile and roles"),
     ("iam.delete.user", "Remove users from the system"),
+    ("iam.suspend.user", "Suspend users from the system"),
     # Role Management
     ("iam.create.role", "Create new roles with assigned permissions and settings"),
     (
