@@ -95,6 +95,10 @@ main > :first-child {
     background-color: var(--success-color);
 }
 
+hr.success {
+    border: 1px solid var(--success-color);
+}
+
 .success-border {
     border: 2px solid var(--success-color);
     border-radius: .75rem;
@@ -108,6 +112,10 @@ main > :first-child {
 .danger,
 .error {
     background-color: var(--danger-color);
+}
+
+hr.danger {
+    border: 1px solid var(--danger-color);
 }
 
 .danger-border {
@@ -146,6 +154,10 @@ main > :first-child {
 
 .warning-text {
     color: var(--warning-color);
+}
+
+hr.warning {
+    border: 1px solid var(--warning-color);
 }
 
 .btn.outlined.danger {
