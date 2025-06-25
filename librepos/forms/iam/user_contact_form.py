@@ -1,16 +1,12 @@
-from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Email
 
+from librepos.forms.base import BaseForm
 
-class UserContactDetailsForm(FlaskForm):
+
+class UserContactForm(BaseForm):
     email = StringField(
         "Email", validators=[DataRequired(), Email()], render_kw={"placeholder": " "}
     )
     phone = StringField("Phone", render_kw={"placeholder": " "})
-    address = StringField("Address", render_kw={"placeholder": " "})
-    city = StringField("City", render_kw={"placeholder": " "})
-    state = StringField("State", render_kw={"placeholder": " "})
-    zipcode = StringField("Zipcode", render_kw={"placeholder": " "})
-    country = StringField("Country", render_kw={"placeholder": " "})
-    submit = SubmitField("Update Contact Details")
+    submit = SubmitField("Update Contact")

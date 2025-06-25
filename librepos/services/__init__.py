@@ -7,7 +7,6 @@ from .order_service import OrderService
 from .permission_service import PermissionService
 from .restaurant_service import RestaurantService
 from .system_settings_service import SystemSettingsService
-from .user_service import UserService
 
 __all__ = [
     "MenuCategoryService",
@@ -18,6 +17,5 @@ __all__ = [
     "AuthService",
     "RestaurantService",
     "SystemSettingsService",
-    "UserService",
     "PermissionService",
 ]

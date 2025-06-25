@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% from "macros/_modals.html" import warningModal %}
+{% from "macros/_modals.html" import warningMessageModal %}
 
 {% block main %}
 
@@ -52,7 +52,7 @@
                             <button class="btn disabled">Delete Category</button>
                         {% else %}
                             <button class="btn danger" popovertarget="warningModal">Delete Category</button>
-                            {% call warningModal(url_for('menu.delete_category', category_id=category.id)) %}
+                            {% call warningMessageModal(url_for('menu.delete_category', category_id=category.id)) %}
                                 <h4 class="center-align">Confirm Deletion</h4>
                                 <p class="flow-text">Are you sure you want to delete this category? This action
                                     cannot

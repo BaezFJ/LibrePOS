@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% from "macros/_sections.html" import section, section_header %}
+
+{% block main %}
+
+    {% call section() %}
+
+        {% call section_header("Edit Policies") %}
+
+        {% endcall %}
+
+    {% endcall %}
+
+{% endblock %}

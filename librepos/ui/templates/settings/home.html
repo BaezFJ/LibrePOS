@@ -12,17 +12,17 @@
 
         <div class="row">
 
-            {% if current_user.has_permission('system_settings.read') %}
+            {% if current_user.has_permission('settings.read.system') %}
                 <!-- System Settings -->
                 <div class="col s6 m4 l3">
                     {{ icon_card("settings_applications", "System", url_for('settings.system_settings')) }}
                 </div>
             {% endif %}
 
-            {% if current_user.has_permission('role.list') %}
+            {% if current_user.has_permission('iam.access') %}
                 <!-- Roles Settings -->
                 <div class="col s6 m4 l3">
-                    {{ icon_card("lock_person", "Roles", url_for('settings.list_user_roles')) }}
+                    {{ icon_card("admin_panel_settings", "IAM", url_for('iam.home')) }}
                 </div>
             {% endif %}
         </div>

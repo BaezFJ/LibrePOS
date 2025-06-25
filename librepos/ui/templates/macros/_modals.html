@@ -1,3 +1,5 @@
+{% from "macros/_buttons.html" import modal_button, tonal_button %}
+
 {% macro infoMessageModal(id, title=None, classes=None) %}
     {% set modal_id = id if id else "infoModal" %}
 
@@ -16,11 +18,12 @@
 {% endmacro %}
 
 
-{% macro warningModal(url) %}
-    <div id="warningModal" class="modal warning-border" popover>
+{% macro warningMessageModal(url, id='warningModal') %}
+    <div id="{{ id }}" class="modal warning-border" popover>
         <div class="modal-header warning-text center-align">
             <i class="large material-symbols-rounded">warning</i>
-            <h5>Warning</h5>
+            <h4>Warning</h4>
+            <hr class="warning">
         </div>
         <div class="modal-content">
             {{ caller() }}
@@ -28,7 +31,7 @@
         <div class="modal-footer">
             <div class="row">
                 <div class="col s6 center-align">
-                    <button class="btn-flat inherit-color" popovertarget="warningModal">Cancel</button>
+                    <button class="btn-flat inherit-color" popovertarget="{{ id }}">Cancel</button>
                 </div>
                 <div class="col s6 center-align">
                     <button hx-post="{{ url }}" class="btn warning black-text">Continue</button>
@@ -54,17 +57,14 @@
 {% endmacro %}
 
 
-{% macro modal(id, title) %}
-    <div id="{{ id }}" class="modal bottom-sheet" popover>
+{% macro modal(id, title, classes='') %}
+    <div id="{{ id }}" class="modal {{ classes }}" popover>
         <div class="modal-header center-align">
             <h5>{{ title }}</h5>
             <hr>
         </div>
         <div class="modal-content">
             {{ caller() }}
-        </div>
-        <div class="modal-footer">
-            <button tabindex="0" class="waves-effect btn-flat white-text" popovertarget="{{ id }}">Close</button>
         </div>
     </div>
 {% endmacro %}

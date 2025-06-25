@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% from "macros/_modals.html" import warningModal %}
+{% from "macros/_modals.html" import warningMessageModal %}
 
 
 {% block main %}
@@ -56,7 +56,7 @@
                             <button class="btn disabled">Delete Group</button>
                         {% else %}
                             <button class="btn danger" popovertarget="warningModal">Delete Group</button>
-                            {% call warningModal(url_for('menu.delete_group', group_id=group.id)) %}
+                            {% call warningMessageModal(url_for('menu.delete_group', group_id=group.id)) %}
                                 <h5 class="center-align">Confirm Deletion</h5>
                                 <p class="flow-text">Are you sure you want to delete this group? This action
                                     cannot

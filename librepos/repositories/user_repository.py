@@ -9,3 +9,7 @@ class UserRepository(EntityRepository[User]):
     @staticmethod
     def find_by_email(email: str) -> User | None:
         return User.query.filter_by(email=email).first()
+
+    @staticmethod
+    def find_by_username(username: str) -> User | None:
+        return User.query.filter_by(username=username).first_or_404()

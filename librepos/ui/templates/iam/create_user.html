@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% from "macros/_sections.html" import section, section_header %}
+{% from "macros/_forms.html" import string_field, submit_field %}
+
+{% block main %}
+
+    {% call section() %}
+
+        {% call section_header(title="Create User") %}
+
+        {% endcall %}
+
+        <form action="{{ url_for('iam.process_create_user') }}" method="POST" class="row">
+            {{ form.hidden_tag() }}
+            {{ string_field(form.role_id) }}
+            {{ string_field(form.username) }}
+            {{ string_field(form.password) }}
+            {{ string_field(form.email) }}
+            {{ submit_field("Create User") }}
+        </form>
+
+    {% endcall %}
+
+{% endblock %}

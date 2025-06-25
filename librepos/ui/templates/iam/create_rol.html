@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% from "macros/_sections.html" import section, section_header %}
+{% from "macros/_cards.html" import panel_card %}
+{% from "macros/_forms.html" import string_field, submit_field %}
+
+{% block main %}
+
+    {% call section() %}
+
+        {% call section_header("Create Role") %}
+
+        {% endcall %}
+
+        <div class="row">
+            <div class="col s12">
+                {% call panel_card() %}
+                    <form action="{{ url_for('iam.process_create_role') }}" method="POST" class="row">
+                        {{ form.hidden_tag() }}
+                        {{ string_field(form.name) }}
+                        {{ string_field(form.description) }}
+                        {{ submit_field("Create Role") }}
+                    </form>
+                {% endcall %}
+            </div>
+        </div>
+
+    {% endcall %}
+
+{% endblock %}

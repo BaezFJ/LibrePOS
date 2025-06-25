@@ -1,21 +1,24 @@
-{% from "macros/_icons.html" import icon %}
+{% set default_button_classes = "btn waves-effect waves-light rounded" %}
 
-{% macro _get_size_class(size) %}
-    {%- if size == 'large' -%}btn-large
-    {%- elif size == 'small' -%}btn-small
-    {% elif size == 'normal' %}btn
-    {%- endif -%}
+
+{% macro filled_button(text, url='#', classes='') %}
+    <a href="{{ url }}" class="{{ default_button_classes }} filled {{ classes }}">{{ text }}</a>
 {% endmacro %}
 
-{% macro button(label=None, href='#', size='normal', theme_classes='filled', waves='waves-effect', icon_name=None, classes='', modal=False) %}
-    {% set modalCaller = 'javascript:'+ href +'.showPopover()' %}
+{% macro outlined_button(text, url='#', classes='') %}
+    <a href="{{ url }}" class="{{ default_button_classes }} outlined {{ classes }}">{{ text }}</a>
+{% endmacro %}
 
-    <a href="{{ modalCaller if modal else href }}"
-       class="{{ _get_size_class(size) }} {{ theme_classes }} rounded {{ waves }} {{ classes }}">
-        {% if icon_name %}
-            {% set icon_left = 'left' if label else "" %}
-            {{ icon(icon_name, classes=icon_left) }}
-        {% endif %}
-        {{ label if label }}
-    </a>
+{% macro tonal_button(text, url='#', classes='') %}
+    <a href="{{ url }}" class="{{ default_button_classes }} tonal {{ classes }}">{{ text }}</a>
+{% endmacro %}
+
+{% macro disabled_button(text) %}
+    <a class="btn disabled">{{ text }}</a>
+{% endmacro %}
+
+{% macro submit_button(text, classes='') %}
+    <button class="{{ default_button_classes }} {{ classes }}" type="submit" name="action">
+        {{ text }}
+    </button>
 {% endmacro %}
