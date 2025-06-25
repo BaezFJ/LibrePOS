@@ -38,6 +38,7 @@ IAM_ROLE_MANAGEMENT_FULL_POLICY = [
     "iam.read.role",
     "iam.list.roles",
     "iam.update.role",
+    "iam.suspend.role",
     "iam.delete.role",
 ]
 

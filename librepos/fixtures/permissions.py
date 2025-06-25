@@ -123,6 +123,7 @@ IAM_PERMISSIONS = [
     ),
     ("iam.list.roles", "Access and view the complete list of roles"),
     ("iam.update.role", "Modify existing role details and permissions"),
+    ("iam.suspend.role", "Suspend roles from the system"),
     ("iam.delete.role", "Remove roles from the system"),
     # Policy Management
     ("iam.create.policy", "Create new policies with assigned permissions"),
