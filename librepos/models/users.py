@@ -64,6 +64,8 @@ class User(UserMixin, db.Model):
     email_confirmed: Mapped[bool] = mapped_column(default=False)
     phone: Mapped[Optional[str]] = mapped_column(unique=True, index=True)
     phone_confirmed: Mapped[bool] = mapped_column(default=False)
+
+    # AddressInfo
     address: Mapped[Optional[str]]
     city: Mapped[Optional[str]]
     state: Mapped[Optional[str]]
