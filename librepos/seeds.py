@@ -116,8 +116,8 @@ def seed_role_policies():
     admin_role = Role.query.filter_by(name="admin").first()
 
     if admin_role:
-        # Get all policies that end with "_full"
-        full_policies = Policy.query.filter(Policy.name.like("%_full")).all()
+        # Get all policies that contain "full" anywhere in the name
+        full_policies = Policy.query.filter(Policy.name.ilike("%full%")).all()
 
         # Add each full policy to an admin role
         for policy in full_policies:
@@ -157,8 +157,8 @@ def seed_role_policies():
 
 def seed_users() -> None:
     admin_user = User(
+        username="admin",
         first_name="john",
-        middle_name=None,
         last_name="doe",
         email="admin@librepos.com",
         password="librepos",
@@ -167,10 +167,15 @@ def seed_users() -> None:
         phone="1234567890",
         active=True,
         role_id=1,
+        address="123 Main St",
+        city="New York",
+        state="NY",
+        zipcode="10001",
+        country="USA",
     )
     manager_user = User(
+        username="manager",
         first_name="jane",
-        middle_name=None,
         last_name="doe",
         email="manager@librepos.com",
         password="librepos",
@@ -179,6 +184,11 @@ def seed_users() -> None:
         phone="9991234567",
         active=True,
         role_id=2,
+        address="123 Main St",
+        city="New York",
+        state="NY",
+        zipcode="10001",
+        country="USA",
     )
     db.session.add_all(
         [

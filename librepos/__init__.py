@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 
 from .manage import add_cli_commands
 from .router import register_blueprints
@@ -30,6 +30,10 @@ def create_app():
 
     # register blueprints
     register_blueprints(app)
+
+    @app.route("/")
+    def index():
+        return redirect(url_for("order.list_orders"))
 
     # load cli commands
     add_cli_commands(app)

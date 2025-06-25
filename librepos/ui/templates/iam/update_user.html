@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% from "macros/_sections.html" import section, section_header %}
+{% from "macros/_icons.html" import icon %}
+{% from "macros/_forms.html" import string_field, submit_field %}
+{% from "macros/_buttons.html" import submit_button %}
+{% from "macros/_cards.html" import panel_card %}
+
+{% block main %}
+
+    {% call section() %}
+        {% set page_title = 'Edit User: ' + user.username|upper %}
+        {% set page_description = "Modify user personal details and contact information." %}
+
+        {{ section_header(title=page_title, description=page_description, caller=False) }}
+
+
+        <div class="row">
+
+            <!-- Personal Information -->
+            <div class="col s12">
+                {% call panel_card("Personal Information") %}
+                    <form action="{{ url_for('iam.update_user_details', user_id=user.id) }}" method="POST" class="row">
+                        {{ details_form.hidden_tag() }}
+                        {{ string_field(details_form.first_name) }}
+                        {{ string_field(details_form.middle_name) }}
+                        {{ string_field(details_form.last_name) }}
+                        {{ string_field(details_form.gender) }}
+                        {{ string_field(details_form.marital_status) }}
+                        {{ string_field(details_form.birthday) }}
+                        {{ submit_field() }}
+                    </form>
+                {% endcall %}
+            </div>
+
+            <!-- Contact Information -->
+            <div class="col s12">
+                {% call panel_card("Contact Information") %}
+                    <form action="{{ url_for('iam.update_user_contact', user_id=user.id) }}" method="POST" class="row">
+                        {{ contact_form.hidden_tag() }}
+                        {{ string_field(contact_form.email) }}
+                        {{ string_field(contact_form.phone) }}
+                        {{ submit_field() }}
+                    </form>
+                {% endcall %}
+            </div>
+
+            <!-- Address Information -->
+            <div class="col s12">
+                {% call panel_card("Address Information") %}
+                    <form action="{{ url_for('iam.update_user_address', user_id=user.id) }}" method="POST" class="row">
+                        {{ address_form.hidden_tag() }}
+                        {{ string_field(address_form.address) }}
+                        {{ string_field(address_form.city) }}
+                        {{ string_field(address_form.state) }}
+                        {{ string_field(address_form.zipcode) }}
+                        {{ string_field(address_form.country) }}
+                        {{ submit_field() }}
+                    </form>
+                {% endcall %}
+            </div>
+
+        </div>
+
+    {% endcall %}
+
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% from "macros/_modals.html" import warningModal %}
+{% from "macros/_modals.html" import warningMessageModal %}
 
 {% block main %}
 
@@ -55,7 +55,7 @@
                                 menu.</p>
                         </div>
                         <button class="btn danger" popovertarget="warningModal">Delete Item</button>
-                        {% call warningModal(url=url_for('menu.delete_item', item_id=item.id)) %}
+                        {% call warningMessageModal(url=url_for('menu.delete_item', item_id=item.id)) %}
                             <h4 class="center-align">Confirm Deletion</h4>
                             <p class="flow-text">Are you sure you want to permanently delete this item? This action
                                 cannot be

@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, BooleanField
-from wtforms.validators import DataRequired, Email
+from wtforms import PasswordField, BooleanField, StringField
+from wtforms.validators import DataRequired
 
 
 class UserLoginForm(FlaskForm):
-    email = EmailField(
-        "Email", validators=[DataRequired(), Email()], render_kw={"placeholder": " "}
+    username = StringField(
+        "Username", validators=[DataRequired()], render_kw={"placeholder": " "}
     )
     password = PasswordField(
         "Password", validators=[DataRequired()], render_kw={"placeholder": " "}

@@ -1,11 +1,15 @@
 """Permission definitions for database seeding."""
 
-# Format: resource.action[.scope]
+# Format: domain.action[.scope]
+#   domain - The controller, main category or area of functionality
+#   action - The specific operation or permission being granted
+#   [.scope] - An optional scope or context (indicated by square brackets)
 # Examples:
 #   user.update      - Update any user profile
 #   user.update.own  - Update only own profile
-#   menu_item.create        - Create menu items
+#   menu.create.item - Create menu item
 
+# User Management Domain
 USER_PERMISSIONS = [
     (
         "user.create",
@@ -27,61 +31,52 @@ USER_PERMISSIONS = [
     ("user.delete", "Permanently remove user accounts from the system"),
 ]
 
-MENU_CATEGORY_PERMISSIONS = [
-    ("menu_category.create", "Create new menu categories for organizing menu items"),
-    ("menu_category.read", "View detailed information about specific menu categories"),
-    ("menu_category.list", "Access and view the complete list of menu categories"),
-    ("menu_category.update", "Modify existing menu category details and properties"),
-    ("menu_category.delete", "Remove menu categories from the system"),
-]
-
-MENU_GROUP_PERMISSIONS = [
-    ("menu_group.create", "Create new menu groups for organizing related menu items"),
-    ("menu_group.read", "View detailed information about specific menu groups"),
-    ("menu_group.list", "Access and view the complete list of menu groups"),
-    ("menu_group.update", "Modify existing menu group details and properties"),
-    ("menu_group.delete", "Remove menu groups from the system"),
-]
-
-MENU_ITEM_PERMISSIONS = [
+# Menu Management Domain
+MENU_PERMISSIONS = [
+    # Categories
+    ("menu.create.category", "Create new menu categories for organizing menu items"),
+    ("menu.read.category", "View detailed information about specific menu categories"),
+    ("menu.list.categories", "Access and view the complete list of menu categories"),
+    ("menu.update.category", "Modify existing menu category details and properties"),
+    ("menu.delete.category", "Remove menu categories from the system"),
+    # Groups
+    ("menu.create.group", "Create new menu groups for organizing related menu items"),
+    ("menu.read.group", "View detailed information about specific menu groups"),
+    ("menu.list.groups", "Access and view the complete list of menu groups"),
+    ("menu.update.group", "Modify existing menu group details and properties"),
+    ("menu.delete.group", "Remove menu groups from the system"),
+    # Items
     (
-        "menu_item.create",
+        "menu.create.item",
         "Create new menu items with names, prices, and other properties",
     ),
-    ("menu_item.read", "View detailed information about specific menu items"),
-    ("menu_item.list", "Access and view the complete list of menu items"),
-    ("menu_item.update", "Modify existing menu item details, prices, and properties"),
-    ("menu_item.delete", "Remove menu items from the system"),
+    ("menu.read.item", "View detailed information about specific menu items"),
+    ("menu.list.items", "Access and view the complete list of menu items"),
+    ("menu.update.item", "Modify existing menu item details, prices, and properties"),
+    ("menu.delete.item", "Remove menu items from the system"),
 ]
 
-POLICY_PERMISSIONS = [
-    ("policy.create", "Create new policies with assigned permissions"),
-    ("policy.read", "View detailed policy information including permissions"),
-    ("policy.list", "Access and view the complete list of policies"),
-    ("policy.update", "Modify existing policy details and permissions"),
-    ("policy.delete", "Remove policies from the system"),
-]
-
+# Order Management Domain
 ORDER_PERMISSIONS = [
+    # Orders
     ("order.create", "Create new customer orders with selected menu items"),
     ("order.read", "View detailed order information including items and status"),
     ("order.list", "Access and view the complete list of orders"),
     ("order.update", "Modify existing order details, items, and properties"),
     ("order.void", "Mark orders as voided while maintaining record"),
     ("order.delete", "Permanently remove orders from the system"),
+    # Order Items
+    ("order.create.item", "Add new items to existing orders"),
+    ("order.read.item", "View detailed information about specific order items"),
+    ("order.list.items", "Access and view all items within an order"),
+    ("order.update.item", "Modify order item details, quantities, and prices"),
+    ("order.void.item", "Mark individual order items as voided"),
+    ("order.delete.item", "Permanently remove items from orders"),
+    ("order.send_to_prep", "Send order items to kitchen/preparation area"),
+    ("order.mark_completed", "Mark order items as completed by kitchen"),
 ]
 
-ORDER_ITEM_PERMISSIONS = [
-    ("order_item.create", "Add new items to existing orders"),
-    ("order_item.read", "View detailed information about specific order items"),
-    ("order_item.list", "Access and view all items within an order"),
-    ("order_item.update", "Modify order item details, quantities, and prices"),
-    ("order_item.void", "Mark individual order items as voided"),
-    ("order_item.delete", "Permanently remove items from orders"),
-    ("order_item.send_to_prep", "Send order items to kitchen/preparation area"),
-    ("order_item.mark_completed", "Mark order items as completed by kitchen"),
-]
-
+# Restaurant Management Domain
 RESTAURANT_PERMISSIONS = [
     (
         "restaurant.read",
@@ -96,56 +91,74 @@ RESTAURANT_PERMISSIONS = [
     ("restaurant.list", "Access and view all restaurant configurations"),
 ]
 
+# System Settings Domain
 SETTINGS_PERMISSIONS = [
-    ("settings.read", "Access and view all application configuration settings"),
-    ("system_settings.read", "View system-wide configuration and technical settings"),
+    ("settings.access", "Access application configuration settings"),
+    ("settings.read.system", "View system-wide configuration and technical settings"),
     (
-        "system_settings.update",
+        "settings.update.system",
         "Modify system-wide configuration, behavior, and technical parameters",
     ),
-    ("settings_permissions.read", "View all permission-related settings"),
 ]
 
-ROLE_PERMISSIONS = [
-    ("role.create", "Create new roles with assigned permissions and settings"),
-    ("role.read", "View detailed role information including permissions and settings"),
-    ("role.list", "Access and view the complete list of roles"),
-    ("role.update", "Modify existing role details and permissions"),
-    ("role.delete", "Remove roles from the system"),
-]
-
-ROLE_POLICIES_PERMISSIONS = [
-    ("role_policies.read", "View all role-related permission policies"),
+# IAM (Identity and Access Management) Domain
+IAM_PERMISSIONS = [
+    # General IAM Access
+    ("iam.access", "Access Identity and Access Management interface"),
+    ("iam.dashboard", "View IAM dashboard with system overview and statistics"),
+    # User Management
+    ("iam.create.user", "Create new users with assigned roles and permissions"),
+    ("iam.read.user", "View detailed user information including roles and permissions"),
+    ("iam.read.user.own", "View own user profile and roles"),
+    ("iam.list.user", "Access and view the complete list of users with their roles"),
+    ("iam.update.user", "Modify existing user details and roles"),
+    ("iam.update.user.own", "Modify own user profile and roles"),
+    ("iam.delete.user", "Remove users from the system"),
+    ("iam.suspend.user", "Suspend users from the system"),
+    # Role Management
+    ("iam.create.role", "Create new roles with assigned permissions and settings"),
     (
-        "role_policies.list",
-        "Access and view the complete list of role-related permission policies",
+        "iam.read.role",
+        "View detailed role information including permissions and settings",
     ),
-    ("role_policies.update", "Modify role-related permission policies"),
-    ("role_policies.delete", "Remove role-related permission policies"),
-    ("role_policies.create", "Create new role-related permission policies"),
-]
-
-# Permissions for the Policy Permissions junction table
-POLICY_PERMISSION_PERMISSIONS = [
-    ("policy_permission.create", "Assign permissions to policies"),
-    ("policy_permission.read", "View permission assignments for policies"),
-    ("policy_permission.list", "Access and view all policy-permission relationships"),
-    ("policy_permission.update", "Modify permission assignments for policies"),
-    ("policy_permission.delete", "Remove permission assignments from policies"),
+    ("iam.list.roles", "Access and view the complete list of roles"),
+    ("iam.update.role", "Modify existing role details and permissions"),
+    ("iam.suspend.role", "Suspend roles from the system"),
+    ("iam.delete.role", "Remove roles from the system"),
+    # Policy Management
+    ("iam.create.policy", "Create new policies with assigned permissions"),
+    ("iam.read.policy", "View detailed policy information including permissions"),
+    ("iam.list.policies", "Access and view the complete list of policies"),
+    ("iam.update.policy", "Modify existing policy details and permissions"),
+    ("iam.delete.policy", "Remove policies from the system"),
+    # Role-Policy Assignments
+    ("iam.assign.policy_to_role", "Assign policies to roles"),
+    ("iam.read.role_policies", "View policy assignments for roles"),
+    ("iam.list.role_policies", "Access and view all role-policy relationships"),
+    ("iam.update.role_policies", "Modify policy assignments for roles"),
+    ("iam.remove.role_policies", "Remove policy assignments from roles"),
+    # Policy-Permission Assignments
+    ("iam.assign.permission_to_policy", "Assign permissions to policies"),
+    ("iam.read.policy_permissions", "View permission assignments for policies"),
+    (
+        "iam.list.policy_permissions",
+        "Access and view all policy-permission relationships",
+    ),
+    ("iam.update.policy_permissions", "Modify permission assignments for policies"),
+    ("iam.remove.policy_permissions", "Remove permission assignments from policies"),
+    # Advanced IAM Operations
+    ("iam.audit", "View IAM audit logs and permission changes"),
+    ("iam.bulk_operations", "Perform bulk operations on users, roles, and policies"),
+    ("iam.export", "Export IAM configurations and reports"),
+    ("iam.import", "Import IAM configurations"),
 ]
 
 # Group all permissions for easy access
 ALL_PERMISSION_FIXTURES = [
     USER_PERMISSIONS,
-    ROLE_PERMISSIONS,
-    MENU_CATEGORY_PERMISSIONS,
-    MENU_GROUP_PERMISSIONS,
-    MENU_ITEM_PERMISSIONS,
+    MENU_PERMISSIONS,
     ORDER_PERMISSIONS,
-    ORDER_ITEM_PERMISSIONS,
     RESTAURANT_PERMISSIONS,
     SETTINGS_PERMISSIONS,
-    POLICY_PERMISSIONS,
-    POLICY_PERMISSION_PERMISSIONS,
-    ROLE_POLICIES_PERMISSIONS,
+    IAM_PERMISSIONS,
 ]

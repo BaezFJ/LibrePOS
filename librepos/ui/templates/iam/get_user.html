@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% from "macros/_sections.html" import section, section_header %}
+{% from "macros/_buttons.html" import outlined_button, filled_button, submit_button %}
+{% from "macros/_icons.html" import icon %}
+{% from "macros/_modals.html" import modal, warningMessageModal %}
+{% from "macros/_forms.html" import string_field, submit_field %}
+{% from "macros/_cards.html" import panel_card %}
+{% from "macros/_tables.html" import table %}
+
+{% block main %}
+
+    {% call section() %}
+
+        {% call section_header(title=user.username|title) %}
+
+            {% if current_user.has_permission("iam.delete.user") %}
+                {% set delete_modal_title = "Delete " + user.username|title + "?" %}
+                {% set delete_modal_id = "confirmDeleteModal" %}
+
+                {% if user.active %}
+                    {{ outlined_button("Delete", classes="disabled", url="javascript:"+delete_modal_id+".showPopover()") }}
+                {% else %}
+                    {{ outlined_button("Delete", classes="danger", url="javascript:"+delete_modal_id+".showPopover()") }}
+
+                    {% call modal(delete_modal_id, delete_modal_title) %}
+                        <p class="flow-text left-align">
+                            Delete <b>{{ user.username|title }}</b> permanently? This will also delete all its user data
+                            and
+                            security credentials
+                        </p>
+                        <p class="flow-text left-align grey-text">
+                            To avoid accidental deletions, we ask you to provide additional written consent.
+                        </p>
+                        <form action="{{ url_for("iam.delete_user", user_id=user.id) }}" method="POST" class="row">
+                            {{ form.hidden_tag() }}
+                            {{ string_field(form.confirmation) }}
+                            <div class="col s12">
+                                {{ submit_button("Delete User", classes="danger") }}
+                            </div>
+                        </form>
+                    {% endcall %}
+                {% endif %}
+
+            {% endif %}
+
+        {% endcall %}
+
+        <div class="row">
+
+            <!-- User Profile Header -->
+            <div class="col s12 m6">
+                {% call panel_card() %}
+                    <div class="row valign-wrapper">
+                        <div class="col s4 center-align">
+                            {% if user.image %}
+                                <img class="circle" src="{{ url_for('static', filename=user.image|safe) }}"
+                                     alt="{{ user.username }}" width="100" height="100">
+                            {% else %}
+                                {{ icon('face', classes='large') }}
+                            {% endif %}
+                        </div>
+                        <div class="col s8">
+                            <h5 class="ml-2">{{ user.full_name|title if user.first_name else "N/A" }}</h5>
+                            <p class="ml-2">
+                                {{ icon('lock_person', classes='tiny') }}&nbsp;
+                                Role &colon; &nbsp; <strong>{{ user.role.name|title }}</strong></p>
+                            <p>
+                                {% if current_user.has_permission("iam.update.user") %}
+                                    {{ outlined_button("Change Role", url_for('iam.display_role_change', user_id=user.id)) }}
+                                {% endif %}
+                        </div>
+                    </div>
+                {% endcall %}
+            </div>
+
+            <!-- User Details Card -->
+            <div class="col s12 m6">
+                {% call panel_card("Personal Information") %}
+                    <div class="row">
+                        <div class="col s12">
+                            <p>
+                                {{ icon('badge', classes='tiny') }}&nbsp;
+                                First Name &colon; &nbsp; <strong>{{ user.first_name|title }}</strong>
+                            </p>
+                            {% if user.middle_name %}
+                                <p>
+                                    {{ icon('badge', classes='tiny') }}&nbsp;
+                                    Middle Name &colon; &nbsp; <strong>{{ user.middle_name|title }}</strong>
+                                <p>
+                            {% endif %}
+                            <p>
+                                {{ icon('badge', classes='tiny') }}&nbsp;
+                                Last Name &colon; &nbsp; <strong>{{ user.last_name|title }}</strong>
+                            <p>
+                                {{ icon('male', classes='tiny') }}&nbsp;
+                                Gender &colon; &nbsp; <strong>{{ user.gender|title }}</strong>
+                            </p>
+                            <p>
+                                {{ icon('favorite', classes='tiny') }}&nbsp;
+                                Marital Status &colon; &nbsp; <strong>{{ user.marital_status|title }}</strong>
+                            </p>
+                            <p>
+                                {{ icon('calendar_today', classes='tiny') }}&nbsp;
+                                Birthday &colon; &nbsp; <strong>{{ user.birthday|date }}</strong>
+                            </p>
+                            <p>
+                                {{ icon('mail', classes='tiny') }}&nbsp;
+                                Email &colon; &nbsp; <strong>{{ user.email }}</strong>
+                                {% if not user.email_confirmed %}
+                                    &nbsp; {{ icon('warning', classes='tiny warning-text') }}
+                                {% endif %}
+                            </p>
+                            <p>
+                                {{ icon('call', classes='tiny') }}&nbsp;
+                                Phone &colon; &nbsp; <strong>{{ user.phone|phone }}</strong>
+                                {% if not user.phone_confirmed %}
+                                    &nbsp; {{ icon('warning', classes='tiny warning-text') }}
+                                {% endif %}
+                            </p>
+                            <p>
+                                {{ icon('location_on', classes='tiny') }}&nbsp;
+                                Address &colon; &nbsp;
+                            </p>
+                            <address class="ml-4">
+                                {{ user.address|title }}<br>
+                                {{ user.city|title }}, {{ user.state|upper }} {{ user.zipcode }}<br>
+                                {{ user.country }}
+                            </address>
+                        </div>
+                        {% if current_user.has_permission("iam.update.user") %}
+                            <div class="col s12">
+                                {{ filled_button("Edit", url=url_for('iam.display_update_user', user_id=user.id)) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endcall %}
+            </div>
+
+            <!-- User Metadata Card -->
+            <div class="col s12 m6">
+                {% call panel_card("Account Metadata") %}
+                    <div class="row">
+                        <div class="col s12">
+                            <p>
+                                {{ icon('calendar_today', classes='tiny') }}&nbsp;
+                                Created Date &colon; &nbsp; <strong>{{ user.created_at|date }}</strong>
+                            </p>
+                            <p>
+                                {{ icon('lock_person', classes='tiny') }}&nbsp;
+                                Role &colon; &nbsp; <strong>{{ user.role.name|title }}</strong></p>
+                            <p>
+                                {{ icon('verified_user', classes='tiny') }}&nbsp;
+                                Status &colon; &nbsp;
+                                {% if user.active %}
+                                    <strong class="success-text">Active</strong>
+                                {% else %}
+                                    <strong class="danger-text">Suspended</strong>
+                                {% endif %}
+                            </p>
+                            <p>
+                                {{ icon('history', classes='tiny') }}&nbsp;
+                                Last Active &colon; &nbsp; <strong>{{ user.current_sign_in_on|date }}</strong></p>
+                        </div>
+                        {% if current_user.has_permission("iam.suspend.user") %}
+                            {% set toggleUserModalID = 'toggleUserModal' %}
+
+
+                            {% if user.active %}
+                                <div class="col s12">
+                                    {{ outlined_button("Suspend Account", url="javascript:"+ toggleUserModalID +".showPopover()", classes="danger") }}
+                                </div>
+
+                                {% call warningMessageModal(url_for('iam.toggle_user_suspend', user_id=user.id), id=toggleUserModalID) %}
+                                    <h4 class="center-align">Suspend User</h4>
+                                    <p class="flow-text">Are you sure you want to suspend this user?</p>
+                                    <p class="flow-text">Suspending this user will prevent them from using the
+                                        system.</p>
+                                {% endcall %}
+                            {% else %}
+                                <div class="col s12">
+                                    {{ outlined_button("Enable Account", url="javascript:"+ toggleUserModalID +".showPopover()", classes="success") }}
+                                </div>
+                                {% call warningMessageModal(url_for('iam.toggle_user_suspend', user_id=user.id), id=toggleUserModalID) %}
+                                    <h4 class="center-align">Enable User</h4>
+                                    <p class="flow-text">Are you sure you want to enable this user?</p>
+                                    <p class="flow-text">Enabling this user will allow them to use the system.</p>
+                                {% endcall %}
+                            {% endif %}
+
+                        {% endif %}
+                    </div>
+                {% endcall %}
+            </div>
+
+        </div>
+
+    {% endcall %}
+
+{% endblock %}

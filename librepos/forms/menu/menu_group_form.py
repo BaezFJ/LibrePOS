@@ -1,19 +1,16 @@
-from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SelectField
+from wtforms import SelectField
 from wtforms.validators import DataRequired
 
+from librepos.forms.base import NamedEntityForm
 
-class MenuGroupForm(FlaskForm):
+
+class MenuGroupForm(NamedEntityForm):
     category_id = SelectField(
         "Category",
         coerce=int,
         validators=[DataRequired()],
         render_kw={"placeholder": " "},
     )
-    name = StringField(
-        "Name", validators=[DataRequired()], render_kw={"placeholder": " "}
-    )
-    active = BooleanField("Active", default=True)
 
     def __init__(self, **kwargs):
         super(MenuGroupForm, self).__init__(**kwargs)

@@ -1,23 +1,20 @@
-from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, FloatField, SelectField
+from wtforms import StringField, FloatField, SelectField
 from wtforms.validators import DataRequired
 
+from librepos.forms.base import NamedEntityForm
 
-class MenuItemForm(FlaskForm):
+
+class MenuItemForm(NamedEntityForm):
     group_id = SelectField(
         "Group",
         coerce=int,
         validators=[DataRequired()],
         render_kw={"placeholder": " "},
     )
-    name = StringField(
-        "Name", validators=[DataRequired()], render_kw={"placeholder": " "}
-    )
     description = StringField("Description", render_kw={"placeholder": " "})
     price = FloatField(
         "Price", validators=[DataRequired()], render_kw={"placeholder": " "}
     )
-    active = BooleanField("Active", default=True)
 
     def __init__(self, **kwargs):
         super(MenuItemForm, self).__init__(**kwargs)

@@ -8,10 +8,10 @@ class AuthService:
     def __init__(self, repo=None):
         self.repo = repo or UserRepository
 
-    def authenticate(self, email, password, remember):
-        user = self.repo.find_by_email(email)
+    def authenticate(self, username, password, remember):
+        user = self.repo.find_by_username(username)
         if not user:
-            FlashMessageHandler.error("Invalid email or password.")
+            FlashMessageHandler.error("Invalid username or password.")
             return None
         if not user.active:
             FlashMessageHandler.error("Your account has been deactivated.")

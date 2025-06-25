@@ -25,7 +25,7 @@ def login():
     }
     if form.validate_on_submit():
         user = auth_service.authenticate(
-            form.email.data, form.password.data, form.remember.data
+            form.username.data, form.password.data, form.remember.data
         )
         if user:
             user.record_sign_in(
