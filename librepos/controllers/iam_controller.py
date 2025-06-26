@@ -311,7 +311,6 @@ def assign_policy_to_role(role_id, policy_id):
 @iam_bp.get("/roles/<int:role_id>/unassign-policy/<int:policy_id>")
 @permission_required("iam.assign.policy_to_role")
 def detach_policy_from_role(role_id, policy_id):
-    print(f"Role ID: {role_id}, Policy ID: {policy_id} - Detaching policy from role.")
     iam_service.remove_policy_from_role(role_id, policy_id)
     return redirect(url_for(".get_role_policies", role_id=role_id))
 
