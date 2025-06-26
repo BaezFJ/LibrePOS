@@ -1,14 +1,51 @@
 {% extends 'base.html' %}
 
 {% from "macros/_sections.html" import section, section_header %}
+{% from "macros/_cards.html" import panel_card %}
+{% from "macros/_tables.html" import table %}
+{% from "macros/_buttons.html" import outlined_button, filled_button %}
 
 {% block main %}
 
     {% call section() %}
+        {% set sectionTitle = "Attach permission policies to " + role.name %}
 
-        {% call section_header("Edit Policies") %}
+        {{ section_header(sectionTitle, caller=False) }}
 
-        {% endcall %}
+        <div class="row">
+            <div class="col s12">
+                {% call panel_card('Current Policies') %}
+                    {% call table(["Policy Name", "Actions"]) %}
+                        {% for role_policy in role.role_policies %}
+                            {% set policyName = role_policy.policy.name|un_snake|title|strip_spaces %}
+                            <tr>
+                                <td>{{ policyName }}</td>
+                                <td>
+                                    {{ outlined_button("Detach", url_for('iam.detach_policy_from_role', role_id=role.id, policy_id=role_policy.policy.id), classes='danger') }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endcall %}
+                {% endcall %}
+            </div>
+
+            <div class="col s12">
+                {% call panel_card('Other policies') %}
+                    {% call table(["Policy Name", "Actions"]) %}
+                        {% for unassigned_policy in unassigned_policies %}
+                            {% set unassignedPolicyName = unassigned_policy.name|un_snake|title|strip_spaces %}
+                            <tr>
+                                <td>{{ unassignedPolicyName }}</td>
+                                <td>
+                                    {{ filled_button("Attach", url_for('iam.assign_policy_to_role', role_id=role.id, policy_id=unassigned_policy.id)) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    {% endcall %}
+                {% endcall %}
+            </div>
+        </div>
 
     {% endcall %}
 

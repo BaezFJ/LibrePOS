@@ -277,10 +277,12 @@ def get_role(role_id):
 @permission_required("iam.assign.policy_to_role")
 def get_role_policies(role_id):
     role = iam_service.role_repository.get_by_id(role_id)
+    unassigned_policies = iam_service.get_unassigned_policies(role_id)
     context = {
         "title": role.name.title() if role else "Role",
         "back_url": url_for(".get_role", role_id=role_id),
         "role": role,
+        "unassigned_policies": unassigned_policies,
     }
     return render_template("iam/role_policies.html", **context)
 
@@ -297,6 +299,21 @@ def toggle_role_suspend(role_id):
     iam_service.toggle_role_status(role_id)
     response.headers["HX-Redirect"] = url_for(".get_role", role_id=role_id)
     return response
+
+
+@iam_bp.get("/roles/<int:role_id>/assign-policy/<int:policy_id>")
+@permission_required("iam.assign.policy_to_role")
+def assign_policy_to_role(role_id, policy_id):
+    iam_service.assign_policy_to_role(role_id, policy_id)
+    return redirect(url_for(".get_role_policies", role_id=role_id))
+
+
+@iam_bp.get("/roles/<int:role_id>/unassign-policy/<int:policy_id>")
+@permission_required("iam.assign.policy_to_role")
+def detach_policy_from_role(role_id, policy_id):
+    print(f"Role ID: {role_id}, Policy ID: {policy_id} - Detaching policy from role.")
+    iam_service.remove_policy_from_role(role_id, policy_id)
+    return redirect(url_for(".get_role_policies", role_id=role_id))
 
 
 # ================================
