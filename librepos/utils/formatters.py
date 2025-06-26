@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from babel.numbers import get_currency_symbol
@@ -58,3 +59,14 @@ def phone_formatter(value: str) -> str:
     if value is None:
         return "N/A"
     return f"({value[:3]})-{value[3:6]}-{value[6:]}"
+
+
+def un_snake_formatter(value: str) -> str:
+    if value is None:
+        return "N/A"
+    value = value.replace("_", " ")
+    return value
+
+
+def strip_spaces_formatter(value):
+    return re.sub(r"\s+", "", value)
