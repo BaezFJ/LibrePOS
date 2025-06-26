@@ -1,8 +1,8 @@
-{% macro table(headers, classes=None) %}
-    {% set base_class = "striped highlight" %}
-    {% set css_class = base_class + " " + (classes if classes else "") %}
+{% macro table(headers, classes='') %}
+    {% set base_class = "striped highlight " %}
+    {% set set_table_classes = base_class + classes %}
 
-    <table class="{{ classes }}">
+    <table class="{{ set_table_classes }}">
         <thead>
         <tr>
             {% for header in headers %}
