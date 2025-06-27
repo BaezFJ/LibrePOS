@@ -130,6 +130,7 @@ IAM_PERMISSIONS = [
     ("iam.read.policy", "View detailed policy information including permissions"),
     ("iam.list.policies", "Access and view the complete list of policies"),
     ("iam.update.policy", "Modify existing policy details and permissions"),
+    ("iam.suspend.policy", "Suspend policies from the system"),
     ("iam.delete.policy", "Remove policies from the system"),
     # Role-Policy Assignments
     ("iam.assign.policy_to_role", "Assign policies to roles"),

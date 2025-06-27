@@ -53,6 +53,10 @@ IAM_ROLE_MANAGEMENT_VIEW_ONLY_POLICY = [
     "iam.list.roles",
 ]
 
+IAM_ROLE_MANAGEMENT_SUSPEND_POLICY = [
+    "iam.suspend.role",
+]
+
 # ======================================================================================================================
 #                                      IAM POLICY MANAGEMENT POLICIES
 # ======================================================================================================================
@@ -61,6 +65,7 @@ IAM_POLICY_MANAGEMENT_FULL_POLICY = [
     "iam.read.policy",
     "iam.list.policies",
     "iam.update.policy",
+    "iam.suspend.policy",
     "iam.delete.policy",
 ]
 
@@ -73,6 +78,10 @@ IAM_POLICY_MANAGEMENT_LIMITED_POLICY = [
 IAM_POLICY_MANAGEMENT_VIEW_ONLY_POLICY = [
     "iam.read.policy",
     "iam.list.policies",
+]
+
+IAM_POLICY_MANAGEMENT_SUSPEND_POLICY = [
+    "iam.suspend.policy",
 ]
 
 # ======================================================================================================================
