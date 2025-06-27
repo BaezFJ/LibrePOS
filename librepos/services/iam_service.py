@@ -232,3 +232,24 @@ class IAMService:
             return True
         except SQLAlchemyError as e:
             FlashMessageHandler.error(f"Error removing policy: {str(e)}")
+
+    # ==================================================================================================================
+    #                                              POLICIES
+    # ==================================================================================================================
+
+    def toggle_policy_status(self, policy_id):
+        """Toggle a policy's active status."""
+        try:
+            policy = self.policy_repository.get_by_id(policy_id)
+
+            if not policy:
+                FlashMessageHandler.error("Policy not found.")
+                return False
+
+            policy.active = not policy.active
+            self.policy_repository.update(policy)
+            status = "activated" if policy.active else "suspended"
+            FlashMessageHandler.success(f"Policy {status} successfully.")
+            return True
+        except SQLAlchemyError as e:
+            FlashMessageHandler.error(f"Error toggling policy status: {str(e)}")

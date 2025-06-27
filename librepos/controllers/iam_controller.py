@@ -327,3 +327,56 @@ def delete_role(role_id):
         iam_service.delete_role(sanitized_data, role_id)
         return redirect(url_for(".list_roles"))
     return redirect(url_for(".get_role", role_id=role_id))
+
+
+# ======================================================================================================================
+#                                              POLICIES ROUTES
+# ======================================================================================================================
+
+# ================================
+#            CREATE
+# ================================
+
+# ================================
+#            READ
+# ================================
+@iam_bp.get("/policies")
+@permission_required("iam.list.policies")
+def list_policies():
+    """Render the IAM policies page."""
+    context = {
+        "title": "Policies",
+        "back_url": url_for(".home"),
+        "policies": iam_service.policy_repository.get_all(),
+    }
+    return render_template("iam/list_policies.html", **context)
+
+
+@iam_bp.get("/policies/<int:policy_id>")
+@permission_required("iam.read.policy")
+def get_policy(policy_id):
+    """Render the IAM policy page."""
+    policy = iam_service.policy_repository.get_by_id(policy_id)
+    form = ConfirmDeletionForm(id=policy_id)
+    context = {
+        "title": "Policy",
+        "back_url": url_for(".list_policies"),
+        "policy": policy,
+    }
+    return render_template("iam/get_policy.html", **context)
+
+
+# ================================
+#            UPDATE
+# ================================
+@iam_bp.post("/policies/<int:policy_id>/toggle-suspend")
+@permission_required("iam.suspend.policy")
+def toggle_policy_suspend(policy_id):
+    response = jsonify(success=True)
+    iam_service.toggle_policy_status(policy_id)
+    response.headers["HX-Redirect"] = url_for(".get_policy", policy_id=policy_id)
+    return response
+
+# ================================
+#            DELETE
+# ================================

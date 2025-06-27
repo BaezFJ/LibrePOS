@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% from "macros/_sections.html" import section, section_header %}
+{% from "macros/_buttons.html" import outlined_button, filled_button, disabled_button %}
+{% from "macros/_cards.html" import panel_card %}
+{% from "macros/_icons.html" import icon %}
+{% from "macros/_tables.html" import table %}
+{% from "macros/_modals.html" import warningMessageModal, dangerModal %}
+
+{% block main %}
+
+    {% call section() %}
+        {% set section_title = policy.name|un_snake|title|strip_spaces %}
+        {% set section_description = policy.description|capitalize %}
+        {{ section_header(section_title, description=section_description) }}
+
+
+        <div class="row">
+
+            <!-- Policy Details -->
+            <div class="col s12">
+                {% call panel_card("Policy Details") %}
+                    <div class="row">
+
+                        <div class="col s12 m6">
+                            <p>
+                                {{ icon('person', classes='tiny') }} &nbsp; Created By &colon;
+                                <strong>AdminUser</strong></p>
+                            <p>
+                                {{ icon('calendar_today', classes='tiny') }} &nbsp; Created On &colon;
+                                <strong>{{ policy.created_at|date }}</strong>
+                            </p>
+                        </div>
+
+                        <div class="col s12 m6">
+                            <p>
+                                {{ icon("verified_user", classes="tiny") }} <strong>Status:</strong> &nbsp;
+                                {% if policy.active %}
+                                    <span class="success-text">Active</span>
+                                {% else %}
+                                    <span class="danger-text">Disabled</span>
+                                {% endif %}
+                            </p>
+                            <p>
+                                {{ icon('workspace_premium', classes='tiny') }} &nbsp; Assigned Roles &colon;
+                                <strong>{{ policy.role_policies|length }}</strong>
+                            </p>
+                            {% for role_policy in policy.role_policies %}
+                                <div class="chip outlined">
+                                    <a href="{{ url_for('iam.get_role', role_id=role_policy.role.id) }}">
+                                        {{ role_policy.role.name|title }}
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endcall %}
+            </div>
+
+            <!-- Permissions Table -->
+            <div class="col s12">
+                {% set panel_title = "Permissions in this Policy (" + policy.policy_permissions|length|string + ")" %}
+                {% call panel_card(panel_title) %}
+                    {% call table(["Name"]) %}
+                        {% for permission in policy.policy_permissions %}
+                            {% set permission_name = permission.permission.name|replace("."," ")|title|strip_spaces %}
+                            <tr>
+                                <td>{{ permission_name }}</td>
+                                <td>{{ permission.permission.description|capitalize }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endcall %}
+                    {{ filled_button("Edit Permissions") }}
+                {% endcall %}
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="col s12">
+                {% call panel_card(title="Danger Zone", classes="danger-border p-4") %}
+                    <p class="danger-text flow-text">
+                        These actions are <strong>irreversible</strong>. Disabling a policy prevents its enforcement.
+                        Deleting a policy will permanently remove all associated permissions and assignments.
+                    </p>
+                    <div class="row">
+                        <!-- Disable Policy -->
+                        <div class="col s12 m6">
+                            <p class="flow-text"><strong class="danger-text">Temporarily Disable</strong></p>
+                            <p>This will deactivate the policy but keep its assignments intact.</p>
+                            {% if policy.active %}
+                                {{ outlined_button("Disable Policy", classes="warning" , url="javascript:disableModal.showPopover()") }}
+                                {% call warningMessageModal(url_for('iam.toggle_policy_suspend', policy_id=policy.id), "disableModal") %}
+                                    <h5 class="center-align">Confirm Policy Disable</h5>
+                                    <p>
+                                        Disabling this policy will make it inactive, but it will remain assigned to
+                                        roles/users. You can re-enable it later from the policy details page.
+                                    </p>
+                                {% endcall %}
+                            {% else %}
+                                {{ outlined_button("Enable Policy", classes="success" , url="javascript:enableModal.showPopover()") }}
+                                {% call warningMessageModal(url_for('iam.toggle_policy_suspend', policy_id=policy.id), "enableModal") %}
+                                    <h5 class="center-align">Confirm Policy Enable</h5>
+                                    <p>
+                                        Enabling this policy will make it active again, and all its permissions will be
+                                        enforced
+                                        for assigned roles/users. You can disable it again if needed.
+                                    </p>
+                                {% endcall %}
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Delete Policy -->
+                        <div class="col s12 m6">
+                            <p class="flow-text"><strong class="danger-text">Permanently Delete</strong></p>
+                            <p>This will remove the policy and all related permissions from the system.</p>
+                            {% if current_user.has_permission('iam.delete.policy') %}
+                                {% if policy.active %}
+                                    {{ disabled_button("Delete Policy") }}
+                                {% else %}
+                                    {{ outlined_button("Delete Policy", classes="danger", url="javascript:confirmPolicyDeletion.showPopover()") }}
+                                    {% call dangerModal("confirmPolicyDeletion") %}
+                                        <h5>Confirm Policy
+                                            Deletion</h5>
+                                        <p>
+                                            This action is <strong>permanent</strong>. Deleting this policy will remove
+                                            all associated permissions and unlink any assigned users or roles. Are you
+                                            sure you want to continue?
+                                        </p>
+                                        <form action="" method="POST" class="row">
+
+                                        </form>
+                                    {% endcall %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endcall %}
+            </div>
+        </div>
+
+    {% endcall %}
+
+{% endblock %}
