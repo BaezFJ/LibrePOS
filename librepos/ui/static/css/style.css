@@ -109,6 +109,11 @@ hr.success {
     color: var(--success-color);
 }
 
+.btn.outlined.success {
+    color: var(--success-color);
+    border-color: var(--success-color);
+}
+
 .danger,
 .error {
     background-color: var(--danger-color);
@@ -128,6 +133,11 @@ hr.danger {
     color: var(--danger-color);
 }
 
+.btn.outlined.danger {
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
 .info {
     background-color: var(--info-color);
 }
@@ -140,6 +150,11 @@ hr.danger {
 
 .info-text {
     color: var(--info-color);
+}
+
+.btn.outlined.info {
+    color: var(--info-color);
+    border-color: var(--info-color);
 }
 
 .warning {
@@ -160,9 +175,9 @@ hr.warning {
     border: 1px solid var(--warning-color);
 }
 
-.btn.outlined.danger {
-    color: #f38ba8;
-    border-color: #f38ba8;
+.btn.outlined.warning {
+    color: var(--warning-color);
+    border-color: var(--warning-color);
 }
 
 .outlined {
