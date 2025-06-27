@@ -29,7 +29,7 @@
             </div>
         </div>
     {% else %}
-        <h5>
+        <h6>
             {{ title }}
             {% if count %}
                 ({{ count|length }})
@@ -37,7 +37,7 @@
             {% if info_url %}
                 <a href="{{ info_url }}" class="fs-small">info</a>
             {% endif %}
-        </h5>
+        </h6>
     {% endif %}
 
     {% if description %}
