@@ -7,9 +7,7 @@
 
     {% call section() %}
 
-        {% call section_header(title="Create User") %}
-
-        {% endcall %}
+        {{ section_header(title="Create User") }}
 
         <form action="{{ url_for('iam.process_create_user') }}" method="POST" class="row">
             {{ form.hidden_tag() }}
