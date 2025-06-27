@@ -41,17 +41,17 @@
     </div>
 {% endmacro %}
 
-{% macro errorModal() %}
-    <div id="errorModal" class="modal danger-border" popover>
+{% macro dangerModal(id, title="Danger") %}
+    <div id="{{ id }}" class="modal danger-border" popover>
         <div class="modal-header danger-text center-align">
             <i class="large material-symbols-rounded">error</i>
-            <h5>Error</h5>
+            <h5>{{ title }}</h5>
         </div>
         <div class="modal-content">
             {{ caller() }}
         </div>
         <div class="modal-footer">
-            <button class="btn-flat inherit-color" popovertarget="infoModal">Dismiss</button>
+            <button class="btn-flat inherit-color" popovertarget="{{ id }}">Dismiss</button>
         </div>
     </div>
 {% endmacro %}
