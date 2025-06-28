@@ -6,6 +6,9 @@
     --primary-background-color: #1e1e2e;
     --secondary-background-color: #11111b;
     --error-color: #f38ba8;
+    --success-color: #a6e3a1;
+    --info-color: #89b4fa;
+    --warning-color: #f9e2af;
 
     /* btn filled and links */
     --md-sys-color-primary: var(--primary-color);
