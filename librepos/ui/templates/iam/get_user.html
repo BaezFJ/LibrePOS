@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% from "macros/_sections.html" import section, section_header %}
-{% from "macros/_buttons.html" import outlined_button, filled_button, submit_button %}
+{% from "macros/_buttons.html" import outlined_button, filled_button, submit_button, disabled_button %}
 {% from "macros/_icons.html" import icon %}
 {% from "macros/_modals.html" import modal, warningMessageModal %}
 {% from "macros/_forms.html" import string_field, submit_field %}
@@ -19,7 +19,7 @@
                 {% set delete_modal_id = "confirmDeleteModal" %}
 
                 {% if user.active %}
-                    {{ outlined_button("Delete", classes="disabled", url="javascript:"+delete_modal_id+".showPopover()") }}
+                    {{ disabled_button("Delete") }}
                 {% else %}
                     {{ outlined_button("Delete", classes="danger", url="javascript:"+delete_modal_id+".showPopover()") }}
 

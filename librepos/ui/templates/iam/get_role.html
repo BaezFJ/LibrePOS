@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% from "macros/_sections.html" import section, section_header %}
-{% from "macros/_buttons.html" import filled_button, outlined_button %}
+{% from "macros/_buttons.html" import filled_button, outlined_button, disabled_button %}
 {% from "macros/_icons.html" import icon %}
 {% from "macros/_cards.html" import panel_card %}
 {% from "macros/_tables.html" import table %}
@@ -20,9 +20,9 @@
                 {% set delete_modal_id = "confirmDeleteModal" %}
 
                 {% if role.active %}
-                    {{ outlined_button("delete", classes="disabled") }}
+                    {{ disabled_button("Delete") }}
                 {% else %}
-                    {{ outlined_button("delete", classes="danger", url="javascript:"+delete_modal_id+".showPopover()") }}
+                    {{ outlined_button("Delete", classes="danger", url="javascript:"+delete_modal_id+".showPopover()") }}
 
                     {% call modal(delete_modal_id, delete_modal_title) %}
                         <p class="flow-text left-align">Delete <b><u>{{ role.name|title }}</u></b> permanently? This
