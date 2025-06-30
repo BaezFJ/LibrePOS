@@ -1,4 +1,6 @@
-{% from "macros/_icons.html" import icon %}
+{% from "macros/button_macros.html" import render_button %}
+{% from "macros/_modals.html" import infoMessageModal %}
+{% from "macros/icon_macros.html" import render_icon %}
 
 {% macro section() %}
     <section class="section">
@@ -9,41 +11,34 @@
 {% endmacro %}
 
 
-{% macro section_header(title, description=None, info_url=None, count=None) %}
-
-    {% if caller %}
-        <div class="row">
-            <div class="col s8">
-                <h6>
-                    {{ title }}
-                    {% if count %}
-                        ({{ count|length }})
-                    {% endif %}
-                    {% if info_url %}
-                        <a href="{{ info_url }}" class="fs-small">info</a>
-                    {% endif %}
-                </h6>
-            </div>
-            <div class="col s4 right-align">
-                {{ caller() }}
-            </div>
+{% macro section_header(title, description=None, info_id=None, info_content=None, count=None, button=None) %}
+    {% set modal_trigger = ("javascript:" + info_id + ".showPopover()") if info_id %}
+    <div class="row">
+        <div class="col s8">
+            <h4 class="my-0">
+                <b>{{ title }}</b>
+                {% if count %}
+                    <span class="grey-text">({{ count|length }})</span>
+                {% endif %}
+                {% if info_id %}
+                    <a href="{{ modal_trigger }}">
+                        {{ render_icon("info", classes="info-text v-align-middle") }}
+                    </a>
+                    {{ infoMessageModal(info_id, title="Info", content=info_content) }}
+                {% endif %}
+            </h4>
         </div>
-    {% else %}
-        <h6>
-            {{ title }}
-            {% if count %}
-                ({{ count|length }})
-            {% endif %}
-            {% if info_url %}
-                <a href="{{ info_url }}" class="fs-small">info</a>
-            {% endif %}
-        </h6>
-    {% endif %}
+        {% if button %}
+            <div class="col s4 right-align">
+                {{ button }}
+            </div>
+        {% endif %}
+    </div>
 
     {% if description %}
-        <p class="grey-text text-darken-1">{{ description }}</p>
+        <p class="grey-text">{{ description }}</p>
     {% endif %}
 
-    <div class="divider mb-4"></div>
+    <div class="divider"></div>
 
 {% endmacro %}
