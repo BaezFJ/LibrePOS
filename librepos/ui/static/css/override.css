@@ -3,14 +3,19 @@ a {
 }
 
 .modal.bottom-sheet {
-    border-top-left-radius: 28px;
-    border-top-right-radius: 28px;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
 }
 
 .btn {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.btn.outlined {
+    letter-spacing: 1px;
+    border: 2px solid;
 }
 
 .modal,
@@ -24,4 +29,10 @@ ul {
 
 .card-panel {
     margin: 0;
+}
+
+.divider {
+    border-radius: var(--border-radius);
+    padding-top: .25rem !important;
+    padding-bottom: .25rem !important;
 }

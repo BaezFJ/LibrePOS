@@ -94,8 +94,7 @@ hr.success {
 
 .success-border {
     border: 2px solid var(--success-color);
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
 }
 
 .success-text {
@@ -118,8 +117,7 @@ hr.danger {
 
 .danger-border {
     border: 2px solid var(--error-color);
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
 }
 
 .danger-text {
@@ -143,8 +141,7 @@ hr.danger {
 
 .info-border {
     border: 2px solid var(--info-color);
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
 }
 
 .info-text {
@@ -156,14 +153,18 @@ hr.danger {
     border-color: var(--info-color);
 }
 
+.btn.filled.info {
+    color: var(--foreground-color);
+    background-color: var(--info-color);
+}
+
 .warning {
     background-color: var(--warning-color);
 }
 
 .warning-border {
     border: 2px solid var(--warning-color);
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
 }
 
 .warning-text {
@@ -244,4 +245,8 @@ hr.warning {
 
 .fs-small {
     font-size: 0.8rem;
+}
+
+.v-align-middle {
+    vertical-align: middle;
 }
