@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% from "macros/layout_components.html" import page_section, render_icon_card %}
+
+{% block main %}
+
+    {% set section_description = "Manage your menu configuration including categories, groups, and individual items. Use these settings to organize and maintain your menu structure effectively." %}
+    {% call page_section("Menu Settings", section_description) %}
+        <div class="col s12">
+            {{ render_icon_card("restaurant", "Categories", url_for("menu.list_categories")) }}
+        </div>
+        <div class="col s6">
+            {{ render_icon_card("list_alt", "Groups", url_for("menu.list_groups")) }}
+        </div>
+        <div class="col s6">
+            {{ render_icon_card("fastfood", "Items", url_for("menu.list_items")) }}
+        </div>
+    {% endcall %}
+
+{% endblock %}
