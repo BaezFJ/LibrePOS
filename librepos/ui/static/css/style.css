@@ -80,6 +80,10 @@ main > :first-child {
     justify-content: space-between;
 }
 
+.space-around {
+    justify-content: space-around;
+}
+
 .scrollable {
     overflow: scroll;
 }
@@ -178,6 +182,11 @@ hr.warning {
 .btn.outlined.warning {
     color: var(--warning-color);
     border-color: var(--warning-color);
+}
+
+.btn.filled.warning {
+    color: var(--foreground-color);
+    background-color: var(--warning-color);
 }
 
 .outlined {
