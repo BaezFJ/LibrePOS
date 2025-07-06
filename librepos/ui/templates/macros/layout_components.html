@@ -125,7 +125,7 @@ Example usage:
 {% macro render_icon_card(icon, text, href="#", truncate_length=12) %}
     {% set card_classes = "center-align hoverable" %}
 
-    <a href="{{ href }}" class="inherit-color">
+    <a href="{{ href }}">
         {% call panel_card(classes=card_classes) %}
             {{ render_icon(icon, classes="large") }}
             <h4 class="mt-2">{{ text|truncate(length=truncate_length) }}</h4>
