@@ -2,6 +2,11 @@ a {
     color: revert;
 }
 
+.navbar .brand-logo,
+.navbar ul:not(.dropdown-content) > li > a {
+    color: var(--foreground-color);
+}
+
 .modal.bottom-sheet {
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
