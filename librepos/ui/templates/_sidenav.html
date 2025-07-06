@@ -1,47 +1,49 @@
-{% from "components.html" import render_list_link %}
+{% from "macros/ui_components.html" import render_icon %}
 
-{% if current_user.is_authenticated %}
-    <ul id="sidenav" class="sidenav right">
-        <li>
-            <div class="user-view">
-                <div class="background">
-                    <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
-                </div>
-                <a href="">
-                    <img class="circle" src="{{ url_for('static', filename=current_user.image|safe) }}"
-                         alt="default">
-                </a>
-                <a href="">
-                    <span class="white-text name">{{ current_user.full_name }}</span>
-                </a>
-                <a><span class="white-text email">{{ current_user.email }}</span></a>
+<ul id="sidenav" class="sidenav right">
+
+    {#  Header  #}
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
             </div>
-        </li>
+            <img class="circle" src="{{ url_for('static', filename=current_user.image|safe) }}"
+                 alt="{{ current_user.username }}">
+            <span class="name">{{ current_user.username }}</span>
+            <span class="email">{{ current_user.email }}</span>
+        </div>
+    </li>
 
-        {{ render_list_link("", "Dashboard", "dashboard") }}
+    {#  Content  #}
+    <li>
+        <a href="">
+            {{ render_icon("dashboard") }}
+            Dashboard
+        </a>
+    </li>
 
-        {{ render_list_link(url_for('order.list_orders'), "Orders", "list_alt") }}
+    <li>
+        <a href="{{ url_for('order.list_orders') }}">
+            {{ render_icon("list_alt") }}
+            Orders
+        </a>
+    </li>
 
-        <li class="no-padding">
-            <ul class="collapsible collapsible-accordion">
-                <li>
-                    <a class="collapsible-header"><i class="material-symbols-rounded">menu_book</i>Menu</a>
-                    <div class="collapsible-body">
-                        <ul>
-                            {{ render_list_link(url_for("menu.list_categories"), "Categories", "restaurant") }}
-                            {{ render_list_link(url_for("menu.list_groups"), "Groups", "list_alt") }}
-                            {{ render_list_link(url_for("menu.list_items"), "Items", "fastfood") }}
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </li>
+    <li>
+        <a href="{{ url_for("settings.home") }}">
+            {{ render_icon("settings") }}
+            Settings
+        </a>
+    </li>
 
-        {{ render_list_link(url_for("settings.home"), "Settings", "settings") }}
+    <div class="divider"></div>
 
+    <li>
+        <a href="{{ url_for("auth.logout") }}">
+            {{ render_icon("logout") }}
+            Logout
+        </a>
+    </li>
 
-        <div class="divider"></div>
-
-        {{ render_list_link(url_for("auth.logout"), "Logout", "logout") }}
-    </ul>
-{% endif %}
+</ul>

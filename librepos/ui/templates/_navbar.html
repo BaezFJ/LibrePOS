@@ -1,3 +1,5 @@
+{% from "macros/ui_components.html" import render_icon %}
+
 <div class="navbar-fixed">
     <nav class="nav navbar">
         <div class="nav-wrapper">
@@ -7,7 +9,7 @@
                     <ul>
                         <li>
                             <a href="{{ back_url }}">
-                                <i class="material-symbols-rounded">arrow_back</i>
+                                {{ render_icon("arrow_back") }}
                             </a>
                         </li>
                     </ul>
@@ -20,19 +22,17 @@
             </a>
 
             {#  ========== Right Menu ========== #}
-            <ul class="right">
-                {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated %}
+                <ul class="right">
                     <li>
-                        <a href="" data-target="sidenav" class="sidenav-trigger">
-                            <i class="material-symbols-rounded">{{ sidenav.icon if sidenav else "account_circle" }}</i>
+                        <a data-target="sidenav" class="sidenav-trigger">
+                            {% set icon_name = sidenav.icon if sidenav else "account_circle" %}
+                            {{ render_icon(icon_name) }}
                         </a>
                     </li>
-                {% endif %}
-            </ul>
+                </ul>
+            {% endif %}
+
         </div>
     </nav>
 </div>
-
-{% if current_user.is_authenticated %}
-    {% include sidenav.template if sidenav else "_sidenav.html" %}
-{% endif %}
