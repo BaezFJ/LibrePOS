@@ -61,7 +61,7 @@ def system_settings():
 #            UPDATE
 # ================================
 @settings_bp.post("/update-system-settings")
-@permission_required("system_settings.update")
+@permission_required("settings.update.system")
 def update_system_settings():
     form = SystemSettingsForm()
     if form.validate_on_submit():

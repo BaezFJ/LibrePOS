@@ -1,116 +1,17 @@
 {% extends 'base.html' %}
 
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import render_form %}
 
 {% block main %}
+    {% set description = "Manage global preferences such as timezone, currency,and formatting rules." %}
 
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col s2">
-                    <i class="large material-symbols-rounded pr-4">admin_panel_settings</i>
-                </div>
-                <div class="col s10">
-                    <h4 class="center-align">System Settings</h4>
-                    <p class="grey-text text-darken-1 flow-text">Manage global preferences such as timezone, currency,
-                        and
-                        formatting
-                        rules.</p>
-                </div>
-            </div>
-
-
-            <form action="{{ url_for('settings.update_system_settings') }}" method="POST">
-                {{ form.hidden_tag() }}
-
-                <!-- Timezone Setting -->
-                <div class="row valign-wrapper">
-                    <div class="col s1">
-                        <span class="material-symbols-rounded">schedule</span>
-                    </div>
-                    <div class="col s4">
-                        <p class="flow-text">Timezone</p>
-                    </div>
-                    <div class="col s7">
-                        {{ form.timezone(class="browser-default") }}
-                    </div>
-                </div>
-
-                <!-- Currency Setting -->
-                <div class="row valign-wrapper">
-                    <div class="col s1">
-                        <span class="material-symbols-rounded">payments</span>
-                    </div>
-                    <div class="col s4">
-                        <p class="flow-text">Currency</p>
-                    </div>
-                    <div class="col s7">
-                        {{ form.currency(class="browser-default") }}
-                    </div>
-                </div>
-
-                <!-- Date Format Setting -->
-                <div class="row valign-wrapper">
-                    <div class="col s1">
-                        <span class="material-symbols-rounded">calendar_month</span>
-                    </div>
-                    <div class="col s4">
-                        <p class="flow-text">Date Format</p>
-                    </div>
-                    <div class="col s7">
-                        {{ form.date_format(class="browser-default") }}
-                    </div>
-                </div>
-
-                <!-- Time Format Setting -->
-                <div class="row valign-wrapper">
-                    <div class="col s1">
-                        <span class="material-symbols-rounded">access_time</span>
-                    </div>
-                    <div class="col s4">
-                        <p class="flow-text">Time Format</p>
-                    </div>
-                    <div class="col s7">
-                        {{ form.time_format(class="browser-default") }}
-                    </div>
-                </div>
-
-                <!-- System Language Setting -->
-                <div class="row valign-wrapper">
-                    <div class="col s1">
-                        <span class="material-symbols-rounded">translate</span>
-                    </div>
-                    <div class="col s4">
-                        <p class="flow-text">System Language</p>
-                    </div>
-                    <div class="col s7">
-                        {{ form.language(class="browser-default") }}
-                    </div>
-                </div>
-
-                <!-- Babel Locale Setting -->
-                <div class="row valign-wrapper">
-                    <div class="col s1">
-                        <span class="material-symbols-rounded">globe</span>
-                    </div>
-                    <div class="col s4">
-                        <p class="flow-text">Locale</p>
-                    </div>
-                    <div class="col s7">
-                        {{ form.locale(class="browser-default") }}
-                    </div>
-                </div>
-
-
-                <!-- Save Button -->
-                <div class="center-align mt-4">
-                    <button class="btn tonal" type="submit">
-                        <i class="material-symbols-rounded left">save</i>
-                        Save Settings
-                    </button>
-                </div>
-            </form>
+    {% call page_section("System Settings", description) %}
+        <div class="col s12">
+            {% call panel_card() %}
+                {{ render_form(form, url_for('settings.update_system_settings')) }}
+            {% endcall %}
         </div>
-
-    </section>
+    {% endcall %}
 
 {% endblock %}
