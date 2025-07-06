@@ -70,6 +70,7 @@ def list_users():
     form = UserCreationForm()
     context = {
         "title": "Users",
+        "description": "An IAM Users are accounts that can log in and use the LibrePOS system based on their permissions.",
         "back_url": url_for(".home"),
         "users": users,
         "form": form,
@@ -238,6 +239,7 @@ def list_roles():
     """Render the IAM roles page."""
     context = {
         "title": "Roles",
+        "description": "Define roles, assign access levels, and configure permissions across the system.",
         "back_url": url_for(".home"),
         "roles": iam_service.role_repository.get_all(),
         "form": RoleForm(),
@@ -255,7 +257,7 @@ def display_create_role():
         "back_url": url_for(".list_roles"),
         "form": form,
     }
-    return render_template("iam/create_rol.html", **context)
+    return render_template("iam/create_role.html", **context)
 
 
 @iam_bp.get("/roles/<int:role_id>")
@@ -337,6 +339,7 @@ def delete_role(role_id):
 #            CREATE
 # ================================
 
+
 # ================================
 #            READ
 # ================================
@@ -346,6 +349,7 @@ def list_policies():
     """Render the IAM policies page."""
     context = {
         "title": "Policies",
+        "description": "A policy controls what users can and cannot do in LibrePOS, like which buttons they can click and which screens they can view.",
         "back_url": url_for(".home"),
         "policies": iam_service.policy_repository.get_all(),
     }
@@ -357,11 +361,12 @@ def list_policies():
 def get_policy(policy_id):
     """Render the IAM policy page."""
     policy = iam_service.policy_repository.get_by_id(policy_id)
-    form = ConfirmDeletionForm(id=policy_id)
+    policy_permissions = iam_service.get_policy_permissions(policy_id)
     context = {
         "title": "Policy",
         "back_url": url_for(".list_policies"),
         "policy": policy,
+        "policy_permissions": policy_permissions,
     }
     return render_template("iam/get_policy.html", **context)
 
