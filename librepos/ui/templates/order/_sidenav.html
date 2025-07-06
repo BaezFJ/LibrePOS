@@ -1,64 +1,72 @@
-{% from "components.html" import render_list_link %}
-{% from "macros/_modals.html" import warningMessageModal %}
+{% from "macros/layout_components.html" import modal %}
+{% from "macros/ui_components.html" import render_icon %}
 
-{% if current_user.is_authenticated %}
-    <ul id="sidenav" class="sidenav right">
-        <li>
-            <div class="user-view">
-                <div class="background">
-                    <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
-                </div>
-                <div class="card-panel z-depth-1">
-                    <h6 class="center-align mb-4">
-                        <i class="material-symbols-rounded left">receipt_long</i>Order Summary
-                    </h6>
-                    <div class="order-summary">
-                        <div class="summary-line">
-                            <span>Subtotal</span>
-                            <span class="dots"></span>
-                            <span>{{ order.subtotal_amount|currency }}</span>
-                        </div>
-                        <div class="summary-line">
-                            <span>Tax</span>
-                            <span class="dots"></span>
-                            <span>{{ order.tax_amount|currency }}</span>
-                        </div>
-                        <div class="summary-line">
-                            <span>Discount</span>
-                            <span class="dots"></span>
-                            <span>−{{ order.discount_amount|currency }}</span>
-                        </div>
-                        <div class="divider"></div>
-                        {% set order_total = (order.subtotal_amount + order.tax_amount) - order.discount_amount %}
-                        <div class="summary-line total">
-                            <span>Total</span>
-                            <span class="dots"></span>
-                            <span>{{ order_total|currency }}</span>
-                        </div>
+<ul id="sidenav" class="sidenav right">
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
+            </div>
+            <div class="card-panel z-depth-1">
+                <h6 class="center-align mb-4">
+                    <i class="material-symbols-rounded left">receipt_long</i>Order Summary
+                </h6>
+                <div class="order-summary">
+                    <div class="summary-line">
+                        <span>Subtotal</span>
+                        <span class="dots"></span>
+                        <span>{{ order.subtotal_amount|currency }}</span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Tax</span>
+                        <span class="dots"></span>
+                        <span>{{ order.tax_amount|currency }}</span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Discount</span>
+                        <span class="dots"></span>
+                        <span>−{{ order.discount_amount|currency }}</span>
+                    </div>
+                    <div class="divider"></div>
+                    {% set order_total = (order.subtotal_amount + order.tax_amount) - order.discount_amount %}
+                    <div class="summary-line total">
+                        <span>Total</span>
+                        <span class="dots"></span>
+                        <span>{{ order_total|currency }}</span>
                     </div>
                 </div>
-                <h6># Guest: {{ order.guest_count }}</h6>
             </div>
+            <h6># Guest: {{ order.guest_count }}</h6>
+        </div>
+    </li>
+
+    <div class="divider"></div>
+
+    <li>
+        <a href="">
+            {{ render_icon("shopping_cart_checkout") }}
+            Check-out
+        </a>
+    </li>
+
+    <div class="divider"></div>
+
+    {% if current_user.has_permission("void_order") %}
+
+        <li>
+            <a href="javascript:warningModal.showPopover()">
+                {{ render_icon("cancel") }}
+                Void Order
+            </a>
         </li>
 
-        <div class="divider"></div>
+        {% call modal("warningModal","Void Order?", "warning") %}
+            <p class="flow-text"><b>Warning</b>: Voiding this order will permanently remove it from active orders.
+                This action cannot be
+                undone. All items and guest information will be marked as voided in the system.</p>
+            <p class="flow-text">Are you sure you want to proceed?</p>
+        {% endcall %}
 
-        {{ render_list_link("", "Check-out", "shopping_cart_checkout") }}
+    {% endif %}
 
-        <div class="divider"></div>
-
-        {% if current_user.has_permission("void_order") %}
-            {{ render_list_link("javascript:warningModal.showPopover()", "Void Order", "cancel") }}
-
-            {% call warningMessageModal(url_for('order.void_order', order_id=order.id)) %}
-                <h5 class="center-align">Void Order Confirmation</h5>
-                <p class="flow-text"><b>Warning</b>: Voiding this order will permanently remove it from active orders.
-                    This action cannot be
-                    undone. All items and guest information will be marked as voided in the system.</p>
-                <p class="flow-text">Are you sure you want to proceed?</p>
-            {% endcall %}
-
-        {% endif %}
-
-    </ul>
-{% endif %}
+</ul>
