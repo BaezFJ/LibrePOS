@@ -1,23 +1,16 @@
 {% extends 'base.html' %}
 
-{% from "macros/_sections.html" import section, section_header %}
-{% from "macros/_forms.html" import string_field, submit_field %}
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import render_form %}
 
 {% block main %}
 
-    {% call section() %}
-
-        {{ section_header(title="Create User") }}
-
-        <form action="{{ url_for('iam.process_create_user') }}" method="POST" class="row">
-            {{ form.hidden_tag() }}
-            {{ string_field(form.role_id) }}
-            {{ string_field(form.username) }}
-            {{ string_field(form.password) }}
-            {{ string_field(form.email) }}
-            {{ submit_field("Create User") }}
-        </form>
-
+    {% call page_section("Create User") %}
+        <div class="col s12">
+            {% call panel_card() %}
+                {{ render_form(form, url_for("iam.process_create_user")) }}
+            {% endcall %}
+        </div>
     {% endcall %}
 
 {% endblock %}

@@ -20,7 +20,6 @@ def login():
 
     form = UserLoginForm()
     context = {
-        "title": "Login",
         "form": form,
     }
     if form.validate_on_submit():

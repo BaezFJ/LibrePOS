@@ -1,34 +1,25 @@
 {% extends 'base.html' %}
 
-{% from "macros/_sections.html" import section, section_header %}
-{% from "macros/_buttons.html" import filled_button, outlined_button %}
-{% from "macros/_cards.html" import panel_card %}
-{% from "macros/_tables.html" import table %}
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import render_button, table %}
 
 {% block main %}
 
-    {% call section() %}
-        {% set section_description = "A policy controls what users can and cannot do in LibrePOS, like which buttons they can click and which screens they can view." %}
-        {{ section_header(title="Policies", description=section_description, count=policies) }}
-
-        <div class="row">
-            <div class="col s12">
-                {% call panel_card() %}
-                    {% call table(["Policy Name"]) %}
-                        {% for policy in policies %}
-                            {% set policy_name = policy.name|un_snake|title|strip_spaces %}
-                            <tr>
-                                <td>
-                                    <a href="{{ url_for('iam.get_policy', policy_id=policy.id) }}">{{ policy_name }}</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-
-                    {% endcall %}
+    {% call page_section(title, description, count=policies) %}
+        <div class="col s12">
+            {% call panel_card() %}
+                {% call table(["Policy Name"]) %}
+                    {% for policy in policies %}
+                        {% set policy_name = policy.name|un_snake|title|strip_spaces %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('iam.get_policy', policy_id=policy.id) }}">{{ policy_name }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
                 {% endcall %}
-            </div>
+            {% endcall %}
         </div>
-
     {% endcall %}
 
 {% endblock %}

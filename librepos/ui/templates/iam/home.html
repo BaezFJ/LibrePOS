@@ -1,34 +1,24 @@
 {% extends 'base.html' %}
 
-{% from "macros/_sections.html" import section, section_header %}
-{% from "macros/_cards.html" import icon_card %}
+{% from "macros/layout_components.html" import page_section, render_icon_card %}
 
 {% block main %}
 
-    {% call section() %}
-
-        {{ section_header("IAM Dashboard") }}
-
-        <div class="row">
-
-            <!-- Users Settings -->
-            <div class="col s6 m4 l3">
-                {{ icon_card("person", "Users", url_for('iam.list_users')) }}
-            </div>
-
-            <!-- Roles Settings -->
-            <div class="col s6 m4 l3">
-                {{ icon_card("lock_person", "Roles", url_for('iam.list_roles')) }}
-            </div>
-
-            <!-- Policies Settings -->
-            <div class="col s6 m4 l3">
-                {{ icon_card("policy", "Policies", url_for('iam.list_policies')) }}
-            </div>
-
-
+    {% call page_section("IAM Dashboard") %}
+        <!-- Users Settings -->
+        <div class="col s6 m4 l3">
+            {{ render_icon_card("person", "Users", url_for('iam.list_users')) }}
         </div>
 
+        <!-- Roles Settings -->
+        <div class="col s6 m4 l3">
+            {{ render_icon_card("lock_person", "Roles", url_for('iam.list_roles')) }}
+        </div>
+
+        <!-- Policies Settings -->
+        <div class="col s6 m4 l3">
+            {{ render_icon_card("policy", "Policies", url_for('iam.list_policies')) }}
+        </div>
     {% endcall %}
 
 {% endblock %}

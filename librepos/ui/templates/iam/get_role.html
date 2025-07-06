@@ -1,125 +1,63 @@
 {% extends 'base.html' %}
 
-{% from "macros/_sections.html" import section, section_header %}
-{% from "macros/_buttons.html" import filled_button, outlined_button, disabled_button %}
-{% from "macros/_icons.html" import icon %}
-{% from "macros/_cards.html" import panel_card %}
-{% from "macros/_tables.html" import table %}
-{% from "macros/_modals.html" import warningMessageModal, modal %}
-{% from "macros/_forms.html" import string_field, submit_field %}
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import table, render_button %}
 
 {% block main %}
+{% set update_role_button %}
+{% if current_user.has_permission("iam.update.role") %}
+    {{ render_button("Edit Role", "filled", url="#") }}
+{% endif %}
+{% endset %}
+{% set users_role_count = role.users|length %}
 
-    {% call section() %}
-        {% set users_role_count = role.users|length %}
-
-        {% call section_header(role.name|title, role.description|capitalize) %}
-
-            {% if current_user.has_permission('iam.delete.role') %}
-                {% set delete_modal_title = "Delete" + role.name|title + "?" %}
-                {% set delete_modal_id = "confirmDeleteModal" %}
-
+{% call page_section(role.name|title, role.description|capitalize, button=update_role_button) %}
+    <!-- Role Summary Card -->
+    <div class="col s12">
+        {% call panel_card("Summary") %}
+            <p>
+                <strong>Creation Date:</strong>&nbsp;{{ role.created_at|date }}
+            </p>
+            <p>
+                <strong>Created by:</strong> &nbsp; System
+            </p>
+            <p>
+                <strong>Assigned Policies:</strong> &nbsp; {{ role.role_policies|length|string }}
+            </p>
+            <p>
+                <strong>Assigned Users:</strong> &nbsp; {{ users_role_count }}
+                &nbsp; {{ "users" if users_role_count > 1 else "user" }}
+            </p>
+            <p>
+                <strong>Status:</strong> &nbsp;
                 {% if role.active %}
-                    {{ disabled_button("Delete") }}
+                    <span class="success-text">Active</span>
                 {% else %}
-                    {{ outlined_button("Delete", classes="danger", url="javascript:"+delete_modal_id+".showPopover()") }}
-
-                    {% call modal(delete_modal_id, delete_modal_title) %}
-                        <p class="flow-text left-align">Delete <b><u>{{ role.name|title }}</u></b> permanently? This
-                            action cannot be undone.</p>
-                        <p class="flow-text left-align grey-text">To prevent accidental deletions, we ask you to provide
-                            additional written consent.</p>
-                        <form action="{{ url_for('iam.delete_role', role_id=role.id) }}" method="POST" class="row">
-                            {{ form.hidden_tag() }}
-                            {{ string_field(form.confirmation) }}
-                            {{ submit_field("Delete Role", classes="danger") }}
-                        </form>
-                    {% endcall %}
+                    <span class="danger-text">Disabled</span>
                 {% endif %}
-
-            {% endif %}
-
+            </p>
         {% endcall %}
+    </div>
 
-        <div class="row">
-
-            <!-- Assigned Policies Card -->
-            <div class="col s12">
-                {% set policiesCardTitle = "Assigned Policies (" + role.role_policies|length|string + ")" %}
-                {% call panel_card(policiesCardTitle) %}
-                    <div class="row">
-                        <div class="col s12">
-                            {% call table(["Policy Name"]) %}
-                                {% for role_policy in role.role_policies %}
-                                    {% set setPolicyName = role_policy.policy.name|replace("_", " ") %}
-                                    <tr>
-                                        <td>{{ setPolicyName|title|replace(" ", "") }}</td>
-                                    </tr>
-                                {% endfor %}
-
-                            {% endcall %}
-                        </div>
-                        <div class="col s12">
-                            {{ filled_button("Edit Policies", url_for('iam.get_role_policies', role_id=role.id)) }}
-                        </div>
-                    </div>
-                {% endcall %}
+    <!-- Assigned Policies Card -->
+    <div class="col s12">
+        {% call panel_card("Assigned Policies", count=role.role_policies) %}
+            <div class="row">
+                <div class="col s12">
+                    {% call table(["Policy Name"]) %}
+                        {% for role_policy in role.role_policies %}
+                            <tr>
+                                <td>{{ role_policy.policy.name|un_snake|title|strip_spaces }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endcall %}
+                </div>
+                <div class="col s12">
+                    {{ render_button("Edit Policies", "filled", url_for('iam.get_role_policies', role_id=role.id)) }}
+                </div>
             </div>
-
-            <!-- Role Metadata Card -->
-            <div class="col s12">
-                {% call panel_card("Role Metadata") %}
-                    <div class="row">
-                        <div class="col s12">
-                            <p>
-                                {{ icon("calendar_today", classes='tiny') }}<strong>Creation Date:</strong>
-                                &nbsp; {{ role.created_at|date }}
-                            </p>
-                            <p>
-                                {{ icon("person", classes='tiny') }} <strong>Created by:</strong> &nbsp; System
-                            </p>
-                            <p>
-                                {{ icon("groups", classes="tiny") }} <strong>Assigned Users:</strong>
-                                &nbsp; {{ users_role_count }} &nbsp; {{ "users" if users_role_count > 1 else "user" }}
-                            </p>
-                            <p>
-                                {{ icon("verified_user", classes="tiny") }} <strong>Status:</strong> &nbsp;
-                                {% if role.active %}
-                                    <span class="success-text">Active</span>
-                                {% else %}
-                                    <span class="danger-text">Disabled</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        {% if current_user.has_permission("iam.delete.role") %}
-                            {% set toggleRoleModalID = 'toggleRoleModal' %}
-
-                            <div class="col s12">
-                                {% if role.active %}
-                                    {{ outlined_button("Disable Role", url="javascript:"+ toggleRoleModalID +".showPopover()", classes="danger") }}
-                                    {% call warningMessageModal(url_for('iam.toggle_role_suspend', role_id=role.id), toggleRoleModalID) %}
-                                        <h4 class="center-align">Disable Role</h4>
-                                        <p class="flow-text">Are you sure you want to disable this role?</p>
-                                        <p class="flow-text">Disabling this role will prevent it from being used.</p>
-                                        <p class="flow-text"><strong>Note:</strong>The role must <u>NOT</u> be assigned
-                                            to any users before it can be disabled</p>
-                                    {% endcall %}
-                                {% else %}
-                                    {{ outlined_button("Enable Role", url="javascript:"+ toggleRoleModalID +".showPopover()") }}
-                                    {% call warningMessageModal(url_for('iam.toggle_role_suspend', role_id=role.id), toggleRoleModalID) %}
-                                        <h4 class="center-align">Enable Role</h4>
-                                        <p class="flow-text">Arey you sure you want to enable this Role?</p>
-                                    {% endcall %}
-                                {% endif %}
-                            </div>
-
-                        {% endif %}
-                    </div>
-                {% endcall %}
-            </div>
-
-        </div>
-
-    {% endcall %}
+        {% endcall %}
+    </div>
+{% endcall %}
 
 {% endblock %}

@@ -1,38 +1,20 @@
 {% extends 'base.html' %}
 
-{% from "macros/_sections.html" import section, section_header %}
-{% from "macros/_buttons.html" import button, submit_button, filled_button %}
-{% from "macros/_tables.html" import table %}
-{% from "macros/_modals.html" import infoMessageModal, modal %}
-{% from "macros/_forms.html" import string_field %}
-{% from "macros/_cards.html" import panel_card %}
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import render_button, table %}
 
 {% block main %}
 
-    {% call section() %}
-        {% set section_description = "An IAM Users are accounts that can log in and use the LibrePOS system based on their permissions." %}
-        {% set info_modal = 'javascript:iamUserInfoModal.showPopover()' %}
-        {% call section_header(title="Users", description=section_description, count=users, info_url=info_modal) %}
+{% set button_html %}
+{% if current_user.has_permission("iam.create.user") %}
+    {{ render_button("Create User", "filled", url=url_for('iam.display_create_user')) }}
+{% endif %}
+{% endset %}
 
-            {% call infoMessageModal("iamUserInfoModal", "IAM User") %}
-                <p class="flow-text left-align">
-                    Identity and Access Management (IAM) Users are accounts that provide individuals with secure access
-                    to the LibrePOS system. Each user account can be assigned specific roles and permissions that
-                    determine what actions they can perform within the application. This granular control enables
-                    administrators to effectively manage system access, ensuring users have the appropriate level of
-                    permissions needed for their job responsibilities while maintaining system security and compliance.
-                </p>
-            {% endcall %}
-
-            {% if current_user.has_permission("iam.create.user") %}
-                {{ filled_button("Create User", url=url_for('iam.display_create_user')) }}
-            {% endif %}
-
-        {% endcall %}
-
+{% call page_section(title, description, count=users, button=button_html) %}
+    <div class="col s12">
         {% call panel_card() %}
             {% call table(["Full Name", "Role", "Last Active"]) %}
-
                 {% for user in users %}
                     <tr>
                         <td>
@@ -44,10 +26,9 @@
                         <td>Today</td>
                     </tr>
                 {% endfor %}
-
             {% endcall %}
         {% endcall %}
-
-    {% endcall %}
+    </div>
+{% endcall %}
 
 {% endblock %}
