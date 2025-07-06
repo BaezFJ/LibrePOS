@@ -1,4 +1,4 @@
-from wtforms import StringField, SelectField, DateField
+from wtforms import StringField, SelectField, DateField, SubmitField
 from wtforms.validators import DataRequired
 
 from librepos.forms.base import BaseForm
@@ -27,3 +27,4 @@ class UserDetailsForm(BaseForm):
         "Marital Status", choices=marital_status_choices, default="single"
     )
     birthday = DateField("Birthday", render_kw=field_kw)
+    submit = SubmitField("Update Details")

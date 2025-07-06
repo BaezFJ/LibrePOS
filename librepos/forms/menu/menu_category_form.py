@@ -1,5 +1,7 @@
+from wtforms import SubmitField
+
 from librepos.forms.base import NamedEntityForm
 
 
 class MenuCategoryForm(NamedEntityForm):
-    pass
+    submit = SubmitField("Add Category")

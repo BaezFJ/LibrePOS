@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField
+from wtforms import StringField, PasswordField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Email
 
 
@@ -16,6 +16,7 @@ class UserCreationForm(FlaskForm):
     password = PasswordField(
         "Password", validators=[DataRequired()], render_kw={"placeholder": " "}
     )
+    submit = SubmitField("Create User")
 
     def __init__(self, **kwargs):
         super(UserCreationForm, self).__init__(**kwargs)

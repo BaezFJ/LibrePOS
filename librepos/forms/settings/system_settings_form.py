@@ -1,6 +1,6 @@
 from babel.numbers import list_currencies
 from flask_wtf import FlaskForm
-from wtforms import SelectField
+from wtforms import SelectField, SubmitField
 from wtforms.validators import DataRequired
 
 from librepos.utils.datetime import get_all_timezones
@@ -44,6 +44,7 @@ class SystemSettingsForm(FlaskForm):
         validators=[DataRequired()],
         render_kw={"placeholder": " "},
     )
+    submit = SubmitField("Save Settings")
 
     def __init__(self, **kwargs):
         super(SystemSettingsForm, self).__init__(**kwargs)
