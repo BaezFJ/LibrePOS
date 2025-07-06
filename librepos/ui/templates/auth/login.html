@@ -1,45 +1,16 @@
 {% extends 'base.html' %}
 
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import render_form, render_button %}
 
 {% block main %}
 
-    <section>
-
-        <div class="container">
-            <div class="row">
-                <div class="col s12">
-                    <div class="card z-depth-2">
-                        <div class="card-content">
-                            <form action="" method="POST">
-                                {{ form.hidden_tag() }}
-                                <div class="input-field">
-                                    {{ form.username() }}
-                                    {{ form.username.label }}
-                                </div>
-                                <div class="input-field">
-                                    {{ form.password() }}
-                                    {{ form.password.label }}
-                                </div>
-                                <div class="input-field center-align mt-4">
-                                    <p>
-                                        <label>
-                                            {{ form.remember() }}
-                                            <span>Remember Me</span>
-                                        </label>
-                                    </p>
-                                </div>
-                                <div class="mt-4">
-                                    <button type="submit" class="btn waves-effect waves-light">
-                                        Login
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    {% call page_section() %}
+        <div class="col s12">
+            {% call panel_card("Login") %}
+                {{ render_form(form, "") }}
+            {% endcall %}
         </div>
-
-    </section>
+    {% endcall %}
 
 {% endblock %}
