@@ -33,6 +33,8 @@ USER_PERMISSIONS = [
 
 # Menu Management Domain
 MENU_PERMISSIONS = [
+    # General Menu Access
+    ("menu.access", "Access menu management interface"),
     # Categories
     ("menu.create.category", "Create new menu categories for organizing menu items"),
     ("menu.read.category", "View detailed information about specific menu categories"),
