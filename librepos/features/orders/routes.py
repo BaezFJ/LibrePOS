@@ -72,11 +72,11 @@ def void_order(order_id):
 @permission_required("order.create.item")
 def add_item_to_order():
     order_id = request.form.get("order_id", type=int, default=0)
-    item_id = request.form.get("item_id", type=int, default=0)
-    quantity = request.form.get("quantity", type=int, default=1)
+    # item_id = request.form.get("item_id", type=int, default=0)
+    # quantity = request.form.get("quantity", type=int, default=1)
 
-    item = menu_item_service.get_item_by_id(item_id)
-    price = item.price if item else 0
+    # item = menu_item_service.get_item_by_id(item_id)
+    # price = item.price if item else 0
 
     # order_item_service.add_item_to_order(order_id, item_id, quantity, price)
     order_service.update_order_subtotals(order_id)
@@ -93,7 +93,7 @@ def add_item_to_order():
 @permission_required("order.delete.item")
 def remove_item_from_order():
     order_id = request.args.get("order_id")
-    order_item_id = request.args.get("order_item_id", type=int, default=0)
+    # order_item_id = request.args.get("order_item_id", type=int, default=0)
     # order_item_service.remove_item_from_order(order_item_id)
     order_service.update_order_subtotals(order_id)
     response = jsonify(success=True)

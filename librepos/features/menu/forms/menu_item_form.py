@@ -12,9 +12,13 @@ class MenuItemForm(FlaskForm):
         validators=[DataRequired()],
         render_kw=default_placeholder,
     )
-    name = StringField("Name", validators=[DataRequired()], render_kw=default_placeholder)
+    name = StringField(
+        "Name", validators=[DataRequired()], render_kw=default_placeholder
+    )
     description = StringField("Description", render_kw=default_placeholder)
-    price = FloatField("Price", validators=[DataRequired()], render_kw=default_placeholder)
+    price = FloatField(
+        "Price", validators=[DataRequired()], render_kw=default_placeholder
+    )
     active = BooleanField("Active")
     submit = SubmitField("Add Item")
 

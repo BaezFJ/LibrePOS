@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from .role_policy import RolePolicy
     from .policy_permission import PolicyPermission
 
+
 class Policy(db.Model):
     """Policy model."""
 

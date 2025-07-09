@@ -6,7 +6,6 @@ from librepos.utils.model_utils import update_model_fields
 
 
 class UserService:
-
     def __init__(self):
         self.user_repository = UserRepository()
 

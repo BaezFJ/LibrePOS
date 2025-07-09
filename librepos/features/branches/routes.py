@@ -5,7 +5,9 @@ from librepos.utils.decorators import permission_required
 from .forms import BranchForm
 from .services import BranchService
 
-branch_bp = Blueprint('branch', __name__, template_folder='templates', url_prefix='/branches')
+branch_bp = Blueprint(
+    "branch", __name__, template_folder="templates", url_prefix="/branches"
+)
 
 branch_service = BranchService()
 

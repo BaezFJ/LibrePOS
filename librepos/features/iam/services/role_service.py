@@ -1,13 +1,16 @@
 from flask_login import current_user
 from sqlalchemy.exc import SQLAlchemyError
 
-from librepos.features.iam.repositories import RoleRepository, PolicyRepository, RolePolicyRepository
+from librepos.features.iam.repositories import (
+    RoleRepository,
+    PolicyRepository,
+    RolePolicyRepository,
+)
 from librepos.utils import FlashMessageHandler
 from librepos.utils.formatters import un_snake_formatter, strip_spaces_formatter
 
 
 class RoleService:
-
     def __init__(self):
         self.role_repository = RoleRepository()
         self.policy_repository = PolicyRepository()

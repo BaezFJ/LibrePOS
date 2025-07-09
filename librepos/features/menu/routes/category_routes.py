@@ -5,7 +5,9 @@ from librepos.utils.decorators import permission_required
 from ..forms import MenuCategoryForm
 from ..services import MenuCategoryService, MenuGroupService, MenuItemService
 
-category_bp = Blueprint("category", __name__, template_folder="templates", url_prefix="/category")
+category_bp = Blueprint(
+    "category", __name__, template_folder="templates", url_prefix="/category"
+)
 
 menu_category_service = MenuCategoryService()
 menu_group_service = MenuGroupService()

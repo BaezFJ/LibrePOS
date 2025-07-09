@@ -3,7 +3,13 @@ from flask import Blueprint, render_template, url_for, redirect, jsonify
 from librepos.common.forms import ConfirmDeletionForm
 from librepos.utils.decorators import permission_required
 from librepos.utils.form import sanitize_form_data
-from ..forms import UserCreationForm, UserContactForm, UserAddressForm, UserDetailsForm, UserRoleForm
+from ..forms import (
+    UserCreationForm,
+    UserContactForm,
+    UserAddressForm,
+    UserDetailsForm,
+    UserRoleForm,
+)
 from ..services import UserService
 
 user_service = UserService()

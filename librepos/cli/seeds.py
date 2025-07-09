@@ -1,6 +1,13 @@
 from librepos.extensions import db
 from librepos.features.branches.models import Branch
-from librepos.features.iam.models import RolePolicy, Policy, Role, User, Permission, PolicyPermission
+from librepos.features.iam.models import (
+    RolePolicy,
+    Policy,
+    Role,
+    User,
+    Permission,
+    PolicyPermission,
+)
 from librepos.features.menu.models import MenuCategory, MenuGroup, MenuItem
 from librepos.features.settings.models import SystemSettings
 from .fixtures import ALL_PERMISSION_FIXTURES, ROLES_FIXTURE, POLICIES_FIXTURE

@@ -28,4 +28,3 @@ class BranchService:
         except Exception as e:
             FlashMessageHandler.error(f"Error updating restaurant: {str(e)}")
             return None, False
-

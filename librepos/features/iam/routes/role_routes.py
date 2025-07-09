@@ -15,6 +15,7 @@ role_bp = Blueprint("role", __name__, template_folder="templates", url_prefix="/
 #            CREATE
 # ================================
 
+
 @role_bp.post("/roles/create")
 @permission_required("iam.create.role")
 def process_create_role():

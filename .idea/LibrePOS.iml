@@ -17,11 +17,11 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/librepos/ui/templates" />
-        <option value="$MODULE_DIR$/librepos/auth/templates" />
-        <option value="$MODULE_DIR$/librepos/user/templates" />
-        <option value="$MODULE_DIR$/librepos/menu/templates" />
-        <option value="$MODULE_DIR$/librepos/order/templates" />
-        <option value="$MODULE_DIR$/librepos/settings/templates" />
+        <option value="$MODULE_DIR$/librepos/features/iam/templates" />
+        <option value="$MODULE_DIR$/librepos/features/orders/templates" />
+        <option value="$MODULE_DIR$/librepos/features/menu/templates" />
+        <option value="$MODULE_DIR$/librepos/features/settings/templates" />
+        <option value="$MODULE_DIR$/librepos/features/branches/templates" />
       </list>
     </option>
   </component>

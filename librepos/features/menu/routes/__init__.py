@@ -5,7 +5,9 @@ from .category_routes import category_bp
 from .group_routes import group_bp
 from .item_routes import item_bp
 
-menu_bp = Blueprint("menu", __name__, template_folder="../templates", url_prefix="/menu")
+menu_bp = Blueprint(
+    "menu", __name__, template_folder="../templates", url_prefix="/menu"
+)
 
 # Subroutes
 menu_bp.register_blueprint(category_bp)

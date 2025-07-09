@@ -6,8 +6,11 @@ from librepos.utils.form import default_placeholder, textarea_attributes
 
 
 class RoleCreationForm(FlaskForm):
-    """ Form for creating roles in the system """
-    name = StringField("Name", validators=[DataRequired()], render_kw=default_placeholder)
+    """Form for creating roles in the system"""
+
+    name = StringField(
+        "Name", validators=[DataRequired()], render_kw=default_placeholder
+    )
     description = TextAreaField(
         "Description",
         validators=[DataRequired()],

@@ -5,7 +5,9 @@ from librepos.utils.decorators import permission_required
 from ..forms import MenuGroupForm
 from ..services import MenuGroupService
 
-group_bp = Blueprint("group", __name__, template_folder="templates", url_prefix="/groups")
+group_bp = Blueprint(
+    "group", __name__, template_folder="templates", url_prefix="/groups"
+)
 
 menu_group_service = MenuGroupService()
 

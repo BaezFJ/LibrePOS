@@ -5,7 +5,9 @@ from ..services import PolicyService
 
 policy_service = PolicyService()
 
-policy_bp = Blueprint("policy", __name__, template_folder="templates", url_prefix="/policies")
+policy_bp = Blueprint(
+    "policy", __name__, template_folder="templates", url_prefix="/policies"
+)
 
 
 # ================================
