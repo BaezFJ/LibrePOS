@@ -1,8 +1,8 @@
 from flask import Flask, redirect, url_for
 
-from .manage import add_cli_commands
-from .router import register_blueprints
-from .utils.formatters import (
+from librepos.cli.manage import add_cli_commands
+from librepos.features import register_features
+from librepos.utils.formatters import (
     phone_formatter,
     currency_formatter,
     date_formatter,
@@ -30,8 +30,8 @@ def create_app():
     # load custom jinja filters
     custom_jinja_filters(app)
 
-    # register blueprints
-    register_blueprints(app)
+    # register features
+    register_features(app)
 
     @app.route("/")
     def index():
@@ -45,14 +45,14 @@ def create_app():
 
 def init_extensions(app):
     from .extensions import db, login_manager, mail, csrf
-    from librepos.models.users import User
+    from librepos.features.iam.models import User
 
     db.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
 
-    login_manager.login_view = "auth.login"  # type: ignore
+    login_manager.login_view = "iam.auth.login"  # type: ignore
     login_manager.session_protection = "strong"
     login_manager.refresh_view = "auth.reauthenticate"  # type: ignore
     login_manager.needs_refresh_message = (

@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 
 def timezone_aware_datetime():
-    from librepos.repositories import SystemSettingsRepository
+    from librepos.features.settings.repositories import SystemSettingsRepository
 
     timezone = SystemSettingsRepository().get_timezone()
 

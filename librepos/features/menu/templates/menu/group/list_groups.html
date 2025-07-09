@@ -5,7 +5,7 @@
 
 {% block main %}
 
-{% set header_description = "Menu groups organize related menu items within categories. Each group belongs to a category and can contain multiple menu items, helping to structure and manage your menu efficiently." %}
+{% set header_description = "Menu groups organize related menu items within category. Each group belongs to a category and can contain multiple menu items, helping to structure and manage your menu efficiently." %}
 {% set button_html %}
 {% if current_user.has_permission("menu.create.group") %}
     {{ render_button("Create Group", "filled", "#") }}
@@ -22,7 +22,7 @@
                             {% set active_color = "success-text" if group.active else "danger-text" %}
                             <td>
                                 {% if current_user.has_permission("menu.read.group") %}
-                                    <a href="{{ url_for("menu.get_group", group_id=group.id) }}">
+                                    <a href="{{ url_for("menu.group.get_group", group_id=group.id) }}">
                                         {{ group.name }}
                                     </a>
                                 {% else %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import table, render_button %}
+
+{% block main %}
+{% set update_role_button %}
+{% if current_user.has_permission("iam.update.role") %}
+    {{ render_button("Edit Role", "filled", url="#") }}
+{% endif %}
+{% endset %}
+{% set users_role_count = role.users|length %}
+
+{% call page_section(role.name|title, role.description|capitalize, button=update_role_button) %}
+    <!-- Role Summary Card -->
+    <div class="col s12">
+        {% call panel_card("Summary") %}
+            <p>
+                <strong>Creation Date:</strong>&nbsp;{{ role.created_at|date }}
+            </p>
+            <p>
+                <strong>Created by:</strong> &nbsp; System
+            </p>
+            <p>
+                <strong>Assigned Policies:</strong> &nbsp; {{ role.role_policies|length|string }}
+            </p>
+            <p>
+                <strong>Assigned Users:</strong> &nbsp; {{ users_role_count }}
+                &nbsp; {{ "users" if users_role_count > 1 else "user" }}
+            </p>
+            <p>
+                <strong>Status:</strong> &nbsp;
+                {% if role.active %}
+                    <span class="success-text">Active</span>
+                {% else %}
+                    <span class="danger-text">Disabled</span>
+                {% endif %}
+            </p>
+        {% endcall %}
+    </div>
+
+    <!-- Assigned Policies Card -->
+    <div class="col s12">
+        {% call panel_card("Assigned Policies", count=role.role_policies) %}
+            <div class="row">
+                <div class="col s12">
+                    {% call table(["Policy Name"]) %}
+                        {% for role_policy in role.role_policies %}
+                            <tr>
+                                <td>{{ role_policy.policy.name|un_snake|title|strip_spaces }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endcall %}
+                </div>
+                <div class="col s12">
+                    {{ render_button("Edit Policies", "filled", url_for('iam.role.get_role_policies', role_id=role.id)) }}
+                </div>
+            </div>
+        {% endcall %}
+    </div>
+{% endcall %}
+
+{% endblock %}

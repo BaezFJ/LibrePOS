@@ -1,3 +1,6 @@
+default_placeholder = {"placeholder": " "}
+textarea_attributes = {"placeholder": " ", " class": "materialize-textarea"}
+
 def sanitize_form_data(form, exclude_fields: list[str] | None = None):
     """
     Sanitizes form data by removing specified fields, including default fields such as

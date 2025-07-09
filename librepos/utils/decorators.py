@@ -16,7 +16,7 @@ def permission_required(permission_name: str):
         def wrapped_view(*args, **kwargs):
             if not current_user.is_authenticated:
                 FlashMessageHandler.error("Authentication required.")
-                return redirect(url_for("auth.login"))
+                return redirect(url_for("iam.auth.login"))
 
             if not current_user.has_permission(permission_name):
                 FlashMessageHandler.error("You don't have the required permission.")
