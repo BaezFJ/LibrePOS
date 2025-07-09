@@ -7,7 +7,7 @@ from librepos.extensions import db
 T = TypeVar("T", bound=Model)
 
 
-class EntityRepository(Generic[T]):
+class BaseRepository(Generic[T]):
     def __init__(self, model_class: Type[T]):
         self.model_class = model_class
 
