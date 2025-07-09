@@ -70,3 +70,9 @@ def un_snake_formatter(value: str) -> str:
 
 def strip_spaces_formatter(value):
     return re.sub(r"\s+", "", value)
+
+
+def name_formatter(value: str) -> str:
+    if value is None:
+        return "N/A"
+    return strip_spaces_formatter(un_snake_formatter(value).title())
