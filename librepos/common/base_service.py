@@ -14,3 +14,11 @@ class BaseService:
         except SQLAlchemyError as e:
             FlashMessageHandler.error(f"{error_message_prefix}: {str(e)}")
             return None
+
+    @staticmethod
+    def validate_exists(repository, entity_id, message):
+        """Validate that an entity exists and return it."""
+        entity = repository.get_by_id(entity_id)
+        if not entity:
+            FlashMessageHandler.error(f"{message}")
+        return entity
