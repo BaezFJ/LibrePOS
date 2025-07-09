@@ -1,17 +1,9 @@
 from librepos.extensions import db
-from librepos.fixtures import ALL_PERMISSION_FIXTURES, ROLES_FIXTURE, POLICIES_FIXTURE
-from librepos.models import (
-    MenuCategory,
-    MenuGroup,
-    MenuItem,
-    Permission,
-    Policy,
-    Restaurant,
-    RolePolicy,
-    Role,
-    SystemSettings,
-    User,
-)
+from librepos.features.branches.models import Branch
+from librepos.features.iam.models import RolePolicy, Policy, Role, User, Permission, PolicyPermission
+from librepos.features.menu.models import MenuCategory, MenuGroup, MenuItem
+from librepos.features.settings.models import SystemSettings
+from .fixtures import ALL_PERMISSION_FIXTURES, ROLES_FIXTURE, POLICIES_FIXTURE
 
 
 def create_permission(name: str, description: str) -> Permission:
@@ -32,8 +24,8 @@ def seed_system_settings():
     return system_settings
 
 
-def seed_restaurant():
-    restaurant = Restaurant(
+def seed_branch():
+    branch = Branch(
         name="LibrePOS",
         address="123 Main St",
         city="New York",
@@ -47,9 +39,9 @@ def seed_restaurant():
         timezone="America/New_York",
         tax_percentage="825",
     )
-    db.session.add(restaurant)
+    db.session.add(branch)
     db.session.commit()
-    return restaurant
+    return branch
 
 
 def seed_roles() -> None:
@@ -76,7 +68,6 @@ def seed_permissions() -> None:
 
 def seed_policies() -> None:
     """Seed policies and their associated permissions."""
-    from librepos.models import Permission, PolicyPermission
 
     all_policies = []
 
@@ -132,7 +123,7 @@ def seed_role_policies():
         manager_policies = [
             "user_management_limited",
             "role_management_view_only",
-            "restaurant_settings_full",
+            "branch_settings_full",
         ]
         for policy_name in manager_policies:
             policy = Policy.query.filter_by(name=policy_name).first()
@@ -238,7 +229,7 @@ def load_menu_data():
 
 
 def seed_all():
-    seed_restaurant()
+    seed_branch()
     seed_system_settings()
 
     seed_roles()

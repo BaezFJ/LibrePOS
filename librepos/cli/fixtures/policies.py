@@ -134,20 +134,20 @@ IAM_PERMISSION_ASSIGNMENT_VIEW_ONLY_POLICY = [
 MENU_CATEGORY_MANAGEMENT_FULL_POLICY = [
     "menu.create.category",
     "menu.read.category",
-    "menu.list.categories",
+    "menu.list.category",
     "menu.update.category",
     "menu.delete.category",
 ]
 
 MENU_CATEGORY_MANAGEMENT_LIMITED_POLICY = [
     "menu.read.category",
-    "menu.list.categories",
+    "menu.list.category",
     "menu.update.category",
 ]
 
 MENU_CATEGORY_VIEW_ONLY_POLICY = [
     "menu.read.category",
-    "menu.list.categories",
+    "menu.list.category",
 ]
 
 # ======================================================================================================================
@@ -261,25 +261,25 @@ ORDER_ITEM_VIEW_ONLY_POLICY = [
 ]
 
 # ======================================================================================================================
-#                                      RESTAURANT MANAGEMENT POLICIES
+#                                      BRANCH MANAGEMENT POLICIES
 # ======================================================================================================================
-RESTAURANT_MANAGEMENT_FULL_POLICY = [
-    "restaurant.create",
-    "restaurant.read",
-    "restaurant.list",
-    "restaurant.update",
-    "restaurant.delete",
+BRANCH_MANAGEMENT_FULL_POLICY = [
+    "branch.create",
+    "branch.read",
+    "branch.list",
+    "branch.update",
+    "branch.delete",
 ]
 
-RESTAURANT_MANAGEMENT_LIMITED_POLICY = [
-    "restaurant.read",
-    "restaurant.list",
-    "restaurant.update",
+BRANCH_MANAGEMENT_LIMITED_POLICY = [
+    "branch.read",
+    "branch.list",
+    "branch.update",
 ]
 
-RESTAURANT_MANAGEMENT_VIEW_ONLY_POLICY = [
-    "restaurant.read",
-    "restaurant.list",
+BRANCH_MANAGEMENT_VIEW_ONLY_POLICY = [
+    "branch.read",
+    "branch.list",
 ]
 
 # ======================================================================================================================
@@ -478,21 +478,21 @@ POLICIES_FIXTURE = [
         "Read-only access to order item information",
         ORDER_ITEM_VIEW_ONLY_POLICY,
     ),
-    # Restaurant Management Policies
+    # Branch Management Policies
     (
-        "restaurant_management_full",
-        "Complete restaurant profile and configuration management",
-        RESTAURANT_MANAGEMENT_FULL_POLICY,
+        "branch_management_full",
+        "Complete branch profile and configuration management",
+        BRANCH_MANAGEMENT_FULL_POLICY,
     ),
     (
-        "restaurant_management_limited",
-        "Restaurant management without creation and deletion capabilities",
-        RESTAURANT_MANAGEMENT_LIMITED_POLICY,
+        "branch_management_limited",
+        "branch management without creation and deletion capabilities",
+        BRANCH_MANAGEMENT_LIMITED_POLICY,
     ),
     (
-        "restaurant_management_view_only",
-        "Read-only access to restaurant settings and profile",
-        RESTAURANT_MANAGEMENT_VIEW_ONLY_POLICY,
+        "branch_management_view_only",
+        "Read-only access to branch settings and profile",
+        BRANCH_MANAGEMENT_VIEW_ONLY_POLICY,
     ),
     # Settings Management Policies
     (

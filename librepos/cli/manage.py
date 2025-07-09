@@ -1,6 +1,6 @@
 import click
 
-from librepos.seeds import seed_all
+from librepos.cli.seeds import seed_all
 
 
 def add_cli_commands(app):

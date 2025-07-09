@@ -36,11 +36,11 @@ MENU_PERMISSIONS = [
     # General Menu Access
     ("menu.access", "Access menu management interface"),
     # Categories
-    ("menu.create.category", "Create new menu categories for organizing menu items"),
-    ("menu.read.category", "View detailed information about specific menu categories"),
-    ("menu.list.categories", "Access and view the complete list of menu categories"),
+    ("menu.create.category", "Create new menu category for organizing menu items"),
+    ("menu.read.category", "View detailed information about specific menu category"),
+    ("menu.list.category", "Access and view the complete list of menu category"),
     ("menu.update.category", "Modify existing menu category details and properties"),
-    ("menu.delete.category", "Remove menu categories from the system"),
+    ("menu.delete.category", "Remove menu category from the system"),
     # Groups
     ("menu.create.group", "Create new menu groups for organizing related menu items"),
     ("menu.read.group", "View detailed information about specific menu groups"),
@@ -78,19 +78,19 @@ ORDER_PERMISSIONS = [
     ("order.mark_completed", "Mark order items as completed by kitchen"),
 ]
 
-# Restaurant Management Domain
-RESTAURANT_PERMISSIONS = [
+# Branch Management Domain
+BRANCH_PERMISSIONS = [
     (
-        "restaurant.read",
-        "View restaurant profile, contact information, and business details",
+        "branch.read",
+        "View branch profile, contact information, and business details",
     ),
     (
-        "restaurant.update",
-        "Modify restaurant information, operating hours, and business settings",
+        "branch.update",
+        "Modify branch information, operating hours, and business settings",
     ),
-    ("restaurant.create", "Create new restaurant profiles and configurations"),
-    ("restaurant.delete", "Remove restaurant profiles from the system"),
-    ("restaurant.list", "Access and view all restaurant configurations"),
+    ("branch.create", "Create new branch profiles and configurations"),
+    ("branch.delete", "Remove branch profiles from the system"),
+    ("branch.list", "Access and view all branch configurations"),
 ]
 
 # System Settings Domain
@@ -161,7 +161,7 @@ ALL_PERMISSION_FIXTURES = [
     USER_PERMISSIONS,
     MENU_PERMISSIONS,
     ORDER_PERMISSIONS,
-    RESTAURANT_PERMISSIONS,
+    BRANCH_PERMISSIONS,
     SETTINGS_PERMISSIONS,
     IAM_PERMISSIONS,
 ]
