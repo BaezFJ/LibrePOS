@@ -27,6 +27,12 @@
             </div>
         {% endif %}
 
+        {% if current_user.has_permission("branch.list") %}
+            <div class="col s6 m4 l3">
+                {{ render_icon_card("domain", "Branch", url_for("branch.list_branches")) }}
+            </div>
+        {% endif %}
+
     {% endcall %}
 
 {% endblock %}

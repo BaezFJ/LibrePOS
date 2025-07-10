@@ -13,35 +13,48 @@ branch_service = BranchService()
 
 
 # ======================================================================================================================
-#                                              RESTAURANT ROUTES
+#                                              BRANCH ROUTES
 # ======================================================================================================================
 
 
 # ================================
 #            READ
 # ================================
+
 @branch_bp.get("/")
-@permission_required("restaurant.read")
-def get_restaurant():
-    restaurant = branch_service.repository.get_by_id(1)
-    form = BranchForm(obj=restaurant)
+@permission_required("branch.list")
+def list_branches():
     context = {
         "title": "Branches",
-        "back_url": url_for(".home"),
-        "restaurant": restaurant,
+        "back_url": url_for("settings.home"),
+        "branches": branch_service.repository.get_all(),
+    }
+    return render_template("branches/list_branches.html", **context)
+
+
+@branch_bp.get("/<int:branch_id>>")
+@permission_required("branch.read")
+def get_branch(branch_id):
+    """Render the branch page."""
+    branch = branch_service.repository.get_by_id(branch_id)
+    form = BranchForm(obj=branch)
+    context = {
+        "title": "Branches",
+        "back_url": url_for(".list_branches"),
+        "branch": branch,
         "form": form,
     }
-    return render_template("branches/get_restaurant.html", **context)
+    return render_template("branches/get_branch.html", **context)
 
 
 # ================================
 #            UPDATE
 # ================================
-@branch_bp.post("/<branch_id>/update-branch>")
-@permission_required("restaurant.update")
-def update_restaurant():
+@branch_bp.post("/<int:branch_id>/update-branch>")
+@permission_required("branch.update")
+def update_restaurant(branch_id):
     form = BranchForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         branch_service.update_restaurant(sanitized_data)
-    return redirect(url_for(".get_restaurant"))
+    return redirect(url_for(".get_branch", branch_id=branch_id))

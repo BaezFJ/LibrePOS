@@ -1,10 +1,12 @@
+from librepos.common.base_service import BaseService
 from librepos.utils import FlashMessageHandler
 from librepos.utils.model_utils import update_model_fields
+from librepos.utils.validators import validate_exists
 
 from ..repositories import BranchRepository
 
 
-class BranchService:
+class BranchService(BaseService):
     def __init__(self):
         self.repository = BranchRepository()
 
@@ -14,17 +16,14 @@ class BranchService:
     def update_restaurant(self, data):
         """Update restaurant details."""
 
-        try:
-            restaurant = self.repository.get_by_id(1)
+        def _update_operation():
+            branch = validate_exists(self.repository, data.get("id"), "Restaurant not found.")
+            if not branch:
+                return None
 
-            if not restaurant:
-                FlashMessageHandler.error("Restaurant not found.")
-                return None, False
-
-            update_model_fields(restaurant, data)
-            self.repository.update(restaurant)
+            update_model_fields(branch, data)
+            self.repository.update(branch)
             FlashMessageHandler.success("Restaurant updated successfully.")
-            return restaurant, True
-        except Exception as e:
-            FlashMessageHandler.error(f"Error updating restaurant: {str(e)}")
-            return None, False
+            return branch
+
+        return self._execute_with_error_handling(_update_operation, "Error updating restaurant")

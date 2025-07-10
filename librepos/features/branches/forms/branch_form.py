@@ -1,6 +1,6 @@
 from babel.numbers import list_currencies
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, FloatField
+from wtforms import StringField, SelectField, FloatField, SubmitField, HiddenField
 from wtforms.validators import DataRequired
 
 from librepos.utils.datetime import get_all_timezones
@@ -8,6 +8,7 @@ from librepos.utils.form import default_placeholder
 
 
 class BranchForm(FlaskForm):
+    id = HiddenField(validators=[DataRequired()])
     name = StringField(
         "Name", validators=[DataRequired()], render_kw=default_placeholder
     )
@@ -48,6 +49,7 @@ class BranchForm(FlaskForm):
     tax_percentage = FloatField(
         "Tax Percentage", render_kw={"placeholder": "0.00"}, default=0.00
     )
+    submit = SubmitField("Update Branch")
 
     def __init__(self, **kwargs):
         super(BranchForm, self).__init__(**kwargs)

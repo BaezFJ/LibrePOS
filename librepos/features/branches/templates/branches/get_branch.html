@@ -1,76 +1,16 @@
 {% extends 'base.html' %}
 
-
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import render_form %}
 
 {% block main %}
 
-    <section>
-        <div class="container">
-            <div class="row">
-
-                <div class="col s12">
-                    <div class="card z-depth-2">
-                        <div class="card-content">
-                            <form action="{{ url_for('settings.update_restaurant') }}" method="POST" class="row">
-                                {{ form.hidden_tag() }}
-                                <div class="col s12 input-field">
-                                    {{ form.name() }}
-                                    {{ form.name.label }}
-                                </div>
-                                <div class="col s12 input-field">
-                                    {{ form.address() }}
-                                    {{ form.address.label }}
-                                </div>
-                                <div class="col s5 input-field">
-                                    {{ form.city() }}
-                                    {{ form.city.label }}
-                                </div>
-                                <div class="col s3 input-field">
-                                    {{ form.state() }}
-                                    {{ form.state.label }}
-                                </div>
-                                <div class="col s4 input-field">
-                                    {{ form.zipcode() }}
-                                    {{ form.zipcode.label }}
-                                </div>
-                                <div class="col s6 input-field">
-                                    {{ form.country() }}
-                                    {{ form.country.label }}
-                                </div>
-                                <div class="col s6 input-field">
-                                    {{ form.phone() }}
-                                    {{ form.phone.label }}
-                                </div>
-                                <div class="col s12 input-field">
-                                    {{ form.email() }}
-                                    {{ form.email.label }}
-                                </div>
-                                <div class="col s12 input-field">
-                                    {{ form.website() }}
-                                    {{ form.website.label }}
-                                </div>
-                                <div class="col s6 input-field">
-                                    {{ form.currency() }}
-                                    {{ form.currency.label }}
-                                </div>
-                                <div class="col s6 input-field">
-                                    {{ form.timezone() }}
-                                    {{ form.timezone.label }}
-                                </div>
-                                <div class="col s12 input-field">
-                                    {{ form.tax_percentage() }}
-                                    {{ form.tax_percentage.label }}
-                                </div>
-                                <div class="col s12 center-block">
-                                    <button type="submit" class="btn">Update</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+    {% call page_section(branch.name) %}
+        <div class="col s12">
+            {% call panel_card() %}
+                {{ render_form(form, url_for("branch.update_restaurant", branch_id=branch.id)) }}
+            {% endcall %}
         </div>
-    </section>
+    {% endcall %}
 
 {% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import table %}
+
+{% block main %}
+    {% set branches_description = "Manage your restaurant branches and their information. View, create, edit, and control branch operations from this centralized dashboard." %}
+    {% call page_section("Branches", branches_description, count=branches) %}
+
+        <div class="col s12">
+            {% if branches %}
+                {% call panel_card() %}
+                    {% call table(["ID", "Branch Name"]) %}
+                        {% for branch in branches %}
+                            <tr>
+                                <td>{{ branch.id }}</td>
+                                <td>
+                                    <a href="{{ url_for("branch.get_branch", branch_id=branch.id) }}">{{ branch.name }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    {% endcall %}
+                {% endcall %}
+            {% endif %}
+        </div>
+
+    {% endcall %}
+
+{% endblock %}
