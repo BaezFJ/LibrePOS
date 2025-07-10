@@ -127,6 +127,7 @@ def delete_role(role_id):
     form = ConfirmDeletionForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        role_service.delete_role(sanitized_data, role_id)
-        return redirect(url_for("role.list_roles"))
-    return redirect(url_for("role.get_role", role_id=role_id))
+        if role_service.delete_role(sanitized_data, role_id):
+            return redirect(url_for(".list_roles"))
+        return redirect(url_for(".get_role", role_id=role_id))
+    return redirect(url_for(".get_role", role_id=role_id))
