@@ -265,6 +265,8 @@ Example usage:
 
     {% if field.type == "BooleanField" %}
         {{ render_switch_field(field) }}
+    {% elif field.type == "HiddenField" %}
+        {{ field(**kwargs)|safe }}
     {% else %}
         {{ render_text_field(field) }}
     {% endif %}
