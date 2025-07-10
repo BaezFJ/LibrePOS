@@ -17,7 +17,9 @@ class BranchService(BaseService):
         """Update restaurant details."""
 
         def _update_operation():
-            branch = validate_exists(self.repository, data.get("id"), "Restaurant not found.")
+            branch = validate_exists(
+                self.repository, data.get("id"), "Restaurant not found."
+            )
             if not branch:
                 return None
 
@@ -26,4 +28,6 @@ class BranchService(BaseService):
             FlashMessageHandler.success("Restaurant updated successfully.")
             return branch
 
-        return self._execute_with_error_handling(_update_operation, "Error updating restaurant")
+        return self._execute_with_error_handling(
+            _update_operation, "Error updating restaurant"
+        )

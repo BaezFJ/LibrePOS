@@ -21,6 +21,7 @@ branch_service = BranchService()
 #            READ
 # ================================
 
+
 @branch_bp.get("/")
 @permission_required("branch.list")
 def list_branches():
