@@ -20,9 +20,12 @@
             </div>
         {% endif %}
 
-        <div class="col s6 m4 l3">
-            {{ render_icon_card("menu_book_2", "Menu", url_for("menu.home")) }}
-        </div>
+        {% if current_user.has_permission("menu.access") %}
+            <!-- Menu Settings -->
+            <div class="col s6 m4 l3">
+                {{ render_icon_card("menu_book_2", "Menu", url_for("menu.home")) }}
+            </div>
+        {% endif %}
 
     {% endcall %}
 
