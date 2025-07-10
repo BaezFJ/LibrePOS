@@ -129,6 +129,13 @@ IAM_PERMISSION_ASSIGNMENT_VIEW_ONLY_POLICY = [
 ]
 
 # ======================================================================================================================
+#                                      MENU ACCESS POLICIES
+# ======================================================================================================================
+MENU_ACCESS_FULL_POLICY = [
+    "menu.access",
+]
+
+# ======================================================================================================================
 #                                      MENU CATEGORY MANAGEMENT POLICIES
 # ======================================================================================================================
 MENU_CATEGORY_MANAGEMENT_FULL_POLICY = [
@@ -435,6 +442,12 @@ POLICIES_FIXTURE = [
         "menu_item_view_only",
         "Read-only access to menu item information",
         MENU_ITEM_VIEW_ONLY_POLICY,
+    ),
+    # Menu Full Access Policies
+    (
+        "menu_access_full",
+        "Full access to all menu management functions",
+        MENU_ACCESS_FULL_POLICY,
     ),
     # Order Management Policies
     (
