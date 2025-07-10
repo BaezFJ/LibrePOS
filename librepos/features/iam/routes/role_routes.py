@@ -34,7 +34,7 @@ def process_create_role():
 # ================================
 
 
-@role_bp.get("/roles")
+@role_bp.get("/")
 @permission_required("iam.list.roles")
 def list_roles():
     """Render the IAM roles page."""
@@ -48,7 +48,7 @@ def list_roles():
     return render_template("iam/role/list_roles.html", **context)
 
 
-@role_bp.get("/roles/create")
+@role_bp.get("/create")
 @permission_required("iam.create.role")
 def display_create_role():
     """Render the IAM role creation page."""
@@ -61,7 +61,7 @@ def display_create_role():
     return render_template("iam/role/create_role.html", **context)
 
 
-@role_bp.get("/roles/<int:role_id>")
+@role_bp.get("/<int:role_id>")
 @permission_required("iam.read.role")
 def get_role(role_id):
     """Render the IAM role page."""
@@ -76,7 +76,7 @@ def get_role(role_id):
     return render_template("iam/role/get_role.html", **context)
 
 
-@role_bp.get("/roles/<int:role_id>/policies")
+@role_bp.get("/<int:role_id>/policies")
 @permission_required("iam.assign.policy_to_role")
 def get_role_policies(role_id):
     role = role_service.role_repository.get_by_id(role_id)
@@ -95,7 +95,7 @@ def get_role_policies(role_id):
 # ================================
 
 
-@role_bp.post("/roles/<int:role_id>/toggle-suspend")
+@role_bp.post("/<int:role_id>/toggle-suspend")
 @permission_required("iam.suspend.role")
 def toggle_role_suspend(role_id):
     response = jsonify(success=True)
@@ -104,14 +104,14 @@ def toggle_role_suspend(role_id):
     return response
 
 
-@role_bp.get("/roles/<int:role_id>/assign-policy/<int:policy_id>")
+@role_bp.get("/<int:role_id>/assign-policy/<int:policy_id>")
 @permission_required("iam.assign.policy_to_role")
 def assign_policy_to_role(role_id, policy_id):
     role_service.assign_policy_to_role(role_id, policy_id)
     return redirect(url_for(".get_role_policies", role_id=role_id))
 
 
-@role_bp.get("/roles/<int:role_id>/unassign-policy/<int:policy_id>")
+@role_bp.get("/<int:role_id>/unassign-policy/<int:policy_id>")
 @permission_required("iam.assign.policy_to_role")
 def detach_policy_from_role(role_id, policy_id):
     role_service.remove_policy_from_role(role_id, policy_id)
@@ -121,12 +121,12 @@ def detach_policy_from_role(role_id, policy_id):
 # ================================
 #            DELETE
 # ================================
-@role_bp.post("/roles/delete/<int:role_id>")
+@role_bp.post("/<int:role_id>/delete")
 @permission_required("iam.delete.role")
 def delete_role(role_id):
     form = ConfirmDeletionForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         role_service.delete_role(sanitized_data, role_id)
-        return redirect(url_for(".list_roles"))
-    return redirect(url_for(".get_role", role_id=role_id))
+        return redirect(url_for("role.list_roles"))
+    return redirect(url_for("role.get_role", role_id=role_id))
