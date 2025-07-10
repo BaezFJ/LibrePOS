@@ -22,7 +22,7 @@ class AuthService:
             if user.failed_login_count > 0:
                 user.reset_failed_login_count()
             user.record_sign_in(ip=ip, agent=agent)
-            FlashMessageHandler.info("Welcome back!")
+            FlashMessageHandler.info(f"Welcome back {user.username}!")
             return user
         user.handle_failed_login()
         attempts_left = 3 - user.failed_login_count

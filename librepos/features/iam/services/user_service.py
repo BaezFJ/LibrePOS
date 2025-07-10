@@ -1,55 +1,54 @@
-from sqlalchemy.exc import SQLAlchemyError
-
+from librepos.common.base_service import BaseService
 from librepos.features.iam.repositories import UserRepository
 from librepos.utils import FlashMessageHandler
 from librepos.utils.model_utils import update_model_fields
+from librepos.utils.validators import validate_exists, validate_confirmation
 
 
-class UserService:
+class UserService(BaseService):
     def __init__(self):
         self.user_repository = UserRepository()
 
+    def _validate_user_exists(self, user_id):
+        """Validate that a user exists and return it."""
+        return validate_exists(self.user_repository, user_id, "User not found.")
+
     def create_user(self, data):
         """Create a new user."""
-        try:
-            user = self.user_repository.model_class(**data)
 
+        def _create_operation():
+            user = self.user_repository.model_class(**data)
             self.user_repository.add(user)
-            FlashMessageHandler.success("User created successfully.")
             return user
 
-        except SQLAlchemyError as e:
-            FlashMessageHandler.error(f"Error creating user: {str(e)}")
-            return None
+        return self._execute_with_error_handling(
+            _create_operation, "Error creating user"
+        )
 
     def delete_user(self, data):
         """Delete a user."""
-        try:
-            user = self.user_repository.get_by_id(data.get("id"))
-            confirmation = data.get("confirmation").lower()
 
+        def _delete_operation():
+            user = self._validate_user_exists(data.get("id"))
             if not user:
-                FlashMessageHandler.error("User not found.")
                 return False
 
-            if confirmation != "confirm":
-                FlashMessageHandler.error("Invalid confirmation.")
+            if not validate_confirmation(data):
                 return False
 
             self.user_repository.delete(user)
-            FlashMessageHandler.success("User deleted successfully.")
             return True
-        except SQLAlchemyError as e:
-            FlashMessageHandler.error(f"Error deleting user: {str(e)}")
-            return False
+
+        return self._execute_with_error_handling(
+            _delete_operation, "Error deleting user"
+        )
 
     def toggle_user_status(self, user_id):
         """Toggle a user's active status."""
-        try:
-            user = self.user_repository.get_by_id(user_id)
 
+        def _toggle_operation():
+            user = self._validate_user_exists(user_id)
             if not user:
-                FlashMessageHandler.error("User not found.")
                 return False
 
             user.active = not user.active
@@ -57,22 +56,24 @@ class UserService:
             status = "activated" if user.active else "suspended"
             FlashMessageHandler.success(f"User {status} successfully.")
             return True
-        except SQLAlchemyError as e:
-            FlashMessageHandler.error(f"Error toggling user status: {str(e)}")
-            return False
+
+        return self._execute_with_error_handling(
+            _toggle_operation, "Error toggling user status"
+        )
 
     def update_user(self, user_id, data):
         """Update a user."""
-        try:
-            user = self.user_repository.get_by_id(user_id)
 
+        def _update_operation():
+            user = self._validate_user_exists(user_id)
             if not user:
-                FlashMessageHandler.error("User not found.")
                 return False
 
             update_model_fields(user, data)
             self.user_repository.update(user)
             FlashMessageHandler.success("User updated successfully.")
             return True
-        except SQLAlchemyError as e:
-            FlashMessageHandler.error(f"Error updating user: {str(e)}")
+
+        return self._execute_with_error_handling(
+            _update_operation, "Error updating user"
+        )

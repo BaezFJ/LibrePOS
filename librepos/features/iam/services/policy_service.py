@@ -1,21 +1,24 @@
-from sqlalchemy.exc import SQLAlchemyError
-
+from librepos.common.base_service import BaseService
 from librepos.features.iam.repositories import PolicyRepository
 from librepos.utils import FlashMessageHandler
-from librepos.utils.formatters import strip_spaces_formatter
+from librepos.utils.formatters import name_formatter
+from librepos.utils.validators import validate_exists
 
 
-class PolicyService:
+class PolicyService(BaseService):
     def __init__(self):
         self.policy_repository = PolicyRepository()
 
+    def _validate_policy_exists(self, policy_id):
+        """Validate that a policy exists and return it."""
+        return validate_exists(self.policy_repository, policy_id, "Policy not found.")
+
     def toggle_policy_status(self, policy_id):
         """Toggle a policy's active status."""
-        try:
-            policy = self.policy_repository.get_by_id(policy_id)
 
+        def _toggle_operation():
+            policy = self._validate_policy_exists(policy_id)
             if not policy:
-                FlashMessageHandler.error("Policy not found.")
                 return False
 
             policy.active = not policy.active
@@ -23,16 +26,17 @@ class PolicyService:
             status = "activated" if policy.active else "suspended"
             FlashMessageHandler.success(f"Policy {status} successfully.")
             return True
-        except SQLAlchemyError as e:
-            FlashMessageHandler.error(f"Error toggling policy status: {str(e)}")
+
+        return self._execute_with_error_handling(
+            _toggle_operation, "Error toggling policy status"
+        )
 
     def get_policy_permissions(self, policy_id):
         """Get all permissions assigned to a policy."""
-        try:
-            policy = self.policy_repository.get_by_id(policy_id)
 
+        def _get_policy_permissions_operation():
+            policy = self._validate_policy_exists(policy_id)
             if not policy:
-                FlashMessageHandler.error("Policy not found.")
                 return None
 
             permissions = []
@@ -40,14 +44,11 @@ class PolicyService:
                 permission = policy_permission.permission
                 permissions.append(
                     {
-                        "name": strip_spaces_formatter(
-                            permission.name.replace(".", " ").title()
-                        ),
-                        "description": permission.description,
+                        "name": name_formatter(permission.name),
                     }
                 )
             return permissions
 
-        except SQLAlchemyError as e:
-            FlashMessageHandler.error(f"Error retrieving policy permissions: {str(e)}")
-            return None
+        return self._execute_with_error_handling(
+            _get_policy_permissions_operation, "Error retrieving policy permissions"
+        )
