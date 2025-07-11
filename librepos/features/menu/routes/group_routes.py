@@ -35,7 +35,7 @@ def list_groups():
     context = {
         "title": "Groups",
         "back_url": url_for("menu.home"),
-        "groups": menu_group_service.list_groups(),
+        "groups": menu_group_service.repository.get_all(),
         "form": form,
     }
     return render_template("menu/group/list_groups.html", **context)
@@ -44,7 +44,7 @@ def list_groups():
 @group_bp.get("/<int:group_id>")
 @permission_required("menu.read.group")
 def get_group(group_id):
-    group = menu_group_service.get_group_by_id(group_id)
+    group = menu_group_service.repository.get_by_id(group_id)
     form = MenuGroupForm(obj=group)
     context = {
         "title": group.name if group else "Group",

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, jsonify, request
+from flask import Blueprint, render_template, redirect, url_for, jsonify, request
 
 from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
@@ -19,12 +19,13 @@ menu_item_service = MenuItemService()
 # ================================
 @category_bp.post("/create")
 @permission_required("menu.create.category")
-def create_category():
+def process_create_category():
     form = MenuCategoryForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_category_service.create_category(sanitized_data)
-        flash("Category created successfully.", "success")
+        new_category = menu_category_service.create_category(sanitized_data)
+        if new_category:
+            return redirect(url_for("menu.category.get_category", category_id=new_category.id))
     return redirect(url_for("menu.category.list_categories"))
 
 
@@ -37,21 +38,33 @@ def list_categories():
     context = {
         "title": "Categories",
         "back_url": url_for("menu.home"),
-        "category": menu_category_service.list_categories(),
+        "categories": menu_category_service.repository.get_all(),
         "form": MenuCategoryForm(),
     }
     return render_template("menu/category/list_categories.html", **context)
 
 
+@category_bp.get("/create")
+@permission_required("menu.create.category")
+def display_create_category():
+    """Display the creation category page."""
+    context = {
+        "title": "Category",
+        "back_url": url_for(".list_categories"),
+        "form": MenuCategoryForm(),
+    }
+    return render_template("menu/category/create_category.html", **context)
+
+
 @category_bp.get("/<int:category_id>")
 @permission_required("menu.read.category")
 def get_category(category_id):
-    category = menu_category_service.get_category_by_id(category_id)
+    category = menu_category_service.repository.get_by_id(category_id)
     context = {
         "title": category.name if category else "Category",
         "back_url": url_for("menu.category.list_categories"),
         "form": MenuCategoryForm(obj=category),
-        "category": menu_category_service.get_category_by_id(category_id),
+        "category": menu_category_service.repository.get_by_id(category_id),
     }
     return render_template("menu/category/get_category.html", **context)
 
@@ -60,7 +73,7 @@ def get_category(category_id):
 @category_bp.get("hx/categories")
 def get_hx_categories():
     order_id = request.args.get("order_id")
-    categories = menu_category_service.list_active_categories()
+    categories = menu_category_service.repository.get_active_categories()
     return render_template(
         "menu/category/hx_categories.html", categories=categories, order_id=order_id
     )
@@ -70,8 +83,8 @@ def get_hx_categories():
 @category_bp.get("hx/groups/<int:category_id>")
 def get_hx_groups(category_id):
     order_id = request.args.get("order_id")
-    groups = menu_group_service.list_groups_by_category(category_id)
-    category = menu_category_service.get_category_by_id(category_id)
+    groups = menu_group_service.repository.list_groups_by_category(category_id)
+    category = menu_category_service.repository.get_by_id(category_id)
     return render_template(
         "menu/group/hx_groups.html", groups=groups, category=category, order_id=order_id
     )
@@ -81,7 +94,7 @@ def get_hx_groups(category_id):
 @category_bp.get("hx/group/items/<int:group_id>")
 def get_hx_group_items(group_id):
     order_id = request.args.get("order_id")
-    group = menu_group_service.get_group_by_id(group_id)
+    group = menu_group_service.repository.get_by_id(group_id)
     items = menu_item_service.list_items_by_group(group_id)
     return render_template(
         "menu/item/hx_group_items.html", items=items, group=group, order_id=order_id
