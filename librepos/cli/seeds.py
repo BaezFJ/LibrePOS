@@ -198,7 +198,20 @@ def seed_users() -> None:
 
 
 def load_menu_data():
-    categories = ["Drinks", "Entrees", "Desserts"]
+    categories = [
+        {
+            "name": "Beverages",
+            "description": "Refreshing drinks, hot beverages and specialty drinks to complement your meal",
+        },
+        {
+            "name": "Desserts",
+            "description": "Indulge in our delectable selection of sweet treats and desserts made fresh daily",
+        },
+        {
+            "name": "Entrees",
+            "description": "Main course dishes featuring our chef's signature creations and house specialties",
+        },
+    ]
     drinks_groups = ["Can", "Bottle", "Hot"]
     items = [
         {
@@ -215,7 +228,7 @@ def load_menu_data():
         },
     ]
     for category in categories:
-        menu_category = MenuCategory(name=category)
+        menu_category = MenuCategory(name=category["name"], description=category["description"])
         db.session.add(menu_category)
         db.session.commit()
 
