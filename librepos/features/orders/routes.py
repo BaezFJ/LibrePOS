@@ -45,7 +45,7 @@ def list_orders():
 @permission_required("order.read")
 def get_order(order_id):
     order = order_service.order_repo.get_by_id(order_id)
-    menu_categories = menu_category_service.list_categories()
+    menu_categories = menu_category_service.repository.get_all()
     context = {
         "title": str(order.order_number) if order else "Order",
         "back_url": url_for("order.list_orders"),
