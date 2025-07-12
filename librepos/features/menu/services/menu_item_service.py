@@ -24,7 +24,9 @@ class MenuItemService(BaseService):
             FlashMessageHandler.success("Menu item created successfully.")
             return item
 
-        return self._execute_with_error_handling(_create_operation, "Error creating menu item")
+        return self._execute_with_error_handling(
+            _create_operation, "Error creating menu item"
+        )
 
     def get_item_by_id(self, item_id):
         return self.repository.get_by_id(item_id)
@@ -52,7 +54,9 @@ class MenuItemService(BaseService):
             FlashMessageHandler.success("Menu item updated successfully.")
             return item
 
-        return self._execute_with_error_handling(_update_operation, "Error updating menu item")
+        return self._execute_with_error_handling(
+            _update_operation, "Error updating menu item"
+        )
 
     def delete_menu_item(self, item_id):
         """Delete a menu item."""
@@ -67,4 +71,6 @@ class MenuItemService(BaseService):
             FlashMessageHandler.success("Menu item deleted successfully.")
             return True
 
-        return self._execute_with_error_handling(_delete_operation, "Error deleting menu item")
+        return self._execute_with_error_handling(
+            _delete_operation, "Error deleting menu item"
+        )

@@ -23,7 +23,9 @@ class MenuGroupService(BaseService):
             FlashMessageHandler.success("Group created successfully.")
             return new_group
 
-        return self._execute_with_error_handling(_create_operation, "Error creating group")
+        return self._execute_with_error_handling(
+            _create_operation, "Error creating group"
+        )
 
     def update_group(self, group_id: int, data):
         """Update a group."""
@@ -41,7 +43,9 @@ class MenuGroupService(BaseService):
             FlashMessageHandler.success("Group updated successfully.")
             return group
 
-        return self._execute_with_error_handling(_update_operation, "Error updating group")
+        return self._execute_with_error_handling(
+            _update_operation, "Error updating group"
+        )
 
     def delete_group(self, group_id):
         """Delete a group."""
@@ -56,4 +60,6 @@ class MenuGroupService(BaseService):
             FlashMessageHandler.success("Group deleted successfully.")
             return True
 
-        return self._execute_with_error_handling(_delete_operation, "Error deleting group")
+        return self._execute_with_error_handling(
+            _delete_operation, "Error deleting group"
+        )

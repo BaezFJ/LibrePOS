@@ -1,40 +1,80 @@
 {% extends 'base.html' %}
 
-{% from "macros/layout_components.html" import page_section, panel_card %}
-{% from "macros/ui_components.html" import render_button, table %}
+{% from "macros/layout_components.html" import page_section, panel_card, modal, danger_zone_card %}
+{% from "macros/ui_components.html" import render_button, render_modal_button, table, render_form, render_status_text %}
 
 {% block main %}
 
 {% set button_html %}
 {% if current_user.has_permission("menu.update.category") %}
-    {{ render_button("Edit", "filled", "#") }}
+    {{ render_button("Edit", "filled", url_for("menu.category.update_category", category_id=category.id)) }}
 {% endif %}
 {% endset %}
 
-{% call page_section(category.name|title, button=button_html) %}
+{% set page_description = category.description|capitalize if category.description %}
+
+{% call page_section(category.name|title, page_description, button=button_html) %}
+    {% set created_by_username = category.created_by.username if category.created_by_id else "System" %}
+    {% set updated_by_username = category.updated_by.username if category.updated_by_id else "N/A" %}
+    <!-- Summary Card -->
     <div class="col s12">
         {% call panel_card("Summary") %}
-            <!-- TODO 7/3/25 : Add information about the category such as creation/updated data, active state, group associations, and created/updated by.  -->
+            <div class="row g-0">
+                <div class="col s12 m6">
+                    <p>
+                        <strong>Created Date:</strong> &nbsp; {{ category.created_at|date }}
+                    </p>
+                    <p>
+                        <strong>Created By:</strong> &nbsp; {{ created_by_username|title }}
+                    </p>
+                </div>
+                <div class="col s12 m6">
+                    <p>
+                        <strong>Updated Date:</strong> &nbsp; {{ category.updated_at|date }}
+                    </p>
+                    <p>
+                        <strong>Updated By:</strong> &nbsp; {{ updated_by_username|title }}
+                    </p>
+                </div>
+                <div class="col s12 m6">
+                    <p>
+                        <strong>Status:</strong> &nbsp; {{ render_status_text(category.active) }}
+                    </p>
+                </div>
+            </div>
         {% endcall %}
     </div>
 
+    <!-- Assigned Items Card -->
     <div class="col s12">
-        {% call panel_card("Assigned Groups") %}
-            {% call table(["Group", "Description"]) %}
-                {% for menu_group in category.menu_groups %}
-                    <tr>
-                        <td><a href="#">{{ menu_group.name }}</a></td>
-                        <td>No Description</td>
-                    </tr>
-                {% endfor %}
-            {% endcall %}
+        {% call panel_card("Assigned Groups", count=category.menu_groups) %}
+            {% if category.menu_groups %}
+                {% call table(["Group", "Description"]) %}
+                    {% for menu_group in category.menu_groups %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for("menu.group.get_group", group_id=menu_group.id) }}">
+                                    {{ menu_group.name }}
+                                </a>
+                            </td>
+                            <td>No Description</td>
+                        </tr>
+                    {% endfor %}
+                {% endcall %}
+            {% else %}
+                <h5 class="center-align">No Groups Assigned</h5>
+            {% endif %}
         {% endcall %}
     </div>
 
-    <div class="col s12">
-        {% call panel_card("Danger Zone", classes="danger-border") %}
-        {% endcall %}
-    </div>
+    {% if current_user.has_permission("menu.delete.category") %}
+        <!-- Danger Zone Card -->
+        <div class="col s12">
+            {% set message = "All menu groups and items associated with this category will be affected." %}
+            {{ danger_zone_card(category.active, "category", form, url_for("menu.category.delete_category", category_id=category.id), message) }}
+        </div>
+    {% endif %}
+
 {% endcall %}
 
 {% endblock %}

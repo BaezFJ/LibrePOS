@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% from "macros/layout_components.html" import page_section, panel_card %}
-{% from "macros/ui_components.html" import render_button, table, render_active_icon %}
+{% from "macros/ui_components.html" import render_button, table, render_status_icon %}
 
 {% block main %}
 
@@ -28,7 +28,7 @@
                                 {% endif %}
                             </td>
                             <td>{{ item.price|currency }}</td>
-                            <td>{{ render_active_icon(item.active) }}</td>
+                            <td>{{ render_status_icon(item.active) }}</td>
                         </tr>
                     {% endfor %}
                 {% endcall %}

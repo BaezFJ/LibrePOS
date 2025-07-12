@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, jsonify, request
+from flask import Blueprint, render_template, redirect, url_for, request
 
+from librepos.common.forms import ConfirmDeletionForm
 from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from ..forms import MenuCategoryForm
@@ -17,16 +18,24 @@ menu_item_service = MenuItemService()
 # ================================
 #            CREATE
 # ================================
-@category_bp.post("/create")
+@category_bp.route("/create", methods=["POST", "GET"])
 @permission_required("menu.create.category")
-def process_create_category():
+def create_category():
+    """Display & process the creation category page."""
     form = MenuCategoryForm()
+    context = {
+        "title": "Category",
+        "back_url": url_for(".list_categories"),
+        "form": form,
+    }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         new_category = menu_category_service.create_category(sanitized_data)
         if new_category:
-            return redirect(url_for("menu.category.get_category", category_id=new_category.id))
-    return redirect(url_for("menu.category.list_categories"))
+            return redirect(
+                url_for("menu.category.get_category", category_id=new_category.id)
+            )
+    return render_template("menu/category/create_category.html", **context)
 
 
 # ================================
@@ -44,26 +53,13 @@ def list_categories():
     return render_template("menu/category/list_categories.html", **context)
 
 
-@category_bp.get("/create")
-@permission_required("menu.create.category")
-def display_create_category():
-    """Display the creation category page."""
-    context = {
-        "title": "Category",
-        "back_url": url_for(".list_categories"),
-        "form": MenuCategoryForm(),
-    }
-    return render_template("menu/category/create_category.html", **context)
-
-
 @category_bp.get("/<int:category_id>")
 @permission_required("menu.read.category")
 def get_category(category_id):
-    category = menu_category_service.repository.get_by_id(category_id)
     context = {
-        "title": category.name if category else "Category",
+        "title": "Category",
         "back_url": url_for("menu.category.list_categories"),
-        "form": MenuCategoryForm(obj=category),
+        "form": ConfirmDeletionForm(id=category_id),
         "category": menu_category_service.repository.get_by_id(category_id),
     }
     return render_template("menu/category/get_category.html", **context)
@@ -116,14 +112,23 @@ def get_hx_numpad():
 # ================================
 #            UPDATE
 # ================================
-@category_bp.post("/<int:category_id>/update")
+@category_bp.route("/<int:category_id>/update", methods=["POST", "GET"])
 @permission_required("menu.update.category")
 def update_category(category_id):
-    form = MenuCategoryForm()
+    """Display & process the update category page."""
+    category = menu_category_service.repository.get_by_id(category_id)
+    form = MenuCategoryForm(obj=category, submit_text="Update")
+    context = {
+        "title": "Update",
+        "back_url": url_for(".get_category", category_id=category_id),
+        "form": form,
+        "category": category,
+    }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         menu_category_service.update_category(category_id, sanitized_data)
-    return redirect(url_for("menu.category.get_category", category_id=category_id))
+        return redirect(url_for(".get_category", category_id=category_id))
+    return render_template("menu/category/update_category.html", **context)
 
 
 # ================================
@@ -132,8 +137,10 @@ def update_category(category_id):
 @category_bp.post("/<int:category_id>/delete")
 @permission_required("menu.delete.category")
 def delete_category(category_id):
-    menu_category_service.delete_category(category_id)
-    # Return a redirect header HTMX understands
-    response = jsonify(success=True)
-    response.headers["HX-Redirect"] = url_for("menu.category.list_categories")
-    return response
+    form = ConfirmDeletionForm()
+    if form.validate_on_submit():
+        sanitized_data = sanitize_form_data(form)
+        if menu_category_service.delete_category(sanitized_data, category_id):
+            return redirect(url_for(".list_categories"))
+        return redirect(url_for(".get_category", category_id=category_id))
+    return redirect(url_for(".list_categories"))
