@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, jsonify
 
-from librepos.common.forms import ConfirmDeletionForm
+from librepos.common.forms import ConfirmationForm
 from librepos.utils.decorators import permission_required
 from librepos.utils.form import sanitize_form_data
 from ..forms import (
@@ -56,7 +56,7 @@ def list_users():
 def get_user(user_id):
     """Render the user page."""
     user = user_service.user_repository.get_by_id(user_id)
-    form = ConfirmDeletionForm(id=user_id)
+    form = ConfirmationForm()
     context = {
         "title": "User",
         "back_url": url_for(".list_users"),
@@ -172,7 +172,7 @@ def update_user_role(user_id):
 @permission_required("iam.delete.user")
 def delete_user(user_id):
     """Render the IAM user creation page."""
-    form = ConfirmDeletionForm()
+    form = ConfirmationForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         user_service.delete_user(sanitized_data)

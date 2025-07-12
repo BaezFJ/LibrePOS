@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, jsonify
 
-from librepos.common.forms import ConfirmDeletionForm
+from librepos.common.forms import ConfirmationForm
 from librepos.utils.decorators import permission_required
 from librepos.utils.form import sanitize_form_data
 from ..forms import RoleCreationForm
@@ -66,7 +66,7 @@ def display_create_role():
 def get_role(role_id):
     """Render the IAM role page."""
     role = role_service.role_repository.get_by_id(role_id)
-    form = ConfirmDeletionForm(id=role_id)
+    form = ConfirmationForm()
     context = {
         "title": "Role",
         "back_url": url_for(".list_roles"),
@@ -124,7 +124,7 @@ def detach_policy_from_role(role_id, policy_id):
 @role_bp.post("/<int:role_id>/delete")
 @permission_required("iam.delete.role")
 def delete_role(role_id):
-    form = ConfirmDeletionForm()
+    form = ConfirmationForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         if role_service.delete_role(sanitized_data, role_id):
