@@ -9,4 +9,6 @@ class MenuCategoryRepository(BaseRepository[MenuCategory]):
 
     @staticmethod
     def get_active_categories() -> list[MenuCategory]:
-        return MenuCategory.query.filter_by(active=True).all()
+        return (
+            MenuCategory.query.filter_by(active=True).order_by(MenuCategory.name).all()
+        )

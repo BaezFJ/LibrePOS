@@ -1,11 +1,11 @@
-from flask_wtf import FlaskForm
-from wtforms import SubmitField, StringField, BooleanField, SelectField
+from wtforms import StringField, TextAreaField, BooleanField, SelectField
 from wtforms.validators import DataRequired
 
-from librepos.utils.form import default_placeholder
+from librepos.common.forms import BaseForm
+from librepos.utils.form import default_placeholder, textarea_attributes
 
 
-class MenuGroupForm(FlaskForm):
+class MenuGroupForm(BaseForm):
     category_id = SelectField(
         "Category",
         coerce=int,
@@ -15,16 +15,16 @@ class MenuGroupForm(FlaskForm):
     name = StringField(
         "Name", validators=[DataRequired()], render_kw=default_placeholder
     )
-    active = BooleanField("Active")
-    submit = SubmitField("Add Group")
+    description = TextAreaField("Description", render_kw=textarea_attributes)
+    active = BooleanField("Active", default=True)
 
     def __init__(self, **kwargs):
         super(MenuGroupForm, self).__init__(**kwargs)
-        from librepos.features.menu.models import MenuCategory
+        from librepos.features.menu.repositories import MenuCategoryRepository
 
-        active_categories = (
-            MenuCategory.query.filter_by(active=True).order_by(MenuCategory.name).all()
-        )
+        menu_category_repository = MenuCategoryRepository()
+
+        active_categories = menu_category_repository.get_active_categories()
         self.category_id.choices = [
             (category.id, category.name) for category in active_categories
         ]

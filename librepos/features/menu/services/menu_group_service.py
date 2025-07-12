@@ -1,8 +1,10 @@
+from flask_login import current_user
+
 from librepos.common.base_service import BaseService
 from librepos.features.menu.repositories import MenuGroupRepository
-from librepos.utils import FlashMessageHandler
+from librepos.utils import FlashMessageHandler, timezone_aware_datetime
 from librepos.utils.model_utils import update_model_fields
-from librepos.utils.validators import validate_exists
+from librepos.utils.validators import validate_exists, validate_confirmation
 
 
 class MenuGroupService(BaseService):
@@ -35,6 +37,10 @@ class MenuGroupService(BaseService):
             if not group:
                 return None
 
+            # Add update tracking data
+            data["updated_by_id"] = current_user.id
+            data["updated_at"] = timezone_aware_datetime()
+
             # Update the fields
             update_model_fields(group, data)
 
@@ -47,12 +53,16 @@ class MenuGroupService(BaseService):
             _update_operation, "Error updating group"
         )
 
-    def delete_group(self, group_id):
+    def delete_group(self, group_id, data):
         """Delete a group."""
 
         def _delete_operation():
             group = self._validate_group_exists(group_id)
             if not group:
+                return None
+
+            # Validate confirmation
+            if not validate_confirmation(data):
                 return None
 
             # Perform the deletion

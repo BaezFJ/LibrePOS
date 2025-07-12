@@ -8,7 +8,7 @@
 {% set header_description = "Menu groups organize related menu items within category. Each group belongs to a category and can contain multiple menu items, helping to structure and manage your menu efficiently." %}
 {% set button_html %}
 {% if current_user.has_permission("menu.create.group") %}
-    {{ render_button("Create Group", "filled", "#") }}
+    {{ render_button("Create Group", "filled", url_for("menu.group.create_group")) }}
 {% endif %}
 {% endset %}
 

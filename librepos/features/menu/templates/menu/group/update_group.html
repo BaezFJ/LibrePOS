@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import render_form %}
+
+{% block main %}
+    {% set section_title = group.name %}
+
+    {% call page_section(section_title) %}
+        <div class="col s12">
+            {% call panel_card() %}
+                {{ render_form(form) }}
+            {% endcall %}
+        </div>
+    {% endcall %}
+
+{% endblock %}

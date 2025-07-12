@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, TYPE_CHECKING, Optional
 
 from sqlalchemy import ForeignKey
@@ -5,6 +6,7 @@ from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from librepos.extensions import db
 from librepos.utils import slugify_string
+from librepos.utils.datetime import timezone_aware_datetime
 
 if TYPE_CHECKING:
     from .menu_category import MenuCategory
@@ -23,6 +25,7 @@ class MenuGroup(db.Model):
         self.category_id = category_id
         self.name = name.capitalize()
         self.slug = slugify_string(name)
+        self.created_at = timezone_aware_datetime()
 
     # ForeignKeys
     category_id: Mapped[int] = mapped_column(ForeignKey("menu_categories.id"))
@@ -34,6 +37,8 @@ class MenuGroup(db.Model):
     name: Mapped[str] = mapped_column(unique=True, index=True)
     description: Mapped[Optional[str]]
     active: Mapped[bool] = mapped_column(default=True)
+    created_at: Mapped[datetime]
+    updated_at: Mapped[Optional[datetime]]
 
     # Relationships
     # category:Mapped["MenuGroup"] = relationship(back_populates="menu_groups", viewonly=True, order_by="MenuGroup.name")
