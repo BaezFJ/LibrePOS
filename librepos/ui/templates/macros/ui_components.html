@@ -106,11 +106,11 @@ Visual states:
 Uses render_icon macro internally to display Material Symbols icons with appropriate styling.
 
 Example usage:
-{{ render_active_icon() }}         -> Renders active green icon
-{{ render_active_icon(False) }}    -> Renders inactive red icon
+{{ render_status_icon() }}         -> Renders active green icon
+{{ render_status_icon(False) }}    -> Renders inactive red icon
 #}
 
-{% macro render_active_icon(data=True) %}
+{% macro render_status_icon(data=True) %}
     {% set active_color = "success-text" if data else "danger-text" %}
     {% set active_icon = "radio_button_checked" if data else "radio_button_unchecked" %}
 
@@ -460,4 +460,41 @@ Example usage:
         </div>
     </div>
 
+{% endmacro %}
+
+
+<!--======================-->
+<!-- ACTIVE STATE DISPLAY -->
+<!--======================-->
+
+{# 
+Active Status Documentation:
+
+Parameters:
+- status: Boolean value indicating the active/inactive state
+  True renders "Active" text in success color
+  False renders "Disabled" text in danger color
+  Default is True
+
+Visual status:
+- Active: Green "Active" text (success-text class)
+- Disabled: Red "Disabled" text (danger-text class)
+
+Features:
+- Provides text-based status indication
+- Uses consistent color scheme with other status indicators
+- Complements render_status_icon for text-only displays
+- Maintains accessibility with clear text states
+
+Example usage:
+{{ render_status_text(True) }}     -> Renders green "Active" text
+{{ render_status_text(False) }}    -> Renders red "Disabled" text
+#}
+
+{% macro render_status_text(status=True) %}
+    {% if status %}
+        <span class="success-text">Active</span>
+    {% else %}
+        <span class="danger-text">Disabled</span>
+    {% endif %}
 {% endmacro %}
