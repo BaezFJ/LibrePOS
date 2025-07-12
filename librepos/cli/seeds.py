@@ -228,7 +228,9 @@ def load_menu_data():
         },
     ]
     for category in categories:
-        menu_category = MenuCategory(name=category["name"], description=category["description"])
+        menu_category = MenuCategory(
+            name=category["name"], description=category["description"]
+        )
         db.session.add(menu_category)
         db.session.commit()
 
