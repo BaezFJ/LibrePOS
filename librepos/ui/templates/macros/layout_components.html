@@ -1,4 +1,4 @@
-{% from "macros/ui_components.html" import render_icon, render_modal_button, render_form %}
+{% from "macros/ui_components.html" import render_icon, render_modal_button, render_form, render_status_text %}
 <!--
 This template contains Jinja2 macros for page layout components and complex composite UI elements.
 
@@ -294,6 +294,61 @@ Example usage:
             <div class="col s6 center-align">
                 <p>
                     Last Active &colon; &nbsp; <strong>{{ user.current_sign_in_on|date }}</strong>
+                </p>
+            </div>
+        </div>
+    {% endcall %}
+{% endmacro %}
+
+
+{#
+Summary Card Documentation:
+
+Parameters:
+- obj: Required object containing audit information
+  Must include: created_at, created_by_id, updated_at, updated_by_id, active
+  And relationships: created_by, updated_by with username attribute
+
+Layout:
+- Renders as panel card with "Summary" header
+- Two column layout for creation/update details:
+  - Left: Created date and created by username
+  - Right: Updated date and updated by username
+- Bottom row shows active/inactive status
+- Uses MaterializeCSS grid system
+- Dates formatted with date filter
+- Usernames shown in title case
+- System shown if no created_by, N/A if no updated_by
+
+Example usage:
+{{ summary_card(category) }}
+{{ summary_card(menu_item) }}
+#}
+
+{% macro summary_card(obj) %}
+    {% call panel_card("Summary") %}
+        {% set created_by_username = obj.created_by.username if obj.created_by_id else "System" %}
+        {% set updated_by_username = obj.updated_by.username if obj.updated_by_id else "N/A" %}
+        <div class="row g-0">
+            <div class="col s12 m6">
+                <p>
+                    <strong>Created Date:</strong> &nbsp; {{ obj.created_at|date }}
+                </p>
+                <p>
+                    <strong>Created By:</strong> &nbsp; {{ created_by_username|title }}
+                </p>
+            </div>
+            <div class="col s12 m6">
+                <p>
+                    <strong>Updated Date:</strong> &nbsp; {{ obj.updated_at|date }}
+                </p>
+                <p>
+                    <strong>Updated By:</strong> &nbsp; {{ updated_by_username|title }}
+                </p>
+            </div>
+            <div class="col s12">
+                <p>
+                    <strong>Status:</strong> &nbsp; {{ render_status_text(obj.active) }}
                 </p>
             </div>
         </div>
