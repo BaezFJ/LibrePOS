@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 
-from librepos.common.forms import ConfirmDeletionForm
+from librepos.common.forms import ConfirmationForm
 from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from ..forms import MenuCategoryForm
@@ -59,7 +59,7 @@ def get_category(category_id):
     context = {
         "title": "Category",
         "back_url": url_for("menu.category.list_categories"),
-        "form": ConfirmDeletionForm(id=category_id),
+        "form": ConfirmationForm(),
         "category": menu_category_service.repository.get_by_id(category_id),
     }
     return render_template("menu/category/get_category.html", **context)
@@ -137,7 +137,7 @@ def update_category(category_id):
 @category_bp.post("/<int:category_id>/delete")
 @permission_required("menu.delete.category")
 def delete_category(category_id):
-    form = ConfirmDeletionForm()
+    form = ConfirmationForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
         if menu_category_service.delete_category(sanitized_data, category_id):
