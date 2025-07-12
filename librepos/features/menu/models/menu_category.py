@@ -9,6 +9,7 @@ from librepos.utils import timezone_aware_datetime
 
 if TYPE_CHECKING:
     from .menu_group import MenuGroup
+    from librepos.features.iam.models import User
 
 
 class MenuCategory(db.Model):
@@ -31,9 +32,13 @@ class MenuCategory(db.Model):
     description: Mapped[Optional[str]]
     active: Mapped[bool] = mapped_column(default=True)
     created_at: Mapped[datetime]
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
-        onupdate=lambda: timezone_aware_datetime()
-    )
+    updated_at: Mapped[Optional[datetime]]
 
     # Relationships
     menu_groups: Mapped[List["MenuGroup"]] = relationship(back_populates="category")
+    created_by: Mapped["User"] = relationship(
+        "User", back_populates="created_menu_categories", foreign_keys=[created_by_id]
+    )
+    updated_by: Mapped["User"] = relationship(
+        "User", back_populates="updated_menu_categories", foreign_keys=[updated_by_id]
+    )

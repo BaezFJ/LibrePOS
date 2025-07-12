@@ -13,6 +13,7 @@ from librepos.utils import timezone_aware_datetime
 if TYPE_CHECKING:
     from .role import Role
     from librepos.features.orders.models import ShopOrder
+    from librepos.features.menu.models import MenuCategory
 
 
 class User(UserMixin, db.Model):
@@ -86,6 +87,16 @@ class User(UserMixin, db.Model):
     # Relationships
     role: Mapped["Role"] = relationship(back_populates="users")
     orders: Mapped[List["ShopOrder"]] = relationship("ShopOrder", back_populates="user")
+    created_menu_categories: Mapped[List["MenuCategory"]] = relationship(
+        "MenuCategory",
+        back_populates="created_by",
+        foreign_keys="MenuCategory.created_by_id",
+    )
+    updated_menu_categories: Mapped[List["MenuCategory"]] = relationship(
+        "MenuCategory",
+        back_populates="updated_by",
+        foreign_keys="MenuCategory.updated_by_id",
+    )
 
     # TODO (6/21/25): Move authentication, activity logging, and access control related functions to corresponding repositories
     # Functions to move:
