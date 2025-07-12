@@ -12,11 +12,13 @@ class BaseForm(FlaskForm):
             self.submit.label.text = submit_text
 
         # Move the submit field to the end
-        if 'submit' in self._fields:
-            submit_field = self._fields.pop('submit')
-            self._fields['submit'] = submit_field
+        if "submit" in self._fields:
+            submit_field = self._fields.pop("submit")
+            self._fields["submit"] = submit_field
 
 
 class ConfirmationForm(FlaskForm):
-    confirmation = StringField("Confirmation", validators=[DataRequired(), Length(min=6, max=15)])
+    confirmation = StringField(
+        "Confirmation", validators=[DataRequired(), Length(min=6, max=15)]
+    )
     submit = SubmitField("Confirm")
