@@ -1,46 +1,27 @@
 {% extends 'base.html' %}
 
-{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/layout_components.html" import page_section, panel_card, summary_card, danger_zone_card %}
 {% from "macros/ui_components.html" import render_button %}
 
 {% block main %}
 {% set button_html %}
 {% if current_user.has_permission("menu.update.item") %}
-    {{ render_button("Edit", "filled", "#") }}
+    {{ render_button("Edit", "filled", url_for("menu.item.update_item", item_id=item.id)) }}
 {% endif %}
 {% endset %}
 
 {% call page_section(item.name|title, item.description|capitalize, button=button_html) %}
     <!-- Summary panel -->
     <div class="col s12">
-        {% call panel_card("Summary") %}
-            {% set active_color = "success-text" if item.active else "danger-text" %}
-            <div class="flow-text">
-                <p>Status: <strong class="{{ active_color }}">{{ "Active" if item.active else "Disabled" }}</strong></p>
-                <p>Created Date: <strong>1/12/2025</strong></p>
-                <p>Created By: <strong>System</strong></p>
-            </div>
-        {% endcall %}
+        {{ summary_card(item) }}
     </div>
 
-    <!-- Danger Zone -->
-    <div class="col s12">
-        {% call panel_card(title="Danger Zone", classes="danger-border p-4") %}
-            <div class="row">
-                <div class="col s12 m8">
-                    <p class="flow-text">
-                        <strong>This action is irreversible.</strong>
-                    </p>
-                    <p class="flow-text">
-                        <strong>Are you sure you want to delete this item?</strong>
-                    </p>
-                </div>
-                <div class="col s6 offset-s3 m4 right-align">
-                    {{ render_button("Delete Item", "outlined", classes="danger") }}
-                </div>
-            </div>
-        {% endcall %}
-    </div>
+    {% if current_user.has_permission("menu.delete.item") %}
+        <!-- Danger Zone -->
+        <div class="col s12">
+            {{ danger_zone_card(item.active, "item", form, url_for("menu.item.delete_item", item_id=item.id)) }}
+        </div>
+    {% endif %}
 {% endcall %}
 
 {% endblock %}

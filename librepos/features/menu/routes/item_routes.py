@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, jsonify
+from flask import Blueprint, render_template, redirect, url_for
 
+from librepos.common.forms import ConfirmationForm
 from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from ..forms import MenuItemForm
@@ -13,14 +14,21 @@ menu_item_service = MenuItemService()
 # ================================
 #            CREATE
 # ================================
-@item_bp.post("/create")
+@item_bp.route("/create", methods=["POST", "GET"])
 @permission_required("menu.create.item")
 def create_item():
     form = MenuItemForm()
+    context = {
+        "title": "Item",
+        "back_url": url_for(".list_items"),
+        "form": form,
+    }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_item_service.create_menu_item(sanitized_data)
-    return redirect(url_for("menu.item.list_items"))
+        new_item = menu_item_service.create_item(sanitized_data)
+        if new_item:
+            return redirect(url_for(".get_item", item_id=new_item.id))
+    return render_template("menu/item/create_item.html", **context)
 
 
 # ================================
@@ -42,13 +50,11 @@ def list_items():
 @item_bp.get("/<int:item_id>")
 @permission_required("menu.read.item")
 def get_item(item_id):
-    item = menu_item_service.get_item_by_id(item_id)
-    form = MenuItemForm(obj=item)
     context = {
-        "title": item.name if item else "Item",
-        "back_url": url_for("menu.item.list_items"),
-        "item": item,
-        "form": form,
+        "title": "Item",
+        "back_url": url_for(".list_items"),
+        "item": menu_item_service.get_item_by_id(item_id),
+        "form": ConfirmationForm(),
     }
     return render_template("menu/item/get_item.html", **context)
 
@@ -56,14 +62,22 @@ def get_item(item_id):
 # ================================
 #            UPDATE
 # ================================
-@item_bp.post("/<int:item_id>/update")
+@item_bp.route("/<int:item_id>/update", methods=["POST", "GET"])
 @permission_required("menu.update.item")
 def update_item(item_id):
-    form = MenuItemForm()
+    item = menu_item_service.get_item_by_id(item_id)
+    form = MenuItemForm(obj=item, submit_text="Update")
+    context = {
+        "title": "Update",
+        "back_url": url_for(".get_item", item_id=item_id),
+        "form": form,
+        "item": item,
+    }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        menu_item_service.update_menu_item(item_id, sanitized_data)
-    return redirect(url_for("menu.item.get_item", item_id=item_id))
+        menu_item_service.update_item(item_id, sanitized_data)
+        return redirect(url_for(".get_item", item_id=item_id))
+    return render_template("menu/item/update_item.html", **context)
 
 
 # ================================
@@ -72,7 +86,10 @@ def update_item(item_id):
 @item_bp.post("/<int:item_id>/delete")
 @permission_required("menu.delete.item")
 def delete_item(item_id):
-    menu_item_service.delete_menu_item(item_id)
-    response = jsonify(success=True)
-    response.headers["HX-Redirect"] = url_for("menu.item.list_items")
-    return response
+    form = ConfirmationForm()
+    if form.validate_on_submit():
+        sanitized_data = sanitize_form_data(form)
+        if menu_item_service.delete_item(sanitized_data, item_id):
+            return redirect(url_for(".list_items"))
+        return redirect(url_for(".get_item", item_id=item_id))
+    return redirect(url_for(".list_items"))
