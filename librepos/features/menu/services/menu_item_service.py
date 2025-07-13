@@ -2,7 +2,11 @@ from flask_login import current_user
 
 from librepos.common.base_service import BaseService
 from librepos.features.menu.repositories import MenuItemRepository
-from librepos.utils import FlashMessageHandler, convert_dollars_to_cents, timezone_aware_datetime
+from librepos.utils import (
+    FlashMessageHandler,
+    convert_dollars_to_cents,
+    timezone_aware_datetime,
+)
 from librepos.utils.model_utils import update_model_fields
 from librepos.utils.validators import validate_exists, validate_confirmation
 
@@ -61,7 +65,7 @@ class MenuItemService(BaseService):
             _update_operation, "Error updating menu item"
         )
 
-    def delete_menu_item(self, item_id: int, data: dict):
+    def delete_item(self, item_id: int, data: dict):
         """Delete a menu item."""
 
         def _delete_operation():

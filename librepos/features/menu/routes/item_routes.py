@@ -89,7 +89,7 @@ def delete_item(item_id):
     form = ConfirmationForm()
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        if menu_item_service.delete_item(sanitized_data, item_id):
+        if menu_item_service.delete_item(item_id, sanitized_data):
             return redirect(url_for(".list_items"))
         return redirect(url_for(".get_item", item_id=item_id))
     return redirect(url_for(".list_items"))
