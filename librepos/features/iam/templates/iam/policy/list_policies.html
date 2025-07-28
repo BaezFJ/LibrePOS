@@ -8,9 +8,23 @@
     {% call page_section(title, description, count=policies) %}
         <div class="col s12">
             {% call panel_card() %}
+                <ul class="collapsible">
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+                        <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+                        <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+                        <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+                    </li>
+                </ul>
                 {% call table(["Policy Name"]) %}
                     {% for policy in policies %}
-                        {% set policy_name = policy.name|un_snake|title|strip_spaces %}
+                        {% set policy_name = policy.name %}
                         <tr>
                             <td>
                                 <a href="{{ url_for('iam.policy.get_policy', policy_id=policy.id) }}">{{ policy_name }}</a>

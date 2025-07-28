@@ -7,7 +7,7 @@
 
 {% set button_html %}
 {% if current_user.has_permission("menu.create.item") %}
-    {{ render_button("Create Item", "filled", url_for("menu.item.create_item")) }}
+    {{ render_button("Create MenuItem", "filled", url_for("menu.item.create_item")) }}
 {% endif %}
 {% endset %}
 

@@ -22,7 +22,7 @@
     <div class="col s12">
         {% call panel_card("Assigned Groups", count=category.menu_groups) %}
             {% if category.menu_groups %}
-                {% call table(["Group", "Description"]) %}
+                {% call table(["MenuGroup", "Description"]) %}
                     {% for menu_group in category.menu_groups %}
                         <tr>
                             <td>

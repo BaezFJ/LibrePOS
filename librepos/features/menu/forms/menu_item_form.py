@@ -7,7 +7,7 @@ from librepos.utils.form import default_placeholder
 
 class MenuItemForm(BaseForm):
     group_id = SelectField(
-        "Group",
+        "MenuGroup",
         coerce=int,
         validators=[DataRequired()],
         render_kw=default_placeholder,

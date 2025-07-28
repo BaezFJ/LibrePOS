@@ -13,7 +13,7 @@ system_settings_service = SystemSettingsService()
 
 
 @settings_bp.get("/")
-@permission_required("settings.access")
+@permission_required("settings.allow.access")
 def home():
     return render_template("settings/home.html", title="Settings")
 

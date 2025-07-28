@@ -5,6 +5,7 @@ from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from ..forms import MenuCategoryForm
 from ..services import MenuCategoryService, MenuGroupService, MenuItemService
+from ..utils.enums import MenuPermissions
 
 category_bp = Blueprint(
     "category", __name__, template_folder="templates", url_prefix="/category"
@@ -19,12 +20,12 @@ menu_item_service = MenuItemService()
 #            CREATE
 # ================================
 @category_bp.route("/create", methods=["POST", "GET"])
-@permission_required("menu.create.category")
+@permission_required(MenuPermissions.CREATE_CATEGORY)
 def create_category():
     """Display & process the creation category page."""
     form = MenuCategoryForm()
     context = {
-        "title": "Category",
+        "title": "MenuCategory",
         "back_url": url_for(".list_categories"),
         "form": form,
     }
@@ -42,7 +43,7 @@ def create_category():
 #            READ
 # ================================
 @category_bp.get("/")
-@permission_required("menu.list.category")
+@permission_required(MenuPermissions.LIST_CATEGORY)
 def list_categories():
     context = {
         "title": "Categories",
@@ -54,10 +55,10 @@ def list_categories():
 
 
 @category_bp.get("/<int:category_id>")
-@permission_required("menu.read.category")
+@permission_required(MenuPermissions.READ_CATEGORY)
 def get_category(category_id):
     context = {
-        "title": "Category",
+        "title": "MenuCategory",
         "back_url": url_for("menu.category.list_categories"),
         "form": ConfirmationForm(),
         "category": menu_category_service.repository.get_by_id(category_id),
@@ -113,7 +114,7 @@ def get_hx_numpad():
 #            UPDATE
 # ================================
 @category_bp.route("/<int:category_id>/update", methods=["POST", "GET"])
-@permission_required("menu.update.category")
+@permission_required(MenuPermissions.UPDATE_CATEGORY)
 def update_category(category_id):
     """Display & process the update category page."""
     category = menu_category_service.repository.get_by_id(category_id)
@@ -135,7 +136,7 @@ def update_category(category_id):
 #            DELETE
 # ================================
 @category_bp.post("/<int:category_id>/delete")
-@permission_required("menu.delete.category")
+@permission_required(MenuPermissions.DELETE_CATEGORY)
 def delete_category(category_id):
     form = ConfirmationForm()
     if form.validate_on_submit():

@@ -7,7 +7,7 @@ from librepos.utils.form import default_placeholder, textarea_attributes
 
 class MenuGroupForm(BaseForm):
     category_id = SelectField(
-        "Category",
+        "MenuCategory",
         coerce=int,
         validators=[DataRequired()],
         render_kw=default_placeholder,

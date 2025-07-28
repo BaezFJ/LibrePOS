@@ -10,7 +10,9 @@ from librepos.features.iam.models import (
 )
 from librepos.features.menu.models import MenuCategory, MenuGroup, MenuItem
 from librepos.features.settings.models import SystemSettings
-from .fixtures import ALL_PERMISSION_FIXTURES, ROLES_FIXTURE, POLICIES_FIXTURE
+from .fixtures import ROLES_FIXTURE
+from .fixtures.permissions import list_all_permissions
+from .fixtures.policies import list_all_policies
 
 
 def create_permission(name: str, description: str) -> Permission:
@@ -61,16 +63,13 @@ def seed_roles() -> None:
 
 def seed_permissions() -> None:
     all_permissions = []
-    for permission_group in ALL_PERMISSION_FIXTURES:
-        # Create the permission
-        all_permissions.extend(
-            [
-                create_permission(name, description)
-                for name, description in permission_group
-            ]
-        )
-        db.session.add_all(all_permissions)
-        db.session.commit()
+
+    permissions = list_all_permissions()
+    for name, description in permissions:
+        all_permissions.append(create_permission(name, description))
+
+    db.session.add_all(all_permissions)
+    db.session.commit()
 
 
 def seed_policies() -> None:
@@ -78,7 +77,7 @@ def seed_policies() -> None:
 
     all_policies = []
 
-    for policy_name, policy_description, permission_names in POLICIES_FIXTURE:
+    for policy_name, policy_description, permission_names in list_all_policies():
         # Create the policy
         policy = Policy(policy_name, policy_description)
         all_policies.append(policy)
@@ -114,8 +113,8 @@ def seed_role_policies():
     admin_role = Role.query.filter_by(name="admin").first()
 
     if admin_role:
-        # Get all policies that contain "full" anywhere in the name
-        full_policies = Policy.query.filter(Policy.name.ilike("%full%")).all()
+        # Get all policies that contain "FullAccess" anywhere in the name
+        full_policies = Policy.query.filter(Policy.name.ilike("%FullAccess%")).all()
 
         # Add each full policy to an admin role
         for policy in full_policies:
@@ -256,6 +255,7 @@ def seed_all():
 
     seed_roles()
     seed_permissions()
+    # seed_policy_categories()
     seed_policies()
     seed_role_policies()
 

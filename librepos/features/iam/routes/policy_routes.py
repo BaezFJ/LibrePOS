@@ -1,7 +1,8 @@
-from flask import Blueprint, url_for, jsonify, render_template
+from flask import Blueprint, url_for, render_template
 
 from librepos.utils.decorators import permission_required
 from ..services import PolicyService
+from ..utils.enums import IAMPermissions
 
 policy_service = PolicyService()
 
@@ -11,15 +12,10 @@ policy_bp = Blueprint(
 
 
 # ================================
-#            CREATE
-# ================================
-
-
-# ================================
 #            READ
 # ================================
 @policy_bp.get("/policies")
-@permission_required("iam.list.policies")
+@permission_required(IAMPermissions.LIST_POLICY)
 def list_policies():
     """Render the IAM policies page."""
     context = {
@@ -32,7 +28,7 @@ def list_policies():
 
 
 @policy_bp.get("/policies/<int:policy_id>")
-@permission_required("iam.read.policy")
+@permission_required(IAMPermissions.READ_POLICY)
 def get_policy(policy_id):
     """Render the IAM policy page."""
     policy = policy_service.policy_repository.get_by_id(policy_id)
@@ -44,19 +40,3 @@ def get_policy(policy_id):
         "policy_permissions": policy_permissions,
     }
     return render_template("iam/policy/get_policy.html", **context)
-
-
-# ================================
-#            UPDATE
-# ================================
-@policy_bp.post("/policies/<int:policy_id>/toggle-suspend")
-@permission_required("iam.suspend.policy")
-def toggle_policy_suspend(policy_id):
-    response = jsonify(success=True)
-    policy_service.toggle_policy_status(policy_id)
-    response.headers["HX-Redirect"] = url_for(".get_policy", policy_id=policy_id)
-    return response
-
-# ================================
-#            DELETE
-# ================================

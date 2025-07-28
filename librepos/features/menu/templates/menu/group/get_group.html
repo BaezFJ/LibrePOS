@@ -18,12 +18,12 @@
     {{ summary_card(group) }}
 </div>
 
-<!-- Group-Items panel -->
+<!-- MenuGroup-Items panel -->
 <div class="col s12">
     {% set button_html %}
     {% endset %}
     {% call panel_card("Assigned Items", count=group.menu_items) %}
-        {% call table(["Item Name", "Price", "Status"]) %}
+        {% call table(["MenuItem Name", "Price", "Status"]) %}
             {% for menu_item in group.menu_items %}
                 {% set status_color = "success-text" if menu_item.active else "danger-text" %}
                 <tr>

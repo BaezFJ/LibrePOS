@@ -1,5 +1,17 @@
-from .permissions import ALL_PERMISSION_FIXTURES
-from .policies import POLICIES_FIXTURE
+from .policies import (
+    IAMPermissions,
+    MenuPermissions,
+    OrderPermissions,
+    BranchPermissions,
+    SettingsPermissions,
+)
 from .roles import ROLES_FIXTURE
 
-__all__ = ["ALL_PERMISSION_FIXTURES", "ROLES_FIXTURE", "POLICIES_FIXTURE"]
+__all__ = [
+    "ROLES_FIXTURE",
+    "IAMPermissions",
+    "MenuPermissions",
+    "OrderPermissions",
+    "BranchPermissions",
+    "SettingsPermissions",
+]

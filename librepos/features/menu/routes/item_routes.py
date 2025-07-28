@@ -5,6 +5,7 @@ from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from ..forms import MenuItemForm
 from ..services import MenuItemService
+from ..utils.enums import MenuPermissions
 
 item_bp = Blueprint("item", __name__, template_folder="templates", url_prefix="/items")
 
@@ -15,11 +16,11 @@ menu_item_service = MenuItemService()
 #            CREATE
 # ================================
 @item_bp.route("/create", methods=["POST", "GET"])
-@permission_required("menu.create.item")
+@permission_required(MenuPermissions.CREATE_ITEM)
 def create_item():
     form = MenuItemForm()
     context = {
-        "title": "Item",
+        "title": "MenuItem",
         "back_url": url_for(".list_items"),
         "form": form,
     }
@@ -35,7 +36,7 @@ def create_item():
 #            READ
 # ================================
 @item_bp.get("/")
-@permission_required("menu.list.items")
+@permission_required(MenuPermissions.LIST_ITEM)
 def list_items():
     form = MenuItemForm()
     context = {
@@ -48,10 +49,10 @@ def list_items():
 
 
 @item_bp.get("/<int:item_id>")
-@permission_required("menu.read.item")
+@permission_required(MenuPermissions.READ_ITEM)
 def get_item(item_id):
     context = {
-        "title": "Item",
+        "title": "MenuItem",
         "back_url": url_for(".list_items"),
         "item": menu_item_service.get_item_by_id(item_id),
         "form": ConfirmationForm(),
@@ -63,7 +64,7 @@ def get_item(item_id):
 #            UPDATE
 # ================================
 @item_bp.route("/<int:item_id>/update", methods=["POST", "GET"])
-@permission_required("menu.update.item")
+@permission_required(MenuPermissions.UPDATE_ITEM)
 def update_item(item_id):
     item = menu_item_service.get_item_by_id(item_id)
     form = MenuItemForm(obj=item, submit_text="Update")
@@ -84,7 +85,7 @@ def update_item(item_id):
 #            DELETE
 # ================================
 @item_bp.post("/<int:item_id>/delete")
-@permission_required("menu.delete.item")
+@permission_required(MenuPermissions.DELETE_ITEM)
 def delete_item(item_id):
     form = ConfirmationForm()
     if form.validate_on_submit():

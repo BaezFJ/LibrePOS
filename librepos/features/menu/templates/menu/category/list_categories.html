@@ -7,7 +7,7 @@
 {% set header_description = "Manage menu category to organize and group items in your menu" %}
 {% set button_html %}
 {% if current_user.has_permission("menu.create.category") %}
-    {{ render_button("Create Category", "filled", url_for("menu.category.create_category")) }}
+    {{ render_button("Create MenuCategory", "filled", url_for("menu.category.create_category")) }}
 {% endif %}
 {% endset %}
 

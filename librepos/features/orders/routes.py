@@ -5,6 +5,7 @@ from librepos.features.menu.services import MenuCategoryService, MenuItemService
 from librepos.utils.decorators import permission_required
 from librepos.utils.enums import OrderStateEnum
 from .services import OrderService
+from .utils.enums import OrderPermissions
 
 order_bp = Blueprint(
     "order", __name__, template_folder="templates", url_prefix="/orders"
@@ -20,7 +21,7 @@ menu_item_service = MenuItemService()
 #            CREATE
 # ================================
 @order_bp.post("/create-order")
-@permission_required("order.create")
+@permission_required(OrderPermissions.CREATE_TICKET)
 def create_order():
     new_order = order_service.create_order(data={"user_id": current_user.id})
     response = jsonify(success=True)
@@ -32,7 +33,7 @@ def create_order():
 #            READ
 # ================================
 @order_bp.get("/")
-@permission_required("order.list")
+@permission_required(OrderPermissions.LIST_TICKET)
 def list_orders():
     context = {
         "title": "Orders",
@@ -42,7 +43,7 @@ def list_orders():
 
 
 @order_bp.get("/<int:order_id>")
-@permission_required("order.read")
+@permission_required(OrderPermissions.READ_TICKET)
 def get_order(order_id):
     order = order_service.order_repo.get_by_id(order_id)
     menu_categories = menu_category_service.repository.get_all()
@@ -60,7 +61,7 @@ def get_order(order_id):
 #            UPDATE
 # ================================
 @order_bp.post("/void-order/<int:order_id>")
-@permission_required("order.void")
+@permission_required(OrderPermissions.CREATE_TICKET)
 def void_order(order_id):
     order_service.patch_order_status(order_id, OrderStateEnum.VOIDED)
     response = jsonify(success=True)
@@ -69,7 +70,7 @@ def void_order(order_id):
 
 
 @order_bp.post("/add-item-to-order")
-@permission_required("order.create.item")
+@permission_required(OrderPermissions.CREATE_TICKET_ITEM)
 def add_item_to_order():
     order_id = request.form.get("order_id", type=int, default=0)
     # item_id = request.form.get("item_id", type=int, default=0)
@@ -90,7 +91,7 @@ def add_item_to_order():
 
 
 @order_bp.post("/remove-item-from-order")
-@permission_required("order.delete.item")
+@permission_required(OrderPermissions.DELETE_TICKET_ITEM)
 def remove_item_from_order():
     order_id = request.args.get("order_id")
     # order_item_id = request.args.get("order_item_id", type=int, default=0)

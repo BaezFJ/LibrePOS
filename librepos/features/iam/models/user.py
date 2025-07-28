@@ -12,7 +12,7 @@ from librepos.utils import timezone_aware_datetime
 
 if TYPE_CHECKING:
     from .role import Role
-    from librepos.features.orders.models import ShopOrder
+    from librepos.features.orders.models import Ticket
     from librepos.features.menu.models import MenuCategory, MenuGroup, MenuItem
 
 
@@ -86,7 +86,7 @@ class User(UserMixin, db.Model):
 
     # Relationships
     role: Mapped["Role"] = relationship(back_populates="users")
-    orders: Mapped[List["ShopOrder"]] = relationship("ShopOrder", back_populates="user")
+    tickets: Mapped[List["Ticket"]] = relationship("Ticket", back_populates="user")
     created_menu_categories: Mapped[List["MenuCategory"]] = relationship(
         "MenuCategory",
         back_populates="created_by",

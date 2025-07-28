@@ -9,17 +9,17 @@ from librepos.utils import timezone_aware_datetime
 from librepos.utils.enums import OrderStateEnum
 
 if TYPE_CHECKING:
-    from librepos.features.orders.models import ShopOrderItem
+    from librepos.features.orders.models import TicketItem
     from librepos.features.iam.models import User
 
 
-class ShopOrder(db.Model):
-    """ShopOrder model."""
+class Ticket(db.Model):
+    """Ticket model."""
 
-    __tablename__ = "shop_orders"
+    __tablename__ = "ticket"
 
     def __init__(self, user_id: int, **kwargs):
-        super(ShopOrder, self).__init__(**kwargs)
+        super(Ticket, self).__init__(**kwargs)
         self.user_id = user_id
         self.order_number = self.get_next_order_number()
         self.created_date = timezone_aware_datetime().date()
@@ -49,9 +49,9 @@ class ShopOrder(db.Model):
     closed_time: Mapped[Optional[time]]
 
     # Relationships
-    user: Mapped["User"] = relationship(back_populates="orders")
-    items: Mapped[List["ShopOrderItem"]] = relationship(
-        back_populates="shop_order", cascade="all, delete-orphan"
+    user: Mapped["User"] = relationship(back_populates="tickets")
+    items: Mapped[List["TicketItem"]] = relationship(
+        back_populates="ticket", cascade="all, delete-orphan"
     )
 
     # payment = db.relationship("ShopOrderPayment", back_populates="shop_order")
@@ -59,7 +59,7 @@ class ShopOrder(db.Model):
     @staticmethod
     def get_next_order_number():
         today = timezone_aware_datetime().date()
-        daily_orders = ShopOrder.query.filter_by(created_date=today).all()
+        daily_orders = Ticket.query.filter_by(created_date=today).all()
         if daily_orders:
             return daily_orders[-1].order_number + 1
         else:

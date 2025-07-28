@@ -85,7 +85,7 @@ class RoleService(BaseService):
             if not role:
                 return None
 
-            policies = self.policy_repository.list_active_policies()
+            policies = self.policy_repository.get_all()
             if not policies:
                 FlashMessageHandler.error("No policies found.")
                 return None

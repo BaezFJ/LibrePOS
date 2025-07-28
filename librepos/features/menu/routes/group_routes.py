@@ -5,6 +5,7 @@ from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from ..forms import MenuGroupForm
 from ..services import MenuGroupService
+from ..utils.enums import MenuPermissions
 
 group_bp = Blueprint(
     "group", __name__, template_folder="templates", url_prefix="/groups"
@@ -17,12 +18,12 @@ menu_group_service = MenuGroupService()
 #            CREATE
 # ================================
 @group_bp.route("/create", methods=["POST", "GET"])
-@permission_required("menu.create.group")
+@permission_required(MenuPermissions.CREATE_GROUP)
 def create_group():
     """Display & process the creation group page."""
     form = MenuGroupForm()
     context = {
-        "title": "Group",
+        "title": "MenuGroup",
         "back_url": url_for(".list_groups"),
         "form": form,
     }
@@ -38,7 +39,7 @@ def create_group():
 #            READ
 # ================================
 @group_bp.get("/")
-@permission_required("menu.list.groups")
+@permission_required(MenuPermissions.LIST_GROUP)
 def list_groups():
     form = MenuGroupForm()
     context = {
@@ -51,10 +52,10 @@ def list_groups():
 
 
 @group_bp.get("/<int:group_id>")
-@permission_required("menu.read.group")
+@permission_required(MenuPermissions.READ_GROUP)
 def get_group(group_id):
     context = {
-        "title": "Group",
+        "title": "MenuGroup",
         "back_url": url_for("menu.group.list_groups"),
         "group": menu_group_service.repository.get_by_id(group_id),
         "form": ConfirmationForm(),
@@ -66,7 +67,7 @@ def get_group(group_id):
 #            UPDATE
 # ================================
 @group_bp.route("/<int:group_id>/update", methods=["POST", "GET"])
-@permission_required("menu.update.group")
+@permission_required(MenuPermissions.UPDATE_GROUP)
 def update_group(group_id):
     group = menu_group_service.repository.get_by_id(group_id)
     form = MenuGroupForm(obj=group, submit_text="Update")
@@ -87,7 +88,7 @@ def update_group(group_id):
 #            DELETE
 # ================================
 @group_bp.post("/<int:group_id>/delete")
-@permission_required("menu.delete.group")
+@permission_required(MenuPermissions.DELETE_GROUP)
 def delete_group(group_id):
     form = ConfirmationForm()
     if form.validate_on_submit():

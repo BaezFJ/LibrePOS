@@ -6,24 +6,24 @@ from sqlalchemy.orm import Mapped, relationship, mapped_column
 from librepos.extensions import db
 
 if TYPE_CHECKING:
-    from librepos.features.orders.models import ShopOrder
+    from librepos.features.orders.models import Ticket
     from librepos.features.menu.models import MenuItem
 
 
-class ShopOrderItem(db.Model):
-    """ShopOrderItem model."""
+class TicketItem(db.Model):
+    """TicketItem model."""
 
-    __tablename__ = "shop_order_items"
+    __tablename__ = "ticket_items"
 
-    def __init__(self, shop_order_id: int, menu_item_id: int, item_name: str, **kwargs):
-        super(ShopOrderItem, self).__init__(**kwargs)
+    def __init__(self, ticket_id: int, menu_item_id: int, item_name: str, **kwargs):
+        super(TicketItem, self).__init__(**kwargs)
         """Create instance."""
-        self.shop_order_id = shop_order_id
+        self.ticket_id = ticket_id
         self.menu_item_id = menu_item_id
         self.item_name = item_name.title()
 
     # ForeignKeys
-    shop_order_id: Mapped[int] = mapped_column(ForeignKey("shop_orders.id"))
+    ticket_id: Mapped[int] = mapped_column(ForeignKey("ticket.id"))
     menu_item_id: Mapped[int] = mapped_column(ForeignKey("menu_items.id"))
 
     # Columns
@@ -43,5 +43,5 @@ class ShopOrderItem(db.Model):
     )  # item was sent to the kitchen / bar
 
     # Relationships
-    shop_order: Mapped["ShopOrder"] = relationship(back_populates="items")
+    ticket: Mapped["Ticket"] = relationship(back_populates="items")
     menu_item: Mapped["MenuItem"] = relationship()

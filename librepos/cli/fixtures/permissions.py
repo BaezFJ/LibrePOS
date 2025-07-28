@@ -1,167 +1,236 @@
-"""Permission definitions for database seeding."""
+from librepos.features.branches.utils.enums import BranchPermissions
+from librepos.features.iam.utils.enums import IAMPermissions
+from librepos.features.menu.utils.enums import MenuPermissions
+from librepos.features.orders.utils.enums import OrderPermissions
+from librepos.features.settings.utils.enums import SettingsPermissions
 
-# Format: domain.action[.scope]
-#   domain - The controller, main category or area of functionality
-#   action - The specific operation or permission being granted
-#   [.scope] - An optional scope or context (indicated by square brackets)
-# Examples:
-#   user.update      - Update any user profile
-#   user.update.own  - Update only own profile
-#   menu.create.item - Create menu item
-
-# User Management Domain
-USER_PERMISSIONS = [
+iam_permissions_list = [
     (
-        "user.create",
-        "Create new user accounts with username, email, role assignments and permission settings",
+        IAMPermissions.ACCESS,
+        "View and navigate the Identity and Access Management (IAMPermissions) interface for managing users, roles and permissions",
     ),
     (
-        "user.read",
-        "View detailed user information including profile, roles, and assigned permissions",
+        IAMPermissions.CREATE_USER,
+        "Create new user accounts and assign them specific roles and permissions for system access",
     ),
     (
-        "user.list",
-        "Access and view the complete list of system users with their assigned roles",
+        IAMPermissions.READ_USER,
+        "View complete user profile information including assigned roles, permissions and account details",
     ),
     (
-        "user.update",
-        "Modify existing user accounts including username, email, role assignments and permissions",
-    ),
-    ("user.update.own", "Modify own user profile and permissions"),
-    ("user.delete", "Permanently remove user accounts from the system"),
-]
-
-# Menu Management Domain
-MENU_PERMISSIONS = [
-    # General Menu Access
-    ("menu.access", "Access menu management interface"),
-    # Categories
-    ("menu.create.category", "Create new menu category for organizing menu items"),
-    ("menu.read.category", "View detailed information about specific menu category"),
-    ("menu.list.category", "Access and view the complete list of menu category"),
-    ("menu.update.category", "Modify existing menu category details and properties"),
-    ("menu.delete.category", "Remove menu category from the system"),
-    # Groups
-    ("menu.create.group", "Create new menu groups for organizing related menu items"),
-    ("menu.read.group", "View detailed information about specific menu groups"),
-    ("menu.list.groups", "Access and view the complete list of menu groups"),
-    ("menu.update.group", "Modify existing menu group details and properties"),
-    ("menu.delete.group", "Remove menu groups from the system"),
-    # Items
-    (
-        "menu.create.item",
-        "Create new menu items with names, prices, and other properties",
-    ),
-    ("menu.read.item", "View detailed information about specific menu items"),
-    ("menu.list.items", "Access and view the complete list of menu items"),
-    ("menu.update.item", "Modify existing menu item details, prices, and properties"),
-    ("menu.delete.item", "Remove menu items from the system"),
-]
-
-# Order Management Domain
-ORDER_PERMISSIONS = [
-    # Orders
-    ("order.create", "Create new customer orders with selected menu items"),
-    ("order.read", "View detailed order information including items and status"),
-    ("order.list", "Access and view the complete list of orders"),
-    ("order.update", "Modify existing order details, items, and properties"),
-    ("order.void", "Mark orders as voided while maintaining record"),
-    ("order.delete", "Permanently remove orders from the system"),
-    # Order Items
-    ("order.create.item", "Add new items to existing orders"),
-    ("order.read.item", "View detailed information about specific order items"),
-    ("order.list.items", "Access and view all items within an order"),
-    ("order.update.item", "Modify order item details, quantities, and prices"),
-    ("order.void.item", "Mark individual order items as voided"),
-    ("order.delete.item", "Permanently remove items from orders"),
-    ("order.send_to_prep", "Send order items to kitchen/preparation area"),
-    ("order.mark_completed", "Mark order items as completed by kitchen"),
-]
-
-# Branch Management Domain
-BRANCH_PERMISSIONS = [
-    (
-        "branch.read",
-        "View branch profile, contact information, and business details",
+        IAMPermissions.LIST_USER,
+        "View and search through the complete list of system users with their assigned roles and status",
     ),
     (
-        "branch.update",
-        "Modify branch information, operating hours, and business settings",
+        IAMPermissions.UPDATE_USER,
+        "Modify existing user profiles including roles, permissions, contact information and account status",
     ),
-    ("branch.create", "Create new branch profiles and configurations"),
-    ("branch.delete", "Remove branch profiles from the system"),
-    ("branch.list", "Access and view all branch configurations"),
-]
-
-# System Settings Domain
-SETTINGS_PERMISSIONS = [
-    ("settings.access", "Access application configuration settings"),
-    ("settings.read.system", "View system-wide configuration and technical settings"),
     (
-        "settings.update.system",
-        "Modify system-wide configuration, behavior, and technical parameters",
+        IAMPermissions.DELETE_USER,
+        "Permanently remove user accounts and revoke all associated system access privileges",
+    ),
+    (
+        IAMPermissions.CREATE_ROLE,
+        "Define new roles with specific sets of permissions that can be assigned to multiple users",
+    ),
+    (
+        IAMPermissions.READ_ROLE,
+        "View detailed role configurations including all associated permissions and access levels",
+    ),
+    (
+        IAMPermissions.LIST_ROLE,
+        "View and search through all system roles and their assigned permissions and user assignments",
+    ),
+    (
+        IAMPermissions.UPDATE_ROLE,
+        "Modify existing role configurations including adding/removing permissions and access levels",
+    ),
+    (
+        IAMPermissions.DELETE_ROLE,
+        "Permanently remove roles from the system and unassign them from all associated users",
+    ),
+    (
+        IAMPermissions.CREATE_POLICY,
+        "Define new policies with specific sets of permissions",
+    ),
+    (
+        IAMPermissions.READ_POLICY,
+        "View detailed policy configurations and permission sets defined in the system",
+    ),
+    (
+        IAMPermissions.LIST_POLICY,
+        "View and search through all system policies and their associated permissions",
+    ),
+    (
+        IAMPermissions.UPDATE_POLICY,
+        "Modify existing policy configurations including permission sets",
+    ),
+    (
+        IAMPermissions.DELETE_POLICY,
+        "Permanently remove policies from the system excluding system defaults.",
     ),
 ]
 
-# IAM (Identity and Access Management) Domain
-IAM_PERMISSIONS = [
-    # General IAM Access
-    ("iam.access", "Access Identity and Access Management interface"),
-    ("iam.dashboard", "View IAM dashboard with system overview and statistics"),
-    # User Management
-    ("iam.create.user", "Create new users with assigned roles and permissions"),
-    ("iam.read.user", "View detailed user information including roles and permissions"),
-    ("iam.read.user.own", "View own user profile and roles"),
-    ("iam.list.user", "Access and view the complete list of users with their roles"),
-    ("iam.update.user", "Modify existing user details and roles"),
-    ("iam.update.user.own", "Modify own user profile and roles"),
-    ("iam.delete.user", "Remove users from the system"),
-    ("iam.suspend.user", "Suspend users from the system"),
-    # Role Management
-    ("iam.create.role", "Create new roles with assigned permissions and settings"),
+menu_permissions = [
     (
-        "iam.read.role",
-        "View detailed role information including permissions and settings",
+        MenuPermissions.ACCESS,
+        "View and navigate the Menu Management interface for configuring restaurant menus",
     ),
-    ("iam.list.roles", "Access and view the complete list of roles"),
-    ("iam.update.role", "Modify existing role details and permissions"),
-    ("iam.suspend.role", "Suspend roles from the system"),
-    ("iam.delete.role", "Remove roles from the system"),
-    # Policy Management
-    ("iam.create.policy", "Create new policies with assigned permissions"),
-    ("iam.read.policy", "View detailed policy information including permissions"),
-    ("iam.list.policies", "Access and view the complete list of policies"),
-    ("iam.update.policy", "Modify existing policy details and permissions"),
-    ("iam.suspend.policy", "Suspend policies from the system"),
-    ("iam.delete.policy", "Remove policies from the system"),
-    # Role-Policy Assignments
-    ("iam.assign.policy_to_role", "Assign policies to roles"),
-    ("iam.read.role_policies", "View policy assignments for roles"),
-    ("iam.list.role_policies", "Access and view all role-policy relationships"),
-    ("iam.update.role_policies", "Modify policy assignments for roles"),
-    ("iam.remove.role_policies", "Remove policy assignments from roles"),
-    # Policy-Permission Assignments
-    ("iam.assign.permission_to_policy", "Assign permissions to policies"),
-    ("iam.read.policy_permissions", "View permission assignments for policies"),
     (
-        "iam.list.policy_permissions",
-        "Access and view all policy-permission relationships",
+        MenuPermissions.CREATE_CATEGORY,
+        "Create new menu categories to organize menu items (e.g. Appetizers, Entrees)",
     ),
-    ("iam.update.policy_permissions", "Modify permission assignments for policies"),
-    ("iam.remove.policy_permissions", "Remove permission assignments from policies"),
-    # Advanced IAM Operations
-    ("iam.audit", "View IAM audit logs and permission changes"),
-    ("iam.bulk_operations", "Perform bulk operations on users, roles, and policies"),
-    ("iam.export", "Export IAM configurations and reports"),
-    ("iam.import", "Import IAM configurations"),
+    (
+        MenuPermissions.READ_CATEGORY,
+        "View detailed menu category information including description and contained items",
+    ),
+    (
+        MenuPermissions.LIST_CATEGORY,
+        "View and search through all menu categories and their organizational structure",
+    ),
+    (
+        MenuPermissions.UPDATE_CATEGORY,
+        "Modify existing menu category details including name, description and organization",
+    ),
+    (
+        MenuPermissions.DELETE_CATEGORY,
+        "Permanently remove menu categories and reassign or delete contained items",
+    ),
+    (
+        MenuPermissions.CREATE_GROUP,
+        "Create new menu groups within categories for further menu organization",
+    ),
+    (
+        MenuPermissions.READ_GROUP,
+        "View detailed menu group information including contained items and category assignment",
+    ),
+    (
+        MenuPermissions.LIST_GROUP,
+        "View and search through all menu groups and their organizational structure",
+    ),
+    (
+        MenuPermissions.UPDATE_GROUP,
+        "Modify existing menu group details including name, category and organization",
+    ),
+    (
+        MenuPermissions.DELETE_GROUP,
+        "Permanently remove menu groups and reassign or delete contained items",
+    ),
+    (
+        MenuPermissions.CREATE_ITEM,
+        "Add new menu items with pricing, descriptions and category/group assignments",
+    ),
+    (
+        MenuPermissions.READ_ITEM,
+        "View detailed menu item information including pricing, descriptions and availability",
+    ),
+    (
+        MenuPermissions.LIST_ITEM,
+        "View and search through all menu items across categories and groups",
+    ),
+    (
+        MenuPermissions.UPDATE_ITEM,
+        "Modify existing menu item details including pricing, descriptions and assignments",
+    ),
+    (MenuPermissions.DELETE_ITEM, "Permanently remove menu items from the system"),
 ]
 
-# Group all permissions for easy access
-ALL_PERMISSION_FIXTURES = [
-    USER_PERMISSIONS,
-    MENU_PERMISSIONS,
-    ORDER_PERMISSIONS,
-    BRANCH_PERMISSIONS,
-    SETTINGS_PERMISSIONS,
-    IAM_PERMISSIONS,
+order_permissions = [
+    (
+        OrderPermissions.ACCESS,
+        "View and navigate the Order Management interface for processing customer orders",
+    ),
+    (
+        OrderPermissions.CREATE_TICKET,
+        "Create new order tickets with customer and table information",
+    ),
+    (
+        OrderPermissions.READ_TICKET,
+        "View detailed order ticket information including items, status and payment details",
+    ),
+    (
+        OrderPermissions.LIST_TICKET,
+        "View and search through all order tickets with their current status",
+    ),
+    (
+        OrderPermissions.UPDATE_TICKET,
+        "Modify existing order ticket details including status, items and payment information",
+    ),
+    (
+        OrderPermissions.DELETE_TICKET,
+        "Permanently remove order tickets from the system",
+    ),
+    (
+        OrderPermissions.CREATE_TICKET_ITEM,
+        "Add individual menu items to order tickets with quantity and special instructions",
+    ),
+    (
+        OrderPermissions.READ_TICKET_ITEM,
+        "View detailed order item information including modifiers and preparation status",
+    ),
+    (
+        OrderPermissions.LIST_TICKET_ITEM,
+        "View all items across order tickets with their current status",
+    ),
+    (
+        OrderPermissions.UPDATE_TICKET_ITEM,
+        "Modify ordered items including quantity, special instructions and preparation status",
+    ),
+    (OrderPermissions.DELETE_TICKET_ITEM, "Remove individual items from order tickets"),
 ]
+
+branch_permissions = [
+    (
+        BranchPermissions.ACCESS,
+        "View and navigate the Branch Management interface for multiple location management",
+    ),
+    (
+        BranchPermissions.CREATE_BRANCH,
+        "Create new branch locations with address and contact information",
+    ),
+    (
+        BranchPermissions.READ_BRANCH,
+        "View detailed branch information including location, staff and operational details",
+    ),
+    (
+        BranchPermissions.LIST_BRANCH,
+        "View and search through all branch locations with their current status",
+    ),
+    (
+        BranchPermissions.UPDATE_BRANCH,
+        "Modify existing branch details including location, contact info and operational settings",
+    ),
+    (
+        BranchPermissions.DELETE_BRANCH,
+        "Permanently remove branch locations from the system",
+    ),
+]
+
+settings_permissions = [
+    (
+        SettingsPermissions.ACCESS,
+        "View and navigate the System Settings interface for global configuration",
+    ),
+    (
+        SettingsPermissions.LIST_SETTINGS,
+        "View and search through all system configuration settings",
+    ),
+    (
+        SettingsPermissions.READ_SETTINGS,
+        "View detailed system setting configurations and current values",
+    ),
+    (
+        SettingsPermissions.UPDATE_SETTINGS,
+        "Modify system-wide configuration settings and parameters",
+    ),
+]
+
+
+def list_all_permissions():
+    return [
+        *iam_permissions_list,
+        *menu_permissions,
+        *order_permissions,
+        *branch_permissions,
+        *settings_permissions,
+    ]

@@ -47,7 +47,7 @@
                     {% call table(["Policy Name"]) %}
                         {% for role_policy in role.role_policies %}
                             <tr>
-                                <td>{{ role_policy.policy.name|un_snake|title|strip_spaces }}</td>
+                                <td>{{ role_policy.policy.name }}</td>
                             </tr>
                         {% endfor %}
                     {% endcall %}

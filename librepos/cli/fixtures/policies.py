@@ -1,553 +1,339 @@
-"""Policies definitions for database seeding."""
+from librepos.features.branches.utils.enums import BranchPermissions
+from librepos.features.iam.utils.enums import IAMPermissions
+from librepos.features.menu.utils.enums import MenuPermissions
+from librepos.features.orders.utils.enums import OrderPermissions
+from librepos.features.settings.utils.enums import SettingsPermissions
+from .permission_utils import PermissionLevelManager
 
-# Modular policies based on functional areas
-# Each policy groups related permissions for specific management areas
-
-# ======================================================================================================================
-#                                           IAM USER MANAGEMENT POLICIES
-# ======================================================================================================================
-IAM_USER_MANAGEMENT_FULL_POLICY = [
-    "iam.create.user",
-    "iam.read.user",
-    "iam.list.user",
-    "iam.update.user",
-    "iam.delete.user",
-    "iam.suspend.user",
-]
-
-IAM_USER_MANAGEMENT_LIMITED_POLICY = [
-    "iam.read.user",
-    "iam.list.user",
-    "iam.update.user",
-]
-
-IAM_USER_MANAGEMENT_VIEW_ONLY_POLICY = [
-    "iam.read.user",
-    "iam.list.user",
-]
-
-IAM_USER_SELF_MANAGEMENT_POLICY = [
-    "iam.update.user.own",
-]
-
-# ======================================================================================================================
-#                                           IAM ROLE MANAGEMENT POLICIES
-# ======================================================================================================================
-IAM_ROLE_MANAGEMENT_FULL_POLICY = [
-    "iam.create.role",
-    "iam.read.role",
-    "iam.list.roles",
-    "iam.update.role",
-    "iam.suspend.role",
-    "iam.delete.role",
-]
-
-IAM_ROLE_MANAGEMENT_LIMITED_POLICY = [
-    "iam.read.role",
-    "iam.list.roles",
-    "iam.update.role",
-]
-
-IAM_ROLE_MANAGEMENT_VIEW_ONLY_POLICY = [
-    "iam.read.role",
-    "iam.list.roles",
-]
-
-IAM_ROLE_MANAGEMENT_SUSPEND_POLICY = [
-    "iam.suspend.role",
-]
-
-# ======================================================================================================================
-#                                      IAM POLICY MANAGEMENT POLICIES
-# ======================================================================================================================
-IAM_POLICY_MANAGEMENT_FULL_POLICY = [
-    "iam.create.policy",
-    "iam.read.policy",
-    "iam.list.policies",
-    "iam.update.policy",
-    "iam.suspend.policy",
-    "iam.delete.policy",
-]
-
-IAM_POLICY_MANAGEMENT_LIMITED_POLICY = [
-    "iam.read.policy",
-    "iam.list.policies",
-    "iam.update.policy",
-]
-
-IAM_POLICY_MANAGEMENT_VIEW_ONLY_POLICY = [
-    "iam.read.policy",
-    "iam.list.policies",
-]
-
-IAM_POLICY_MANAGEMENT_SUSPEND_POLICY = [
-    "iam.suspend.policy",
-]
-
-# ======================================================================================================================
-#                                      IAM ROLE ASSIGNMENT POLICIES
-# ======================================================================================================================
-IAM_ROLE_ASSIGNMENT_FULL_POLICY = [
-    "iam.assign.policy_to_role",
-    "iam.read.role_policies",
-    "iam.list.role_policies",
-    "iam.update.role_policies",
-    "iam.remove.role_policies",
-]
-
-IAM_ROLE_ASSIGNMENT_LIMITED_POLICY = [
-    "iam.read.role_policies",
-    "iam.list.role_policies",
-    "iam.update.role_policies",
-]
-
-IAM_ROLE_ASSIGNMENT_VIEW_ONLY_POLICY = [
-    "iam.read.role_policies",
-    "iam.list.role_policies",
-]
-
-# ======================================================================================================================
-#                                      IAM PERMISSION ASSIGNMENT POLICIES
-# ======================================================================================================================
-IAM_PERMISSION_ASSIGNMENT_FULL_POLICY = [
-    "iam.assign.permission_to_policy",
-    "iam.read.policy_permissions",
-    "iam.list.policy_permissions",
-    "iam.update.policy_permissions",
-    "iam.remove.policy_permissions",
-]
-
-IAM_PERMISSION_ASSIGNMENT_LIMITED_POLICY = [
-    "iam.read.policy_permissions",
-    "iam.list.policy_permissions",
-    "iam.update.policy_permissions",
-]
-
-IAM_PERMISSION_ASSIGNMENT_VIEW_ONLY_POLICY = [
-    "iam.read.policy_permissions",
-    "iam.list.policy_permissions",
-]
-
-# ======================================================================================================================
-#                                      MENU ACCESS POLICIES
-# ======================================================================================================================
-MENU_ACCESS_FULL_POLICY = [
-    "menu.access",
-]
-
-# ======================================================================================================================
-#                                      MENU CATEGORY MANAGEMENT POLICIES
-# ======================================================================================================================
-MENU_CATEGORY_MANAGEMENT_FULL_POLICY = [
-    "menu.create.category",
-    "menu.read.category",
-    "menu.list.category",
-    "menu.update.category",
-    "menu.delete.category",
-]
-
-MENU_CATEGORY_MANAGEMENT_LIMITED_POLICY = [
-    "menu.read.category",
-    "menu.list.category",
-    "menu.update.category",
-]
-
-MENU_CATEGORY_VIEW_ONLY_POLICY = [
-    "menu.read.category",
-    "menu.list.category",
-]
-
-# ======================================================================================================================
-#                                      MENU GROUP MANAGEMENT POLICIES
-# ======================================================================================================================
-MENU_GROUP_MANAGEMENT_FULL_POLICY = [
-    "menu.create.group",
-    "menu.read.group",
-    "menu.list.groups",
-    "menu.update.group",
-    "menu.delete.group",
-]
-
-MENU_GROUP_MANAGEMENT_LIMITED_POLICY = [
-    "menu.read.group",
-    "menu.list.groups",
-    "menu.update.group",
-]
-
-MENU_GROUP_VIEW_ONLY_POLICY = [
-    "menu.read.group",
-    "menu.list.groups",
-]
-
-# ======================================================================================================================
-#                                      MENU ITEM MANAGEMENT POLICIES
-# ======================================================================================================================
-MENU_ITEM_MANAGEMENT_FULL_POLICY = [
-    "menu.create.item",
-    "menu.read.item",
-    "menu.list.items",
-    "menu.update.item",
-    "menu.delete.item",
-]
-
-MENU_ITEM_MANAGEMENT_LIMITED_POLICY = [
-    "menu.read.item",
-    "menu.list.items",
-    "menu.update.item",
-]
-
-MENU_ITEM_VIEW_ONLY_POLICY = [
-    "menu.read.item",
-    "menu.list.items",
-]
-
-# ======================================================================================================================
-#                                      ORDER MANAGEMENT POLICIES
-# ======================================================================================================================
-ORDER_MANAGEMENT_FULL_POLICY = [
-    "order.create",
-    "order.read",
-    "order.list",
-    "order.update",
-    "order.void",
-    "order.delete",
-]
-
-ORDER_MANAGEMENT_OPERATIONAL_POLICY = [
-    "order.create",
-    "order.read",
-    "order.list",
-    "order.update",
-    "order.void",
-]
-
-ORDER_MANAGEMENT_LIMITED_POLICY = [
-    "order.create",
-    "order.read",
-    "order.list",
-    "order.update",
-]
-
-ORDER_VIEW_ONLY_POLICY = [
-    "order.read",
-    "order.list",
-]
-
-# ======================================================================================================================
-#                                      ORDER ITEM MANAGEMENT POLICIES
-# ======================================================================================================================
-ORDER_ITEM_MANAGEMENT_FULL_POLICY = [
-    "order.create.item",
-    "order.read.item",
-    "order.list.items",
-    "order.update.item",
-    "order.void.item",
-    "order.delete.item",
-]
-
-ORDER_ITEM_MANAGEMENT_OPERATIONAL_POLICY = [
-    "order.create.item",
-    "order.read.item",
-    "order.list.items",
-    "order.update.item",
-    "order.void.item",
-    "order.send_to_prep",
-    "order.mark_completed",
-]
-
-ORDER_ITEM_MANAGEMENT_LIMITED_POLICY = [
-    "order.create.item",
-    "order.read.item",
-    "order.list.items",
-    "order.update.item",
-]
-
-ORDER_ITEM_VIEW_ONLY_POLICY = [
-    "order.read.item",
-    "order.list.items",
-]
-
-# ======================================================================================================================
-#                                      BRANCH MANAGEMENT POLICIES
-# ======================================================================================================================
-BRANCH_MANAGEMENT_FULL_POLICY = [
-    "branch.create",
-    "branch.read",
-    "branch.list",
-    "branch.update",
-    "branch.delete",
-]
-
-BRANCH_MANAGEMENT_LIMITED_POLICY = [
-    "branch.read",
-    "branch.list",
-    "branch.update",
-]
-
-BRANCH_MANAGEMENT_VIEW_ONLY_POLICY = [
-    "branch.read",
-    "branch.list",
-]
-
-# ======================================================================================================================
-#                                      SETTINGS MANAGEMENT POLICIES
-# ======================================================================================================================
-SYSTEM_SETTINGS_FULL_POLICY = [
-    "settings.access",
-    "settings.read.system",
-    "settings.update.system",
-]
-
-SYSTEM_SETTINGS_LIMITED_POLICY = [
-    "settings.access",
-    "settings.read.system",
-]
-
-BASIC_SETTINGS_VIEW_POLICY = [
-    "settings.access",
-]
-
-# ======================================================================================================================
-#                                      IAM ACCESS POLICIES
-# ======================================================================================================================
-IAM_FULL_ACCESS_POLICY = [
-    "iam.access",
-    "iam.dashboard",
-    "iam.audit",
-    "iam.bulk_operations",
-    "iam.export",
-    "iam.import",
-]
-
-IAM_BASIC_ACCESS_POLICY = [
-    "iam.access",
-    "iam.dashboard",
-]
-
-# Complete policy definitions with metadata
-POLICIES_FIXTURE = [
-    # IAM User Management Policies
+IAM_POLICIES = [
     (
-        "iam_user_management_full",
-        "Complete IAM user account management including creation and deletion",
-        IAM_USER_MANAGEMENT_FULL_POLICY,
+        "IAMFullAccess",
+        "Provides complete access to all IAM features including user, role, and policy management with full create, read, update, and delete capabilities",
+        PermissionLevelManager.get_full_access_permissions(IAMPermissions),
     ),
     (
-        "iam_user_management_limited",
-        "IAM user account management without creation and deletion capabilities",
-        IAM_USER_MANAGEMENT_LIMITED_POLICY,
+        "IAMLimitedAccess",
+        "Provides access to view and modify IAM resources but restricts creation and deletion of users, roles, and policies",
+        PermissionLevelManager.get_limited_access_permissions(IAMPermissions),
     ),
     (
-        "iam_user_management_view_only",
-        "Read-only access to IAM user account information",
-        IAM_USER_MANAGEMENT_VIEW_ONLY_POLICY,
+        "IAMReadOnlyAccess",
+        "Provides view-only access to IAM resources including users, roles, and policies without modification capabilities",
+        PermissionLevelManager.get_read_only_permissions(IAMPermissions),
     ),
     (
-        "iam_user_self_management",
-        "Permission to manage own IAM user profile only",
-        IAM_USER_SELF_MANAGEMENT_POLICY,
-    ),
-    # IAM Role Management Policies
-    (
-        "iam_role_management_full",
-        "Complete IAM role management capabilities",
-        IAM_ROLE_MANAGEMENT_FULL_POLICY,
-    ),
-    (
-        "iam_role_management_limited",
-        "IAM role management without creation and deletion capabilities",
-        IAM_ROLE_MANAGEMENT_LIMITED_POLICY,
+        "IAMUserFull",
+        "Provides complete user management capabilities including creating, viewing, updating, and deleting user accounts",
+        [
+            IAMPermissions.ACCESS,
+            IAMPermissions.CREATE_USER,
+            IAMPermissions.READ_USER,
+            IAMPermissions.LIST_USER,
+            IAMPermissions.UPDATE_USER,
+            IAMPermissions.DELETE_USER,
+        ],
     ),
     (
-        "iam_role_management_view_only",
-        "Read-only access to IAM role information",
-        IAM_ROLE_MANAGEMENT_VIEW_ONLY_POLICY,
-    ),
-    # IAM Policy Management Policies
-    (
-        "iam_policy_management_full",
-        "Complete IAM policy management capabilities",
-        IAM_POLICY_MANAGEMENT_FULL_POLICY,
-    ),
-    (
-        "iam_policy_management_limited",
-        "IAM policy management without creation and deletion capabilities",
-        IAM_POLICY_MANAGEMENT_LIMITED_POLICY,
+        "IAMUserLimited",
+        "Provides ability to view and modify user accounts but restricts user creation and deletion",
+        [
+            IAMPermissions.ACCESS,
+            IAMPermissions.READ_USER,
+            IAMPermissions.LIST_USER,
+            IAMPermissions.UPDATE_USER,
+        ],
     ),
     (
-        "iam_policy_management_view_only",
-        "Read-only access to IAM policy information",
-        IAM_POLICY_MANAGEMENT_VIEW_ONLY_POLICY,
-    ),
-    # IAM Permission Assignment Policies
-    (
-        "iam_permission_assignment_full",
-        "Complete permission assignment management",
-        IAM_PERMISSION_ASSIGNMENT_FULL_POLICY,
+        "IAMUserReadOnly",
+        "Provides view-only access to user account information without modification capabilities",
+        [IAMPermissions.ACCESS, IAMPermissions.READ_USER, IAMPermissions.LIST_USER],
     ),
     (
-        "iam_permission_assignment_limited",
-        "Permission assignment management without removal capabilities",
-        IAM_PERMISSION_ASSIGNMENT_LIMITED_POLICY,
+        "IAMRoleFull",
+        "Provides complete role management capabilities including creating, viewing, updating, and deleting roles",
+        [
+            IAMPermissions.ACCESS,
+            IAMPermissions.CREATE_ROLE,
+            IAMPermissions.READ_ROLE,
+            IAMPermissions.LIST_ROLE,
+            IAMPermissions.UPDATE_ROLE,
+            IAMPermissions.DELETE_ROLE,
+        ],
     ),
     (
-        "iam_permission_assignment_view_only",
-        "Read-only access to permission assignment information",
-        IAM_PERMISSION_ASSIGNMENT_VIEW_ONLY_POLICY,
-    ),
-    # Menu Category Management Policies
-    (
-        "menu_category_management_full",
-        "Complete menu category management including creation and deletion",
-        MENU_CATEGORY_MANAGEMENT_FULL_POLICY,
-    ),
-    (
-        "menu_category_management_limited",
-        "Menu category management without creation and deletion",
-        MENU_CATEGORY_MANAGEMENT_LIMITED_POLICY,
+        "IAMRoleLimited",
+        "Provides ability to view and modify roles but restricts role creation and deletion",
+        [
+            IAMPermissions.ACCESS,
+            IAMPermissions.READ_ROLE,
+            IAMPermissions.LIST_ROLE,
+            IAMPermissions.UPDATE_ROLE,
+        ],
     ),
     (
-        "menu_category_view_only",
-        "Read-only access to menu category information",
-        MENU_CATEGORY_VIEW_ONLY_POLICY,
-    ),
-    # Menu Group Management Policies
-    (
-        "menu_group_management_full",
-        "Complete menu group management including creation and deletion",
-        MENU_GROUP_MANAGEMENT_FULL_POLICY,
+        "IAMRoleReadOnly",
+        "Provides view-only access to role configurations without modification capabilities",
+        [IAMPermissions.ACCESS, IAMPermissions.READ_ROLE, IAMPermissions.LIST_ROLE],
     ),
     (
-        "menu_group_management_limited",
-        "Menu group management without creation and deletion",
-        MENU_GROUP_MANAGEMENT_LIMITED_POLICY,
+        "IAMPolicyFull",
+        "Provides complete policy management capabilities including creating, viewing, updating, and deleting policies",
+        [
+            IAMPermissions.ACCESS,
+            IAMPermissions.CREATE_POLICY,
+            IAMPermissions.READ_POLICY,
+            IAMPermissions.LIST_POLICY,
+            IAMPermissions.UPDATE_POLICY,
+            IAMPermissions.DELETE_POLICY,
+        ],
     ),
     (
-        "menu_group_view_only",
-        "Read-only access to menu group information",
-        MENU_GROUP_VIEW_ONLY_POLICY,
-    ),
-    # Menu Item Management Policies
-    (
-        "menu_item_management_full",
-        "Complete menu item management including creation and deletion",
-        MENU_ITEM_MANAGEMENT_FULL_POLICY,
-    ),
-    (
-        "menu_item_management_limited",
-        "Menu item management without creation and deletion",
-        MENU_ITEM_MANAGEMENT_LIMITED_POLICY,
+        "IAMPolicyLimited",
+        "Provides ability to view and modify policies but restricts policy creation and deletion",
+        [
+            IAMPermissions.ACCESS,
+            IAMPermissions.READ_POLICY,
+            IAMPermissions.LIST_POLICY,
+            IAMPermissions.UPDATE_POLICY,
+        ],
     ),
     (
-        "menu_item_view_only",
-        "Read-only access to menu item information",
-        MENU_ITEM_VIEW_ONLY_POLICY,
-    ),
-    # Menu Full Access Policies
-    (
-        "menu_access_full",
-        "Full access to all menu management functions",
-        MENU_ACCESS_FULL_POLICY,
-    ),
-    # Order Management Policies
-    (
-        "order_management_full",
-        "Complete order management including deletion capabilities",
-        ORDER_MANAGEMENT_FULL_POLICY,
-    ),
-    (
-        "order_management_operational",
-        "Operational order management including void but not delete",
-        ORDER_MANAGEMENT_OPERATIONAL_POLICY,
-    ),
-    (
-        "order_management_limited",
-        "Basic order processing without void or delete capabilities",
-        ORDER_MANAGEMENT_LIMITED_POLICY,
-    ),
-    (
-        "order_view_only",
-        "Read-only access to order information",
-        ORDER_VIEW_ONLY_POLICY,
-    ),
-    # Order Item Management Policies
-    (
-        "order_item_management_full",
-        "Complete order item management including deletion capabilities",
-        ORDER_ITEM_MANAGEMENT_FULL_POLICY,
-    ),
-    (
-        "order_item_management_operational",
-        "Operational order item management including kitchen operations",
-        ORDER_ITEM_MANAGEMENT_OPERATIONAL_POLICY,
-    ),
-    (
-        "order_item_management_limited",
-        "Basic order item processing without void or delete capabilities",
-        ORDER_ITEM_MANAGEMENT_LIMITED_POLICY,
-    ),
-    (
-        "order_item_view_only",
-        "Read-only access to order item information",
-        ORDER_ITEM_VIEW_ONLY_POLICY,
-    ),
-    # Branch Management Policies
-    (
-        "branch_management_full",
-        "Complete branch profile and configuration management",
-        BRANCH_MANAGEMENT_FULL_POLICY,
-    ),
-    (
-        "branch_management_limited",
-        "branch management without creation and deletion capabilities",
-        BRANCH_MANAGEMENT_LIMITED_POLICY,
-    ),
-    (
-        "branch_management_view_only",
-        "Read-only access to branch settings and profile",
-        BRANCH_MANAGEMENT_VIEW_ONLY_POLICY,
-    ),
-    # Settings Management Policies
-    (
-        "system_settings_full",
-        "Complete system configuration and settings management",
-        SYSTEM_SETTINGS_FULL_POLICY,
-    ),
-    (
-        "system_settings_limited",
-        "Limited system settings access without modification capabilities",
-        SYSTEM_SETTINGS_LIMITED_POLICY,
-    ),
-    (
-        "basic_settings_view",
-        "Basic read access to general application settings",
-        BASIC_SETTINGS_VIEW_POLICY,
-    ),
-    # IAM Access Policies
-    (
-        "iam_full_access",
-        "Complete IAM interface access with advanced operations",
-        IAM_FULL_ACCESS_POLICY,
-    ),
-    (
-        "iam_basic_access",
-        "Basic IAM interface access and dashboard viewing",
-        IAM_BASIC_ACCESS_POLICY,
-    ),
-    # IAM Role Assignment Policies
-    (
-        "iam_role_assignment_full",
-        "Complete role assignment management capabilities",
-        IAM_ROLE_ASSIGNMENT_FULL_POLICY,
-    ),
-    (
-        "iam_role_assignment_limited",
-        "Role assignment management without removal capabilities",
-        IAM_ROLE_ASSIGNMENT_LIMITED_POLICY,
-    ),
-    (
-        "iam_role_assignment_view_only",
-        "Read-only access to role assignment information",
-        IAM_ROLE_ASSIGNMENT_VIEW_ONLY_POLICY,
+        "IAMPolicyReadOnly",
+        "Provides view-only access to policy configurations without modification capabilities",
+        [IAMPermissions.ACCESS, IAMPermissions.READ_POLICY, IAMPermissions.LIST_POLICY],
     ),
 ]
+
+MENU_POLICIES = [
+    (
+        "MenuFullAccess",
+        "Provides complete access to all menu management features including creation, modification and deletion of categories, groups and items",
+        PermissionLevelManager.get_full_access_permissions(MenuPermissions),
+    ),
+    (
+        "MenuLimitedAccess",
+        "Provides ability to view and modify menu items, categories and groups but restricts creation and deletion operations",
+        PermissionLevelManager.get_limited_access_permissions(MenuPermissions),
+    ),
+    (
+        "MenuReadOnlyAccess",
+        "Provides view-only access to browse menu structure, categories, groups and items without modification capabilities",
+        PermissionLevelManager.get_read_only_permissions(MenuPermissions),
+    ),
+    (
+        "MenuCategoryFull",
+        "Provides complete menu category management including ability to create new categories, modify existing ones, and remove categories with their contents",
+        [
+            MenuPermissions.ACCESS,
+            MenuPermissions.CREATE_CATEGORY,
+            MenuPermissions.READ_CATEGORY,
+            MenuPermissions.LIST_CATEGORY,
+            MenuPermissions.UPDATE_CATEGORY,
+            MenuPermissions.DELETE_CATEGORY,
+        ],
+    ),
+    (
+        "MenuCategoryLimited",
+        "Provides ability to view and modify existing menu categories but restricts creating new categories or deleting them",
+        [
+            MenuPermissions.ACCESS,
+            MenuPermissions.READ_CATEGORY,
+            MenuPermissions.LIST_CATEGORY,
+            MenuPermissions.UPDATE_CATEGORY,
+        ],
+    ),
+    (
+        "MenuCategoryReadOnly",
+        "Provides view-only access to browse menu categories and their contents without modification capabilities",
+        [
+            MenuPermissions.ACCESS,
+            MenuPermissions.READ_CATEGORY,
+            MenuPermissions.LIST_CATEGORY,
+        ],
+    ),
+    (
+        "MenuGroupFull",
+        "Provides complete menu group management including ability to create new groups within categories, modify existing ones, and remove groups",
+        [
+            MenuPermissions.ACCESS,
+            MenuPermissions.CREATE_GROUP,
+            MenuPermissions.READ_GROUP,
+            MenuPermissions.LIST_GROUP,
+            MenuPermissions.UPDATE_GROUP,
+            MenuPermissions.DELETE_GROUP,
+        ],
+    ),
+    (
+        "MenuGroupLimited",
+        "Provides ability to view and modify existing menu groups but restricts creating new groups or deleting them",
+        [
+            MenuPermissions.ACCESS,
+            MenuPermissions.READ_GROUP,
+            MenuPermissions.LIST_GROUP,
+            MenuPermissions.UPDATE_GROUP,
+        ],
+    ),
+    (
+        "MenuGroupReadOnly",
+        "Provides view-only access to browse menu groups and their organizational structure without modification capabilities",
+        [
+            MenuPermissions.ACCESS,
+            MenuPermissions.READ_GROUP,
+            MenuPermissions.LIST_GROUP,
+        ],
+    ),
+    (
+        "MenuItemFull",
+        "Provides complete menu item management including ability to add new items, modify details like pricing and descriptions, and remove items",
+        [
+            MenuPermissions.ACCESS,
+            MenuPermissions.CREATE_ITEM,
+            MenuPermissions.READ_ITEM,
+            MenuPermissions.LIST_ITEM,
+            MenuPermissions.UPDATE_ITEM,
+            MenuPermissions.DELETE_ITEM,
+        ],
+    ),
+    (
+        "MenuItemLimited",
+        "Provides ability to view and modify existing menu items but restricts adding new items or deleting them",
+        [
+            MenuPermissions.ACCESS,
+            MenuPermissions.READ_ITEM,
+            MenuPermissions.LIST_ITEM,
+            MenuPermissions.UPDATE_ITEM,
+        ],
+    ),
+    (
+        "MenuItemReadOnly",
+        "Provides view-only access to browse menu items and their details without modification capabilities",
+        [MenuPermissions.ACCESS, MenuPermissions.READ_ITEM, MenuPermissions.LIST_ITEM],
+    ),
+]
+
+ORDER_POLICIES = [
+    (
+        "OrderFullAccess",
+        "Provides complete access to all order management functions including creating, viewing, modifying and deleting orders, tickets and items",
+        PermissionLevelManager.get_full_access_permissions(OrderPermissions),
+    ),
+    (
+        "OrderLimitedAccess",
+        "Provides ability to view and modify orders but restricts creation and deletion of orders, tickets and items",
+        PermissionLevelManager.get_limited_access_permissions(OrderPermissions),
+    ),
+    (
+        "OrderReadOnlyAccess",
+        "Provides view-only access to browse orders, tickets and items without modification capabilities",
+        PermissionLevelManager.get_read_only_permissions(OrderPermissions),
+    ),
+    (
+        "OrderTicketFull",
+        "Provides complete order ticket management capabilities including creating new tickets, modifying ticket details like status and payment info, and removing tickets",
+        [
+            OrderPermissions.ACCESS,
+            OrderPermissions.CREATE_TICKET,
+            OrderPermissions.READ_TICKET,
+            OrderPermissions.LIST_TICKET,
+            OrderPermissions.UPDATE_TICKET,
+            OrderPermissions.DELETE_TICKET,
+        ],
+    ),
+    (
+        "OrderTicketLimited",
+        "Provides ability to view ticket details and modify ticket status and payment info but restricts creating new tickets or deleting existing ones",
+        [
+            OrderPermissions.ACCESS,
+            OrderPermissions.READ_TICKET,
+            OrderPermissions.LIST_TICKET,
+            OrderPermissions.UPDATE_TICKET,
+        ],
+    ),
+    (
+        "OrderTicketReadOnly",
+        "Provides view-only access to browse order tickets and their details without modification capabilities",
+        [
+            OrderPermissions.ACCESS,
+            OrderPermissions.READ_TICKET,
+            OrderPermissions.LIST_TICKET,
+        ],
+    ),
+    (
+        "OrderTicketItemFull",
+        "Provides complete order item management capabilities including adding items to tickets, modifying quantities and special instructions, and removing items",
+        [
+            OrderPermissions.ACCESS,
+            OrderPermissions.CREATE_TICKET_ITEM,
+            OrderPermissions.READ_TICKET_ITEM,
+            OrderPermissions.LIST_TICKET_ITEM,
+            OrderPermissions.UPDATE_TICKET_ITEM,
+            OrderPermissions.DELETE_TICKET_ITEM,
+        ],
+    ),
+    (
+        "OrderTicketItemLimited",
+        "Provides ability to view order items and modify quantities and instructions but restricts adding new items or removing existing ones",
+        [
+            OrderPermissions.ACCESS,
+            OrderPermissions.READ_TICKET_ITEM,
+            OrderPermissions.LIST_TICKET_ITEM,
+            OrderPermissions.UPDATE_TICKET_ITEM,
+        ],
+    ),
+    (
+        "OrderTicketItemReadOnly",
+        "Provides view-only access to browse order items and their details without modification capabilities",
+        [
+            OrderPermissions.ACCESS,
+            OrderPermissions.READ_TICKET_ITEM,
+            OrderPermissions.LIST_TICKET_ITEM,
+        ],
+    ),
+]
+
+BRANCH_POLICIES = [
+    (
+        "BranchFullAccess",
+        "Provides complete access to branch management including creating new locations, modifying branch details, and removing branches",
+        PermissionLevelManager.get_full_access_permissions(BranchPermissions),
+    ),
+    (
+        "BranchLimitedAccess",
+        "Provides ability to view and modify branch details like contact info and operational settings but restricts creating or deleting branches",
+        PermissionLevelManager.get_limited_access_permissions(BranchPermissions),
+    ),
+    (
+        "BranchReadOnlyAccess",
+        "Provides view-only access to browse branch locations and their details without modification capabilities",
+        PermissionLevelManager.get_read_only_permissions(BranchPermissions),
+    ),
+]
+
+SETTINGS_POLICIES = [
+    (
+        "SettingsFullAccess",
+        "Provides complete access to system settings including viewing and modifying all configuration parameters and global settings",
+        PermissionLevelManager.get_full_access_permissions(SettingsPermissions),
+    ),
+    (
+        "SettingsLimitedAccess",
+        "Provides ability to view and modify basic system settings while restricting access to critical configuration parameters",
+        PermissionLevelManager.get_limited_access_permissions(SettingsPermissions),
+    ),
+    (
+        "SettingsReadOnlyAccess",
+        "Provides view-only access to browse system settings and configuration values without modification capabilities",
+        PermissionLevelManager.get_read_only_permissions(SettingsPermissions),
+    ),
+]
+
+
+def list_all_policies():
+    """List all policy definitions."""
+    return [
+        *IAM_POLICIES,
+        *MENU_POLICIES,
+        *ORDER_POLICIES,
+        *BRANCH_POLICIES,
+        *SETTINGS_POLICIES,
+    ]

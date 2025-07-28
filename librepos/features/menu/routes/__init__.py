@@ -16,7 +16,7 @@ menu_bp.register_blueprint(item_bp)
 
 
 @menu_bp.get("/")
-@permission_required("menu.access")
+@permission_required("menu.allow.access")
 def home():
     """Render the home page."""
     context = {

@@ -15,7 +15,7 @@ class MenuCategoryService(BaseService):
 
     def _validate_category_exists(self, category_id):
         """Validate that a category exists and return it."""
-        return validate_exists(self.repository, category_id, "Category not found.")
+        return validate_exists(self.repository, category_id, "MenuCategory not found.")
 
     def create_category(self, data):
         """Create a new category."""
@@ -24,7 +24,7 @@ class MenuCategoryService(BaseService):
 
         def _create_operation():
             self.repository.add(new_category)
-            FlashMessageHandler.success("Category created successfully.")
+            FlashMessageHandler.success("MenuCategory created successfully.")
             return new_category
 
         return self._execute_with_error_handling(
@@ -48,7 +48,7 @@ class MenuCategoryService(BaseService):
 
             # Perform the update
             self.repository.update(category)
-            FlashMessageHandler.success("Category updated successfully.")
+            FlashMessageHandler.success("MenuCategory updated successfully.")
             return category
 
         return self._execute_with_error_handling(
@@ -69,7 +69,7 @@ class MenuCategoryService(BaseService):
 
             # Perform the deletion
             self.repository.delete(category)
-            FlashMessageHandler.success("Category deleted successfully.")
+            FlashMessageHandler.success("MenuCategory deleted successfully.")
             return True
 
         return self._execute_with_error_handling(

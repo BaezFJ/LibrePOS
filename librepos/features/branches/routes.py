@@ -4,6 +4,7 @@ from librepos.utils import sanitize_form_data
 from librepos.utils.decorators import permission_required
 from .forms import BranchForm
 from .services import BranchService
+from .utils.enums import BranchPermissions
 
 branch_bp = Blueprint(
     "branch", __name__, template_folder="templates", url_prefix="/branches"
@@ -23,7 +24,7 @@ branch_service = BranchService()
 
 
 @branch_bp.get("/")
-@permission_required("branch.list")
+@permission_required(BranchPermissions.LIST_BRANCH)
 def list_branches():
     context = {
         "title": "Branches",
@@ -34,7 +35,7 @@ def list_branches():
 
 
 @branch_bp.get("/<int:branch_id>>")
-@permission_required("branch.read")
+@permission_required(BranchPermissions.READ_BRANCH)
 def get_branch(branch_id):
     """Render the branch page."""
     branch = branch_service.repository.get_by_id(branch_id)
@@ -52,7 +53,7 @@ def get_branch(branch_id):
 #            UPDATE
 # ================================
 @branch_bp.post("/<int:branch_id>/update-branch>")
-@permission_required("branch.update")
+@permission_required(BranchPermissions.UPDATE_BRANCH)
 def update_restaurant(branch_id):
     form = BranchForm()
     if form.validate_on_submit():

@@ -5,6 +5,7 @@ from librepos.utils.decorators import permission_required
 from librepos.utils.form import sanitize_form_data
 from ..forms import RoleCreationForm
 from ..services import RoleService
+from ..utils.enums import IAMPermissions
 
 role_service = RoleService()
 
@@ -17,7 +18,7 @@ role_bp = Blueprint("role", __name__, template_folder="templates", url_prefix="/
 
 
 @role_bp.post("/create")
-@permission_required("iam.create.role")
+@permission_required(IAMPermissions.CREATE_ROLE)
 def process_create_role():
     """Process the role creation form."""
     form = RoleCreationForm()
@@ -35,7 +36,7 @@ def process_create_role():
 
 
 @role_bp.get("/")
-@permission_required("iam.list.roles")
+@permission_required(IAMPermissions.LIST_ROLE)
 def list_roles():
     """Render the IAM roles page."""
     context = {
@@ -49,7 +50,7 @@ def list_roles():
 
 
 @role_bp.get("/create")
-@permission_required("iam.create.role")
+@permission_required(IAMPermissions.CREATE_ROLE)
 def display_create_role():
     """Render the IAM role creation page."""
     form = RoleCreationForm()
@@ -62,7 +63,7 @@ def display_create_role():
 
 
 @role_bp.get("/<int:role_id>")
-@permission_required("iam.read.role")
+@permission_required(IAMPermissions.READ_ROLE)
 def get_role(role_id):
     """Render the IAM role page."""
     role = role_service.role_repository.get_by_id(role_id)
@@ -77,7 +78,7 @@ def get_role(role_id):
 
 
 @role_bp.get("/<int:role_id>/policies")
-@permission_required("iam.assign.policy_to_role")
+@permission_required(IAMPermissions.UPDATE_ROLE)
 def get_role_policies(role_id):
     role = role_service.role_repository.get_by_id(role_id)
     unassigned_policies = role_service.get_unassigned_policies(role_id)
@@ -96,7 +97,7 @@ def get_role_policies(role_id):
 
 
 @role_bp.post("/<int:role_id>/toggle-suspend")
-@permission_required("iam.suspend.role")
+@permission_required(IAMPermissions.UPDATE_ROLE)
 def toggle_role_suspend(role_id):
     response = jsonify(success=True)
     role_service.toggle_role_status(role_id)
@@ -105,14 +106,14 @@ def toggle_role_suspend(role_id):
 
 
 @role_bp.get("/<int:role_id>/assign-policy/<int:policy_id>")
-@permission_required("iam.assign.policy_to_role")
+@permission_required(IAMPermissions.UPDATE_ROLE)
 def assign_policy_to_role(role_id, policy_id):
     role_service.assign_policy_to_role(role_id, policy_id)
     return redirect(url_for(".get_role_policies", role_id=role_id))
 
 
 @role_bp.get("/<int:role_id>/unassign-policy/<int:policy_id>")
-@permission_required("iam.assign.policy_to_role")
+@permission_required(IAMPermissions.UPDATE_ROLE)
 def detach_policy_from_role(role_id, policy_id):
     role_service.remove_policy_from_role(role_id, policy_id)
     return redirect(url_for(".get_role_policies", role_id=role_id))
@@ -122,7 +123,7 @@ def detach_policy_from_role(role_id, policy_id):
 #            DELETE
 # ================================
 @role_bp.post("/<int:role_id>/delete")
-@permission_required("iam.delete.role")
+@permission_required(IAMPermissions.DELETE_ROLE)
 def delete_role(role_id):
     form = ConfirmationForm()
     if form.validate_on_submit():

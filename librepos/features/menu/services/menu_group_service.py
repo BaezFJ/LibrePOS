@@ -13,7 +13,7 @@ class MenuGroupService(BaseService):
 
     def _validate_group_exists(self, group_id):
         """Validate that a group exists and return it."""
-        return validate_exists(self.repository, group_id, "Group not found.")
+        return validate_exists(self.repository, group_id, "MenuGroup not found.")
 
     def create_group(self, data):
         """Create a new group."""
@@ -22,7 +22,7 @@ class MenuGroupService(BaseService):
 
         def _create_operation():
             self.repository.add(new_group)
-            FlashMessageHandler.success("Group created successfully.")
+            FlashMessageHandler.success("MenuGroup created successfully.")
             return new_group
 
         return self._execute_with_error_handling(
@@ -46,7 +46,7 @@ class MenuGroupService(BaseService):
 
             # Perform the update
             self.repository.update(group)
-            FlashMessageHandler.success("Group updated successfully.")
+            FlashMessageHandler.success("MenuGroup updated successfully.")
             return group
 
         return self._execute_with_error_handling(
@@ -67,7 +67,7 @@ class MenuGroupService(BaseService):
 
             # Perform the deletion
             self.repository.delete(group)
-            FlashMessageHandler.success("Group deleted successfully.")
+            FlashMessageHandler.success("MenuGroup deleted successfully.")
             return True
 
         return self._execute_with_error_handling(

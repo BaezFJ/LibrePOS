@@ -20,8 +20,8 @@ class Policy(db.Model):
     def __init__(self, name: str, description: str):
         super(Policy, self).__init__()
         """Create instance."""
-        self.name = name.lower()
-        self.description = description.lower()
+        self.name = name
+        self.description = description
         self.created_at = timezone_aware_datetime()
 
     # Columns

@@ -13,21 +13,21 @@
             </div>
         {% endif %}
 
-        {% if current_user.has_permission('iam.access') %}
+        {% if current_user.has_permission('iam.allow.access') %}
             <!-- Roles Settings -->
             <div class="col s6 m4 l3">
                 {{ render_icon_card("admin_panel_settings", "IAM", url_for('iam.home')) }}
             </div>
         {% endif %}
 
-        {% if current_user.has_permission("menu.access") %}
+        {% if current_user.has_permission("menu.allow.access") %}
             <!-- Menu Settings -->
             <div class="col s6 m4 l3">
                 {{ render_icon_card("menu_book_2", "Menu", url_for("menu.home")) }}
             </div>
         {% endif %}
 
-        {% if current_user.has_permission("branch.list") %}
+        {% if current_user.has_permission("branch.list.branch") %}
             <div class="col s6 m4 l3">
                 {{ render_icon_card("domain", "Branch", url_for("branch.list_branches")) }}
             </div>

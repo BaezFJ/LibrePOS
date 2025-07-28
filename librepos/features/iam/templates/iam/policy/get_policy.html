@@ -4,117 +4,31 @@
 {% from "macros/ui_components.html" import render_button, render_modal_button, render_icon, table %}
 
 {% block main %}
-{% set header_title = policy.name|un_snake|title|strip_spaces %}
-{% set header_description = policy.description|capitalize %}
+    {% set header_description = policy.description|capitalize %}
 
-{% call page_section(header_title, header_description) %}
-<!-- Policy Details -->
-<div class="col s12">
-    {% call panel_card("Policy Details") %}
-        <div class="flow-text">
-            <p>
-                {{ render_icon('person', classes='tiny') }} &nbsp; Created By &colon;
-                <strong>AdminUser</strong></p>
-            <p>
-                {{ render_icon('calendar_today', classes='tiny') }} &nbsp; Created On &colon;
-                <strong>{{ policy.created_at|date }}</strong>
-            </p>
-            <p>
-                {{ render_icon("verified_user", classes="tiny") }} <strong>Status:</strong> &nbsp;
-                {% if policy.active %}
-                    <span class="success-text">Active</span>
-                {% else %}
-                    <span class="danger-text">Disabled</span>
-                {% endif %}
-            </p>
-            <p>
-                {{ render_icon('workspace_premium', classes='tiny') }} &nbsp; Assigned Roles &colon;
-                <strong>{{ policy.role_policies|length }}</strong>
-            </p>
-        </div>
-    {% endcall %}
-</div>
+    {% call page_section(policy.name, header_description) %}
+        <!-- Policy Details -->
+        <div class="col s12">
+            {% call panel_card("Assigned Roles") %}
 
-<!-- Permissions Table -->
-<div class="col s12">
-    {% set panel_title = "Assigned Permissions" %}
-    {% call panel_card(panel_title, count=policy.policy_permissions) %}
-        {% call table(["Name", "Description"]) %}
-            {% for permission in policy.policy_permissions %}
-                {% set permission_name = permission.permission.name|replace("."," ")|title|strip_spaces %}
-                <tr>
-                    <td>{{ permission_name }}</td>
-                    <td>{{ permission.permission.description|capitalize }}</td>
-                </tr>
-            {% endfor %}
-        {% endcall %}
-        {% if policy.active %}
-            {{ render_button("Edit Permissions", "filled") }}
-        {% else %}
-            {{ render_button("Edit Permissions", "disabled") }}
-        {% endif %}
-    {% endcall %}
-</div>
-
-<!-- Danger Zone -->
-<div class="col s12">
-    {% call panel_card(title="Danger Zone", classes="danger-border p-4") %}
-    <p class="flow-text">
-        These actions are <strong>irreversible</strong>. Disabling a policy prevents its enforcement.
-        Deleting a policy will permanently remove all associated permissions and assignments.
-    </p>
-    <div class="row">
-        <!-- Disable Policy -->
-        <div class="col s12 m6">
-            <p class="flow-text"><strong>Temporarily Disable</strong></p>
-            <p>This will deactivate the policy but keep its assignments intact.</p>
-            {% if policy.active %}
-            {{ render_modal_button("Disable Policy", "outlined", "disableModal", classes="danger") }}
-            {% set modal_footer %}
-            {{ render_button("Disable", "filled", classes="warning black-text") }}
-            {{ render_button("Close", "text", classes="grey-text") }}
-            {% endset %}
-            {% call modal("disableModal", "Disable Policy?", "warning", footer=modal_footer) %}
-                <p class="flow-text">
-                    Disabling this policy will make it inactive, but it will remain assigned to
-                    roles/users. You can re-enable it later from the policy details page.
-                </p>
             {% endcall %}
-            {% else %}
-            {{ render_modal_button("Enable Policy", "outlined", "enableModal", classes="danger") }}
-            {% call modal("enableModal", "Enable Policy", "warning") %}
-                <p class="flow-text">
-                    Enabling this policy will make it active again, and all its permissions will be
-                    enforced
-                    for assigned roles/users. You can disable it again if needed.
-                </p>
+        </div>
+
+        <!-- PermissionBuilder Table -->
+        <div class="col s12">
+            {% set panel_title = "PermissionBuilder" %}
+            {% call panel_card(panel_title, count=policy.policy_permissions) %}
+                {% call table(["Name", "Description"]) %}
+                    {% for permission in policy.policy_permissions %}
+                        {% set permission_name = permission.permission.name|replace("."," ")|title|strip_spaces %}
+                        <tr>
+                            <td>{{ permission_name }}</td>
+                            <td>{{ permission.permission.description|capitalize }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endcall %}
             {% endcall %}
-            {% endif %}
-
         </div>
-
-        <!-- Delete Policy -->
-        <div class="col s12 m6">
-            <p class="flow-text"><strong>Permanently Delete</strong></p>
-            <p>This will remove the policy and all related permissions from the system.</p>
-            {% if current_user.has_permission('iam.delete.policy') %}
-                {% if policy.active %}
-                    {{ render_button("Delete Policy", "disabled") }}
-                {% else %}
-                    {{ render_modal_button("Delete Policy", "outlined", "confirmPolicyDeletion", "danger") }}
-                    {% call modal("confirmPolicyDeletion", "Confirm Delete", "danger") %}
-                        <p class="flow-text">
-                            This action is <strong>permanent</strong>. Deleting this policy will remove
-                            all associated permissions and unlink any assigned users or roles. Are you
-                            sure you want to continue?
-                        </p>
-                    {% endcall %}
-                {% endif %}
-            {% endif %}
-        </div>
-    </div>
     {% endcall %}
-</div>
-{% endcall %}
 
 {% endblock %}

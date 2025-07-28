@@ -1,4 +1,4 @@
-from .shop_order_items import ShopOrderItem
-from .shop_orders import ShopOrder
+from .ticket import Ticket
+from .ticket_item import TicketItem
 
-__all__ = ["ShopOrder", "ShopOrderItem"]
+__all__ = ["Ticket", "TicketItem"]

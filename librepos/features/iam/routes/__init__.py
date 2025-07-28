@@ -17,7 +17,7 @@ iam_bp.register_blueprint(auth_bp)
 
 @iam_bp.get("/")
 @iam_bp.get("/home")
-@permission_required("iam.access")
+@permission_required("iam.allow.access")
 def home():
     """Render the IAM home page."""
 
