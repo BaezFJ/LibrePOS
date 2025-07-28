@@ -3,8 +3,8 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField, SubmitField
 from wtforms.validators import DataRequired
 
+from librepos.common.enums import DateFormatEnum
 from librepos.utils.datetime import get_all_timezones
-from librepos.utils.enums import DateFormatEnum
 from librepos.utils.form import default_placeholder
 
 

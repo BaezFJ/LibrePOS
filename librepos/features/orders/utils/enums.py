@@ -42,3 +42,9 @@ class OrderPermissions(StrEnum):
     LIST_TICKET_ITEM = "order.list.ticket_item"
     UPDATE_TICKET_ITEM = "order.update.ticket_item"
     DELETE_TICKET_ITEM = "order.delete.ticket_item"
+
+
+class OrderStatus(StrEnum):
+    PENDING = "pending"
+    COMPLETED = "completed"
+    VOIDED = "voided"

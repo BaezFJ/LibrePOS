@@ -3,8 +3,8 @@ from typing import Any
 from sqlalchemy.exc import SQLAlchemyError
 
 from librepos.utils import FlashMessageHandler
-from librepos.utils.enums import OrderStateEnum
 from ..repositories import OrderRepository, OrderItemRepository
+from ..utils.enums import OrderStatus
 
 
 class OrderService:
@@ -20,11 +20,11 @@ class OrderService:
         user_orders = self.order_repo.list_orders_by_user(user_id)
         user_pending_orders = []
         for order in user_orders:
-            if order.status == OrderStateEnum.PENDING.value:
+            if order.status == OrderStatus.PENDING.value:
                 user_pending_orders.append(order)
         return user_pending_orders
 
-    def patch_order_status(self, order_id: int, status: OrderStateEnum):
+    def patch_order_status(self, order_id: int, status: OrderStatus):
         try:
             # Get the existing order
             order = self.order_repo.get_by_id(order_id)

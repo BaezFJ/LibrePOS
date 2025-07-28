@@ -1,12 +1,6 @@
 from enum import StrEnum
 
 
-class OrderStateEnum(StrEnum):
-    PENDING = "pending"
-    COMPLETED = "completed"
-    VOIDED = "voided"
-
-
 class DateFormatEnum(StrEnum):
     DDMMYYYY = "%d/%m/%Y"
     MMDDYYYY = "%m/%d/%Y"

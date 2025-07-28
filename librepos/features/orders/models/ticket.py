@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
-from librepos.utils.enums import OrderStateEnum
+from ..utils.enums import OrderStatus
 
 if TYPE_CHECKING:
     from librepos.features.orders.models import TicketItem
@@ -31,8 +31,8 @@ class Ticket(db.Model):
     # Columns
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     order_number: Mapped[int]
-    status: Mapped[OrderStateEnum] = mapped_column(
-        Enum(OrderStateEnum), default=OrderStateEnum.PENDING
+    status: Mapped[OrderStatus] = mapped_column(
+        Enum(OrderStatus), default=OrderStatus.PENDING
     )
     guest_count: Mapped[int] = mapped_column(default=1)
 

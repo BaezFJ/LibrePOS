@@ -3,9 +3,8 @@ from flask_login import current_user
 
 from librepos.features.menu.services import MenuCategoryService, MenuItemService
 from librepos.utils.decorators import permission_required
-from librepos.utils.enums import OrderStateEnum
 from .services import OrderService
-from .utils.enums import OrderPermissions
+from .utils.enums import OrderPermissions, OrderStatus
 
 order_bp = Blueprint(
     "order", __name__, template_folder="templates", url_prefix="/orders"
@@ -63,7 +62,7 @@ def get_order(order_id):
 @order_bp.post("/void-order/<int:order_id>")
 @permission_required(OrderPermissions.CREATE_TICKET)
 def void_order(order_id):
-    order_service.patch_order_status(order_id, OrderStateEnum.VOIDED)
+    order_service.patch_order_status(order_id, OrderStatus.VOIDED)
     response = jsonify(success=True)
     response.headers["HX-Redirect"] = url_for("order.list_orders")
     return response
