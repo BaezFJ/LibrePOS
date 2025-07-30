@@ -7,20 +7,12 @@
     {% set header_description = policy.description|capitalize %}
 
     {% call page_section(policy.name, header_description) %}
-        <!-- Policy Details -->
-        <div class="col s12">
-            {% call panel_card("Assigned Roles") %}
-
-            {% endcall %}
-        </div>
-
         <!-- PermissionBuilder Table -->
         <div class="col s12">
-            {% set panel_title = "PermissionBuilder" %}
-            {% call panel_card(panel_title, count=policy.policy_permissions) %}
+            {% call panel_card("Permissions", count=policy.policy_permissions) %}
                 {% call table(["Name", "Description"]) %}
                     {% for permission in policy.policy_permissions %}
-                        {% set permission_name = permission.permission.name|replace("."," ")|title|strip_spaces %}
+                        {% set permission_name = permission.permission.name|replace("."," ")|un_snake|title|strip_spaces %}
                         <tr>
                             <td>{{ permission_name }}</td>
                             <td>{{ permission.permission.description|capitalize }}</td>

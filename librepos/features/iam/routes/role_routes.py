@@ -45,6 +45,7 @@ def list_roles():
         "back_url": url_for("iam.home"),
         "roles": role_service.role_repository.get_all(),
         "form": RoleCreationForm(),
+        "create_role_permission": IAMPermissions.CREATE_ROLE,
     }
     return render_template("iam/role/list_roles.html", **context)
 
@@ -73,6 +74,7 @@ def get_role(role_id):
         "back_url": url_for(".list_roles"),
         "role": role,
         "form": form,
+        "update_role_permission": IAMPermissions.UPDATE_ROLE,
     }
     return render_template("iam/role/get_role.html", **context)
 

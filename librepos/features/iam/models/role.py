@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, relationship, mapped_column
@@ -28,7 +28,9 @@ class Role(db.Model):
     name: Mapped[str] = mapped_column(unique=True, index=True)
     description: Mapped[str]
     created_at: Mapped[datetime]
+    updated_at: Mapped[Optional[datetime]]
     active: Mapped[bool] = mapped_column(default=True)
+    deletable: Mapped[bool] = mapped_column(default=True)
 
     # Relationships
     users: Mapped[List["User"]] = relationship(back_populates="role")

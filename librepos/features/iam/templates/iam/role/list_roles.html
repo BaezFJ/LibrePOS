@@ -6,7 +6,7 @@
 {% block main %}
 
 {% set button_html %}
-{% if current_user.has_permission("iam.create.role") %}
+{% if current_user.has_permission(create_role_permission) %}
     {{ render_button("Create Role", "filled", url=url_for('iam.role.display_create_role')) }}
 {% endif %}
 {% endset %}

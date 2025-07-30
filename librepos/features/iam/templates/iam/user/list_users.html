@@ -6,7 +6,7 @@
 {% block main %}
 
 {% set button_html %}
-{% if current_user.has_permission("iam.create.user") %}
+{% if current_user.has_permission(create_user_permission) %}
     {{ render_button("Create User", "filled", url=url_for('iam.user.display_create_user')) }}
 {% endif %}
 {% endset %}

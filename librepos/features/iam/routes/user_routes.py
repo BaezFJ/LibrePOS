@@ -42,12 +42,14 @@ def process_create_user():
 def list_users():
     users = user_service.user_repository.get_all()
     form = UserCreationForm()
+    create_user_permission = IAMPermissions.CREATE_USER
     context = {
         "title": "Users",
         "description": "An IAM Users are accounts that can log in and use the LibrePOS system based on their permissions.",
         "back_url": url_for("iam.home"),
         "users": users,
         "form": form,
+        "create_user_permission": create_user_permission,
     }
     return render_template("iam/user/list_users.html", **context)
 
@@ -58,11 +60,13 @@ def get_user(user_id):
     """Render the user page."""
     user = user_service.user_repository.get_by_id(user_id)
     form = ConfirmationForm()
+    update_user_permission = IAMPermissions.UPDATE_USER
     context = {
         "title": "User",
         "back_url": url_for(".list_users"),
         "user": user,
         "form": form,
+        "update_user_permission": update_user_permission,
     }
     return render_template("iam/user/get_user.html", **context)
 

@@ -7,8 +7,8 @@
 {% block main %}
 
 {% set button_html %}
-{% if current_user.has_permission("iam.update.user") %}
-    {{ render_button("Edit", "filled", "#") }}
+{% if current_user.has_permission(update_user_permission) %}
+    {{ render_button("Edit", "filled", url_for("iam.user.display_update_user", user_id=user.id)) }}
 {% endif %}
 {% endset %}
 

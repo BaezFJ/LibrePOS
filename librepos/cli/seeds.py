@@ -255,31 +255,29 @@ def seed_all():
 
     seed_roles()
     seed_permissions()
-    # seed_policy_categories()
     seed_policies()
     seed_role_policies()
 
     seed_users()
     load_menu_data()
 
-
-MENU_GROUPS = [
-    {
-        "name": "Entrees",
-    },
-    {
-        "name": "Beverages",
-    },
-    {
-        "name": "Desserts",
-    },
-]
-
-TICKET_TYPES = [
-    {"name": "dine-in", "icon": "table_restaurant"},
-    {"name": "take-out", "icon": "takeout_dining", "default": True},
-    {"name": "delivery", "icon": "delivery_dining", "active": False, "visible": False},
-    {"name": "phone", "icon": "phone"},
-    {"name": "drive-thru", "icon": "time_to_leave", "active": False, "visible": False},
-    {"name": "online", "icon": "public", "visible": False},
-]
+# MENU_GROUPS = [
+#     {
+#         "name": "Entrees",
+#     },
+#     {
+#         "name": "Beverages",
+#     },
+#     {
+#         "name": "Desserts",
+#     },
+# ]
+#
+# TICKET_TYPES = [
+#     {"name": "dine-in", "icon": "table_restaurant"},
+#     {"name": "take-out", "icon": "takeout_dining", "default": True},
+#     {"name": "delivery", "icon": "delivery_dining", "active": False, "visible": False},
+#     {"name": "phone", "icon": "phone"},
+#     {"name": "drive-thru", "icon": "time_to_leave", "active": False, "visible": False},
+#     {"name": "online", "icon": "public", "visible": False},
+# ]

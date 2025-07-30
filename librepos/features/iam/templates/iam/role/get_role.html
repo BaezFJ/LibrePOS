@@ -5,7 +5,7 @@
 
 {% block main %}
 {% set update_role_button %}
-{% if current_user.has_permission("iam.update.role") %}
+{% if current_user.has_permission(update_role_permission) %}
     {{ render_button("Edit Role", "filled", url="#") }}
 {% endif %}
 {% endset %}
@@ -59,34 +59,36 @@
         {% endcall %}
     </div>
 
-    <!-- Danger Zone Card -->
-    <div class="col s12">
-        {% call panel_card("Danger Zone", classes="danger-border") %}
-            <div class="row">
-                <div class="col s12">
-                    <p class="flow-text">
-                        <strong>This action is irreversible.</strong>
-                    </p>
-                    <p class="flow-text">
-                        <strong>Are you sure you want to delete this role?</strong>
-                    </p>
-                </div>
-                <div class="col s12">
-                    {{ render_modal_button("Delete Role", "outlined", "deleteRole", classes="danger") }}
-                    {% call modal("deleteRole", "Delete Role?", "danger") %}
+    {% if role.deletable %}
+        <!-- Danger Zone Card -->
+        <div class="col s12">
+            {% call panel_card("Danger Zone", classes="danger-border") %}
+                <div class="row">
+                    <div class="col s12">
                         <p class="flow-text">
-                            Deleting this role will permanently remove it from the system and revoke all associated
-                            permissions from users who have this role. This action cannot be undone.
+                            <strong>This action is irreversible.</strong>
                         </p>
                         <p class="flow-text">
-                            Type <strong>confirm</strong> to proceed with deletion.
+                            <strong>Are you sure you want to delete this role?</strong>
                         </p>
-                        {{ render_form(form, url_for("iam.role.delete_role", role_id=role.id)) }}
-                    {% endcall %}
+                    </div>
+                    <div class="col s12">
+                        {{ render_modal_button("Delete Role", "outlined", "deleteRole", classes="danger") }}
+                        {% call modal("deleteRole", "Delete Role?", "danger") %}
+                            <p class="flow-text">
+                                Deleting this role will permanently remove it from the system and revoke all associated
+                                permissions from users who have this role. This action cannot be undone.
+                            </p>
+                            <p class="flow-text">
+                                Type <strong>confirm</strong> to proceed with deletion.
+                            </p>
+                            {{ render_form(form, url_for("iam.role.delete_role", role_id=role.id)) }}
+                        {% endcall %}
+                    </div>
                 </div>
-            </div>
-        {% endcall %}
-    </div>
+            {% endcall %}
+        </div>
+    {% endif %}
 
 {% endcall %}
 
