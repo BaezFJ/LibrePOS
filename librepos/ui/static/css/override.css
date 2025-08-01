@@ -41,3 +41,13 @@ ul {
     padding-top: .25rem !important;
     padding-bottom: .25rem !important;
 }
+
+@media only screen and (max-width: 992.99px) {
+    .tabs .tab a {
+        padding-top: 12px;
+    }
+}
+
+.tabs {
+    border-radius: var(--border-radius);
+}
