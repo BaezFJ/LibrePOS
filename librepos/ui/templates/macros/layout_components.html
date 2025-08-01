@@ -53,7 +53,7 @@ Example usage:
 {% endcall %}
 #}
 
-{% macro page_section(title, description=None, count=None, button=None) %}
+{% macro page_section(title, description=None, count=None, button=None, row=True) %}
     <section class="section">
         <div class="container">
             {% if title %}
@@ -79,7 +79,7 @@ Example usage:
                     <div class="divider"></div>
                 </div>
             {% endif %}
-            <div class="section-content row mt-4">
+            <div class="section-content {{ "row" if row }} mt-4">
                 {{ caller() }}
             </div>
         </div>
