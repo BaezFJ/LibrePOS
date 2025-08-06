@@ -25,6 +25,11 @@
             {% if current_user.is_authenticated %}
                 <ul class="right">
                     <li>
+                        <a href="">
+                            {{ render_icon("notifications") }}
+                        </a>
+                    </li>
+                    <li>
                         <a data-target="sidenav" class="sidenav-trigger">
                             {% set icon_name = sidenav.icon if sidenav else "account_circle" %}
                             {{ render_icon(icon_name) }}
