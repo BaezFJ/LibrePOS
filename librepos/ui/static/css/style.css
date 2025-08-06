@@ -67,6 +67,10 @@ main > :first-child {
     color: inherit;
 }
 
+.inherit-height {
+    height: inherit;
+}
+
 .flex {
     display: flex;
     flex-direction: row;
