@@ -88,6 +88,18 @@ main > :first-child {
     justify-content: space-around;
 }
 
+.space-evenly {
+    justify-content: space-evenly;
+}
+
+.flex-center {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
 .scrollable {
     overflow: scroll;
 }
