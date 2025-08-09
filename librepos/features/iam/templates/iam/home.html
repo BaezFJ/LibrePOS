@@ -14,11 +14,6 @@
         <div class="col s6 m4 l3">
             {{ render_icon_card("lock_person", "Roles", url_for('iam.role.list_roles')) }}
         </div>
-
-        <!-- Policies Settings -->
-        <div class="col s6 m4 l3">
-            {{ render_icon_card("policy", "Policies", url_for('iam.policy.list_policies')) }}
-        </div>
     {% endcall %}
 
 {% endblock %}
