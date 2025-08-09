@@ -11,7 +11,7 @@ from ..forms import (
     UserRoleForm,
 )
 from ..services import UserService
-from ..utils.enums import IAMPermissions
+from ..utils.enums import IAMPermissions as Permissions
 
 user_service = UserService()
 
@@ -22,7 +22,7 @@ user_bp = Blueprint("user", __name__, template_folder="templates", url_prefix="/
 #            CREATE
 # ================================
 @user_bp.post("/create-user")
-@permission_required(IAMPermissions.CREATE_USER)
+@permission_required(Permissions.CREATE_USER)
 def process_create_user():
     """Process the user creation form."""
     form = UserCreationForm()
@@ -38,11 +38,11 @@ def process_create_user():
 #            READ
 # ================================
 @user_bp.get("/")
-@permission_required(IAMPermissions.LIST_USER)
+@permission_required(Permissions.LIST_USER)
 def list_users():
     users = user_service.user_repository.get_all()
     form = UserCreationForm()
-    create_user_permission = IAMPermissions.CREATE_USER
+    create_user_permission = Permissions.CREATE_USER
     context = {
         "title": "Users",
         "description": "An IAM Users are accounts that can log in and use the LibrePOS system based on their permissions.",
@@ -55,12 +55,12 @@ def list_users():
 
 
 @user_bp.get("/<int:user_id>")
-@permission_required(IAMPermissions.READ_USER)
+@permission_required(Permissions.READ_USER)
 def get_user(user_id):
     """Render the user page."""
     user = user_service.user_repository.get_by_id(user_id)
     form = ConfirmationForm()
-    update_user_permission = IAMPermissions.UPDATE_USER
+    update_user_permission = Permissions.UPDATE_USER
     context = {
         "title": "User",
         "back_url": url_for(".list_users"),
@@ -72,7 +72,7 @@ def get_user(user_id):
 
 
 @user_bp.get("/create")
-@permission_required(IAMPermissions.CREATE_USER)
+@permission_required(Permissions.CREATE_USER)
 def display_create_user():
     """Render the IAM user creation page."""
     form = UserCreationForm()
@@ -85,7 +85,7 @@ def display_create_user():
 
 
 @user_bp.get("/<int:user_id>/update")
-@permission_required(IAMPermissions.UPDATE_USER)
+@permission_required(Permissions.UPDATE_USER)
 def display_update_user(user_id):
     """Render the IAM user update page."""
     user = user_service.user_repository.get_by_id(user_id)
@@ -104,7 +104,7 @@ def display_update_user(user_id):
 
 
 @user_bp.get("/<int:user_id>/role-change")
-@permission_required(IAMPermissions.UPDATE_USER)
+@permission_required(Permissions.UPDATE_USER)
 def display_role_change(user_id):
     """Render the IAM user role change page."""
     user = user_service.user_repository.get_by_id(user_id)
@@ -122,7 +122,7 @@ def display_role_change(user_id):
 #            UPDATE
 # ================================
 @user_bp.post("/<int:user_id>/update/address")
-@permission_required(IAMPermissions.UPDATE_USER)
+@permission_required(Permissions.UPDATE_USER)
 def update_user_address(user_id):
     form = UserAddressForm()
     if form.validate_on_submit:
@@ -132,7 +132,7 @@ def update_user_address(user_id):
 
 
 @user_bp.post("/<int:user_id>/update/contact")
-@permission_required(IAMPermissions.UPDATE_USER)
+@permission_required(Permissions.UPDATE_USER)
 def update_user_contact(user_id):
     form = UserContactForm()
     if form.validate_on_submit:
@@ -142,7 +142,7 @@ def update_user_contact(user_id):
 
 
 @user_bp.post("/<int:user_id>/update/details")
-@permission_required(IAMPermissions.UPDATE_USER)
+@permission_required(Permissions.UPDATE_USER)
 def update_user_details(user_id):
     form = UserDetailsForm()
     if form.validate_on_submit:
@@ -152,7 +152,7 @@ def update_user_details(user_id):
 
 
 @user_bp.post("/<int:user_id>/suspend")
-@permission_required(IAMPermissions.UPDATE_USER)
+@permission_required(Permissions.UPDATE_USER)
 def toggle_user_suspend(user_id):
     response = jsonify(success=True)
     user_service.toggle_user_status(user_id)
@@ -161,7 +161,7 @@ def toggle_user_suspend(user_id):
 
 
 @user_bp.post("/<int:user_id>/update-role")
-@permission_required(IAMPermissions.UPDATE_USER)
+@permission_required(Permissions.UPDATE_USER)
 def update_user_role(user_id):
     form = UserRoleForm()
     if form.validate_on_submit:
@@ -174,7 +174,7 @@ def update_user_role(user_id):
 #            DELETE
 # ================================
 @user_bp.post("/<int:user_id>/delete")
-@permission_required(IAMPermissions.DELETE_USER)
+@permission_required(Permissions.DELETE_USER)
 def delete_user(user_id):
     """Render the IAM user creation page."""
     form = ConfirmationForm()

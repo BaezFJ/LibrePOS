@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, render_template
 
 from librepos.cli.manage import add_cli_commands
 from librepos.features import register_features
@@ -34,8 +34,8 @@ def create_app():
     register_features(app)
 
     @app.route("/")
-    def index():
-        return redirect(url_for("order.list_orders"))
+    def dashboard():
+        return render_template("dashboard.html")
 
     # load cli commands
     add_cli_commands(app)

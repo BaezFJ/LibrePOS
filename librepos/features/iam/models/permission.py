@@ -1,12 +1,13 @@
-from typing import List
+# from typing import List
 from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from librepos.extensions import db
+from .associations import role_permission_association
 
 if TYPE_CHECKING:
-    from .policy_permission import PolicyPermission
+    from .role import Role
 
 
 class Permission(db.Model):
@@ -23,6 +24,13 @@ class Permission(db.Model):
     name: Mapped[str] = mapped_column(unique=True)
     description: Mapped[str]
 
-    policy_permissions: Mapped[List["PolicyPermission"]] = relationship(
-        "PolicyPermission", back_populates="permission", cascade="all, delete-orphan"
+    roles: Mapped[list["Role"]] = relationship(
+        "Role",
+        secondary=role_permission_association,
+        back_populates="permissions",
+        lazy="joined",
     )
+
+    # policy_permissions: Mapped[List["PolicyPermission"]] = relationship(
+    #     "PolicyPermission", back_populates="permission", cascade="all, delete-orphan"
+    # )

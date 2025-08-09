@@ -9,6 +9,9 @@
 <main>
     {% block main %}{% endblock %}
 </main>
+{% if current_user.is_authenticated %}
+    {% include "_bottom_navbar.html" %}
+{% endif %}
 {% block footer %}{% endblock %}
 {% include "_flash_messages.html" %}
 {% include "_scripts.html" %}

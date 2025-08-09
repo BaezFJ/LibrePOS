@@ -43,6 +43,25 @@ class OrderPermissions(StrEnum):
     UPDATE_TICKET_ITEM = "order.update.ticket_item"
     DELETE_TICKET_ITEM = "order.delete.ticket_item"
 
+    @property
+    def description(self) -> str:
+        return _DESCRIPTIONS[self]
+
+
+_DESCRIPTIONS: dict[OrderPermissions, str] = {
+    OrderPermissions.ACCESS: "View and navigate the Order Management interface for processing customer orders",
+    OrderPermissions.CREATE_TICKET: "Create new order tickets with customer and table information",
+    OrderPermissions.READ_TICKET: "View detailed order ticket information including items, status and payment details",
+    OrderPermissions.LIST_TICKET: "View and search through all order tickets with their current status",
+    OrderPermissions.UPDATE_TICKET: "Modify existing order ticket details including status, items and payment information",
+    OrderPermissions.DELETE_TICKET: "Permanently remove order tickets from the system",
+    OrderPermissions.CREATE_TICKET_ITEM: "Add individual menu items to order tickets with quantity and special instructions",
+    OrderPermissions.READ_TICKET_ITEM: "View detailed order item information including modifiers and preparation status",
+    OrderPermissions.LIST_TICKET_ITEM: "View all items across order tickets with their current status",
+    OrderPermissions.UPDATE_TICKET_ITEM: "Modify ordered items including quantity, special instructions and preparation status",
+    OrderPermissions.DELETE_TICKET_ITEM: "Remove individual items from order tickets",
+}
+
 
 class OrderStatus(StrEnum):
     PENDING = "pending"

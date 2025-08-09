@@ -16,7 +16,7 @@ auth_service = AuthService()
 def login():
     if current_user.is_authenticated:
         FlashMessageHandler.warning("You are already logged in.")
-        return redirect(url_for("order.list_orders"))
+        return redirect(url_for("dashboard"))
 
     form = UserLoginForm()
     context = {
@@ -31,8 +31,8 @@ def login():
             next_url = request.args.get("next", "")
             next_url = next_url.replace("\\", "")  # Normalize backslashes
             if not urlparse(next_url).netloc and not urlparse(next_url).scheme:
-                return redirect(next_url or url_for("order.list_orders"))
-            return redirect(url_for("order.list_orders"))
+                return redirect(next_url or url_for("dashboard"))
+            return redirect(url_for("dashboard"))
     return render_template("iam/auth/login.html", **context)
 
 

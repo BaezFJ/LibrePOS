@@ -6,10 +6,11 @@ from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
+from .associations import role_permission_association
 
 if TYPE_CHECKING:
     from .user import User
-    from .role_policy import RolePolicy
+    from .permission import Permission
 
 
 class Role(db.Model):
@@ -34,13 +35,13 @@ class Role(db.Model):
 
     # Relationships
     users: Mapped[List["User"]] = relationship(back_populates="role")
-    role_policies: Mapped[List["RolePolicy"]] = relationship(
-        "RolePolicy", back_populates="role", cascade="all, delete-orphan"
+    permissions: Mapped[list["Permission"]] = relationship(
+        "Permission",
+        secondary=role_permission_association,
+        back_populates="roles",
+        lazy="joined",
     )
 
     def has_permission(self, permission_name: str) -> bool:
         """Check if any attached policy includes the permission."""
-        for rp in self.role_policies:
-            if rp.policy and rp.policy.has_permission(permission_name):
-                return True
-        return False
+        return any(p.name == permission_name for p in self.permissions)

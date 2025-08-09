@@ -1,0 +1,100 @@
+{% from "macros/layout_components.html" import page_section, panel_card %}
+{% from "macros/ui_components.html" import render_button %}
+
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+{% set button_html %}
+{{ render_button("Create Order", "filled") }}
+{% endset %}
+
+{% call page_section("Dashboard", "Welcome back! Tap to start or check current orders.", button=button_html) %}
+
+{% endcall %}
+
+
+
+<div class="container">
+
+    <!-- Page Header -->
+    <div class="row valign-wrapper" style="margin-bottom: 1rem;">
+        <div class="col s10">
+            <h5 class="grey-text text-darken-3">
+                <i class="material-symbols-rounded left">dashboard</i>
+                Waiter Dashboard
+            </h5>
+            <p class="grey-text">Welcome back! Tap to start or check current orders.</p>
+        </div>
+        <div class="col s2 right-align">
+            <a href="/orders/create" class="btn-floating btn-large green darken-2 tooltipped"
+               data-tooltip="Start New Order">
+                <i class="material-symbols-rounded">add</i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Popular Dishes -->
+    <div class="section">
+        <h6><i class="material-symbols-rounded left">star</i> Popular Dishes</h6>
+        <div class="chips">
+            <div class="chip">🍕 Pepperoni Pizza</div>
+            <div class="chip">🍔 Bacon Cheeseburger</div>
+            <div class="chip">🥗 Caesar Salad</div>
+            <div class="chip">🍤 Shrimp Tacos</div>
+        </div>
+    </div>
+
+    <!-- Out of Stock -->
+    <div class="section">
+        <h6 class="red-text text-darken-2">
+            <i class="material-symbols-rounded left">report</i> Out of Stock
+        </h6>
+        <div class="card-panel red lighten-5">
+            <p class="red-text text-darken-2">
+                <i class="material-symbols-rounded tiny">warning</i> The following items are currently unavailable:
+            </p>
+            <ul class="browser-default red-text">
+                <li>Vanilla Milkshake</li>
+                <li>Chicken Wings</li>
+                <li>Spinach Dip</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Real-time Order Feed -->
+    <div class="section">
+        <h6><i class="material-symbols-rounded left">table_restaurant</i> Active Orders</h6>
+
+        <ul class="collection z-depth-1">
+            <li class="collection-item avatar">
+                <i class="material-symbols-rounded circle green">done</i>
+                <span class="title"><strong>Table 3</strong> - Completed</span>
+                <p>2x Burger, 1x Soda<br>🕓 12:45 PM</p>
+                <a href="#!" class="secondary-content grey-text tooltipped" data-tooltip="View">
+                    <i class="material-symbols-rounded">visibility</i>
+                </a>
+            </li>
+            <li class="collection-item avatar">
+                <i class="material-symbols-rounded circle amber">schedule</i>
+                <span class="title"><strong>Table 7</strong> - Preparing</span>
+                <p>1x Lasagna, 1x Red Wine<br>🕓 12:48 PM</p>
+                <a href="#!" class="secondary-content grey-text">
+                    <i class="material-symbols-rounded">visibility</i>
+                </a>
+            </li>
+            <li class="collection-item avatar">
+                <i class="material-symbols-rounded circle red">priority_high</i>
+                <span class="title"><strong>Table 5</strong> - Delayed</span>
+                <p>3x Fish Tacos<br>🕓 12:50 PM</p>
+                <a href="#!" class="secondary-content grey-text">
+                    <i class="material-symbols-rounded">visibility</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+{% endblock %}
