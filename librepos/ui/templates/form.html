@@ -1,0 +1,151 @@
+<!--=================-->
+<!-- FORM ELEMENTS -->
+<!--=================-->
+
+{#
+Form Documentation:
+
+Parameters:
+- form: Form object to be rendered
+  WTForms form instance containing the fields to display
+
+- url: String URL for form submission
+  Target endpoint for POST request when form is submitted
+
+Layout:
+- Renders in responsive grid navigation
+- Fields use col s12 m6 l4 xl3 classes for responsive sizing
+- Submit button centered in full-width column
+
+Features:
+- Automatically includes CSRF token via form.hidden_tag()
+- Styles submit button with filled, rounded button classes
+- Renders all non-CSRF fields using render_field macro
+- Input fields wrapped in materialize input-field class
+#}
+
+{% macro render_form(form, url) %}
+
+    {% set responsive_class = "col s12 m8 offset-m2" %}
+
+    <form action="{{ url }}" method="post" class="row">
+        {{ form.hidden_tag() }}
+        {% for field in form if field.name != 'csrf_token' %}
+            {% if field.name == "submit" %}
+                <div class="col s12 center-block">
+                    {{ field(class="btn filled rounded waves-effect waves-light") }}
+                </div>
+            {% else %}
+                <div class="{{ responsive_class }} input-field">
+                    {{ render_field(field) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </form>
+
+{% endmacro %}
+
+{#
+Form Field Documentation:
+
+Parameters:
+- field: Form field object to be rendered
+  WTForms field instance to display with appropriate styling and behavior
+  Supports BooleanField and standard text input fields
+
+Features:
+- Automatically detects field type and uses appropriate render macro
+- BooleanFields render as Material toggle switches
+- Text fields include label and optional icon/supporting text
+- Maintains consistent Material Design styling
+
+Example usage:
+{{ render_field(form.name) }}
+{{ render_field(form.enabled) }}
+#}
+
+<!-- Form Field Components -->
+{% macro render_field(field) %}
+
+    {% if field.type == "BooleanField" %}
+        {{ render_switch_field(field) }}
+    {% elif field.type == "HiddenField" %}
+        {{ field(**kwargs)|safe }}
+    {% else %}
+        {{ render_text_field(field) }}
+    {% endif %}
+
+{% endmacro %}
+
+{#
+Switch Field Documentation:
+
+Parameters:
+- field: Form field object of type BooleanField to be rendered
+  WTForms BooleanField instance to display as a Material toggle switch
+  Must be a BooleanField type for proper behavior
+
+Layout:
+- Renders as Material Design toggle switch component
+- Label text displayed before the switch control
+- Switch includes animated lever element for visual feedback
+
+Features:
+- Converts standard checkbox into Material toggle switch
+- Maintains form field binding and validation
+- Provides touch-friendly mobile interaction
+- Animates state changes with sliding lever
+
+Example usage:
+{{ render_switch_field(form.enabled) }}
+{{ render_switch_field(form.active_status) }}
+#}
+
+{% macro render_switch_field(field) %}
+    <div class="switch">
+        <span>{{ field.label.text }}&colon; &nbsp;</span>
+        <label>
+            {{ field(**kwargs)|safe }}
+            <span class="lever"></span>
+        </label>
+    </div>
+{% endmacro %}
+
+{#
+Text Field Documentation:
+
+Parameters:
+- field: Form field object to be rendered
+  WTForms field instance to display with appropriate styling and behavior
+  Supports text inputs, textareas, password fields, and select fields
+
+For text inputs:
+- Renders standard text input with floating label
+- Maintains Material Design input styling
+- Supports placeholder text and validation states
+
+For select fields:
+- Renders as Material Design select dropdown
+- Options populated from field.choices
+- Maintains form field binding and validation
+- Supports multiple selection if configured
+
+Features:
+- Automatically detects field type and applies appropriate styling
+- Includes field label with proper positioning
+- Preserves form validation and error states
+- Compatible with Materialize CSS input styles
+
+Example usage:
+{{ render_text_field(form.name) }}         -> Renders text input
+{{ render_text_field(form.category) }}     -> Renders select dropdown
+#}
+
+{% macro render_text_field(field) %}
+
+    <!-- TODO 7/5/25 : Render form field error messages. -->
+
+    {{ field(**kwargs)|safe }}
+    {{ field.label }}
+
+{% endmacro %}

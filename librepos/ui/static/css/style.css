@@ -55,10 +55,6 @@ main {
     overflow: scroll;
 }
 
-main > :first-child {
-    margin-top: 2rem;
-}
-
 .align-center {
     align-content: center;
 }
@@ -102,6 +98,15 @@ main > :first-child {
 
 .scrollable {
     overflow: scroll;
+}
+
+.primary-border {
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+}
+
+.primary-background {
+    background-color: var(--primary-color);
 }
 
 .success {
@@ -266,12 +271,4 @@ hr.warning {
 .summary-line.total {
     font-weight: 600;
     font-size: 1.2rem;
-}
-
-.fs-small {
-    font-size: 0.8rem;
-}
-
-.v-align-middle {
-    vertical-align: middle;
 }

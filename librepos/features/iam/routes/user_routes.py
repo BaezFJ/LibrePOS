@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, url_for, redirect, jsonify
+from flask_login import login_required, current_user
 
 from librepos.common.forms import ConfirmationForm
 from librepos.utils.decorators import permission_required
@@ -69,6 +70,16 @@ def get_user(user_id):
         "update_user_permission": update_user_permission,
     }
     return render_template("iam/user/get_user.html", **context)
+
+
+@user_bp.get("/<int:user_id>/dashboard")
+@login_required
+def get_user_dashboard(user_id):
+    """Render the user dashboard."""
+    context = {
+        "head_title": "IAM | User | Dashboard",
+    }
+    return render_template("iam/user/get_user_dashboard.html", **context)
 
 
 @user_bp.get("/create")

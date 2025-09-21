@@ -28,18 +28,16 @@ a {
     max-height: 80%;
 }
 
+.modal {
+    --modal-background-color: color-mix(in srgb, var(--md-sys-color-surface), var(--md-sys-color-surface-tint) 2%);
+}
+
 ul {
     padding-inline-start: 0;
 }
 
 .card-panel {
     margin: 0;
-}
-
-.divider {
-    border-radius: var(--border-radius);
-    padding-top: .25rem !important;
-    padding-bottom: .25rem !important;
 }
 
 @media only screen and (max-width: 992.99px) {
@@ -50,4 +48,15 @@ ul {
 
 .tabs {
     border-radius: var(--border-radius);
+}
+
+.page-footer {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    border-top: none !important;
+    background-color: var(--secondary-background-color);
+}
+
+.divider {
+    border-radius: var(--border-radius) !important;
 }

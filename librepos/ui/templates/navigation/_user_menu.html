@@ -1,0 +1,35 @@
+{% from "elements.html" import render_divider %}
+{% from "components.html" import render_nav_link %}
+
+<menu id="userMenu" class="sidenav right">
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
+            </div>
+            <img class="circle" src="{{ url_for('static', filename=current_user.image|safe) }}"
+                 alt="{{ current_user.username }}">
+            <span class="name">{{ current_user.username }}</span>
+            <span class="email">{{ current_user.email }}</span>
+        </div>
+    </li>
+
+    {{ render_nav_link("Dashboard", "dashboard", url_for("iam.user.get_user_dashboard", user_id=current_user.id)) }}
+
+    {{ render_nav_link("Notifications", "notifications") }}
+
+    {{ render_nav_link("Messages", "chat") }}
+
+    {{ render_divider() }}
+
+    {{ render_nav_link("Clock-In", "schedule") }}
+
+    {{ render_nav_link("Schedule", "overview") }}
+
+    {{ render_nav_link("Calendar", "calendar_month") }}
+
+    {{ render_divider() }}
+
+    {{ render_nav_link("Logout", "logout", url_for("iam.auth.logout")) }}
+
+</menu>

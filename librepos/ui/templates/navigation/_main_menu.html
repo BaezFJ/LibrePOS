@@ -1,0 +1,41 @@
+{% from "elements.html" import render_divider, render_icon %}
+{% from "components.html" import render_nav_link, render_nav_subheader, collapsible_nav_link %}
+
+<menu id="mainMenu" class="sidenav">
+
+    {{ render_nav_link("New Order", "point_of_sale") }}
+    {{ render_nav_link("Active Orders", "order_play") }}
+
+    {#  Content  #}
+    {{ render_divider() }}
+
+    {{ render_nav_link("Orders", "orders") }}
+
+    {{ render_nav_link("Reports", "finance") }}
+
+    {% call collapsible_nav_link("Menu", "menu_book_2") %}
+
+        {{ render_nav_link("Groups", "list_alt") }}
+        {{ render_nav_link("Products", "fastfood", "") }}
+        {{ render_nav_link("Modifiers", "tune", "") }}
+        {{ render_nav_link("Discounts", "percent_discount", "") }}
+        {{ render_nav_link("Options", "extension", "") }}
+        {{ render_nav_link("Settings", "settings", "") }}
+
+    {% endcall %}
+
+    {{ render_nav_link("Customers", "id_card") }}
+
+    {{ render_nav_link("IAM", "admin_panel_settings") }}
+
+    {{ render_nav_link("Branch", "domain") }}
+
+    {{ render_nav_link("Tables", "dine_in") }}
+
+    {{ render_nav_link("POS", "point_of_sale") }}
+
+    {{ render_nav_link("System", "settings_applications") }}
+
+    {{ render_nav_link("Support", "support_agent") }}
+
+</menu>

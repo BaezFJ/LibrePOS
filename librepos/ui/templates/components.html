@@ -1,0 +1,136 @@
+{% from "elements.html" import render_icon, render_button, render_divider %}
+
+<!--====================-->
+<!-- MODAL COMPONENTS -->
+<!--====================-->
+{% macro modal(id, title, message=None, style='primary-border') %}
+
+    <div id="{{ id }}" class="modal {{ style }}" popover>
+        <div class="modal-header">
+            <div class="flex space-between">
+                <h4>{{ title }}</h4>
+                <button class="modal-close waves-effect btn-flat" popovertarget="{{ id }}">
+                    {{ render_icon("close", "grey-text") }}
+                </button>
+            </div>
+            {% if message %}
+                <p class="grey-text flow-text my-1">{{ message }}</p>
+            {% endif %}
+            {{ render_divider() }}
+        </div>
+        <div class="modal-content">
+            {{ caller() }}
+        </div>
+        <div class="modal-footer">
+            <button class="waves-effect btn-flat grey-text" popovertarget="{{ id }}">Close</button>
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+<!--====================-->
+<!-- CARD COMPONENTS -->
+<!--====================-->
+{% macro card(title, cls='') %}
+
+    <div class="card {{ cls }}">
+        <div class="card-content">
+            <span class="card-title">{{ title }}</span>
+            {{ caller() }}
+        </div>
+        <div class="card-action">
+            <a href="#">This is a link</a>
+            <a href="#">This is a link</a>
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+{% macro panel_card(title=None, count=None, button=None, cls='') %}
+    <div class="card-panel z-depth-2 {{ cls }}">
+        {% if title %}
+            <div class="flex space-between">
+                <h4 class="my-2">
+                    {{ title }}
+                    {% if count %}
+                        <span class="grey-text">({{ count|length|string }})</span>
+                    {% endif %}
+                </h4>
+                {% if button %}
+                    {{ render_button(button.get("text"), href=button.get("href"), icon=button.get("icon")) }}
+                {% endif %}
+            </div>
+            {{ render_divider() }}
+        {% endif %}
+        {% if caller is defined %}
+            {{ caller() }}
+        {% endif %}
+    </div>
+{% endmacro %}
+
+
+{%- macro render_icon_card(icon, text, href="#") %}
+
+    <a href="{{ href }}" class="hoverable inherit-color">
+        {% call panel_card(classes="center-align hoverable") %}
+            {{ render_icon(icon, classes="large") }}
+            <p class="flow-text">{{ text }}</p>
+        {% endcall %}
+    </a>
+
+{% endmacro -%}
+
+
+<!--=======================-->
+<!-- NAVIGATION COMPONENTS -->
+<!--=======================-->
+
+{% macro render_nav_link(text, icon='skull', href='!#', dynamic_text=False) %}
+    <li>
+        <a href="{{ href }}" class="waves-effect">
+            {{ render_icon(icon, "left") }}
+            {% if dynamic_text %}
+                <span class="hide-on-small-only">&nbsp;{{ text }}</span>
+            {% else %}
+                <span>{{ text }}</span>
+            {% endif %}
+        </a>
+    </li>
+
+{% endmacro %}
+
+{% macro collapsible_nav_link(text, icon='skull') %}
+    <li>
+        <ul class="collapsible collapsible-accordion">
+            <li>
+                <a class="collapsible-header">
+                    {{ render_icon(icon, "left") }}
+                    {{ text }}
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {{ caller() }}
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </li>
+{% endmacro %}
+
+{% macro render_sidenav_trigger(text, icon, target='sidenav') %}
+    <li>
+        <a data-target="{{ target }}" class="sidenav-trigger">
+            {{ render_icon(icon, "left") }}
+            <span class="hide-on-small-only">&nbsp;{{ text }}</span>
+        </a>
+    </li>
+{% endmacro %}
+
+
+{% macro render_nav_subheader(text, cls='') %}
+    <li>
+        <a class="subheader {{ cls }}">{{ text }}</a>
+    </li>
+{% endmacro %}

@@ -1,0 +1,33 @@
+{% from "elements.html" import render_divider, render_button %}
+
+{% macro section(title, subtitle=None, count=0, button=None, cls="mx-4") %}
+    <section class="section {{ cls }}">
+        {{ section_header(title=title, subtitle=subtitle, count=count, button=button) }}
+        <div class="section-content mt-4 row">
+            {{ caller() }}
+        </div>
+    </section>
+{% endmacro %}
+
+
+{% macro section_header(title, subtitle=None, count=None, button=None) %}
+    {% if title is defined %}
+        <div class="section-header">
+            <div class="flex space-between mx-4">
+                <h3 class="my-2">
+                    <b>{{ title }}</b>
+                    {% if count %}
+                        <span class="grey-text">({{ count|length }})</span>
+                    {% endif %}
+                </h3>
+                {% if button %}
+                    {{ render_button(button.get("text"), href=button.get("href"), icon=button.get("icon")) }}
+                {% endif %}
+            </div>
+            {% if subtitle %}
+                <p class="grey-text flow-text">{{ subtitle|capitalize }}</p>
+            {% endif %}
+            {{ render_divider() }}
+        </div>
+    {% endif %}
+{% endmacro %}

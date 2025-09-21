@@ -1,0 +1,24 @@
+{% from "components.html" import render_nav_link, render_sidenav_trigger %}
+
+<header>
+    <nav class="nav navbar">
+        <div class="nav-wrapper">
+            {#  ========== Left Menu ========== #}
+            <ul>
+                {% if back_url is defined %}
+                    {{ render_nav_link("Back", "arrow_back" , back_url, dynamic_text=True) }}
+                {% endif %}
+                {{ render_sidenav_trigger("Menu", "menu", "mainMenu") }}
+            </ul>
+            {#  ========== Menu Title ========== #}
+            <p class="brand-logo center my-0 flow-text">
+                {{ nav_title|truncate(15) if nav_title is defined else business_name|truncate(15) }}
+            </p>
+
+            {#  ========== Right Menu ========== #}
+            <ul class="right">
+                {{ render_sidenav_trigger(current_user.username|capitalize, "account_circle", "userMenu") }}
+            </ul>
+        </div>
+    </nav>
+</header>
