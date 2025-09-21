@@ -71,18 +71,6 @@
 {% endmacro %}
 
 
-{%- macro render_icon_card(icon, text, href="#") %}
-
-    <a href="{{ href }}" class="hoverable inherit-color">
-        {% call panel_card(classes="center-align hoverable") %}
-            {{ render_icon(icon, classes="large") }}
-            <p class="flow-text">{{ text }}</p>
-        {% endcall %}
-    </a>
-
-{% endmacro -%}
-
-
 <!--=======================-->
 <!-- NAVIGATION COMPONENTS -->
 <!--=======================-->

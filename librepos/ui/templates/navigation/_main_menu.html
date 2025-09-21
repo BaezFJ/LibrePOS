@@ -28,7 +28,7 @@
 
     {{ render_nav_link("IAM", "admin_panel_settings") }}
 
-    {{ render_nav_link("Branch", "domain") }}
+    {{ render_nav_link("Branch", "domain", url_for("branch.list_branches")) }}
 
     {{ render_nav_link("Tables", "dine_in") }}
 

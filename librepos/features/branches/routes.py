@@ -28,23 +28,20 @@ branch_service = BranchService()
 def list_branches():
     context = {
         "title": "Branches",
-        "back_url": url_for("settings.home"),
         "branches": branch_service.repository.get_all(),
     }
     return render_template("branches/list_branches.html", **context)
 
 
-@branch_bp.get("/<int:branch_id>>")
+@branch_bp.get("/<int:branch_id>")
 @permission_required(BranchPermissions.READ_BRANCH)
 def get_branch(branch_id):
     """Render the branch page."""
     branch = branch_service.repository.get_by_id(branch_id)
-    form = BranchForm(obj=branch)
     context = {
         "title": "Branches",
         "back_url": url_for(".list_branches"),
         "branch": branch,
-        "form": form,
     }
     return render_template("branches/get_branch.html", **context)
 

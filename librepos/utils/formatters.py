@@ -58,7 +58,7 @@ def currency_formatter(value: int) -> str:
 def phone_formatter(value: str) -> str:
     if value is None:
         return "N/A"
-    return f"({value[:3]})-{value[3:6]}-{value[6:]}"
+    return f"({value[:3]}) {value[3:6]}-{value[6:]}"
 
 
 def un_snake_formatter(value: str) -> str:

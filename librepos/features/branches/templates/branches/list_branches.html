@@ -1,22 +1,32 @@
 {% extends 'base.html' %}
 
-{% from "macros/layout_components.html" import page_section, panel_card %}
-{% from "macros/ui_components.html" import table %}
+{% from "layout.html" import section %}
+{% from "components.html" import panel_card %}
+{% from "elements.html" import table %}
 
 {% block main %}
     {% set branches_description = "Manage your restaurant branches and their information. View, create, edit, and control branch operations from this centralized dashboard." %}
-    {% call page_section("Branches", branches_description, count=branches) %}
+    {% set create_branch_button = {"text": "Create Branch", "href": "", "icon": "add"} %}
+    {% call section("Branches", branches_description, count=branches, button=create_branch_button) %}
 
         <div class="col s12">
             {% if branches %}
                 {% call panel_card() %}
-                    {% call table(["ID", "Branch Name"]) %}
+                    {% call table(["ID", "Branch Name", "Address", "City", "State", "Manager", "Phone", "Email"]) %}
                         {% for branch in branches %}
                             <tr>
                                 <td>{{ branch.id }}</td>
                                 <td>
-                                    <a href="{{ url_for("branch.get_branch", branch_id=branch.id) }}">{{ branch.name }}</a>
+                                    <a href="{{ url_for("branch.get_branch", branch_id=branch.id) }}">
+                                        {{ branch.name }}
+                                    </a>
                                 </td>
+                                <td>{{ branch.address }}</td>
+                                <td>{{ branch.city}}</td>
+                                <td>{{ branch.state }}</td>
+                                <td>John Doe</td>
+                                <td>{{ branch.phone|phone}}</td>
+                                <td>{{ branch.email }}</td>
                             </tr>
                         {% endfor %}
 
