@@ -1,7 +1,7 @@
 import os
 from importlib.metadata import version
 
-from flask import Flask, render_template
+from flask import Flask
 from jinja2 import StrictUndefined, DebugUndefined, FileSystemBytecodeCache
 
 from librepos.cli.manage import add_cli_commands
@@ -29,7 +29,7 @@ def create_app():
     app.config.from_envvar("LIBREPOS_SETTINGS", silent=True)
 
     # Catch missing variables early in development.
-    app.jinja_env.undefined = StrictUndefined if app.config['DEBUG'] else DebugUndefined
+    app.jinja_env.undefined = StrictUndefined if app.config["DEBUG"] else DebugUndefined
 
     # # Nicer whitespace handling (optional)
     app.jinja_env.lstrip_blocks = True
