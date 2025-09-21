@@ -28,10 +28,10 @@ def validate_exists(repository, entity_id, message="Entity not found."):
 
 
 def validate_confirmation(
-        data,
-        confirmation_field="confirmation",
-        expected_value="confirm",
-        error_message="Invalid confirmation.",
+    data,
+    confirmation_field="confirmation",
+    expected_value="confirm",
+    error_message="Invalid confirmation.",
 ):
     """Validate confirmation input matches the expected value.
 

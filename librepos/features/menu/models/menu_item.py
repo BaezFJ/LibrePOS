@@ -18,7 +18,7 @@ class MenuItem(db.Model):
     __tablename__ = "menu_items"
 
     def __init__(
-            self, group_id: int, name: str, description: str, price: int, **kwargs
+        self, group_id: int, name: str, description: str, price: int, **kwargs
     ):
         super(MenuItem, self).__init__(**kwargs)
         """Create instance."""

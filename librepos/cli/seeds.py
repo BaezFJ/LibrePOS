@@ -60,7 +60,7 @@ def seed_permissions() -> None:
     from librepos.features.settings.utils.enums import SettingsPermissions
 
     def _create_permission(
-            permission_name: str, permission_description: str
+        permission_name: str, permission_description: str
     ) -> Permission:
         return Permission(name=permission_name, description=permission_description)
 

@@ -11,7 +11,7 @@ DEFAULT_UNAUTHORIZED_ENDPOINT = "dashboard"
 
 
 def permission_required(
-        permission: str, unauthorized_endpoint: str | None = None
+    permission: str, unauthorized_endpoint: str | None = None
 ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
     Decorator to restrict access to users with a specific permission.
@@ -32,7 +32,7 @@ def permission_required(
         def create_user(): ...
     """
     target_unauthorized_endpoint = (
-            unauthorized_endpoint or DEFAULT_UNAUTHORIZED_ENDPOINT
+        unauthorized_endpoint or DEFAULT_UNAUTHORIZED_ENDPOINT
     )
 
     def decorator(view_func):

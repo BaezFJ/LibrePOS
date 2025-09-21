@@ -7,7 +7,7 @@ class OrderItemRepository(BaseRepository[TicketItem]):
         super().__init__(TicketItem)
 
     def add_item_to_order(
-            self, order_id: int, item_id: int, item_name: str, quantity: int, price: int
+        self, order_id: int, item_id: int, item_name: str, quantity: int, price: int
     ):
         """Add an item to an order."""
         item = TicketItem(

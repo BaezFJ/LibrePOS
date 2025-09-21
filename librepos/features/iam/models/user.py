@@ -22,12 +22,12 @@ class User(UserMixin, db.Model):
     __tablename__ = "users"
 
     def __init__(
-            self,
-            role_id: int,
-            username: str,
-            email: str,
-            password: str,
-            **kwargs,
+        self,
+        role_id: int,
+        username: str,
+        email: str,
+        password: str,
+        **kwargs,
     ):
         super(User, self).__init__(**kwargs)
         """Create instance."""

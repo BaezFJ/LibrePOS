@@ -26,7 +26,7 @@ def login():
         ip = str(request.remote_addr)
         agent = str(request.user_agent)[:255]
         if auth_service.authenticate(
-                form.username.data, form.password.data, form.remember.data, ip, agent
+            form.username.data, form.password.data, form.remember.data, ip, agent
         ):
             next_url = request.args.get("next", "")
             next_url = next_url.replace("\\", "")  # Normalize backslashes
