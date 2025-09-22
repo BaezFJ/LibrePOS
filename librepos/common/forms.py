@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Length
 
 
 class BaseForm(FlaskForm):
-    submit = SubmitField("Submit")
+    submit = SubmitField("Save")
 
     def __init__(self, *args, submit_text=None, **kwargs):
         super().__init__(*args, **kwargs)

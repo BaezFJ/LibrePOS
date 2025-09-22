@@ -28,7 +28,7 @@ def permission_required(
         def view(): ...
 
         # Or with a custom unauthorized redirect:
-        @permission_required(IAMPermissions.CREATE_USER, unauthorized_endpoint="iam.home")
+        @permission_required(IAMPermissions.CREATE_USER, unauthorized_endpoint="iam.user.unauthorized")
         def create_user(): ...
     """
     target_unauthorized_endpoint = (
