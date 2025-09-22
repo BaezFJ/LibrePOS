@@ -28,6 +28,11 @@
 
     {{ render_nav_link("IAM", "admin_panel_settings") }}
 
+    {% call collapsible_nav_link("IAM", "admin_panel_settings") %}
+        {{ render_nav_link("Users", "person", url_for('iam.user.list_users')) }}
+        {{ render_nav_link("Roles", "lock_person", url_for('iam.role.list_roles')) }}
+    {% endcall %}
+
     {{ render_nav_link("Branch", "domain", url_for("branch.list_branches")) }}
 
     {{ render_nav_link("Tables", "dine_in") }}

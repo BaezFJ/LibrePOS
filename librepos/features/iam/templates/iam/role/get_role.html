@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
-{% from "macros/layout_components.html" import page_section, panel_card, modal %}
+{% from "macros/layout_components.html" import page_section, modal %}
 {% from "macros/ui_components.html" import table, render_button, render_modal_button, render_form %}
+{% from "layout.html" import section %}
+{% from "components.html" import panel_card, modal %}
+{% from "macros/cards.html" import render_icon_card %}
+{% from "elements.html" import render_icon, render_status_text %}
 
 {% block main %}
 {% set update_role_button %}
@@ -11,85 +15,42 @@
 {% endset %}
 {% set users_role_count = role.users|length %}
 
-{% call page_section(role.name|title, role.description|capitalize, button=update_role_button) %}
-    <!-- Role Summary Card -->
-    <div class="col s12">
-        {% call panel_card("Summary") %}
-            <p>
-                <strong>Creation Date:</strong>&nbsp;{{ role.created_at|date }}
+{% call section(role.name|title, role.description|capitalize) %}
+    <div class="col s6 m4 l3">
+        {{ render_icon_card("edit", "Edit") }}
+    </div>
+    <div class="col s6 m4 l3">
+        {{ render_icon_card("policy", "Policies") }}
+    </div>
+    <div class="col s6 m4 l3">
+        {{ render_icon_card("settings", "Settings") }}
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="javascript:infoModal.showPopover()" class="inherit-color">
+            {% call panel_card(cls="center-align hoverable") %}
+                {{ render_icon("info", cls="large") }}
+                <p class="flow-text">Info</p>
+            {% endcall %}
+        </a>
+        {% call modal("infoModal", "Info", style="info") %}
+            <p class="flow-text">
+                <strong>Description</strong> &colon; &nbsp;{{ role.description }}
             </p>
-            <p>
-                <strong>Created by:</strong> &nbsp; System
+            <p class="flow-text">
+                <strong>Created Date</strong> &colon; &nbsp; &#128197; &nbsp;{{ role.created_at.strftime("%d %b %Y") }}
             </p>
-            <p>
-                <strong>Assigned Policies:</strong> &nbsp; {{ role.role_policies|length|string }}
+            <p class="flow-text">
+                <strong>Created Time</strong>&colon; &nbsp; &#128337; &nbsp;{{ role.created_at.strftime("%H:%M:%S") }}
             </p>
-            <p>
+            <p class="flow-text">
+                <strong>Status</strong> &colon; &nbsp; {{ render_status_text(role.active) }}
+            </p>
+            <p class="flow-text">
                 <strong>Assigned Users:</strong> &nbsp; {{ users_role_count }}
                 &nbsp; {{ "users" if users_role_count > 1 else "user" }}
             </p>
-            <p>
-                <strong>Status:</strong> &nbsp;
-                {% if role.active %}
-                    <span class="success-text">Active</span>
-                {% else %}
-                    <span class="danger-text">Disabled</span>
-                {% endif %}
-            </p>
         {% endcall %}
     </div>
-
-    <!-- Assigned Policies Card -->
-    <div class="col s12">
-        {% call panel_card("Assigned Policies", count=role.role_policies) %}
-            <div class="row">
-                <div class="col s12">
-                    {% call table(["Policy Name"]) %}
-                        {% for role_policy in role.role_policies %}
-                            <tr>
-                                <td>{{ role_policy.policy.name }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endcall %}
-                </div>
-                <div class="col s12">
-                    {{ render_button("Edit Policies", "filled", url_for('iam.role.get_role_policies', role_id=role.id)) }}
-                </div>
-            </div>
-        {% endcall %}
-    </div>
-
-    {% if role.deletable %}
-        <!-- Danger Zone Card -->
-        <div class="col s12">
-            {% call panel_card("Danger Zone", classes="danger-border") %}
-                <div class="row">
-                    <div class="col s12">
-                        <p class="flow-text">
-                            <strong>This action is irreversible.</strong>
-                        </p>
-                        <p class="flow-text">
-                            <strong>Are you sure you want to delete this role?</strong>
-                        </p>
-                    </div>
-                    <div class="col s12">
-                        {{ render_modal_button("Delete Role", "outlined", "deleteRole", classes="danger") }}
-                        {% call modal("deleteRole", "Delete Role?", "danger") %}
-                            <p class="flow-text">
-                                Deleting this role will permanently remove it from the system and revoke all associated
-                                permissions from users who have this role. This action cannot be undone.
-                            </p>
-                            <p class="flow-text">
-                                Type <strong>confirm</strong> to proceed with deletion.
-                            </p>
-                            {{ render_form(form, url_for("iam.role.delete_role", role_id=role.id)) }}
-                        {% endcall %}
-                    </div>
-                </div>
-            {% endcall %}
-        </div>
-    {% endif %}
-
 {% endcall %}
 
 {% endblock %}

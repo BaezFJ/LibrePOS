@@ -47,7 +47,6 @@ def list_users():
     context = {
         "title": "Users",
         "description": "An IAM Users are accounts that can log in and use the LibrePOS system based on their permissions.",
-        "back_url": url_for("iam.home"),
         "users": users,
         "form": form,
         "create_user_permission": create_user_permission,

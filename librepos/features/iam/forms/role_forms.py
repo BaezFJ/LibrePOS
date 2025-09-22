@@ -1,11 +1,11 @@
-from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField, BooleanField
+from wtforms import StringField, TextAreaField
 from wtforms.validators import DataRequired
 
 from librepos.utils.form import default_placeholder, textarea_attributes
+from librepos.common.forms import BaseForm
 
 
-class RoleCreationForm(FlaskForm):
+class RoleCreationForm(BaseForm):
     """Form for creating roles in the system"""
 
     name = StringField(
@@ -16,8 +16,6 @@ class RoleCreationForm(FlaskForm):
         validators=[DataRequired()],
         render_kw=textarea_attributes,
     )
-    active = BooleanField("Active", default=True)
-    submit = SubmitField("Create Role")
 
     def __init__(self, *args, **kwargs):
         super(RoleCreationForm, self).__init__(*args, **kwargs)

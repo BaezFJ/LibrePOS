@@ -17,17 +17,23 @@ role_bp = Blueprint("role", __name__, template_folder="templates", url_prefix="/
 # ================================
 
 
-@role_bp.post("/create")
+@role_bp.route("/new", methods=["POST", "GET"])
 @permission_required(Permissions.CREATE_ROLE)
-def process_create_role():
-    """Process the role creation form."""
+def create_role():
+    """Display & process the creation role page."""
     form = RoleCreationForm()
+    context = {
+        "title": "Create Role",
+        "back_url": url_for(".list_roles"),
+        "form": form,
+    }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        role = role_service.create_role(sanitized_data)
-        if role:
-            return redirect(url_for(".get_role", role_id=role.id))
-    return redirect(url_for(".list_roles"))
+        new_role = role_service.create_role(sanitized_data)
+        if new_role:
+            return redirect(url_for(".get_role", role_id=new_role.id))
+        return redirect(url_for(".list_roles"))
+    return render_template("iam/role/create_role.html", **context)
 
 
 # ================================
@@ -40,27 +46,11 @@ def process_create_role():
 def list_roles():
     """Render the IAM roles page."""
     context = {
-        "title": "Roles",
-        "description": "Define roles, assign access levels, and configure permissions across the system.",
-        "back_url": url_for("iam.home"),
+        "head_title": "IAM | Role | List",
+        "head_description": "Define roles, assign access levels, and configure permissions across the system.",
         "roles": role_service.role_repository.get_all(),
-        "form": RoleCreationForm(),
-        "create_role_permission": Permissions.CREATE_ROLE,
     }
     return render_template("iam/role/list_roles.html", **context)
-
-
-@role_bp.get("/create")
-@permission_required(Permissions.CREATE_ROLE)
-def display_create_role():
-    """Render the IAM role creation page."""
-    form = RoleCreationForm()
-    context = {
-        "title": "Create Role",
-        "back_url": url_for(".list_roles"),
-        "form": form,
-    }
-    return render_template("iam/role/create_role.html", **context)
 
 
 @role_bp.get("/<int:role_id>")
