@@ -3,9 +3,9 @@
 <!--====================-->
 <!-- MODAL COMPONENTS -->
 <!--====================-->
-{% macro modal(id, title, message=None, style='primary-border') %}
+{% macro modal(id, title, message=None, style='primary') %}
 
-    <div id="{{ id }}" class="modal {{ style }}" popover>
+    <div id="{{ id }}" class="modal {{ style }}-border" popover>
         <div class="modal-header">
             <div class="flex space-between">
                 <h4>{{ title }}</h4>
