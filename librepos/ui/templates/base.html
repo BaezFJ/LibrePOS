@@ -6,7 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <meta name="description" content="Open Source web-based point of sale system for restaurants.">
+    {% set default_description = "Open Source web-based point of sale system for restaurants." %}
+    <meta name="description" content="{{ head_description if head_description is defined else default_description }}">
     <meta property="og:title" content="LibrePOS">
     <meta property="og:type" content="">
     <meta property="og:url" content="">
