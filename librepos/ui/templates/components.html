@@ -1,8 +1,38 @@
 {% from "elements.html" import render_icon, render_button, render_divider %}
 
 <!--====================-->
+<!-- LAYOUT COMPONENTS -->
+<!--====================-->
+
+{% macro section(title, message, count=0, cls="container") %}
+    <section class="section {{ cls }}">
+        <div class="row">
+            <div class="col s12">
+                <h3 class="my-2">
+                    {{ title if title is defined }}
+                    {% if count %}
+                        <span class="grey-text text-lighten-1 flow-text">&lpar;{{ count|length|string }}&rpar;</span>
+                    {% endif %}
+                </h3>
+                {% if message is defined %}
+                    <p class="grey-text flow-text my-1">{{ message }}</p>
+                {% endif %}
+            </div>
+            <div class="col s12">
+                {{ render_divider() }}
+            </div>
+            <div class="col s12">
+                {{ caller() }}
+            </div>
+        </div>
+    </section>
+{% endmacro %}
+
+
+<!--====================-->
 <!-- MODAL COMPONENTS -->
 <!--====================-->
+
 {% macro modal(id, title, message=None, style='primary') %}
 
     <div id="{{ id }}" class="modal {{ style }}-border" popover>
@@ -32,6 +62,8 @@
 <!--====================-->
 <!-- CARD COMPONENTS -->
 <!--====================-->
+
+{#  BASIC CARD  #}
 {% macro card(title, cls='') %}
 
     <div class="card {{ cls }}">
@@ -47,7 +79,7 @@
 
 {% endmacro %}
 
-
+{#  CARD PANEL  #}
 {% macro panel_card(title=None, count=None, button=None, cls='') %}
     <div class="card-panel z-depth-2 {{ cls }}">
         {% if title %}

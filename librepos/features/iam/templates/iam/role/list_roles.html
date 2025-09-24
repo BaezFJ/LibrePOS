@@ -1,14 +1,11 @@
 {% extends 'base.html' %}
 
-{% from "layout.html" import section %}
-{% from "components.html" import panel_card %}
-{% from "elements.html" import render_button, table %}
+{% from "components.html" import section, panel_card %}
+{% from "elements.html" import render_button, table, render_subtext %}
 
 {% block main %}
 
-    {% set create_role_button = {"text": "Create Role", "href": url_for('iam.role.create_role'), "icon": "add"} %}
-
-    {% call section("Roles", head_description, count=roles, button=create_role_button) %}
+    {% call section("Roles", head_description, count=roles) %}
         <!-- Roles Overview Table -->
         <div class="col s12">
             {% call panel_card() %}

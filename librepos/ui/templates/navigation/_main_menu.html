@@ -26,8 +26,6 @@
 
     {{ render_nav_link("Customers", "id_card") }}
 
-    {{ render_nav_link("IAM", "admin_panel_settings") }}
-
     {% call collapsible_nav_link("IAM", "admin_panel_settings") %}
         {{ render_nav_link("Users", "person", url_for('iam.user.list_users')) }}
         {{ render_nav_link("Roles", "lock_person", url_for('iam.role.list_roles')) }}
