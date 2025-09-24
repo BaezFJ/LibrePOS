@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% from "components.html" import section, panel_card, table %}
+{% from "components.html" import section, card_panel, table, fixed_action_button %}
 {% from "elements.html" import render_button, render_subtext %}
 
 {% block main %}
@@ -8,7 +8,7 @@
     {% call section("Roles", head_description, count=roles) %}
         <!-- Roles Overview Table -->
         <div class="col s12">
-            {% call panel_card() %}
+            {% call card_panel() %}
                 {% if roles %}
                     {% call table(["Name", "Description", "Users"]) %}
                         {% for role in roles %}
@@ -28,5 +28,7 @@
             {% endcall %}
         </div>
     {% endcall %}
+
+    {{ fixed_action_button("add", url_for("iam.role.create_role")) }}
 
 {% endblock %}

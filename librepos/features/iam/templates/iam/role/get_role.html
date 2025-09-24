@@ -2,7 +2,7 @@
 
 {% from "macros/layout_components.html" import page_section, modal %}
 {% from "macros/ui_components.html" import table, render_button, render_modal_button, render_form %}
-{% from "components.html" import section, panel_card, modal %}
+{% from "components.html" import section, card_panel, modal %}
 {% from "macros/cards.html" import render_icon_card %}
 {% from "elements.html" import render_icon, render_status_text %}
 
@@ -26,7 +26,7 @@
     </div>
     <div class="col s6 m4 l3">
         <a href="javascript:infoModal.showPopover()" class="inherit-color">
-            {% call panel_card(cls="center-align hoverable") %}
+            {% call card_panel(cls="center-align hoverable") %}
                 {{ render_icon("info", cls="large") }}
                 <p class="flow-text">Info</p>
             {% endcall %}

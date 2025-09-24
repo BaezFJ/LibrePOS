@@ -98,25 +98,31 @@
 {% endmacro %}
 
 {#  CARD PANEL  #}
-{% macro panel_card(title=None, count=None, button=None, cls='') %}
-    <div class="card-panel z-depth-2 {{ cls }}">
-        {% if title %}
-            <div class="flex space-between">
-                <h4 class="my-2">
-                    {{ title }}
-                    {% if count %}
-                        <span class="grey-text">({{ count|length|string }})</span>
-                    {% endif %}
-                </h4>
-                {% if button %}
-                    {{ render_button(button.get("text"), href=button.get("href"), icon=button.get("icon")) }}
-                {% endif %}
-            </div>
-            {{ render_divider() }}
-        {% endif %}
-        {% if caller is defined %}
-            {{ caller() }}
-        {% endif %}
+{#{% macro panel_card(title=None, count=None, button=None, cls='') %}#}
+{#    <div class="card-panel z-depth-2 {{ cls }}">#}
+{#        {% if title %}#}
+{#            <div class="flex space-between">#}
+{#                <h4 class="my-2">#}
+{#                    {{ title }}#}
+{#                    {% if count %}#}
+{#                        <span class="grey-text">({{ count|length|string }})</span>#}
+{#                    {% endif %}#}
+{#                </h4>#}
+{#                {% if button %}#}
+{#                    {{ render_button(button.get("text"), href=button.get("href"), icon=button.get("icon")) }}#}
+{#                {% endif %}#}
+{#            </div>#}
+{#            {{ render_divider() }}#}
+{#        {% endif %}#}
+{#        {% if caller is defined %}#}
+{#            {{ caller() }}#}
+{#        {% endif %}#}
+{#    </div>#}
+{#{% endmacro %}#}
+
+{% macro card_panel(cls) %}
+    <div class="card-panel z-depth-2 {{ cls if cls is defined }}">
+        {{ caller() }}
     </div>
 {% endmacro %}
 
