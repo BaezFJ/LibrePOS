@@ -1,4 +1,4 @@
-{% from "elements.html" import render_icon, render_button, render_divider %}
+{% from "elements.html" import render_icon, render_button, render_divider, render_floating_button %}
 
 <!--====================-->
 <!-- TABLE COMPONENTS -->
@@ -43,9 +43,7 @@
             <div class="col s12">
                 {{ render_divider() }}
             </div>
-            <div class="col s12">
-                {{ caller() }}
-            </div>
+            {{ caller() }}
         </div>
     </section>
 {% endmacro %}
@@ -145,4 +143,17 @@
             </li>
         </ul>
     </li>
+{% endmacro %}
+
+<!--===================-->
+<!-- UI COMPONENTS -->
+<!--===================-->
+
+{% macro fixed_action_button(icon, url) %}
+    <div class="fixed-action-btn mb-4">
+        {{ render_floating_button(icon, url) }}
+        {% if caller is defined %}
+            {{ caller() }}
+        {% endif %}
+    </div>
 {% endmacro %}

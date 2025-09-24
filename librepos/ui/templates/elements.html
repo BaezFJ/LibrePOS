@@ -51,6 +51,12 @@
 
 {% endmacro %}
 
+{% macro render_floating_button(icon, href, cls='filled') %}
+    <a href="{{ href }}" class="btn-floating btn-large {{ cls if cls is defined }}">
+        {{ render_icon(icon) }}
+    </a>
+{% endmacro %}
+
 
 <!--====================-->
 <!-- IMAGE ELEMENTS -->
