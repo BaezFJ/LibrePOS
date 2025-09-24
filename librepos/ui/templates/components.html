@@ -1,6 +1,28 @@
 {% from "elements.html" import render_icon, render_button, render_divider %}
 
 <!--====================-->
+<!-- TABLE COMPONENTS -->
+<!--====================-->
+{% macro table(headers=None, cls='') %}
+
+    <table class="striped highlight {{ cls }}">
+        {% if headers is defined %}
+            <thead>
+            <tr>
+                {% for header in headers %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+        {% endif %}
+        <tbody>
+        {{ caller() }}
+        </tbody>
+    </table>
+
+{% endmacro %}
+
+<!--====================-->
 <!-- LAYOUT COMPONENTS -->
 <!--====================-->
 
@@ -107,20 +129,6 @@
 <!-- NAVIGATION COMPONENTS -->
 <!--=======================-->
 
-{% macro render_nav_link(text, icon='skull', href='!#', dynamic_text=False) %}
-    <li>
-        <a href="{{ href }}" class="waves-effect">
-            {{ render_icon(icon, "left") }}
-            {% if dynamic_text %}
-                <span class="hide-on-small-only">&nbsp;{{ text }}</span>
-            {% else %}
-                <span>{{ text }}</span>
-            {% endif %}
-        </a>
-    </li>
-
-{% endmacro %}
-
 {% macro collapsible_nav_link(text, icon='skull') %}
     <li>
         <ul class="collapsible collapsible-accordion">
@@ -136,21 +144,5 @@
                 </div>
             </li>
         </ul>
-    </li>
-{% endmacro %}
-
-{% macro render_sidenav_trigger(text, icon, target='sidenav') %}
-    <li>
-        <a data-target="{{ target }}" class="sidenav-trigger">
-            {{ render_icon(icon, "left") }}
-            <span class="hide-on-small-only">&nbsp;{{ text }}</span>
-        </a>
-    </li>
-{% endmacro %}
-
-
-{% macro render_nav_subheader(text, cls='') %}
-    <li>
-        <a class="subheader {{ cls }}">{{ text }}</a>
     </li>
 {% endmacro %}

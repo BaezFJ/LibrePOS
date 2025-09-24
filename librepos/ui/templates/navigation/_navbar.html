@@ -1,4 +1,4 @@
-{% from "components.html" import render_nav_link, render_sidenav_trigger %}
+{% from "elements.html" import render_nav_link, render_icon %}
 
 <header>
     <nav class="nav navbar">
@@ -6,9 +6,19 @@
             {#  ========== Left Menu ========== #}
             <ul>
                 {% if back_url is defined %}
-                    {{ render_nav_link("Back", "arrow_back" , back_url, dynamic_text=True) }}
+                    <li>
+                        <a href="{{ back_url }}" class="waves-effect">
+                            {{ render_icon("arrow_back", "left") }}
+                            <span class="hide-on-small-and-down">Back</span>
+                        </a>
+                    </li>
                 {% endif %}
-                {{ render_sidenav_trigger("Menu", "menu", "mainMenu") }}
+                <li>
+                    <a data-target="mainMenu" class="sidenav-trigger">
+                        {{ render_icon("menu", "left") }}
+                        <span class="hide-on-small-only">&nbsp;Menu</span>
+                    </a>
+                </li>
             </ul>
             {#  ========== Menu Title ========== #}
             <p class="brand-logo center my-0 flow-text">
@@ -17,7 +27,12 @@
 
             {#  ========== Right Menu ========== #}
             <ul class="right">
-                {{ render_sidenav_trigger(current_user.username|capitalize, "account_circle", "userMenu") }}
+                <li>
+                    <a data-target="userMenu" class="sidenav-trigger">
+                        {{ render_icon("account_circle", "left") }}
+                        <span class="hide-on-small-only">&nbsp;{{ current_user.username|capitalize }}</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>

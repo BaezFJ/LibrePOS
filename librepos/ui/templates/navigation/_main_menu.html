@@ -1,9 +1,9 @@
-{% from "elements.html" import render_divider, render_icon %}
-{% from "components.html" import render_nav_link, render_nav_subheader, collapsible_nav_link %}
+{% from "elements.html" import render_divider, render_icon, render_nav_link %}
+{% from "components.html" import collapsible_nav_link %}
 
 <menu id="mainMenu" class="sidenav">
 
-    {{ render_nav_link("New Order", "point_of_sale") }}
+    {{ render_nav_link("New Order",  "point_of_sale") }}
     {{ render_nav_link("Active Orders", "order_play") }}
 
     {#  Content  #}

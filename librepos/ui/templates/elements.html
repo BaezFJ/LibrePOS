@@ -1,26 +1,4 @@
 <!--====================-->
-<!-- TABLE ELEMENTS -->
-<!--====================-->
-{% macro table(headers=None) %}
-
-    <table class="striped highlight responsive-table">
-        {% if headers is defined %}
-            <thead>
-            <tr>
-                {% for header in headers %}
-                    <th>{{ header }}</th>
-                {% endfor %}
-            </tr>
-            </thead>
-        {% endif %}
-        <tbody>
-        {{ caller() }}
-        </tbody>
-    </table>
-
-{% endmacro %}
-
-<!--====================-->
 <!-- ICON ELEMENTS -->
 <!--====================-->
 {% macro render_icon(icon, cls='') %}
@@ -112,4 +90,17 @@
     {% else %}
         <span class="danger-text">Disabled</span>
     {% endif %}
+{% endmacro %}
+
+<!--=======================-->
+<!-- NAVIGATION ELEMENTS -->
+<!--=======================-->
+
+{% macro render_nav_link(text, icon='skull', href='!#') %}
+    <li>
+        <a href="{{ href if href is defined }}" class="waves-effect">
+            {{ render_icon(icon, "left") }}
+            <span>{{ text }}</span>
+        </a>
+    </li>
 {% endmacro %}
