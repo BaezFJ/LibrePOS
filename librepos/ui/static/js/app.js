@@ -133,6 +133,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize tooltips
     initializeTooltips();
 
+    // Dropdowns
+    const dropdownTriggerSelector = '.dropdown-trigger';
+    const dropdownOptions = {
+        // specify options here
+        constrainWidth: false,
+    };
+
+    const initializeDropdowns = () => {
+        const dropdownTriggerElements = document.querySelectorAll(dropdownTriggerSelector);
+        const dropdownInstances = M.Dropdown.init(dropdownTriggerElements, dropdownOptions);
+        return dropdownInstances;
+    };
+
+    // Initialize dropdowns
+    initializeDropdowns();
+
 
 });
 
