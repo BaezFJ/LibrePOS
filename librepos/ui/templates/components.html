@@ -26,17 +26,14 @@
 <!-- LAYOUT COMPONENTS -->
 <!--====================-->
 
-{% macro section(title, message, count=0, cls="container") %}
+{% macro section(title, msg, cls="container") %}
     <section class="section {{ cls }}">
         <hgroup>
             <h2 class="my-2">
                 {{ title if title is defined }}
-                {% if count %}
-                    <span class="grey-text text-lighten-1 flow-text">&lpar;{{ count|length|string }}&rpar;</span>
-                {% endif %}
             </h2>
-            {% if message is defined %}
-                <p class="grey-text flow-text my-1">{{ message }}</p>
+            {% if msg is defined %}
+                <p class="grey-text flow-text my-1">{{ msg }}</p>
             {% endif %}
         </hgroup>
         {{ render_divider(cls="mb-4") }}
@@ -82,48 +79,22 @@
 <!--====================-->
 
 {#  BASIC CARD  #}
-{% macro card(title, cls='') %}
+{% macro card(title, actions, cls='') %}
 
-    <div class="card {{ cls }}">
+    <div class="card hoverable z-depth-2 {{ cls }}">
         <div class="card-content">
             <span class="card-title">{{ title }}</span>
             {{ caller() }}
         </div>
-        <div class="card-action">
-            <a href="#">This is a link</a>
-            <a href="#">This is a link</a>
-        </div>
+        {% if actions is defined %}
+            <div class="card-action">
+                {% for action in actions %}
+                    <a href="{{ action.url }}">{{ action.text }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
-{% endmacro %}
-
-{#  CARD PANEL  #}
-{#{% macro panel_card(title=None, count=None, button=None, cls='') %}#}
-{#    <div class="card-panel z-depth-2 {{ cls }}">#}
-{#        {% if title %}#}
-{#            <div class="flex space-between">#}
-{#                <h4 class="my-2">#}
-{#                    {{ title }}#}
-{#                    {% if count %}#}
-{#                        <span class="grey-text">({{ count|length|string }})</span>#}
-{#                    {% endif %}#}
-{#                </h4>#}
-{#                {% if button %}#}
-{#                    {{ render_button(button.get("text"), href=button.get("href"), icon=button.get("icon")) }}#}
-{#                {% endif %}#}
-{#            </div>#}
-{#            {{ render_divider() }}#}
-{#        {% endif %}#}
-{#        {% if caller is defined %}#}
-{#            {{ caller() }}#}
-{#        {% endif %}#}
-{#    </div>#}
-{#{% endmacro %}#}
-
-{% macro card_panel(cls) %}
-    <div class="card-panel z-depth-2 {{ cls if cls is defined }}">
-        {{ caller() }}
-    </div>
 {% endmacro %}
 
 
@@ -147,6 +118,19 @@
             </li>
         </ul>
     </li>
+{% endmacro %}
+
+{% macro dropdown_menu(text) %}
+    <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Drop Me!</a>
+    <!-- Dropdown Structure -->
+    <ul id='dropdown1' class='dropdown-content'>
+        <li><a href="#!">one</a></li>
+        <li><a href="#!">two</a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a href="#!">three</a></li>
+        <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
+        <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+    </ul>
 {% endmacro %}
 
 <!--===================-->
