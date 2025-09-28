@@ -85,16 +85,6 @@
     {% block main %}{% endblock %}
 </main>
 
-{% if current_user.is_authenticated %}
-    <footer class="page-footer">
-        <div class="flex space-between">
-            <p class="m-1">Station ID &colon; 01</p>
-            <p class="m-1">LibrePOS</p>
-            <p class="m-1">&Vee; &colon; {{ app_version }}</p>
-        </div>
-    </footer>
-{% endif %}
-
 {% block scripts %}{% endblock %}
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}

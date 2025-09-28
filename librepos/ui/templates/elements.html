@@ -10,7 +10,7 @@
 {% endmacro %}
 
 {% macro render_status_icon(data=True) %}
-    {% set active_color = "success-text" if data else "danger-text" %}
+    {% set active_color = "success-text" if data else "error-text" %}
     {% set active_icon = "radio_button_checked" if data else "radio_button_unchecked" %}
 
     {{ render_icon(active_icon, cls=active_color) }}
@@ -83,7 +83,7 @@
 <!-- DIVIDER ELEMENTS -->
 <!--====================-->
 {% macro render_divider(cls='') %}
-    <div class="divider py-1 {{ cls }}"></div>
+    <hr class="divider {{ cls }}">
 {% endmacro %}
 
 

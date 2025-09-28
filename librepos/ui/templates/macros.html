@@ -1,13 +1,12 @@
-{% from "components.html" import card_panel %}
 {% from "elements.html" import render_icon %}
 
 {%- macro render_icon_card(icon, text, href="#") %}
 
-    <a href="{{ href }}" class="hoverable inherit-color">
-        {% call card_panel(cls="center-align hoverable") %}
+    <a href="{{ href }}">
+        <div class="card-panel center-align hoverable">
             {{ render_icon(icon, cls="large") }}
             <p class="flow-text">{{ text }}</p>
-        {% endcall %}
+        </div>
     </a>
 
 {% endmacro -%}
