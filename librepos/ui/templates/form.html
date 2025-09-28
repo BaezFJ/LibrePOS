@@ -26,20 +26,10 @@ Features:
 
 {% macro render_form(form, url="") %}
 
-    {% set responsive_class = "col s12 m8 offset-m2" %}
-
     <form action="{{ url }}" method="post" class="row">
         {{ form.hidden_tag() }}
         {% for field in form if field.name != 'csrf_token' %}
-            {% if field.name == "submit" %}
-                <div class="col s12 center-block">
-                    {{ field(class="btn filled rounded waves-effect waves-light") }}
-                </div>
-            {% else %}
-                <div class="{{ responsive_class }} input-field">
-                    {{ render_field(field) }}
-                </div>
-            {% endif %}
+            {{ render_field(field) }}
         {% endfor %}
     </form>
 
@@ -65,14 +55,20 @@ Example usage:
 #}
 
 <!-- Form Field Components -->
-{% macro render_field(field) %}
+{% macro render_field(field, cls='s12 m8 offset-m2') %}
 
     {% if field.type == "BooleanField" %}
-        {{ render_switch_field(field) }}
+        {{ render_switch_field(field, cls=cls) }}
+
     {% elif field.type == "HiddenField" %}
         {{ field(**kwargs)|safe }}
+
+    {% elif field.type == "SubmitField" %}
+        {{ render_form_submit(field) }}
+
     {% else %}
-        {{ render_text_field(field) }}
+        {{ render_text_field(field, cls=cls) }}
+
     {% endif %}
 
 {% endmacro %}
@@ -101,13 +97,15 @@ Example usage:
 {{ render_switch_field(form.active_status) }}
 #}
 
-{% macro render_switch_field(field) %}
-    <div class="switch">
-        <span>{{ field.label.text }}&colon; &nbsp;</span>
-        <label>
-            {{ field(**kwargs)|safe }}
-            <span class="lever"></span>
-        </label>
+{% macro render_switch_field(field, cls) %}
+    <div class="col {{ cls if cls is defined }} input-field">
+        <div class="switch">
+            <span>{{ field.label.text }}&colon; &nbsp;</span>
+            <label>
+                {{ field(**kwargs)|safe }}
+                <span class="lever"></span>
+            </label>
+        </div>
     </div>
 {% endmacro %}
 
@@ -141,11 +139,18 @@ Example usage:
 {{ render_text_field(form.category) }}     -> Renders select dropdown
 #}
 
-{% macro render_text_field(field) %}
+{% macro render_text_field(field, cls) %}
 
     <!-- TODO 7/5/25 : Render form field error messages. -->
 
-    {{ field(**kwargs)|safe }}
-    {{ field.label }}
+    <div class="col {{ cls if cls is defined }} input-field">
+        {{ field(**kwargs)|safe }}
+        {{ field.label }}
+    </div>
+{% endmacro %}
 
+{% macro render_form_submit(field) %}
+    <div class="col s12 center-block">
+        {{ field(class="btn filled rounded waves-effect waves-light") }}
+    </div>
 {% endmacro %}
