@@ -109,10 +109,6 @@
                 {% for category, message in messages %}
                     new M.Toast({
                         toastId: 'message-template-{{ category }}',
-                        inDuration: 250,
-                        outDuration: 250,
-                        displayLength: 1500,
-                        classes: 'rounded'
                     });
                 {% endfor %}
             {% endif %}

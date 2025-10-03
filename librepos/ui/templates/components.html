@@ -55,7 +55,7 @@
             <div class="flex space-between">
                 <h4>{{ title }}</h4>
                 <button class="modal-close waves-effect btn-flat" popovertarget="{{ id }}">
-                    {{ render_icon("close", "grey-text") }}
+                    {{ render_icon("close") }}
                 </button>
             </div>
             {% if message %}
@@ -67,7 +67,7 @@
             {{ caller() }}
         </div>
         <div class="modal-footer">
-            <button class="waves-effect btn-flat grey-text" popovertarget="{{ id }}">Close</button>
+            <button class="waves-effect btn-flat" popovertarget="{{ id }}">Close</button>
         </div>
     </div>
 
@@ -137,7 +137,7 @@
 <!-- UI COMPONENTS -->
 <!--===================-->
 
-{% macro fixed_action_button(icon, url) %}
+{% macro fixed_action_button(url, icon="add") %}
     <div class="fixed-action-btn mb-4">
         {{ render_floating_button(icon, url) }}
         {% if caller is defined %}

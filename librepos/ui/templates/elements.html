@@ -37,8 +37,8 @@
 
 {% endmacro %}
 
-{% macro render_modal_button(text, id, style="filled", icon=None, cls='') %}
-    {%- set btn_cls = style + " " + base_button_classes + " " + cls -%}
+{% macro render_modal_button(text, id, icon=None, cls='') %}
+    {%- set btn_cls = base_button_classes + " " + cls -%}
 
     <button class="btn {{ btn_cls }}" popovertarget="{{ id }}">
         {%- if icon -%}
