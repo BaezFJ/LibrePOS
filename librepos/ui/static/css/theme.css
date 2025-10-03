@@ -13,8 +13,20 @@
     --catppuccin-mocha-surface-1: #45475a;
     --catppuccin-mocha-surface-2: #585b70;
 
+    --catppuccin-mocha-blue: #89b4fa; /*Info*/
+    --catppuccin-mocha-green: #a6e3a1; /*Success*/
+    --catppuccin-mocha-yellow: #f9e2af; /*Warning*/
+    --catppuccin-mocha-red: #f38ba8; /*Error*/
+
+    --sys-color-info: var(--catppuccin-mocha-blue);
+    --sys-color-on-info: var(--catppuccin-mocha-crust);
+    --sys-color-success: var(--catppuccin-mocha-green);
+    --sys-color-on-success: var(--catppuccin-mocha-crust);
+    --sys-color-warning: var(--catppuccin-mocha-yellow);
+    --sys-color-on-warning: var(--catppuccin-mocha-crust);
+
     --md-sys-color-background: var(--catppuccin-mocha-base); /*Main background color*/
-    /*--md-sys-color-error:red;*/
+    --md-sys-color-error: var(--catppuccin-mocha-red);
     /*--md-sys-color-error-container:red;*/
     /*--md-sys-color-inverse-on-surface:;*/
     /*--md-sys-color-inverse-primary:;*/
@@ -23,7 +35,7 @@
     /*--md-sys-color-on-error:;*/
     /*--md-sys-color-on-error-container:;*/
     --md-sys-color-on-primary: var(--catppuccin-mocha-crust); /*Text color on navbar*/
-    /*--md-sys-color-on-primary-container:;*/
+    --md-sys-color-on-primary-container:var(--catppuccin-mocha-crust); /*Text color on floating action button*/
     /*--md-sys-color-on-primary-fixed:;*/
     /*--md-sys-color-on-primary-fixed-variant:;*/
     --md-sys-color-on-secondary: var(--catppuccin-mocha-crust); /*Text color on floating action button*/
@@ -39,7 +51,7 @@
     --md-sys-color-outline: var(--catppuccin-mocha-subtext-0); /*Color for toggle-switch in off-state*/
     --md-sys-color-outline-variant: var(--catppuccin-mocha-surface-2); /*Color for divider*/
     --md-sys-color-primary: var(--catppuccin-mocha-mauve); /*Color for primary buttons and actions*/
-    /*--md-sys-color-primary-container:;*/
+    --md-sys-color-primary-container:var(--catppuccin-mocha-mauve); /*Color for floating action button*/
     /*--md-sys-color-primary-fixed:;*/
     /*--md-sys-color-primary-fixed-dim:;*/
     /*--md-sys-color-scrim:;*/
@@ -74,10 +86,25 @@
     --catppuccin-latte-crust: #dce0e8;
     --catppuccin-latte-mantle: #e6e9ef;
     --catppuccin-latte-mauve: #8839ef;
+    --catppuccin-latte-overlay-0: #9ca0b0;
+    --catppuccin-latte-surface-0: #ccd0da;
+    --catppuccin-latte-surface-1: #bcc0cc;
     --catppuccin-latte-surface-2: #acb0be;
 
+    --catppuccin-latte-blue: #1e66f5; /*Info*/
+    --catppuccin-latte-green: #40a02b; /*Success*/
+    --catppuccin-latte-yellow: #df8e1d; /*Warning*/
+    --catppuccin-latte-red: #d20f39; /*Error*/
+
+    --sys-color-info: var(--catppuccin-latte-blue);
+    --sys-color-on-info: var(--catppuccin-latte-crust);
+    --sys-color-success: var(--catppuccin-latte-green);
+    --sys-color-on-success: var(--catppuccin-latte-crust);
+    --sys-color-warning: var(--catppuccin-latte-yellow);
+    --sys-color-on-warning: var(--catppuccin-latte-crust);
+
     --md-sys-color-background: var(--catppuccin-latte-base); /*Main background color*/
-    /*--md-sys-color-error:red;*/
+    --md-sys-color-error: var(--catppuccin-latte-red);
     /*--md-sys-color-error-container:red;*/
     /*--md-sys-color-inverse-on-surface:;*/
     /*--md-sys-color-inverse-primary:;*/
@@ -86,10 +113,10 @@
     /*--md-sys-color-on-error:;*/
     /*--md-sys-color-on-error-container:;*/
     --md-sys-color-on-primary: var(--catppuccin-latte-crust); /*Text color on navbar*/
-    /*--md-sys-color-on-primary-container:;*/
+    --md-sys-color-on-primary-container:var(--catppuccin-latte-crust);/*Text color on floating action button*/
     /*--md-sys-color-on-primary-fixed:;*/
     /*--md-sys-color-on-primary-fixed-variant:;*/
-    --md-sys-color-on-secondary: var(--catppuccin-latte-crust); /*Text color on floating action button*/
+    --md-sys-color-on-secondary: var(--catppuccin-latte-crust); /*Text color on button*/
     --md-sys-color-on-secondary-container: var(--catppuccin-latte-subtext-1); /*Text color on tonal buttons, sidenav's*/
     /*--md-sys-color-on-secondary-fixed:;*/
     /*--md-sys-color-on-secondary-fixed-variant:;*/
@@ -100,18 +127,18 @@
     /*--md-sys-color-on-tertiary-fixed:;*/
     /*--md-sys-color-on-tertiary-fixed-variant:;*/
     --md-sys-color-outline: var(--catppuccin-latte-subtext-0); /*Color for toggle-switch in off-state*/
-    --md-sys-color-outline-variant: var(--catppuccin-latte-subtext-0); /*Color for divider*/
+    --md-sys-color-outline-variant: var(--catppuccin-latte-surface-2); /*Color for divider*/
     --md-sys-color-primary: var(--catppuccin-latte-mauve); /*Color for primary buttons and actions*/
-    /*--md-sys-color-primary-container:;*/
+    --md-sys-color-primary-container:var(--catppuccin-latte-mauve); /*Color for floating action button*/
     /*--md-sys-color-primary-fixed:;*/
     /*--md-sys-color-primary-fixed-dim:;*/
     /*--md-sys-color-scrim:;*/
     /*--md-sys-color-secondary:;*/
-    --md-sys-color-secondary-container: var(--catppuccin-latte-crust); /* tonal-button, elevated-button, and navbar */
+    --md-sys-color-secondary-container: var(--catppuccin-latte-surface-2); /* tonal-button, elevated-button, and navbar */
     /*--md-sys-color-secondary-fixed:;*/
     /*--md-sys-color-secondary-fixed-dim:;*/
     /*--md-sys-color-shadow:;*/
-    --md-sys-color-surface: var(--catppuccin-latte-mantle); /*Background for cards*/
+    --md-sys-color-surface: var(--catppuccin-latte-surface-0); /*Background for cards*/
     /*--md-sys-color-surface-bright:;*/
     /*--md-sys-color-surface-container:;*/
     /*--md-sys-color-surface-container-high:;*/
@@ -119,7 +146,7 @@
     /*--md-sys-color-surface-container-low:;*/
     /*--md-sys-color-surface-container-lowest:;*/
     /*--md-sys-color-surface-dim:;*/
-    --md-sys-color-surface-tint: var(--catppuccin-latte-mauve); /*Tint color for cards and modals */
+    --md-sys-color-surface-tint: var(--catppuccin-latte-overlay-0); /*Tint color for cards and modals */
     --md-sys-color-surface-variant: var(--catppuccin-latte-surface-2); /*Background for toggle-switch*/
     /*--md-sys-color-tertiary:;*/
     /*--md-sys-color-tertiary-container:;*/

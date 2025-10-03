@@ -10,3 +10,7 @@
 ul {
     padding-inline-start: 0;
 }
+
+.error{
+    color: var(--md-sys-color-on-error);
+}

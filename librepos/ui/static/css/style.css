@@ -55,6 +55,34 @@ main {
     overflow: scroll;
 }
 
+.primary {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+
+.primary-border {
+    border: 1px solid var(--md-sys-color-primary);
+}
+
+.info {
+    background-color: var(--sys-color-info);
+    color: var(--sys-color-on-info);
+}
+
+.info-border {
+    border: 1px solid var(--sys-color-info);
+}
+
+.warning {
+    background-color: var(--sys-color-warning);
+    color: var(--sys-color-on-warning);
+}
+
+.success {
+    background-color: var(--sys-color-success);
+    color: var(--sys-color-on-success);
+}
+
 .flex {
     display: flex;
     flex-direction: row;

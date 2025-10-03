@@ -1,1 +1,1 @@
-.navbar{color:var(--md-sys-color-on-background)}.navbar .brand-logo,.navbar ul:not(.dropdown-content)>li>a{color:revert}ul{padding-inline-start:0}
+.navbar{color:var(--md-sys-color-on-background)}.navbar .brand-logo,.navbar ul:not(.dropdown-content)>li>a{color:revert}ul{padding-inline-start:0}.error{color:var(--md-sys-color-on-error)}
