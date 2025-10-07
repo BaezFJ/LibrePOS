@@ -5,7 +5,7 @@ from flask import Flask
 from jinja2 import StrictUndefined, DebugUndefined, FileSystemBytecodeCache
 
 from librepos.cli.manage import add_cli_commands
-from librepos.features import register_features
+from librepos.features.urls import urlpatterns
 from librepos.utils.formatters import (
     phone_formatter,
     currency_formatter,
@@ -62,7 +62,7 @@ def create_app():
     custom_jinja_filters(app)
 
     # register features
-    register_features(app)
+    urlpatterns(app)
 
     # load cli commands
     add_cli_commands(app)
@@ -72,7 +72,7 @@ def create_app():
 
 def init_extensions(app):
     from .extensions import db, login_manager, mail, csrf
-    from librepos.features.iam.models import User
+    from librepos.features.iam.user.models import User
 
     db.init_app(app)
     mail.init_app(app)
