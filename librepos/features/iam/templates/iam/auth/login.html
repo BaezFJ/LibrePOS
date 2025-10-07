@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% from "components.html" import section, panel_card %}
+{% from "components.html" import section %}
 {% from "form.html" import render_form %}
 
 {% block main %}
 
     {% call section() %}
         <div class="col s12 m6 offset-m3">
-            {% call panel_card("Login") %}
+            <div class="card-panel">
                 {{ render_form(form, "") }}
-            {% endcall %}
+            </div>
         </div>
     {% endcall %}
 
