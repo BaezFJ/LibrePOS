@@ -33,7 +33,7 @@
                 {{ title|title if title is defined }}
             </h2>
             {% if msg is defined %}
-                <p class="grey-text flow-text my-1">{{ msg }}</p>
+                <p class="grey-text flow-text my-1">{{ msg|capitalize }}</p>
             {% endif %}
         </hgroup>
         {{ render_divider(cls="mb-4") }}
