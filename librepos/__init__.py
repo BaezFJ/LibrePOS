@@ -5,7 +5,7 @@ from flask import Flask
 from jinja2 import StrictUndefined, DebugUndefined, FileSystemBytecodeCache
 
 from librepos.cli.manage import add_cli_commands
-from librepos.features.urls import urlpatterns
+from librepos.features.routes import urlpatterns
 from librepos.utils.formatters import (
     phone_formatter,
     currency_formatter,
@@ -72,20 +72,20 @@ def create_app():
 
 def init_extensions(app):
     from .extensions import db, login_manager, mail, csrf
-    from librepos.features.iam.user.models import User
+    from librepos.features.iam.models import User
 
     db.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
 
-    login_manager.login_view = "iam.auth.login"  # type: ignore
+    login_manager.login_view = "iam.auth.get_login"  # type: ignore
     login_manager.session_protection = "strong"
-    login_manager.refresh_view = "auth.reauthenticate"  # type: ignore
-    login_manager.needs_refresh_message = (
-        "To protect your account, please reauthenticate to access this page."
-    )
-    login_manager.needs_refresh_message_category = "info"
+    # login_manager.refresh_view = "auth.reauthenticate"  # type: ignore
+    # login_manager.needs_refresh_message = (
+    #     "To protect your account, please reauthenticate to access this page."
+    # )
+    # login_manager.needs_refresh_message_category = "info"
 
     @login_manager.user_loader
     def load_user(user_id):

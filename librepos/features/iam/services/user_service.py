@@ -7,18 +7,18 @@ from librepos.utils.validators import validate_exists, validate_confirmation
 
 class UserService(BaseService):
     def __init__(self):
-        self.user_repository = UserRepository()
+        self.repo = UserRepository()
 
     def _validate_user_exists(self, user_id):
         """Validate that a user exists and return it."""
-        return validate_exists(self.user_repository, user_id, "User not found.")
+        return validate_exists(self.repo, user_id, "User not found.")
 
     def create_user(self, data):
         """Create a new user."""
 
         def _create_operation():
-            user = self.user_repository.model_class(**data)
-            self.user_repository.add(user)
+            user = self.repo.model_class(**data)
+            self.repo.add(user)
             return user
 
         return self._execute_with_error_handling(
@@ -36,7 +36,7 @@ class UserService(BaseService):
             if not validate_confirmation(data):
                 return False
 
-            self.user_repository.delete(user)
+            self.repo.delete(user)
             return True
 
         return self._execute_with_error_handling(
@@ -52,7 +52,7 @@ class UserService(BaseService):
                 return False
 
             user.active = not user.active
-            self.user_repository.update(user)
+            self.repo.update(user)
             status = "activated" if user.active else "suspended"
             FlashMessageHandler.success(f"User {status} successfully.")
             return True
@@ -70,7 +70,7 @@ class UserService(BaseService):
                 return False
 
             update_model_fields(user, data)
-            self.user_repository.update(user)
+            self.repo.update(user)
             FlashMessageHandler.success("User updated successfully.")
             return True
 

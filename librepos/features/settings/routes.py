@@ -5,9 +5,7 @@ from librepos.utils.decorators import permission_required
 from .forms import SystemSettingsForm
 from .services import SystemSettingsService
 
-settings_bp = Blueprint(
-    "settings", __name__, template_folder="templates", url_prefix="/settings"
-)
+settings_bp = Blueprint("settings", __name__, template_folder="templates")
 
 system_settings_service = SystemSettingsService()
 

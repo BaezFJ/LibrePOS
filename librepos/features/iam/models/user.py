@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 
 from librepos.extensions import db
 from librepos.utils import timezone_aware_datetime
@@ -118,23 +118,9 @@ class User(UserMixin, db.Model):
         foreign_keys="MenuItem.updated_by_id",
     )
 
-    # TODO (6/21/25): Move authentication, activity logging, and access control related functions to corresponding repositories
-    # Functions to move:
-    # - check_password(): Move to AuthenticationRepository
-    # - record_sign_in(), handle_failed_login(), reset_failed_login_count(): Move to ActivityTrackingRepository
-    # - has_permission(): Move to AccessControlRepository
-
-    def check_password(self, password: str) -> bool:
-        return check_password_hash(self.password, password)
-
     @property
     def full_name(self) -> str:
         return f"{self.first_name} {self.middle_name or ''} {self.last_name}"
-
-    def has_permission(self, permission_name: str) -> bool:
-        if not self.role:
-            return False
-        return self.role.has_permission(permission_name)
 
     def set_default_image(self):
         if self.gender == "male":
@@ -142,24 +128,3 @@ class User(UserMixin, db.Model):
 
         if self.gender == "female":
             self.image = "images/default_female_user.png"
-
-    def record_sign_in(self, ip: str, agent: str):
-        self.sign_in_count += 1
-        self.current_sign_in_on = timezone_aware_datetime()
-        self.current_sign_in_ip = ip
-        self.last_sign_in_on = self.current_sign_in_on
-        self.last_sign_in_ip = self.current_sign_in_ip
-        self.current_user_agent = agent
-        self.last_user_agent = agent
-
-        db.session.commit()
-
-    def handle_failed_login(self):
-        self.failed_login_count += 1
-        if self.failed_login_count >= 3:
-            self.active = False
-        db.session.commit()
-
-    def reset_failed_login_count(self):
-        self.failed_login_count = 0
-        db.session.commit()

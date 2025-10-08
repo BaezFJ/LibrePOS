@@ -6,9 +6,7 @@ from librepos.utils.decorators import permission_required
 from .services import OrderService
 from .utils.enums import OrderPermissions, OrderStatus
 
-order_bp = Blueprint(
-    "order", __name__, template_folder="templates", url_prefix="/orders"
-)
+order_bp = Blueprint("order", __name__, template_folder="templates")
 
 order_service = OrderService()
 # order_item_service = OrderItemService()

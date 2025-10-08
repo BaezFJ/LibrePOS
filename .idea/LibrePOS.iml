@@ -22,6 +22,7 @@
         <option value="$MODULE_DIR$/librepos/features/menu/templates" />
         <option value="$MODULE_DIR$/librepos/features/settings/templates" />
         <option value="$MODULE_DIR$/librepos/features/branches/templates" />
+        <option value="$MODULE_DIR$/librepos/features/main/templates" />
       </list>
     </option>
   </component>

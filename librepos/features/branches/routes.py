@@ -6,9 +6,7 @@ from .forms import BranchForm
 from .services import BranchService
 from .utils.enums import BranchPermissions
 
-branch_bp = Blueprint(
-    "branch", __name__, template_folder="templates", url_prefix="/branches"
-)
+branch_bp = Blueprint("branch", __name__, template_folder="templates")
 
 branch_service = BranchService()
 

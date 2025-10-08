@@ -2,12 +2,15 @@ from functools import wraps
 from typing import Any, Callable
 
 from flask import redirect, url_for, request
-from flask_login import current_user, login_required
+from flask_login import login_required
 
 from librepos.utils import FlashMessageHandler
+from librepos.features.iam.repositories import UserRepository
 
 PERMISSION_DENIED_MESSAGE = "You don't have the required permission."
-DEFAULT_UNAUTHORIZED_ENDPOINT = "dashboard"
+DEFAULT_UNAUTHORIZED_ENDPOINT = "main.get_dashboard"
+
+repo = UserRepository()
 
 
 def permission_required(
@@ -39,7 +42,7 @@ def permission_required(
         @login_required
         @wraps(view_func)
         def wrapped_view(*args, **kwargs):
-            if not current_user.has_permission(permission):
+            if not repo.find_permission(permission):
                 FlashMessageHandler.error(PERMISSION_DENIED_MESSAGE)
                 return redirect(url_for(target_unauthorized_endpoint, next=request.url))
 

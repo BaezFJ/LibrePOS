@@ -41,7 +41,7 @@ def process_create_user():
 @user_bp.get("/")
 @permission_required(Permissions.LIST_USER)
 def list_users():
-    users = user_service.user_repository.get_all()
+    users = user_service.repo.get_all()
     form = UserCreationForm()
     create_user_permission = Permissions.CREATE_USER
     context = {
@@ -58,7 +58,7 @@ def list_users():
 @permission_required(Permissions.READ_USER)
 def get_user(user_id):
     """Render the user page."""
-    user = user_service.user_repository.get_by_id(user_id)
+    user = user_service.repo.get_by_id(user_id)
     form = ConfirmationForm()
     update_user_permission = Permissions.UPDATE_USER
     context = {
@@ -98,7 +98,7 @@ def display_create_user():
 @permission_required(Permissions.UPDATE_USER)
 def display_update_user(user_id):
     """Render the IAM user update page."""
-    user = user_service.user_repository.get_by_id(user_id)
+    user = user_service.repo.get_by_id(user_id)
     contact_form = UserContactForm(obj=user)
     address_form = UserAddressForm(obj=user)
     details_form = UserDetailsForm(obj=user)
@@ -117,7 +117,7 @@ def display_update_user(user_id):
 @permission_required(Permissions.UPDATE_USER)
 def display_role_change(user_id):
     """Render the IAM user role change page."""
-    user = user_service.user_repository.get_by_id(user_id)
+    user = user_service.repo.get_by_id(user_id)
     form = UserRoleForm(obj=user)
     context = {
         "title": "Change Role",
