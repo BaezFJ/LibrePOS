@@ -30,7 +30,7 @@
     <section class="section {{ cls }}">
         <hgroup>
             <h2 class="my-2">
-                {{ title if title is defined }}
+                {{ title|title if title is defined }}
             </h2>
             {% if msg is defined %}
                 <p class="grey-text flow-text my-1">{{ msg }}</p>
