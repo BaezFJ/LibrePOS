@@ -6,7 +6,7 @@ from librepos.utils import FlashMessageHandler
 from ..forms import UserLoginForm
 from ..services import AuthenticationService
 
-auth_bp = Blueprint("auth", __name__, template_folder="templates", url_prefix="/auth")
+auth_bp = Blueprint("auth", __name__, template_folder="templates")
 
 auth_service = AuthenticationService()
 
@@ -20,6 +20,7 @@ def get_login():
 
     form = UserLoginForm()
     context = {
+        "title": "Login",
         "form": form,
     }
     if form.validate_on_submit():

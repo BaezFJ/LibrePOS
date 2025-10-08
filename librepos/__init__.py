@@ -79,7 +79,7 @@ def init_extensions(app):
     login_manager.init_app(app)
     csrf.init_app(app)
 
-    login_manager.login_view = "iam.auth.get_login"  # type: ignore
+    login_manager.login_view = "auth.get_login"  # type: ignore
     login_manager.session_protection = "strong"
     # login_manager.refresh_view = "auth.reauthenticate"  # type: ignore
     # login_manager.needs_refresh_message = (

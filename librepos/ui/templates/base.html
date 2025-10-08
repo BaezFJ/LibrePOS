@@ -21,7 +21,7 @@
 
     <meta name="theme-color" content="#000000">
 
-    <title>{{ head_title if head_title is defined else business_name }}</title>
+    <title>{{ title if title is defined else business_name }}</title>
 
     <!--HTMX-->
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"></script>
@@ -69,11 +69,6 @@
     <header>
         {% include "navigation/_navbar.html" %}
     </header>
-
-    {# Main Menu #}
-    <aside>
-        {% include "navigation/_main_menu.html" %}
-    </aside>
 
     {# User Menu #}
     <aside>

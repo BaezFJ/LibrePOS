@@ -1,4 +1,5 @@
 {% from "elements.html" import render_nav_link, render_divider %}
+{% from "components.html" import collapsible_nav_link %}
 
 <menu id="userMenu" class="sidenav right">
     <li>
@@ -6,29 +7,49 @@
             <div class="background">
                 <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
             </div>
-            <img class="circle" src="{{ url_for('static', filename=current_user.image|safe) }}"
-                 alt="{{ current_user.username }}">
-            <span class="name">{{ current_user.username }}</span>
-            <span class="email">{{ current_user.email }}</span>
+            <div class="flex space-evenly">
+                <img class="circle" src="{{ url_for('static', filename=current_user.image|safe) }}"
+                     alt="{{ current_user.username }}">
+                <div>
+                    <span class="name">{{ current_user.username }}</span>
+                    <span class="email">{{ current_user.email }}</span>
+                </div>
+            </div>
+
+
         </div>
     </li>
 
-    {{ render_nav_link("Dashboard", "dashboard", url_for("iam.user.get_user_dashboard", user_id=current_user.id)) }}
+    {{ render_nav_link("Dashboard", "dashboard", url_for("main.get_dashboard")) }}
+    {{ render_nav_link("Orders", "orders") }}
+    {{ render_nav_link("Items", "fastfood") }}
 
-    {{ render_nav_link("Notifications", "notifications") }}
+    {% call collapsible_nav_link("Apps", "apps") %}
 
-    {{ render_nav_link("Messages", "chat") }}
+        {{ render_nav_link("Notifications", "notifications") }}
+        {{ render_nav_link("Messages", "chat") }}
+        {{ render_nav_link("Clock-In", "schedule") }}
+        {{ render_nav_link("Schedule", "overview") }}
+        {{ render_nav_link("Calendar", "calendar_month") }}
 
-    {{ render_divider() }}
+    {% endcall %}
 
-    {{ render_nav_link("Clock-In", "schedule") }}
+    {{ render_nav_link("Reports", "finance") }}
+    {{ render_nav_link("Customers", "id_card") }}
 
-    {{ render_nav_link("Schedule", "overview") }}
+    {% call collapsible_nav_link("IAM", "admin_panel_settings") %}
+        {{ render_nav_link("Users", "person", url_for('iam.user.list_users')) }}
+        {{ render_nav_link("Roles", "lock_person", url_for('iam.role.list_roles')) }}
+    {% endcall %}
 
-    {{ render_nav_link("Calendar", "calendar_month") }}
+    {% call collapsible_nav_link("Settings", "settings") %}
+        {{ render_nav_link("Branch", "domain") }}
+        {{ render_nav_link("Tables", "dine_in") }}
+        {{ render_nav_link("POS", "point_of_sale") }}
+        {{ render_nav_link("System", "settings_applications") }}
+    {% endcall %}
 
-    {{ render_divider() }}
-
-    {{ render_nav_link("Logout", "logout", url_for("iam.auth.logout")) }}
+    {{ render_nav_link("Support", "support_agent") }}
+    {{ render_nav_link("Logout", "logout", url_for("auth.logout")) }}
 
 </menu>
