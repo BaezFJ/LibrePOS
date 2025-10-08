@@ -9,7 +9,7 @@ from ..utils.enums import IAMPermissions as Permissions
 
 role_service = RoleService()
 
-role_bp = Blueprint("role", __name__, template_folder="templates", url_prefix="/roles")
+role_bp = Blueprint("role", __name__, template_folder="templates")
 
 
 # ================================
