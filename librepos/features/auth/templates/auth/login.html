@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% import "components/forms/form.j2" as Form %}
+{% import "components/cards/panel.j2" as CardPanel %}
+{% import "components/sections/section.j2" as Section %}
+
+{% block main %}
+
+    <section class="section container">
+
+    {{ Section.header("Login") }}
+        <div class="row">
+            <div class="col s12">
+                {% call () CardPanel.render() %}
+                    <form action="" method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col s12 input-field">
+                                {{ Form.text(form.username) }}
+                            </div>
+                            <div class="col s12 input-field">
+                                {{ Form.text(form.password) }}
+                            </div>
+                            <div class="col s12">
+                                {{ Form.switch(form.remember, "No", "Yes") }}
+                            </div>
+                            <div class="col s12">
+                                {{ Form.submit("Login", "login") }}
+                            </div>
+                        </div>
+                    </form>
+                {% endcall %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+{% import 'macros/_core.j2' as core %}
+
+{% macro render(class_=None) %}
+    <div class="card-panel {{ class_ or '' }}">
+        {{ caller() }}
+    </div>
+{% endmacro %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% import "components/sections/section.j2" as Section %}
+{% import "components/forms/form.j2" as Form %}
+{% import "components/cards/card.j2" as Card %}
+
+{% block main %}
+
+    <section class="section container">
+
+        {{ Section.header("Create Group") }}
+
+        <div class="row">
+            <div class="col s12">
+                {% call () Card.render() %}
+                    <form action="" method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col s12 input-field">
+                                {{ Form.text(form.name) }}
+                            </div>
+                            <div class="col s12 input-field">
+                                {{ Form.text(form.description) }}
+                            </div>
+                            <div class="col s12">
+                                {{ Form.submit("Create Group", "add") }}
+                            </div>
+                        </div>
+                    </form>
+                {% endcall %}
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}

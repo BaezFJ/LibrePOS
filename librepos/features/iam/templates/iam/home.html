@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% import "components/cards/icon_card.j2" as IconCard %}
+{% import "components/sections/section.j2" as Section %}
+
+{% block main %}
+
+    <section class="section container">
+        {{ Section.header("IAM Dashboard") }}
+        <div class="row">
+            <div class="col s6">
+                <a href="{{ url_for("iam.list_users") }}">
+                    {{ IconCard.render("group", "Users") }}
+                </a>
+            </div>
+            <div class="col s6">
+                <a href="{{ url_for("iam.list_groups") }}">
+                    {{ IconCard.render("groups", "Groups") }}
+                </a>
+            </div>
+            <div class="col s6">
+                <a href="{{ url_for("iam.list_permissions") }}">
+                    {{ IconCard.render("security", "Permissions") }}
+                </a>
+            </div>
+            <div class="col s6">
+                {{ IconCard.render("analytics", "Reports") }}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

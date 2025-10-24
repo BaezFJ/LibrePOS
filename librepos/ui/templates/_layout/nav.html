@@ -1,0 +1,43 @@
+{% import "components/icons/icon.j2" as Icon %}
+{% import "components/sidenavs/sidenav.j2" as Sidenav %}
+
+<nav class="nav navbar">
+    <div class="nav-wrapper">
+        {% if back_url is defined %}
+            {#  ========== Left Menu ========== #}
+            <ul>
+                <li>
+                    <a href="{{ back_url }}" class="waves-effect">
+                        {{ Icon.render("arrow_back") }}
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+        {#  ========== Menu Title ========== #}
+        <p class="brand-logo center my-0 flow-text">
+            {{ nav_title|truncate(15) if nav_title is defined else business_name|truncate(15) }}
+        </p>
+
+        {#  ========== Right Menu ========== #}
+        <ul class="right">
+            <li>
+                <a data-target="mainMenu" class="sidenav-trigger">
+                    {{ Icon.render("menu") }}
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+{% call () Sidenav.render("mainMenu", "right") %}
+    {{ Sidenav.user_view(current_user) }}
+
+    {{ Sidenav.item("Dashboard", "dashboard", url_for("core.home")) }}
+
+    {{ Sidenav.item("IAM", "badge", url_for("iam.home")) }}
+
+    {{ Sidenav.divider() }}
+
+    {{ Sidenav.item("Logout", "logout", url_for("auth.logout")) }}
+{% endcall %}

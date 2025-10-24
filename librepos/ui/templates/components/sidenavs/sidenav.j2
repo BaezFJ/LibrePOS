@@ -1,0 +1,76 @@
+{% import "components/icons/icon.j2" as Icon %}
+
+
+{% macro render(id, class_=None) %}
+
+    <menu id="{{ id }}" class="sidenav {{ class_ or '' }}">
+        <li>
+            <a class="sidenav-close" href="#!">
+                {{ Icon.render("close") }}
+                Close
+            </a>
+        </li>
+        {{ caller() }}
+    </menu>
+
+{% endmacro %}
+
+
+{% macro item(text=None, icon='link', url='') %}
+    <li>
+        <a href="{{ url }}" class="waves-effect">
+            {{ Icon.render(icon, "left") }}
+            {% if text is defined %}
+                <span>{{ text }}</span>
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}
+
+
+{% macro collapsible(text, icon=None) %}
+    <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+            <li>
+                <a class="collapsible-header">
+                    {% if icon %}
+                        {{ Icon.render(icon, "left") }}
+                    {% endif %}
+                    {{ text if text is defined }}
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {{ caller() }}
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </li>
+{% endmacro %}
+
+
+{% macro divider() %}
+    <li>
+        <div class="divider"></div>
+    </li>
+{% endmacro %}
+
+
+{% macro user_view(current_user) %}
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="{{ url_for('static', filename='images/polygon_background.png') }}" alt="default">
+            </div>
+            <div class="flex space-evenly grey darken-4" style="border-radius: 1em;">
+                {% set user_profile_image = current_user.image if current_user.image else "images/profile_image_dark.png" %}
+                <img class="circle" src="{{ url_for('static', filename=user_profile_image|safe) }}"
+                     alt="{{ current_user.username }}">
+                <div>
+                    <span class="name">{{ current_user.username }}</span>
+                    <span class="email">{{ current_user.email }}</span>
+                </div>
+            </div>
+        </div>
+    </li>
+{% endmacro %}

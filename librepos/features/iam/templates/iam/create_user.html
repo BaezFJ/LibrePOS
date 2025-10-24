@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% import "components/sections/section.j2" as Section %}
+{% import "components/cards/card.j2" as Card %}
+{% import "components/forms/form.j2" as Form %}
+
+{% block main %}
+
+    {% call () Section.render("Create User") %}
+
+        <div class="row">
+            <div class="col s12">
+                {% call () Card.render() %}
+                    <form action="" method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col s12 input-field">
+                                {{ Form.text(form.username) }}
+                            </div>
+                            <div class="col s12 input-field">
+                                {{ Form.text(form.email) }}
+                            </div>
+                            <div class="col s12">
+                                {{ Form.submit("Create User", "add") }}
+                            </div>
+                        </div>
+                    </form>
+                {% endcall %}
+            </div>
+        </div>
+
+    {% endcall %}
+
+{% endblock %}

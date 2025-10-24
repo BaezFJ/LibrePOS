@@ -1,0 +1,48 @@
+{% macro text(field) %}
+
+    {# allow field-specific input classes/placeholder to stack with per-call classes #}
+    {% set base_class = (field.render_kw.get('class') if field.render_kw and field.render_kw.get('class') else '') %}
+    {% set base_placeholder = (field.render_kw.get('placeholder') if field.render_kw and field.render_kw.get('placeholder') else ' ') %}
+
+    {{ field(class=base_class, placeholder=base_placeholder) }}
+    {{ field.label }}
+
+    {% if field.description %}
+        <small class="supporting-text">{{ field.description }}</small>
+    {% endif %}
+
+    {% if field.errors %}
+        <small class="red-text">{{ field.errors|join(', ') }}</small>
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro switch(field, prefix="Off", suffix="On") %}
+
+    <div class="switch">
+        <span>{{ field.label.text }}&colon; &nbsp;</span>
+        <label>
+            {{ prefix if prefix is defined }}
+            {{ field(**kwargs)|safe }}
+            <span class="lever"></span>
+            {{ suffix if suffix is defined }}
+        </label>
+    </div>
+
+{% endmacro %}
+
+
+
+{% macro submit(text="Submit", icon=None, class_=None) %}
+
+    <button class="btn filled {{ 'icon-right' if icon is defined }} waves-effect waves-light {{ class_ or '' }}"
+            type="submit"
+            name="action">
+        {{ text if text is defined }}
+        {% if icon %}
+            <i class="material-symbols-rounded right">{{ icon }}</i>
+        {% endif %}
+    </button>
+
+{% endmacro %}

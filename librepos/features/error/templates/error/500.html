@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="robots" content="noindex"/>
+    <title>500 — Something went wrong</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --fg: #0f172a; /* slate-900 */
+            --muted: #64748b; /* slate-500 */
+            --line: #e2e8f0; /* slate-200 */
+            --accent: #ef4444; /* red-500 accent hint */
+            --surface: color-mix(in oklab, var(--bg) 94%, transparent);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0b0f17;
+                --fg: #e5e7eb;
+                --muted: #94a3b8;
+                --line: #1f2937;
+                --accent: #f87171; /* red-400 */
+                --surface: color-mix(in oklab, var(--bg) 90%, transparent);
+            }
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .wrap {
+            min-height: 100svh;
+            display: grid;
+            place-items: center;
+            padding: 2rem;
+        }
+
+        .card {
+            width: min(680px, 100%);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: clamp(1.5rem, 2.5vw, 2.5rem);
+            background: var(--surface);
+            backdrop-filter: saturate(140%) blur(2px);
+        }
+
+        .mark {
+            display: inline-grid;
+            place-items: center;
+            width: 96px;
+            height: 96px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            margin-bottom: 1.25rem;
+            position: relative;
+            isolation: isolate;
+        }
+
+        .mark::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(60% 60% at 50% 40%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 70%);
+            opacity: .8;
+            z-index: -1;
+        }
+
+        h1 {
+            margin: 0 0 .25rem 0;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            font-size: clamp(2rem, 5vw, 3rem);
+        }
+
+        .code {
+            font-size: clamp(2.25rem, 7vw, 3.75rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            animation: throb 1.8s ease-in-out infinite;
+        }
+
+        @keyframes throb {
+            0%, 100% {
+                transform: scale(1)
+            }
+            50% {
+                transform: scale(1.03)
+            }
+        }
+
+        p {
+            margin: .25rem 0 1.25rem;
+            color: var(--muted)
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--line);
+            background: transparent;
+            color: var(--fg);
+            padding: .7rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            transition: transform .06s ease, background .2s ease, border-color .2s ease;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid color-mix(in oklab, var(--accent) 40%, transparent);
+            outline-offset: 2px
+        }
+
+        .btn:hover {
+            background: color-mix(in oklab, var(--fg) 6%, transparent);
+            border-color: color-mix(in oklab, var(--fg) 14%, var(--line))
+        }
+
+        .btn:active {
+            transform: translateY(1px)
+        }
+
+        .btn.primary {
+            background: var(--fg);
+            color: var(--bg);
+            border-color: var(--fg);
+        }
+
+        .btn.primary:hover {
+            background: color-mix(in oklab, var(--fg) 92%, var(--bg));
+            border-color: color-mix(in oklab, var(--fg) 92%, var(--bg));
+        }
+
+        .btn.danger {
+            border-color: color-mix(in oklab, var(--accent) 40%, var(--line));
+        }
+
+        .hint {
+            margin-top: 1rem;
+            font-size: .9rem;
+            color: var(--muted);
+            border-top: 1px dashed var(--line);
+            padding-top: 1rem;
+            word-break: break-word;
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace
+        }
+    </style>
+</head>
+<body>
+<main class="wrap" role="main">
+    <section class="card" aria-labelledby="title">
+        <div class="mark" aria-hidden="true">
+            <span class="code" aria-hidden="true">500</span>
+        </div>
+        <h1 id="title">Something went wrong</h1>
+        <p>An unexpected error occurred. Please try again or head back home.</p>
+
+        <div class="row" role="group" aria-label="Actions">
+            <a class="btn primary" href="{{ url_for("dashboard") }}" aria-label="Go back to the homepage">Go home</a>
+            <button class="btn danger" type="button" onclick="location.reload()" aria-label="Reload the page">Try
+                again
+            </button>
+        </div>
+
+        <p class="hint">If this keeps happening, try again later or contact support.</p>
+    </section>
+</main>
+</body>
+</html>

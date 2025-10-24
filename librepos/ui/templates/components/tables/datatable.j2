@@ -1,0 +1,51 @@
+{% import 'macros/_core.j2' as core %}
+
+{% macro render(headers=None, class_=None) %}
+
+    <table class="stiped highlight {{ class_ or '' }}">
+        {% if headers %}
+            <thead>
+            <tr>
+                {% for header in headers %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+        {% endif %}
+        <tbody>
+        {{ caller() }}
+        </tbody>
+    </table>
+
+{% endmacro %}
+
+
+{# datatable(headers, rows, class_=None, attrs=None)
+headers: list of (key, label)
+rows: list of dicts keyed by header keys
+#}
+{% macro datatable(headers, rows, class_=None, attrs=None) -%}
+    <table class="highlight {{ class_ or '' }}" {{ core.attrs(attrs) }}>
+        <thead>
+        <tr>
+            {% for k, label in headers %}
+                <th data-key="{{ k }}">{{ label }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in rows %}
+            <tr>
+                {% for k, _ in headers %}
+                    <td>{{ row.get(k) }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        {% if not rows %}
+            <tr>
+                <td colspan="{{ headers|length }}" class="center-align grey-text">No data</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+{%- endmacro %}

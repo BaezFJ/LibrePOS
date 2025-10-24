@@ -1,0 +1,8 @@
+{# Material Symbols helper. Usage: {{ Icon.render('add') }} #}
+{% macro render(name, class_=None, attrs=None) -%}
+    <i class="material-symbols-rounded {{ class_ or '' }}" aria-hidden="true"{{ attrs and ' ' ~ attrs or '' }}>
+        {% if name is defined %}
+            {{ name }}
+        {% endif %}
+    </i>
+{%- endmacro %}

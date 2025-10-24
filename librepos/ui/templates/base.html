@@ -65,18 +65,10 @@
 </head>
 <body>
 {% if current_user.is_authenticated %}
-    {# Header #}
-    <header>
-        {% include "navigation/_navbar.html" %}
-    </header>
-
-    {# User Menu #}
-    <aside>
-        {% include "navigation/_user_menu.html" %}
-    </aside>
+    {% include '_layout/header.html' %}
 {% endif %}
 
-<main>
+<main id="main">
     {% block main %}{% endblock %}
 </main>
 
@@ -103,7 +95,7 @@
             {% if messages %}
                 {% for category, message in messages %}
                     new M.Toast({
-                        toastId: 'message-template-{{ category }}',
+                        toastId: 'message-templates-{{ category }}',
                     });
                 {% endfor %}
             {% endif %}

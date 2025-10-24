@@ -1,4 +1,4 @@
-from librepos import create_app
+from librepos.main.app import create_app
 
 app = create_app()
 

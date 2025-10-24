@@ -1,0 +1,29 @@
+{% macro render(title, description=None, class_='container') %}
+
+    <section class="section {{ class_ or '' }}">
+        <header class="mb-4">
+            <h2 class="my-0">{{ title if title is defined else "No Title Defined!" }}</h2>
+            {% if description %}
+                <p class="my-2">{{ description }}</p>
+            {% endif %}
+            <div class="divider"></div>
+        </header>
+        {{ caller() }}
+    </section>
+
+{% endmacro %}
+
+
+{% macro header(title, description=None) %}
+
+    <header class="mb-4">
+        <h3 class="mt-0 mb-2">
+            {{ title if title is defined else "No Title Defined!" }}
+        </h3>
+        {% if description %}
+            <p class="mt-0 mb-2">{{ description }}</p>
+        {% endif %}
+        <div class="divider"></div>
+    </header>
+
+{% endmacro %}

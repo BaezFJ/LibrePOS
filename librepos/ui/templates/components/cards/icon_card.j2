@@ -1,0 +1,12 @@
+{% import "components/icons/icon.j2" as Icon %}
+{% import "components/cards/panel.j2" as PanelCard %}
+
+
+{% macro render(icon, title) %}
+    {% call PanelCard.render("my-0 center-align hoverable") %}
+        {% if icon is defined %}
+            {{ Icon.render(icon, "large") }}
+        {% endif %}
+        <p class="flow-text my-2"><strong>{{ title if title is defined }}</strong></p>
+    {% endcall %}
+{% endmacro %}

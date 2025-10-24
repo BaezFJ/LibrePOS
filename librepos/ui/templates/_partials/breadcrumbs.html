@@ -1,0 +1,17 @@
+<nav class="breadcrumb-wrapper">
+    <div class="col s12">
+        <a href="{{ url_for("get_dashboard") }}" class="breadcrumb">Home</a>
+        {% if breadcrumb %}
+            {% for name, url in breadcrumb %}
+                <a href="{{ url }}" class="breadcrumb">{{ name }}</a>
+            {% endfor %}
+        {% endif %}
+    </div>
+</nav>
+
+{#
+Add breadcrumb to the context in a view func.
+context = { "breadcrumb": [
+                            {"Authentication", url_for("get_dashboard")},
+                            {"Users", url_for("iam.list_users")}, ] }
+#}

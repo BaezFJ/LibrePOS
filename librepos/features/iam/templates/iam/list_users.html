@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% import "components/buttons/button.j2" as Button %}
+{% import "components/cards/card.j2" as Card %}
+{% import "components/tables/datatable.j2" as Table %}
+{% import "components/sections/section.j2" as Section %}
+
+
+{% block main %}
+
+
+    <section class="section container">
+
+        {% set description = "An IAM (Identity and Access Management) user is a secure identity used to access and interact with the LibrePOS System." %}
+
+        {{ Section.header("Users", description) }}
+        <div class="row">
+            <div class="col s12">
+                {% call Card.render() %}
+                    {% call () Table.render(["Username", "Active", "Created At"]) %}
+                        {% for user in users %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for("iam.view_user", user_id=user.id) }}">
+                                        {{ user.username|title }}
+                                    </a>
+                                </td>
+                                <td>{{ user.is_active }}</td>
+                                <td>{{ user.created_at|date }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endcall %}
+                {% endcall %}
+            </div>
+        </div>
+    </section>
+
+
+    <div class="fixed-action-btn">
+        {{ Button.render(icon="add", href=url_for('iam.create_user'), variant="floating", class_="btn-large") }}
+    </div>
+
+{% endblock %}
+
+
+
+
+

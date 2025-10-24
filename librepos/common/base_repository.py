@@ -2,7 +2,7 @@ from typing import TypeVar, Generic, Type, Optional, List
 
 from flask_sqlalchemy.model import Model
 
-from librepos.extensions import db
+from librepos.main.extensions import db
 
 T = TypeVar("T", bound=Model)
 
