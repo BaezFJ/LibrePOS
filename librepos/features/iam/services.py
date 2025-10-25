@@ -1,7 +1,7 @@
 from typing import Optional
 
 from librepos.common.base_service import BaseService
-from .models import IAMUser, IAMUserGroup
+from .models import IAMUser, IAMGroup
 from .repositories import (
     IAMUserRepository,
     IAMPermissionRepository,
@@ -25,7 +25,7 @@ class IAMService(BaseService):
             error_message="Failed to create user.",
         )
 
-    def create_group(self, data) -> Optional[IAMUserGroup]:
+    def create_group(self, data) -> Optional[IAMGroup]:
         new_group = self.iam_user_group_repo.model_class(**data)
         return self._create_entity(
             entity=new_group,

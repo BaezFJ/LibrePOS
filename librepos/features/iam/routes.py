@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, url_for, redirect
 from flask_login import login_required
-from librepos.features.auth.decorators import permission_required
 
+from librepos.features.auth.decorators import permission_required
+from librepos.utils import sanitize_form_data
 from .forms import CreateUserForm, CreateGroupForm
 from .permissions import IAMPermissions
 from .services import IAMService
-from ...utils import sanitize_form_data
 
 iam_service = IAMService()
 
@@ -63,6 +63,30 @@ def view_user(user_id):
         "user": user,
     }
     return render_template("iam/view_user.html", **context)
+
+
+@iam_bp.route("/users/<int:user_id>/permissions")
+@permission_required(IAMPermissions.VIEW_IAM_USER)
+def list_user_permissions(user_id):
+    user = iam_service.iam_user_repo.get_by_id(user_id)
+    context = {
+        "title": "IAM | View | User Permissions",
+        "back_url": url_for("iam.view_user", user_id=user_id),
+        "user": user,
+    }
+    return render_template("iam/list_user_permissions.html", **context)
+
+
+@iam_bp.route("/users/<int:user_id>/groups")
+@permission_required(IAMPermissions.VIEW_IAM_USER)
+def list_user_groups(user_id):
+    user = iam_service.iam_user_repo.get_by_id(user_id)
+    context = {
+        "title": "IAM | View | User Groups",
+        "back_url": url_for("iam.view_user", user_id=user_id),
+        "user": user,
+    }
+    return render_template("iam/list_user_groups.html", **context)
 
 
 # ================================

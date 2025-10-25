@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% import "components/sections/section.j2" as Section %}
+
+{% block main %}
+
+
+    {% if user.groups %}
+        <section class="section container">
+            {{ Section.header(user.username|title) }}
+        </section>
+    {% endif %}
+
+    {% if not user.groups %}
+        {% include "_partials/empty_state.html" %}
+    {% endif %}
+
+{% endblock %}

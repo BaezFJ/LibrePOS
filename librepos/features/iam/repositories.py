@@ -1,7 +1,7 @@
 from typing import Optional
 
 from librepos.common.base_repository import BaseRepository
-from .models import IAMUser, IAMPermission, IAMUserGroup
+from .models import IAMUser, IAMPermission, IAMGroup
 
 
 class IAMUserRepository(BaseRepository[IAMUser]):
@@ -30,6 +30,6 @@ class IAMPermissionRepository(BaseRepository[IAMPermission]):
         super().__init__(IAMPermission)
 
 
-class IAMUserGroupRepository(BaseRepository[IAMUserGroup]):
+class IAMUserGroupRepository(BaseRepository[IAMGroup]):
     def __init__(self):
-        super().__init__(IAMUserGroup)
+        super().__init__(IAMGroup)
