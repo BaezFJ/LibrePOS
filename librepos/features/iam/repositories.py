@@ -1,7 +1,6 @@
-from sqlalchemy.orm import InstrumentedAttribute
+from typing import Optional
 
 from librepos.common.base_repository import BaseRepository
-
 from .models import IAMUser, IAMPermission, IAMUserGroup
 
 
@@ -10,7 +9,7 @@ class IAMUserRepository(BaseRepository[IAMUser]):
         super().__init__(IAMUser)
 
     @staticmethod
-    def find_by_username(username: str) -> IAMUser:
+    def find_by_username(username: str) -> Optional[IAMUser]:
         return IAMUser.query.filter_by(username=username).first()
 
     @staticmethod
@@ -22,8 +21,8 @@ class IAMUserRepository(BaseRepository[IAMUser]):
         return permission in group.permissions
 
     @staticmethod
-    def is_superuser(user: IAMUser) -> InstrumentedAttribute[bool]:
-        return user.is_superuser
+    def is_superuser(user: IAMUser) -> bool:
+        return bool(user.is_superuser)
 
 
 class IAMPermissionRepository(BaseRepository[IAMPermission]):

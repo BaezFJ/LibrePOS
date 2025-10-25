@@ -1,6 +1,7 @@
-from librepos.common.base_service import BaseService
+from typing import Optional
 
-from .models import IAMUserGroup
+from librepos.common.base_service import BaseService
+from .models import IAMUser, IAMUserGroup
 from .repositories import (
     IAMUserRepository,
     IAMPermissionRepository,
@@ -14,7 +15,7 @@ class IAMService(BaseService):
         self.iam_permission_repo = IAMPermissionRepository()
         self.iam_user_group_repo = IAMUserGroupRepository()
 
-    def create_user(self, data) -> IAMUserGroup:
+    def create_user(self, data) -> Optional[IAMUser]:
         data["password"] = "test"
         new_user = self.iam_user_repo.model_class(**data)
         return self._create_entity(
@@ -24,7 +25,7 @@ class IAMService(BaseService):
             error_message="Failed to create user.",
         )
 
-    def create_group(self, data) -> IAMUserGroup:
+    def create_group(self, data) -> Optional[IAMUserGroup]:
         new_group = self.iam_user_group_repo.model_class(**data)
         return self._create_entity(
             entity=new_group,

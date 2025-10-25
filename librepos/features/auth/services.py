@@ -1,11 +1,11 @@
 from urllib.parse import urlparse
 
 from flask import redirect, url_for, request
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user
 from werkzeug.security import check_password_hash
 
 from librepos.features.iam.repositories import IAMUserRepository
-from librepos.utils import FlashMessageHandler, timezone_aware_datetime
+from librepos.utils import FlashMessageHandler
 
 
 class AuthenticationService:
@@ -72,20 +72,20 @@ class AuthenticationService:
         attempts_left = self.MAX_LOGIN_ATTEMPTS - user.failed_login_count
         self._show_failed_login_messages(attempts_left)
 
-    def handle_tracking(self, ip: str, agent: str) -> None:
-        user = current_user
-        current_time = timezone_aware_datetime()
-
-        user.sign_in_count += 1
-        user.last_sign_in_on = user.current_sign_in_on
-        user.last_sign_in_ip = user.current_sign_in_ip
-        user.last_user_agent = user.current_user_agent
-
-        user.current_sign_in_on = current_time
-        user.current_sign_in_ip = ip
-        user.current_user_agent = agent
-
-        self.auth_user_repo.update(user)
+    # def handle_tracking(self, ip: str, agent: str) -> None:
+    #     user = current_user
+    #     current_time = timezone_aware_datetime()
+    #
+    #     user.sign_in_count += 1
+    #     user.last_sign_in_on = user.current_sign_in_on
+    #     user.last_sign_in_ip = user.current_sign_in_ip
+    #     user.last_user_agent = user.current_user_agent
+    #
+    #     user.current_sign_in_on = current_time
+    #     user.current_sign_in_ip = ip
+    #     user.current_user_agent = agent
+    #
+    #     self.auth_user_repo.update(user)
 
     def authenticate(self, username: str, password: str, remember: bool):
         # Validate inputs

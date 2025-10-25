@@ -21,7 +21,7 @@ dependencies = [
     "flask-wtf>=1.2.2",
     "python-dotenv>=1.1.1",
     "python-slugify>=8.0.4",
-    "python-usernames>=1.0.0",
+    "python-usernames>=1.1.0",
     "pytz>=2025.2",
     "tzdata>=2025.2",
     "waitress>=3.0.2",
@@ -44,8 +44,8 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "pyright>=1.1.405",
+    "pyright>=1.1.407",
     "pytest>=8.4.2",
     "pytest-cov>=7.0.0",
-    "ruff>=0.13.0",
+    "ruff>=0.14.2",
 ]

@@ -74,7 +74,6 @@ class IAMUser(UserMixin, db.Model):
     password: Mapped[str]
     email: Mapped[Optional[str]] = mapped_column(unique=True, index=True)
     image: Mapped[Optional[str]] = mapped_column(nullable=True)
-    is_active: Mapped[bool] = mapped_column(default=True)
     is_superuser: Mapped[bool] = mapped_column(default=False)
     is_admin: Mapped[bool] = mapped_column(default=False)
     failed_login_count: Mapped[int] = mapped_column(default=0)

@@ -129,7 +129,6 @@ def view_group_users(group_id):
         "title": "IAM | View | Group Users",
         "back_url": url_for("iam.view_group", group_id=group_id),
         "group": group,
-        "users": group.users,
     }
     return render_template("iam/view_group_users.html", **context)
 

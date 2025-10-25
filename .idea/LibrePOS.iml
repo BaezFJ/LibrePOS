@@ -18,13 +18,9 @@
       <list>
         <option value="$MODULE_DIR$/librepos/ui/templates" />
         <option value="$MODULE_DIR$/librepos/features/iam/templates" />
-        <option value="$MODULE_DIR$/librepos/features/orders/templates" />
-        <option value="$MODULE_DIR$/librepos/features/menu/templates" />
-        <option value="$MODULE_DIR$/librepos/features/settings/templates" />
-        <option value="$MODULE_DIR$/librepos/features/branches/templates" />
-        <option value="$MODULE_DIR$/librepos/features/main/templates" />
         <option value="$MODULE_DIR$/librepos/features/core/templates" />
         <option value="$MODULE_DIR$/librepos/features/error/templates" />
+        <option value="$MODULE_DIR$/librepos/features/auth/templates" />
       </list>
     </option>
   </component>

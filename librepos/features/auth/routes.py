@@ -23,9 +23,10 @@ def login():
     }
 
     if form.validate_on_submit():
-        if auth_user_service.authenticate(
-            form.username.data, form.password.data, form.remember.data
-        ):
+        username = str(form.username.data)
+        password = str(form.password.data)
+        remember = form.remember.data
+        if auth_user_service.authenticate(username, password, remember):
             return auth_user_service.handle_next_url()
 
     return render_template("auth/login.html", **context)
