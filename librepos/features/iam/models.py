@@ -8,8 +8,8 @@ from werkzeug.security import generate_password_hash
 from librepos.main.extensions import db
 from librepos.utils.datetime import timezone_aware_datetime
 
-iam_group_permissions = db.Table(
-    "iam_group_permissions",
+iam_group_permissions_association = db.Table(
+    "iam_group_permissions_association",
     db.Column("group_id", db.Integer, db.ForeignKey("iam_group.id"), primary_key=True),
     db.Column(
         "permission_id",
@@ -19,14 +19,14 @@ iam_group_permissions = db.Table(
     ),
 )
 
-iam_user_groups = db.Table(
-    "iam_user_groups",
+iam_user_groups_association = db.Table(
+    "iam_user_groups_association",
     db.Column("user_id", db.Integer, db.ForeignKey("iam_user.id"), primary_key=True),
     db.Column("group_id", db.Integer, db.ForeignKey("iam_group.id"), primary_key=True),
 )
 
-iam_user_permissions = db.Table(
-    "iam_user_permissions",
+iam_user_permissions_association = db.Table(
+    "iam_user_permissions_association",
     db.Column("user_id", db.Integer, db.ForeignKey("iam_user.id"), primary_key=True),
     db.Column(
         "permission_id",
@@ -55,10 +55,10 @@ class IAMGroup(db.Model):
 
     # Relationships
     permissions: Mapped[List["IAMPermission"]] = relationship(
-        secondary=iam_group_permissions, back_populates="groups"
+        secondary=iam_group_permissions_association, back_populates="groups"
     )
     users: Mapped[List["IAMUser"]] = relationship(
-        secondary=iam_user_groups, back_populates="groups"
+        secondary=iam_user_groups_association, back_populates="groups"
     )
 
 
@@ -87,10 +87,10 @@ class IAMUser(UserMixin, db.Model):
 
     # Relationships
     permissions: Mapped[List["IAMPermission"]] = relationship(
-        secondary=iam_user_permissions, back_populates="users"
+        secondary=iam_user_permissions_association, back_populates="users"
     )
     groups: Mapped[List["IAMGroup"]] = relationship(
-        secondary=iam_user_groups, back_populates="users"
+        secondary=iam_user_groups_association, back_populates="users"
     )
 
 
@@ -103,9 +103,6 @@ class IAMPermission(db.Model):
         self.description = description
         self.created_at = timezone_aware_datetime()
 
-    # Foreign keys
-    created_by_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey("iam_user.id"))
-
     # Columns
     id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True, index=True)
     name: Mapped[str] = mapped_column(unique=True, index=True)
@@ -117,8 +114,8 @@ class IAMPermission(db.Model):
 
     # Relationships
     groups: Mapped[List["IAMGroup"]] = relationship(
-        secondary=iam_group_permissions, back_populates="permissions"
+        secondary=iam_group_permissions_association, back_populates="permissions"
     )
     users: Mapped[List["IAMUser"]] = relationship(
-        secondary=iam_user_permissions, back_populates="permissions"
+        secondary=iam_user_permissions_association, back_populates="permissions"
     )
