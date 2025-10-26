@@ -38,7 +38,7 @@ iam_user_permissions_association = db.Table(
 
 
 class IAMGroup(db.Model):
-    """Auth group model."""
+    """IAM group model."""
 
     def __init__(self, name: str, **kwargs):
         super(IAMGroup, self).__init__(**kwargs)
@@ -61,7 +61,7 @@ class IAMGroup(db.Model):
 
 
 class IAMUser(UserMixin, db.Model):
-    """Auth user model."""
+    """IAM user model."""
 
     def __init__(self, username: str, password: str, **kwargs):
         super(IAMUser, self).__init__(**kwargs)
@@ -90,14 +90,39 @@ class IAMUser(UserMixin, db.Model):
     )
 
 
-class IAMPermission(db.Model):
-    """Auth permission model."""
+class IAMPermissionCategory(db.Model):
+    """IAM permission category model."""
 
-    def __init__(self, name: str, description: str, **kwargs):
+    def __init__(self, name: str, **kwargs):
+        super().__init__(**kwargs)
+        self.name = name
+        self.created_at = timezone_aware_datetime()
+
+    # Columns
+    id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(unique=True, index=True)
+    created_at: Mapped[datetime]
+    updated_at: Mapped[Optional[datetime]] = mapped_column(onupdate=timezone_aware_datetime())
+
+    # Relationships
+    permissions: Mapped[List["IAMPermission"]] = relationship(back_populates="category")
+
+
+class IAMPermission(db.Model):
+    """IAM permission model."""
+
+    def __init__(self, category_id: int, name: str, description: str, **kwargs):
         super(IAMPermission, self).__init__(**kwargs)
+        self.category_id = category_id
         self.name = name
         self.description = description
         self.created_at = timezone_aware_datetime()
+
+    # ForeignKey
+    category_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey("iam_permission_category.id"))
+    category: Mapped["IAMPermissionCategory"] = relationship(
+        "IAMPermissionCategory", back_populates="permissions"
+    )
 
     # Columns
     id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True, index=True)

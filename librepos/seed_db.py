@@ -1,28 +1,37 @@
+from librepos.features.iam.models import IAMPermission, IAMPermissionCategory
 from librepos.features.iam.permissions import IAMPermissions
-
-from librepos.features.iam.models import IAMPermission
 from librepos.main.extensions import db
 
 
-def populate_iam_permissions():
-    """Seed the iam permissions."""
-
-    def _create_permission(name: str, description: str) -> IAMPermission:
-        return IAMPermission(name, description)
+def populate_permissions():
+    """Seed the permission categories."""
 
     feature_permissions = [
         IAMPermissions,
     ]
 
-    new_permissions = []
+    for feature in feature_permissions:
+        new_category = IAMPermissionCategory(name=feature.__name__[:-11])
+        db.session.add(new_category)
+        db.session.commit()
 
-    for feature_permission in feature_permissions:
-        for permission in feature_permission:
-            new_permissions.append(_create_permission(permission.name, permission.description))
+        for permission in feature:
+            # permission may be an Enum; get its name/description from value or attributes
+            # Try value tuple first; fallback to attributes if defined.
+            try:
+                name, description = permission.value  # e.g., ("READ_USERS", "Can read users")
+            except Exception:
+                name = getattr(permission, "name", str(permission))
+                description = getattr(permission, "description", "")
 
-    db.session.add_all(new_permissions)
-    db.session.commit()
+            feature_permission = IAMPermission(
+                category_id=new_category.id,
+                name=name,
+                description=description,
+            )
+            db.session.add(feature_permission)
+            db.session.commit()
 
 
 def seed_all():
-    populate_iam_permissions()
+    populate_permissions()
