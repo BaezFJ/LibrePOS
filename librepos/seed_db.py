@@ -4,7 +4,7 @@ from librepos.features.iam.models import IAMPermission
 from librepos.main.extensions import db
 
 
-def seed_auth_permissions():
+def populate_iam_permissions():
     """Seed the iam permissions."""
 
     def _create_permission(name: str, description: str) -> IAMPermission:
@@ -25,4 +25,4 @@ def seed_auth_permissions():
 
 
 def seed_all():
-    seed_auth_permissions()
+    populate_iam_permissions()
