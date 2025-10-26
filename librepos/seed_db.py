@@ -18,9 +18,7 @@ def seed_auth_permissions():
 
     for feature_permission in feature_permissions:
         for permission in feature_permission:
-            new_permissions.append(
-                _create_permission(permission.name, permission.description)
-            )
+            new_permissions.append(_create_permission(permission.name, permission.description))
 
     db.session.add_all(new_permissions)
     db.session.commit()

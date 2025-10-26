@@ -40,9 +40,7 @@ class FlashMessageHandler:
         flash(message, category)
 
     @staticmethod
-    def error(
-        message: str, error: Optional[Exception] = None, category: str = "error"
-    ) -> None:
+    def error(message: str, error: Optional[Exception] = None, category: str = "error") -> None:
         """
         Display an error flash message.
 

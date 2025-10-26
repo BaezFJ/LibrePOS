@@ -49,9 +49,7 @@ class IAMGroup(db.Model):
     name: Mapped[str] = mapped_column(unique=True, index=True)
     description: Mapped[Optional[str]]
     created_at: Mapped[datetime]
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
-        onupdate=timezone_aware_datetime()
-    )
+    updated_at: Mapped[Optional[datetime]] = mapped_column(onupdate=timezone_aware_datetime())
 
     # Relationships
     permissions: Mapped[List["IAMPermission"]] = relationship(
@@ -81,9 +79,7 @@ class IAMUser(UserMixin, db.Model):
     is_admin: Mapped[bool] = mapped_column(default=False)
     failed_login_count: Mapped[int] = mapped_column(default=0)
     created_at: Mapped[datetime]
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
-        onupdate=timezone_aware_datetime()
-    )
+    updated_at: Mapped[Optional[datetime]] = mapped_column(onupdate=timezone_aware_datetime())
 
     # Relationships
     permissions: Mapped[List["IAMPermission"]] = relationship(
@@ -108,9 +104,7 @@ class IAMPermission(db.Model):
     name: Mapped[str] = mapped_column(unique=True, index=True)
     description: Mapped[str]
     created_at: Mapped[datetime]
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
-        onupdate=timezone_aware_datetime()
-    )
+    updated_at: Mapped[Optional[datetime]] = mapped_column(onupdate=timezone_aware_datetime())
 
     # Relationships
     groups: Mapped[List["IAMGroup"]] = relationship(
