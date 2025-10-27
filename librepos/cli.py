@@ -5,7 +5,7 @@ def add_cli_commands(app):
     """Add custom commands to the Flask CLI."""
 
     from librepos.main.extensions import db
-    from librepos.features.iam.models import IAMUser
+    from librepos.features.iam.models import IAMUser, IAMUserProfile
 
     @app.cli.command("seed-db", help="Seed the database with data.")
     def seed_db():
@@ -25,18 +25,25 @@ def add_cli_commands(app):
         confirmation_prompt=True,
         help="The password.",
     )
+    @click.option("--first-name", prompt=True, help="The first name.")
+    @click.option("--last-name", prompt=True, help="The last name.")
     @click.option("--email", prompt=True, help="The email address.")
-    def add_superuser(username, password, email):
+    def add_superuser(username, password, first_name, last_name, email):
         """Add a superuser."""
         user = IAMUser(
             username=username,
             password=password,
-            email=email,
-            is_admin=True,
             is_superuser=True,
         )
         db.session.add(user)
         db.session.commit()
+
+        profile = IAMUserProfile(
+            user_id=user.id, first_name=first_name, last_name=last_name, email=email
+        )
+        db.session.add(profile)
+        db.session.commit()
+
         click.echo(f"Superuser '{username}' created successfully.")
 
     @app.cli.command("reset-db", help="Reset the database.")

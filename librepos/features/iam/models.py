@@ -73,10 +73,7 @@ class IAMUser(UserMixin, db.Model):
     id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True, index=True)
     username: Mapped[str] = mapped_column(unique=True, index=True)
     password: Mapped[str]
-    email: Mapped[Optional[str]] = mapped_column(unique=True, index=True)
-    image: Mapped[Optional[str]] = mapped_column(nullable=True)
     is_superuser: Mapped[bool] = mapped_column(default=False)
-    is_admin: Mapped[bool] = mapped_column(default=False)
     failed_login_count: Mapped[int] = mapped_column(default=0)
     created_at: Mapped[datetime]
     updated_at: Mapped[Optional[datetime]] = mapped_column(onupdate=timezone_aware_datetime())
@@ -88,6 +85,36 @@ class IAMUser(UserMixin, db.Model):
     groups: Mapped[List["IAMGroup"]] = relationship(
         secondary=iam_user_groups_association, back_populates="users"
     )
+    profile: Mapped["IAMUserProfile"] = relationship(
+        "IAMUserProfile", uselist=False, back_populates="user"
+    )
+
+
+class IAMUserProfile(db.Model):
+    """IAM user profile model."""
+
+    def __init__(self, user_id, first_name: str, last_name: str, **kwargs):
+        super().__init__(**kwargs)
+        self.user_id = user_id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.created_at = timezone_aware_datetime()
+
+    # ForeignKeys
+    user_id: Mapped[int] = mapped_column(db.ForeignKey("iam_user.id"))
+
+    # Columns
+    id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True, index=True)
+    first_name: Mapped[str]
+    middle_name: Mapped[Optional[str]]
+    last_name: Mapped[str]
+    image: Mapped[Optional[str]]
+    email: Mapped[Optional[str]] = mapped_column(unique=True, index=True)
+    created_at: Mapped[datetime]
+    updated_at: Mapped[Optional[datetime]] = mapped_column(onupdate=timezone_aware_datetime())
+
+    # Relationships
+    user: Mapped["IAMUser"] = relationship("IAMUser", back_populates="profile")
 
 
 class IAMPermissionCategory(db.Model):
