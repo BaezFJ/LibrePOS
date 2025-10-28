@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="librepos.db" uuid="b0112989-4351-4978-84d1-665d0fb67230">
+    <data-source source="LOCAL" name="librepos.db" uuid="43eacecf-b86d-4ea0-bb72-d17edad4ee60">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/librepos/main/librepos.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/librepos/librepos.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
