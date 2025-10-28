@@ -17,19 +17,32 @@ def add_cli_commands(app):
         click.echo("Done!")
 
     @app.cli.command("add-superuser", help="Add a superuser.")
-    @click.option("--username", prompt=True, help="The username.")
+    @click.option("--username", prompt=True, help="The username.", required=True)
     @click.option(
         "--password",
         prompt=True,
         hide_input=True,
         confirmation_prompt=True,
         help="The password.",
+        required=True,
     )
-    @click.option("--first-name", prompt=True, help="The first name.")
-    @click.option("--last-name", prompt=True, help="The last name.")
+    @click.option("--first-name", prompt=True, help="The first name.", required=True)
+    @click.option("--last-name", prompt=True, help="The last name.", required=True)
     @click.option("--email", prompt=True, help="The email address.")
     def add_superuser(username, password, first_name, last_name, email):
         """Add a superuser."""
+
+        click.echo("\nPlease confirm the following details:")
+        click.echo(f"Username: {username}")
+        click.echo(f"Password: {'*' * len(password)}")
+        click.echo(f"First Name: {first_name if first_name else '<empty>'}")
+        click.echo(f"Last Name: {last_name if last_name else '<empty>'}")
+        click.echo(f"Email: {email if email else '<empty>'}")
+
+        if not click.confirm("\nDo you want to create this superuser?"):
+            click.echo("Operation cancelled.")
+            return
+
         user = IAMUser(
             username=username,
             password=password,
