@@ -27,24 +27,6 @@ def time_formatter(value: datetime | None) -> str:
     return value.strftime(system_time_format)
 
 
-def datetime_formatter(value: datetime | None, format_spec: str) -> str:
-    available_formats = {
-        "short-date": "%y-%m-%d",
-        "full-date": "%Y-%m-%d",
-        "12-hour": "%I:%M %p",
-        "24-hour": "%H:%M",
-        "datetime": "%Y-%m-%d %H:%M:%S",
-    }
-
-    if value is None:
-        return "N/A"
-
-    if format_spec in available_formats:
-        format_spec = available_formats[format_spec]
-
-    return value.strftime(format_spec)
-
-
 def currency_formatter(value: int) -> str:
     dollar_amount = convert_cents_to_dollars(value)
     currency_code = current_app.config["CURRENCY"]
@@ -68,9 +50,3 @@ def un_snake_formatter(value: str) -> str:
 
 def strip_spaces_formatter(value):
     return re.sub(r"\s+", "", value)
-
-
-def name_formatter(value: str) -> str:
-    if value is None:
-        return "N/A"
-    return strip_spaces_formatter(un_snake_formatter(value).title())
