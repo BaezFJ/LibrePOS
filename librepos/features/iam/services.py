@@ -1,35 +1,30 @@
-from typing import Optional
+import secrets
 
 from librepos.common.base_service import BaseService
-from .models import IAMUser, IAMGroup
 from .repositories import (
     IAMUserRepository,
+    IAMGroupRepository,
+    IAMUserProfileRepository,
     IAMPermissionRepository,
-    IAMUserGroupRepository,
 )
 
 
 class IAMService(BaseService):
     def __init__(self):
         self.iam_user_repo = IAMUserRepository()
+        self.iam_group_repo = IAMGroupRepository()
+        self.iam_user_profile_repo = IAMUserProfileRepository()
         self.iam_permission_repo = IAMPermissionRepository()
-        self.iam_user_group_repo = IAMUserGroupRepository()
 
-    def create_user(self, data) -> Optional[IAMUser]:
-        data["password"] = "test"
+    @staticmethod
+    def generate_password(length: int = 16) -> str:
+        return secrets.token_urlsafe(length)
+
+    def create_user(self, data):
+        data["password"] = self.generate_password()
         new_user = self.iam_user_repo.model_class(**data)
-        return self._create_entity(
-            entity=new_user,
-            repository=self.iam_user_repo,
-            success_message="User created successfully.",
-            error_message="Failed to create user.",
-        )
+        return self.iam_user_repo.add(new_user)
 
-    def create_group(self, data) -> Optional[IAMGroup]:
-        new_group = self.iam_user_group_repo.model_class(**data)
-        return self._create_entity(
-            entity=new_group,
-            repository=self.iam_user_group_repo,
-            success_message="Group created successfully.",
-            error_message="Failed to create group.",
-        )
+    def create_group(self, data):
+        new_group = self.iam_group_repo.model_class(**data)
+        return self.iam_group_repo.add(new_group)

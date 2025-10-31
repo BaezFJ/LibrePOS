@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect
+from flask import Blueprint, render_template, url_for, redirect, flash
 from flask_login import login_required
 
 from librepos.features.auth.decorators import permission_required
@@ -48,8 +48,11 @@ def create_user():
     }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        iam_service.create_user(sanitized_data)
-        return redirect(url_for("iam.list_users"))
+        new_user = iam_service.create_user(sanitized_data)
+        if new_user:
+            flash(f"User {new_user.username} created successfully.", "success")
+            return redirect(url_for("iam.view_user", user_id=new_user.id))
+        return redirect(url_for("iam.create_user"))
     return render_template("iam/create_user.html", **context)
 
 
@@ -112,7 +115,7 @@ def list_groups():
     context = {
         "title": "IAM | List | Groups",
         "back_url": url_for("iam.home"),
-        "groups": iam_service.iam_user_group_repo.get_all(),
+        "groups": iam_service.iam_group_repo.get_all(),
     }
     return render_template("iam/list_groups.html", **context)
 
@@ -120,7 +123,7 @@ def list_groups():
 @iam_bp.get("/groups/<int:group_id>")
 @permission_required(IAMPermissions.VIEW_IAM_GROUP)
 def view_group(group_id):
-    group = iam_service.iam_user_group_repo.get_by_id(group_id)
+    group = iam_service.iam_group_repo.get_by_id(group_id)
     context = {
         "title": "IAM | View | Group",
         "back_url": url_for("iam.list_groups"),
@@ -132,7 +135,7 @@ def view_group(group_id):
 @iam_bp.route("/groups/<int:group_id>/edit", methods=["GET", "POST"])
 @permission_required(IAMPermissions.DELETE_IAM_GROUP)
 def edit_group(group_id):
-    group = iam_service.iam_user_group_repo.get_by_id(group_id)
+    group = iam_service.iam_group_repo.get_by_id(group_id)
     form = CreateGroupForm(obj=group)
     context = {
         "title": "IAM | Edit | Group",
@@ -148,7 +151,7 @@ def edit_group(group_id):
 @iam_bp.get("/groups/<int:group_id>/users")
 @permission_required(IAMPermissions.VIEW_IAM_GROUP)
 def view_group_users(group_id):
-    group = iam_service.iam_user_group_repo.get_by_id(group_id)
+    group = iam_service.iam_group_repo.get_by_id(group_id)
     context = {
         "title": "IAM | View | Group Users",
         "back_url": url_for("iam.view_group", group_id=group_id),
@@ -168,7 +171,10 @@ def create_group():
     }
     if form.validate_on_submit():
         sanitized_data = sanitize_form_data(form)
-        iam_service.create_group(sanitized_data)
-        return redirect(url_for("iam.list_groups"))
+        new_group = iam_service.create_group(sanitized_data)
+        if new_group:
+            flash(f"Group {new_group.name} created successfully.", "success")
+            return redirect(url_for("iam.view_group", group_id=new_group.id))
+        return redirect(url_for("iam.create_group"))
 
     return render_template("iam/create_group.html", **context)

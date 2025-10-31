@@ -1,11 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField
+from wtforms import StringField
 from wtforms.validators import DataRequired
 
 
 class CreateUserForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()], render_kw={"autofocus": True})
-    email = EmailField("Email", validators=[DataRequired()])
 
 
 class CreateGroupForm(FlaskForm):
