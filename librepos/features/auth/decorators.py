@@ -1,3 +1,4 @@
+from enum import StrEnum
 from functools import wraps
 from typing import Any, Callable, cast, TYPE_CHECKING
 
@@ -17,7 +18,7 @@ repo = IAMUserRepository()
 
 
 def permission_required(
-    permission: str, unauthorized_endpoint: str | None = None
+    permission: str | StrEnum, unauthorized_endpoint: str | None = None
 ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
     Decorator to restrict access to users with a specific permission.

@@ -1,36 +1,43 @@
-from librepos.features.iam.models import IAMPermission, IAMPermissionCategory
-from librepos.features.iam.permissions import IAMPermissions
+from librepos.features.iam.models import IAMPermission as IAMPermissionModel
+from librepos.features.iam.models import IAMPermissionCategory
+from librepos.features.iam.permissions import IAMPermission
 from librepos.main.extensions import db
 
 
 def populate_permissions():
     """Seed the permission categories."""
-
     feature_permissions = [
-        IAMPermissions,
+        IAMPermission,
     ]
-
     for feature in feature_permissions:
-        new_category = IAMPermissionCategory(name=feature.__name__[:-11])
-        db.session.add(new_category)
-        db.session.commit()
+        # Extract category name
+        category_name = feature.__name__.removesuffix("Permission")
+
+        # Check if a category already exists
+        existing_category = IAMPermissionCategory.query.filter_by(name=category_name).first()
+        if existing_category:
+            category = existing_category
+        else:
+            category = IAMPermissionCategory(name=category_name)
+            db.session.add(category)
+            db.session.flush()  # Get the ID without committing
 
         for permission in feature:
-            # permission may be an Enum; get its name/description from value or attributes
-            # Try value tuple first; fallback to attributes if defined.
-            try:
-                name, description = permission.value  # e.g., ("READ_USERS", "Can read users")
-            except Exception:
-                name = getattr(permission, "name", str(permission))
-                description = getattr(permission, "description", "")
+            # Check if permission already exists
+            existing_permission = IAMPermissionModel.query.filter_by(name=permission.value).first()
+            if existing_permission:
+                continue
 
-            feature_permission = IAMPermission(
-                category_id=new_category.id,
-                name=name,
-                description=description,
+            # For StrEnum: permission.value is the string value, permission.description is a property
+            feature_permission = IAMPermissionModel(
+                category_id=category.id,
+                name=permission.value,
+                description=permission.description,
             )
             db.session.add(feature_permission)
-            db.session.commit()
+
+        # Commit once per feature, not per permission
+        db.session.commit()
 
 
 def seed_all():
