@@ -4,7 +4,228 @@
 {% block main %}
 
     <section class="section">
-        <h1 class="center-align">Core Home (Dashboard)</h1>
+        <div class="row">
+
+            <div class="col s12 m6 l3">
+                <div class="card z-depth-1">
+                    <div class="card-content">
+                        <span class="card-title">Total Sales</span>
+                        <p class="stat-value">$12,480</p>
+                        <span class="stat-label">Today</span>
+                    </div>
+                    <div class="card-action">
+                        <span class="chip">+8.2% vs yesterday</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l3">
+                <div class="card z-depth-1">
+                    <div class="card-content">
+                        <span class="card-title">Open Tabs</span>
+                        <p class="stat-value">3</p>
+                        <span class="stat-label">Dining room</span>
+                    </div>
+                    <div class="card-action">
+                        <span class="chip">Avg $42.10</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l3">
+                <div class="card z-depth-1">
+                    <div class="card-content">
+                        <span class="card-title">Avg Ticket</span>
+                        <p class="stat-value">$38.90</p>
+                        <span class="stat-label">Lunch Service</span>
+                    </div>
+                    <div class="card-action">
+                        <span class="chip">Peak: 1:00PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l3">
+                <div class="card z-depth-1">
+                    <div class="card-content">
+                        <span class="card-title">Inventory</span>
+                        <p class="stat-value">3</p>
+                        <span class="stat-label">Low-stok items</span>
+                    </div>
+                    <div class="card-action">
+                        <span class="chip">Restock needed</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="row">
+
+            <!-- Orders & Queue -->
+            <div class="col s12 l8">
+
+                <div class="row">
+
+                    <!-- Open Orders -->
+                    <div class="col s12">
+                        <div class="card z-depth-1">
+                            <div class="card-content">
+                                <span class="card-title">Open Orders</span>
+                                <table class="highlight">
+                                    <thead>
+                                    <tr>
+                                        <th>Table</th>
+                                        <th>Server</th>
+                                        <th>Status</th>
+                                        <th>Total</th>
+                                        <th>Elapsed</th>
+                                        <td>Actions</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>12</td>
+                                        <td>Rilley</td>
+                                        <td><span class="new badge green" data-badge-caption="">served</span></td>
+                                        <td>$12,480</td>
+                                        <td>04:12</td>
+                                        <td>
+                                            <a href="" class="waves-effect waves-light btn-small tonal">View</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Sam</td>
+                                        <td><span class="new badge orange" data-badge-caption="">prep</span></td>
+                                        <td>$12,480</td>
+                                        <td>07:38</td>
+                                        <td>
+                                            <a href="" class="waves-effect waves-light btn-small tonal">View</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bar 2</td>
+                                        <td>Jim</td>
+                                        <td><span class="new badge blue" data-badge-caption="">drinks</span></td>
+                                        <td>$31.20</td>
+                                        <td>03:05</td>
+                                        <td>
+                                            <a href="" class="waves-effect waves-light btn-small tonal">View</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Patio</td>
+                                        <td>Alex</td>
+                                        <td><span class="new badge red" data-badge-caption="">fire</span></td>
+                                        <td>$78.00</td>
+                                        <td>10:22</td>
+                                        <td>
+                                            <a href="" class="waves-effect waves-light btn-small tonal">View</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-action">
+                                <a href="" class="waves-effect waves-light btn filled">View tickets</a>
+                                <a href="" class="waves-effect waves-light btn-flat">Send to Kitchen</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kitchen Queue -->
+                    <div class="col s12">
+                        <div class="card-panel z-depth-1">
+                            <span class="card-title">Kitchen Queue</span>
+                            <ul class="collection">
+                                <li class="collection-item">
+                                    <div>
+                                        Table 9 - Mushroom Risotto <span class="secondary-content">02:14</span>
+                                    </div>
+                                </li>
+                                <li class="collection-item">
+                                    <div>
+                                        Table 4 - Grilled Salmon <span class="secondary-content">05:32</span>
+                                    </div>
+                                </li>
+                                <li class="collection-item">
+                                    <div>
+                                        Bar 1 - Beef Sliders <span class="secondary-content">01:45</span>
+                                    </div>
+                                </li>
+                                <li class="collection-item">
+                                    <div>
+                                        Patio 3 - Caesar Salad <span class="secondary-content">03:28</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Quick Actions & Stats -->
+            <div class="col s12 l4 flex-row mt-0">
+
+                <!-- Quick Actions -->
+                <div class="card-panel z-depth-1">
+                    <span class="card-title">Quick Actions</span>
+                    <div class="flex-center section g-4">
+                        <a href="" class="waves-effect waves-light btn-large filled w100">Start New Order</a>
+                        <a href="" class="waves-effect waves-light btn-large success w100">Close Day</a>
+                        <a href="" class="waves-effect waves-light btn-large info w100">Add Menu Item</a>
+                    </div>
+                </div>
+
+                <!-- Low Stock -->
+                <div class="card-panel z-depth-1 w100">
+                    <span class="card-title">Low Stock</span>
+                    <ul class="collection">
+                        <li class="collection-item avatar">
+                            <i class="material-symbols-rounded circle red">warning</i>
+                            <span class="title">Coffee Mug</span>
+                            <p>Low stock: 20</p>
+                        </li>
+                        <li class="collection-item avatar">
+                            <i class="material-symbols-rounded circle orange">local_dining</i>
+                            <span class="title">Fresh basil</span>
+                            <p>Runs out in -1 hr</p>
+                        </li>
+                        <li class="collection-item avatar">
+                            <i class="material-symbols-rounded circle blue">local_drink</i>
+                            <span class="title">Tonic water</span>
+                            <p>Bar 2 cases left</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Table Status -->
+                <div class="card-panel z-depth-1 w100">
+                    <span class="card-title">Table Status</span>
+                    <div class="row mt-2">
+                        <div class="col s6">
+                            <p class="stat-label m-0">Occupied</p>
+                            <p class="stat-value m-0">14</p>
+                        </div>
+                        <div class="col s6">
+                            <p class="stat-label m-0">Available</p>
+                            <p class="stat-value m-0">4</p>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <div class="determinate" style="width: 60%"></div>
+                    </div>
+                    <p class="stat-label m-0 mt-2">Capacity in use</p>
+                </div>
+
+            </div>
+
+        </div>
     </section>
 
 {% endblock %}

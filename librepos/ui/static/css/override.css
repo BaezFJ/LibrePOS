@@ -28,7 +28,16 @@ ul {
 
 .card .card-action {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    padding-bottom: 24px;
+}
+
+.card .card-action .btn.filled {
+    margin: 0;
+}
+
+.card-panel{
+    margin: 0;
 }
 
 .card-panel .card-title {
