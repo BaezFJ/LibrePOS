@@ -1,16 +1,20 @@
 from typing import Optional
 
-from librepos.common.base_repository import BaseRepository
-from .models import IAMUser, IAMPermission, IAMGroup, IAMUserProfile
+from sqlalchemy import select
+
+from librepos.core.repository import BaseRepository
+from librepos.core.extensions import db
+
+from .models import IAMUser, IAMPermission, IAMGroup, IAMUserProfile, IAMPermissionCategory
 
 
 class IAMUserRepository(BaseRepository[IAMUser]):
     def __init__(self):
-        super().__init__(IAMUser)
+        super().__init__(IAMUser, db.session)
 
     @staticmethod
     def find_by_username(username: str) -> Optional[IAMUser]:
-        return IAMUser.query.filter_by(username=username).first()
+        return db.session.execute(select(IAMUser).filter_by(username=username)).scalars().first()
 
     @staticmethod
     def user_has_permission(user: IAMUser, permission: str) -> bool:
@@ -31,18 +35,23 @@ class IAMUserRepository(BaseRepository[IAMUser]):
 
 class IAMUserProfileRepository(BaseRepository[IAMUserProfile]):
     def __init__(self):
-        super().__init__(IAMUserProfile)
+        super().__init__(IAMUserProfile, db.session)
 
 
 class IAMPermissionRepository(BaseRepository[IAMPermission]):
     def __init__(self):
-        super().__init__(IAMPermission)
+        super().__init__(IAMPermission, db.session)
 
 
 class IAMGroupRepository(BaseRepository[IAMGroup]):
     def __init__(self):
-        super().__init__(IAMGroup)
+        super().__init__(IAMGroup, db.session)
 
     def create_group(self, data):
         new_group = IAMGroup(**data)
         return self.add(new_group)
+
+
+class IAMPermissionCategoryRepository(BaseRepository[IAMPermissionCategory]):
+    def __init__(self):
+        super().__init__(IAMPermissionCategory, db.session)

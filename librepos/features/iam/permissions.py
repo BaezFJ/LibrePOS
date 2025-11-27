@@ -2,6 +2,8 @@ from enum import StrEnum
 
 # Permission descriptions mapping
 _DESCRIPTIONS = {
+    # IAM
+    "view:iam_home": "View IAM home page",
     # IAMUser
     "view:iam_user": "View IAM user details",
     "view:iam_user_self": "View own IAM user details",
@@ -42,6 +44,9 @@ class IAMPermission(StrEnum):
             # Handle read user permission
             pass
     """
+
+    # IAM
+    VIEW_IAM_HOME = "view:iam_home"
 
     # IAMUser
     VIEW_IAM_USER = "view:iam_user"

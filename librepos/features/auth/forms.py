@@ -7,3 +7,7 @@ class AuthUserLoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     remember = BooleanField("Remember Me")
+
+
+class AuthForgotPasswordForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])

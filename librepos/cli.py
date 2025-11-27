@@ -4,7 +4,7 @@ import click
 def add_cli_commands(app):
     """Add custom commands to the Flask CLI."""
 
-    from librepos.main.extensions import db
+    from librepos.core.extensions import db
     from librepos.features.iam.models import IAMUser, IAMUserProfile
 
     @app.cli.command("seed-db", help="Seed the database with data.")

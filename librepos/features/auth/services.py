@@ -11,9 +11,9 @@ from librepos.utils import FlashMessageHandler
 class AuthenticationService:
     MAX_LOGIN_ATTEMPTS = 3
 
-    def __init__(self, repo=None):
-        self.auth_user_repo = repo or IAMUserRepository()
-        self.dashboard_url = "core.home"
+    def __init__(self, user_repo=None):
+        self.dashboard_url = "core.dashboard"
+        self.user_repo = user_repo if user_repo is not None else IAMUserRepository()
 
     @staticmethod
     def verify_password(user, password: str) -> bool:
@@ -50,7 +50,7 @@ class AuthenticationService:
 
     def reset_failed_login_count(self, user) -> None:
         user.failed_login_count = 0
-        self.auth_user_repo.update(user)
+        self.user_repo.update(user)
 
     def _show_failed_login_messages(self, attempts_left: int) -> None:
         """Display appropriate flash messages based on remaining attempts."""
@@ -67,7 +67,7 @@ class AuthenticationService:
         if user.failed_login_count >= self.MAX_LOGIN_ATTEMPTS:
             user.active = False
 
-        self.auth_user_repo.update(user)
+        self.user_repo.update(user)
 
         attempts_left = self.MAX_LOGIN_ATTEMPTS - user.failed_login_count
         self._show_failed_login_messages(attempts_left)
@@ -85,7 +85,7 @@ class AuthenticationService:
     #     user.current_sign_in_ip = ip
     #     user.current_user_agent = agent
     #
-    #     self.auth_user_repo.update(user)
+    #     self.user_repo.update(user)
 
     def authenticate(self, username: str, password: str, remember: bool):
         # Validate inputs
@@ -93,7 +93,7 @@ class AuthenticationService:
             FlashMessageHandler.error("Invalid username or password.")
             return None
 
-        user = self.auth_user_repo.find_by_username(username)
+        user = self.user_repo.find_by_username(username)
 
         is_valid = False
         if user and user.is_active:

@@ -18,26 +18,30 @@
             {{ nav_title|truncate(15) if nav_title is defined else business_name|truncate(15) }}
         </p>
 
-        {#  ========== Right Menu ========== #}
-        <ul class="right">
-            <li>
-                <a data-target="mainMenu" class="sidenav-trigger">
-                    {{ Icon.render("menu") }}
-                </a>
-            </li>
-        </ul>
+        {% if current_user.is_authenticated %}
+            {#  ========== Right Menu ========== #}
+            <ul class="right">
+                <li>
+                    <a data-target="mainMenu" class="sidenav-trigger">
+                        {{ Icon.render("menu") }}
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
     </div>
 </nav>
 
 
-{% call () Sidenav.render("mainMenu", "right") %}
-    {{ Sidenav.user_view(current_user) }}
+{% if current_user.is_authenticated %}
+    {% call () Sidenav.render("mainMenu", "right") %}
+        {{ Sidenav.user_view(current_user) }}
 
-    {{ Sidenav.item("Dashboard", "dashboard", url_for("core.home")) }}
+        {{ Sidenav.item("Dashboard", "dashboard", url_for("core.dashboard")) }}
 
-    {{ Sidenav.item("IAM", "badge", url_for("iam.home")) }}
+        {{ Sidenav.item("IAM", "badge", url_for("iam.home")) }}
 
-    {{ Sidenav.divider() }}
+        {{ Sidenav.divider() }}
 
-    {{ Sidenav.item("Logout", "logout", url_for("auth.logout")) }}
-{% endcall %}
+        {{ Sidenav.item("Logout", "logout", url_for("auth.logout")) }}
+    {% endcall %}
+{% endif %}

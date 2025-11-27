@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for
 from flask_login import current_user, login_required
 
 from librepos.utils import FlashMessageHandler
-from .forms import AuthUserLoginForm
+from .forms import AuthUserLoginForm, AuthForgotPasswordForm
 from .services import AuthenticationService
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates")
@@ -32,8 +32,14 @@ def login():
     return render_template("auth/login.html", **context)
 
 
+@auth_bp.route("/forgot-password")
+def forgot_password():
+    form = AuthForgotPasswordForm()
+    return render_template("auth/forgot_password.html", title="Forgot Password", form=form)
+
+
 @auth_bp.route("/logout")
 @login_required
 def logout():
     auth_user_service.logout()
-    return redirect(url_for("core.home"))
+    return redirect(url_for("auth.login"))

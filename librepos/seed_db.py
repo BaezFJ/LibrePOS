@@ -1,42 +1,45 @@
 from librepos.features.iam.models import IAMPermission as IAMPermissionModel
 from librepos.features.iam.models import IAMPermissionCategory
 from librepos.features.iam.permissions import IAMPermission
-from librepos.main.extensions import db
+from librepos.core.extensions import db
+from librepos.features.iam.repositories import (
+    IAMPermissionCategoryRepository,
+    IAMPermissionRepository,
+)
 
 
 def populate_permissions():
     """Seed the permission categories."""
+    category_repo = IAMPermissionCategoryRepository()
+    permission_repo = IAMPermissionRepository()
+
     feature_permissions = [
         IAMPermission,
     ]
-    for feature in feature_permissions:
+
+    for feature_enum in feature_permissions:
         # Extract category name
-        category_name = feature.__name__.removesuffix("Permission")
+        category_name = feature_enum.__name__.removesuffix("Permission")
 
-        # Check if a category already exists
-        existing_category = IAMPermissionCategory.query.filter_by(name=category_name).first()
-        if existing_category:
-            category = existing_category
-        else:
-            category = IAMPermissionCategory(name=category_name)
-            db.session.add(category)
-            db.session.flush()  # Get the ID without committing
+        # Get or create a category
+        category = category_repo.get_by_field("name", category_name)
+        if not category:
+            category = category_repo.add(IAMPermissionCategory(name=category_name))
 
-        for permission in feature:
+        for permission in feature_enum:
             # Check if permission already exists
-            existing_permission = IAMPermissionModel.query.filter_by(name=permission.value).first()
-            if existing_permission:
+            if permission_repo.get_by_field("name", permission.value):
                 continue
 
             # For StrEnum: permission.value is the string value, permission.description is a property
             feature_permission = IAMPermissionModel(
-                category_id=category.id,
-                name=permission.value,
+                category_id=category.id,  # type: ignore
+                name=permission.value,  # type: ignore
                 description=permission.description,
             )
             db.session.add(feature_permission)
 
-        # Commit once per feature, not per permission
+        # Commit once per feature
         db.session.commit()
 
 

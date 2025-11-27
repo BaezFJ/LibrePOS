@@ -1,6 +1,6 @@
 <nav class="breadcrumb-wrapper">
     <div class="col s12">
-        <a href="{{ url_for("get_dashboard") }}" class="breadcrumb">Home</a>
+        <a href="{{ url_for("core.dashboard") }}" class="breadcrumb">Dashboard</a>
         {% if breadcrumb %}
             {% for name, url in breadcrumb %}
                 <a href="{{ url }}" class="breadcrumb">{{ name }}</a>

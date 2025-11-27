@@ -65,7 +65,7 @@ def create_app(config: str | type | None = None):
     # load custom jinja filters
     custom_jinja_filters(app)
 
-    # register features and main routes
+    # register features and core routes
     urlpatterns(app)
 
     # load cli_2 commands

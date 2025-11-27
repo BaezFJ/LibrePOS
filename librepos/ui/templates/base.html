@@ -64,11 +64,12 @@
 
 </head>
 <body>
-{% if current_user.is_authenticated %}
-    {% include '_layout/header.html' %}
-{% endif %}
+{#{% if current_user.is_authenticated %}#}
+{#    {% include '_layout/header.html' %}#}
+{#{% endif %}#}
+{% include '_layout/header.html' %}
 
-<main id="main">
+<main id="main" class="container">
     {% block main %}{% endblock %}
 </main>
 

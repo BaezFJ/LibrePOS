@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, flash
-from flask_login import login_required
 
-from librepos.features.auth.decorators import permission_required
+from librepos.core.security import permission_required
 from librepos.utils import sanitize_form_data
 from .forms import CreateUserForm, CreateGroupForm
 from .permissions import IAMPermission
@@ -14,11 +13,11 @@ iam_bp = Blueprint("iam", __name__, template_folder="templates")
 
 @iam_bp.get("/")
 @iam_bp.route("/home")
-@login_required
+@permission_required(IAMPermission.VIEW_IAM_HOME)
 def home():
     context = {
         "title": "IAM | Home",
-        "back_url": url_for("core.home"),
+        "back_url": url_for("core.dashboard"),
     }
     return render_template("iam/home.html", **context)
 
@@ -27,7 +26,7 @@ def home():
 #            USERS
 # ================================
 @iam_bp.route("/users/list", endpoint="list_users", methods=["GET"])
-@permission_required(IAMPermission.VIEW_IAM_USER)
+@permission_required(IAMPermission.LIST_IAM_USER)
 def list_users():
     context = {
         "title": "IAM | List | Users",

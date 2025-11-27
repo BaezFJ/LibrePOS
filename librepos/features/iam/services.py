@@ -1,6 +1,6 @@
 import secrets
 
-from librepos.common.base_service import BaseService
+from librepos.core.service import BaseService
 from .repositories import (
     IAMUserRepository,
     IAMGroupRepository,
@@ -21,10 +21,16 @@ class IAMService(BaseService):
         return secrets.token_urlsafe(length)
 
     def create_user(self, data):
-        data["password"] = self.generate_password()
-        new_user = self.iam_user_repo.model_class(**data)
-        return self.iam_user_repo.add(new_user)
+        def operation():
+            data["password"] = self.generate_password()
+            new_user = self.iam_user_repo.model(**data)
+            return self.iam_user_repo.add(new_user)
+
+        return self._execute_with_error_handling(operation, "Failed to create user.")
 
     def create_group(self, data):
-        new_group = self.iam_group_repo.model_class(**data)
-        return self.iam_group_repo.add(new_group)
+        def operation():
+            new_group = self.iam_group_repo.model(**data)
+            return self.iam_group_repo.add(new_group)
+
+        return self._execute_with_error_handling(operation, "Failed to create group.")

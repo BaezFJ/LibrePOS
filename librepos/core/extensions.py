@@ -2,14 +2,10 @@ from flask_login import LoginManager
 from flask_mailman import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
-from sqlalchemy.orm import DeclarativeBase
 
+from .database import BaseModel
 
-class Base(DeclarativeBase):
-    pass
-
-
-db = SQLAlchemy(model_class=Base)
+db = SQLAlchemy(model_class=BaseModel)
 login_manager = LoginManager()
 mail = Mail()
 csrf = CSRFProtect()

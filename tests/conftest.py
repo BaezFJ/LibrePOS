@@ -1,7 +1,7 @@
 import pytest
 
-from librepos.main.app import create_app
-from librepos.main.extensions import db
+from librepos.core.app import create_app
+from librepos.core.extensions import db
 
 
 @pytest.fixture
