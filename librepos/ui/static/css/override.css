@@ -23,7 +23,7 @@ ul {
 
 .sidenav .user-view {
     margin-bottom: 0;
-    padding: calc(var(--sidenav-padding)*2);
+    padding: calc(var(--sidenav-padding) * 2);
 }
 
 .card .card-action {
@@ -32,11 +32,11 @@ ul {
     padding-bottom: 24px;
 }
 
-.card .card-action .btn.filled {
+.card .card-action .btn.filled, .card .card-action .btn.tonal, .card .card-action .btn.elevated, .card .card-action .btn.outlined {
     margin: 0;
 }
 
-.card-panel{
+.card-panel {
     margin: 0;
 }
 
