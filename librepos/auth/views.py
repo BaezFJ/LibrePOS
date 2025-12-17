@@ -1,4 +1,4 @@
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlparse
 
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user
@@ -24,7 +24,13 @@ def login_view():
             return redirect(url_for("auth.login"))
         login_user(user, remember=form.remember.data)
         next_page = request.args.get("next")
-        if not next_page or urlsplit(next_page).netloc != "":
+        # Ensure next_page is a safe local URL (relative only, no scheme or netloc, no backslash tricks)
+        if next_page:
+            next_page = next_page.replace("\\", "")
+            parsed_url = urlparse(next_page)
+            if parsed_url.netloc or parsed_url.scheme or not next_page.startswith("/"):
+                next_page = url_for("main.dashboard")
+        else:
             next_page = url_for("main.dashboard")
         flash(f"Welcome back {user.fullname}.")
         return redirect(next_page)
