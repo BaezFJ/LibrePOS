@@ -1,0 +1,18 @@
+{% macro render(headers, class_) %}
+
+    <table class="stiped highlight {{ class_ if class_ is defined }}">
+        {% if headers is defined %}
+            <thead>
+            <tr>
+                {% for header in headers %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+        {% endif %}
+        <tbody>
+        {{ caller() }}
+        </tbody>
+    </table>
+
+{% endmacro %}

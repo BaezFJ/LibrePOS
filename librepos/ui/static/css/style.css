@@ -1,10 +1,3 @@
-:root {
-    --success-color: #a6e3a1;
-    --info-color: #89b4fa;
-    --warning-color: #f9e2af;
-    --danger-color: #f38ba8;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     html {
         scroll-behavior: smooth;
@@ -62,131 +55,88 @@ main {
     overflow: scroll;
 }
 
-main > :first-child {
-    margin-top: 2rem;
+
+header, main, footer {
+    padding-left: 300px;
 }
 
-.align-center {
-    align-content: center;
+@media only screen and (max-width: 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
 }
 
-.inherit-color {
-    color: inherit;
+.sidenav {
+    display: flex;
+    flex-direction: column;
 }
 
-.flex {
+@media only screen and (min-width: 993px) {
+    .sidenav-padding-fix {
+        padding-right: 300px;
+    }
+}
+
+.primary-border {
+    border: 1px solid var(--md-sys-color-primary);
+}
+
+.error {
+    background-color: var(--sys-color-error);
+    color: var(--sys-color-on-error);
+}
+
+.error-border {
+    border: 1px solid var(--sys-color-error);
+}
+
+.info {
+    background-color: var(--sys-color-info);
+    color: var(--sys-color-on-info);
+}
+
+.info-border {
+    border: 1px solid var(--sys-color-info);
+}
+
+.warning {
+    background-color: var(--sys-color-warning);
+    color: var(--sys-color-on-warning);
+}
+
+.success {
+    background-color: var(--sys-color-success);
+    color: var(--sys-color-on-success);
+}
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.flex-row {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
-    align-content: center;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .space-between {
     justify-content: space-between;
 }
 
-.scrollable {
-    overflow: scroll;
+.space-around {
+    justify-content: space-around;
 }
 
-.success {
-    background-color: var(--success-color);
-}
-
-hr.success {
-    border: 1px solid var(--success-color);
-}
-
-.success-border {
-    border: 2px solid var(--success-color);
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
-}
-
-.success-text {
-    color: var(--success-color);
-}
-
-.danger,
-.error {
-    background-color: var(--danger-color);
-}
-
-hr.danger {
-    border: 1px solid var(--danger-color);
-}
-
-.danger-border {
-    border: 2px solid var(--danger-color);
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
-}
-
-.danger-text {
-    color: var(--danger-color);
-}
-
-.info {
-    background-color: var(--info-color);
-}
-
-.info-border {
-    border: 2px solid var(--info-color);
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
-}
-
-.info-text {
-    color: var(--info-color);
-}
-
-.warning {
-    background-color: var(--warning-color);
-}
-
-.warning-border {
-    border: 2px solid var(--warning-color);
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
-}
-
-.warning-text {
-    color: var(--warning-color);
-}
-
-hr.warning {
-    border: 1px solid var(--warning-color);
-}
-
-.btn.outlined.danger {
-    color: #f38ba8;
-    border-color: #f38ba8;
-}
-
-.outlined {
-    border: 1px solid;
-    border-radius: .75rem;
-    padding: 0.25rem 0.5rem;
-}
-
-.touch-btn {
-    width: 100%;
-    max-width: 300px;
-    height: 80px;
-    font-size: 2rem;
-    line-height: 70px;
-    border-radius: 10px;
-}
-
-.profile-img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.flex-align-center {
+    align-items: center;
 }
 
 .numpad-btn {
@@ -201,33 +151,215 @@ hr.warning {
     text-align: center;
 }
 
-.order-summary {
-    font-size: 1.1rem;
-    line-height: 2rem;
-}
-
-.summary-line {
+.brand-lockup {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-}
-
-.summary-line span {
-    white-space: nowrap;
-}
-
-.summary-line .dots {
-    flex: 1;
-    border-bottom: 1px dotted #ccc;
-    margin: 0 10px;
-    height: 1px;
-}
-
-.summary-line.total {
-    font-weight: 600;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
     font-size: 1.2rem;
 }
 
-.fs-small {
+.center-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 96px);
+}
+
+.avatar-nav {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    vertical-align: middle;
+}
+
+
+/* Sidenav Customization*/
+
+.sidenav-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    justify-content: center;
+    height: var(--navbar-height);
+    line-height: var(--navbar-height);
+    overflow: hidden;
+    font-size: clamp(1rem, 2vw + 1rem, 1.25rem);
+    white-space: nowrap;
+    transition: width 0.3s ease-in-out;
+}
+
+.sidenav-content {
+    flex: 1 1 auto;
+    overflow: scroll;
+}
+
+.sidenav-footer {
+    padding: 0.5rem;
+    border-top: 1px solid var(--md-sys-color-primary);
+    text-align: center;
     font-size: 0.8rem;
+}
+
+/*** Counter ***/
+span.counter {
+    color: color-mix(in srgb, var(--md-sys-color-on-background) 70%, black 30%);
+}
+
+span.counter::before {
+    content: "(";
+}
+
+span.counter::after {
+    content: ")";
+}
+
+/* Make the dropdown wider and a bit more “panel” like */
+.dropdown-content.user-dropdown {
+    width: 260px; /* wider than default */
+    padding-top: 8px;
+}
+
+.user-dropdown-header {
+    padding: 16px 16px 8px;
+    text-align: center;
+}
+
+.user-dropdown-avatar {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 8px;
+}
+
+.user-dropdown-name {
+    display: block;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.4;
+    text-align: center;
+}
+
+/* Optional: make links a bit more touch-friendly */
+.dropdown-content.user-dropdown > li > a {
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dropdown-content.user-dropdown .material-symbols-rounded {
+    font-size: 1.3rem;
+}
+
+/* Make dropdown look more like a card */
+.dropdown-content.apps-dropdown {
+    border-radius: 16px;
+    padding: 12px;
+    overflow: visible; /* keep shadow & rounded corners visible */
+    min-width: 260px;
+}
+
+/* Inner container: ~30% darker than base */
+.apps-dropdown-inner {
+    background: rgba(0, 0, 0, 0.06); /* tweak as needed for your theme */
+    border-radius: 12px;
+    padding: 12px;
+}
+
+/* 3-column grid for apps */
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.app-tile {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    border-radius: 10px;
+    text-decoration: none;
+    /* Make the hit area feel like a button */
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.app-tile:hover {
+    background: rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.app-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.app-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.2;
+    display: block;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+/* Bottom navbar (mobile) */
+.bottom-nav {
+    color: var(--md-sys-color-on-primary);
+    background-color: var(--md-sys-color-secondary-container);
+    width: 100%;
+    height: var(--navbar-height-mobile);
+    line-height: var(--navbar-height-mobile);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.bottom-nav-item {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1.2;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.bottom-nav-item .material-icons {
+    font-size: 20px;
+    line-height: 20px;
+    margin-bottom: 2px;
+}
+
+.bottom-nav-item.active {
+    color: #69f0ae; /* accent for active item */
+}
+
+/* Only show on small / medium devices */
+@media (min-width: 993px) {
+    .bottom-nav {
+        display: none;
+    }
+}
+
+
+.icon-bottom {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
 }

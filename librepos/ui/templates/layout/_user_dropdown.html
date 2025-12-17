@@ -1,0 +1,50 @@
+<!-- Dropdown Structure -->
+<ul id="user-dropdown" class="dropdown-content user-dropdown">
+    <!-- Custom header -->
+    <li class="user-dropdown-header">
+        <img src="{{ url_for("static", filename="images/default_male_user.png") }}"
+             alt="{{ current_user.fullname or 'User avatar' }}" class="circle user-dropdown-avatar">
+        <span class="user-dropdown-name">{{ current_user.fullname or 'Guest User' }}</span>
+    </li>
+
+    <li class="divider" tabindex="-1"></li>
+
+    <!-- Links -->
+    <li>
+        <a href="">
+            <span class="material-symbols-rounded left">account_circle</span>
+            Profile
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <span class="material-symbols-rounded left">notifications</span>
+            Notifications <span class="new badge">2</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <span class="material-symbols-rounded left">chat</span>
+            Messages <span class="new badge">14</span>
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <span class="material-symbols-rounded left">settings</span>
+            Settings
+        </a>
+    </li>
+    <li>
+        <a href="">
+            <span class="material-symbols-rounded left">help</span>
+            Help &amp; Support
+        </a>
+    </li>
+    <li class="divider" tabindex="-1"></li>
+    <li>
+        <a href="{{ url_for("auth.logout") }}" class="red-text text-darken-1">
+            <span class="material-symbols-rounded left">logout</span>
+            Log out
+        </a>
+    </li>
+</ul>

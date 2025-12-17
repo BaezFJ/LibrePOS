@@ -1,0 +1,13 @@
+{% import "components/sidenav.j2" as Sidenav with context %}
+
+{% call Sidenav.render("Error", "errorMenu") %}
+    {{ Sidenav.item("Go Home", "home", url_for('main.dashboard')) }}
+    {{ Sidenav.item("Go Back", "arrow_back", "javascript:history.back()") }}
+
+    {{ Sidenav.divider() }}
+
+    {{ Sidenav.subheader("Help & Support") }}
+    {{ Sidenav.item("Contact Support", "support_agent") }}
+    {{ Sidenav.item("Documentation", "menu_book") }}
+    {{ Sidenav.item("Report Issue", "bug_report") }}
+{% endcall %}

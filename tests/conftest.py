@@ -1,6 +1,6 @@
 import pytest
 
-from librepos import create_app
+from librepos.app import create_app
 from librepos.extensions import db
 
 

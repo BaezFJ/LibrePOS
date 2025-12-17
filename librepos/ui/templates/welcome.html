@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+    <section class="section">
+        <div class="container">
+            <div class="card-panel center-align">
+                <h1>
+                    <strong>Getting Started with LibrePOS</strong>
+                </h1>
+
+                <p class="flow-text">
+                    Welcome to LibrePOS! Before you start using the system, there are a few essential setup steps:
+                </p>
+
+                <p class="flow-text">
+                    <strong>1) Set up the database</strong><br>
+                    LibrePOS uses <em>SQLite</em> by default, so you can get up and running quickly with minimal
+                    configuration.
+                    If you’d rather use a different database (PostgreSQL, MySQL, etc.), you can configure any database
+                    supported by
+                    <em>Flask-SQLAlchemy</em> by updating your database connection settings accordingly.
+                </p>
+
+                <p class="flow-text">
+                    <strong>2) Create a <code>.env</code> file and add a <code>SECRET_KEY</code></strong><br>
+                    LibrePOS requires a <code>SECRET_KEY</code> for secure session handling and other cryptographic
+                    features.
+                    Create a <code>.env</code> file in your project and define a strong secret key there.
+                </p>
+
+                <p class="flow-text">
+                    <strong>3) Mark initial setup as completed (disables this welcome page)</strong><br>
+                    To load the full application instead of the welcome screen, set the following in your
+                    <code>.env</code> file:
+                    <code>INITIAL_SETUP_COMPLETED=true</code>
+                </p>
+
+                <p class="flow-text">
+                    <strong>4) Run LibrePOS in production configuration</strong><br>
+                    Once your database and environment variables are in place, initialize the app using the production
+                    configuration:
+                    <code>app = create_app("production")</code>
+                </p>
+
+                <p class="flow-text">
+                    After completing these steps, LibrePOS should be ready to start and serve requests.
+                </p>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

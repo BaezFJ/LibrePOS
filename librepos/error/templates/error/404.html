@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block sidenav %}
+    {% include 'error/_sidenav.html' %}
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col s12 m8 offset-m2 l6 offset-l3">
+            <div class="card-panel center-align" style="margin-top: 100px; padding: 40px;">
+                <div style="margin-bottom: 30px;">
+                    <i class="material-symbols-rounded error-text" style="font-size: 96px;">search_off</i>
+                </div>
+                <h1 class="grey-text"><b>404</b></h1>
+                <h5 class="grey-text"><b>Page Not Found</b></h5>
+                <p class="grey-text">
+                    The page you're looking for doesn't exist or may have been moved. Please check the URL or return to the homepage.
+                </p>
+                <div class="row" style="margin-bottom: 0;">
+                    <div class="col s12 m6">
+                        <a href="{{ url_for('main.dashboard') }}" class="btn waves-effect waves-light btn-large">
+                            <i class="material-symbols-rounded">home</i>&nbsp;Go Home
+                        </a>
+                    </div>
+                    <div class="col s12 m6">
+                        <a href="javascript:history.back()" class="btn-flat waves-effect waves-light btn-large">
+                            <i class="material-symbols-rounded">arrow_back</i>&nbsp;Go Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
