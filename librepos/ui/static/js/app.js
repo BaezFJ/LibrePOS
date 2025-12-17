@@ -15,7 +15,7 @@ const registerServiceWorker = () => {
 };
 
 // Service worker registration check
-// TODO: Service worker not re-caching after user logout. (temp disable)
+// TODO: Service worker not re-caching after auth logout. (temp disable)
 // if ('serviceWorker' in navigator) {
 //     window.addEventListener("load", () => registerServiceWorker());
 // }
@@ -137,7 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdownTriggerSelector = '.dropdown-trigger';
     const dropdownOptions = {
         // specify options here
-        constrainWidth: false,
+        constrainWidth: false, // don't force dropdown to avatar width
+        coverTrigger: false,   // show dropdown below the avatar
+        alignment: 'right'     // align menu to the right edge of avatar
     };
 
     const initializeDropdowns = () => {

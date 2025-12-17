@@ -1,17 +1,25 @@
-<nav class="breadcrumb-wrapper">
-    <div class="col s12">
-        <a href="{{ url_for("core.dashboard") }}" class="breadcrumb">Dashboard</a>
-        {% if breadcrumb %}
-            {% for name, url in breadcrumb %}
-                <a href="{{ url }}" class="breadcrumb">{{ name }}</a>
+
+{% if breadcrumb and breadcrumb is iterable %}
+    <nav class="breadcrumb-wrapper pt-4">
+        <div class="col s12">
+            <a href="{{ url_for("core.dashboard") }}" class="breadcrumb">Dashboard</a>
+            {% for crumb in breadcrumb %}
+                {% if crumb is mapping and 'label' in crumb %}
+                    {% if crumb.url %}
+                        <a href="{{ crumb.url }}" class="breadcrumb">{{ crumb.label }}</a>
+                    {% else %}
+                        <span class="breadcrumb">{{ crumb.label }}</span>
+                    {% endif %}
+                {% endif %}
             {% endfor %}
-        {% endif %}
-    </div>
-</nav>
+        </div>
+    </nav>
+{% endif %}
 
 {#
 Add breadcrumb to the context in a view func.
 context = { "breadcrumb": [
-                            {"Authentication", url_for("get_dashboard")},
-                            {"Users", url_for("iam.list_users")}, ] }
+                            {"url": url_for("auth.home"), "label": "IAM"},
+                            {"url": None, "label": "Add auth"}, <-- current error no link
+                             ] }
 #}

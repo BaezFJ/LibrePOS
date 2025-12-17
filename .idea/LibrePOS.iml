@@ -18,11 +18,9 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/librepos/ui/templates" />
-        <option value="$MODULE_DIR$/librepos/features/auth/templates" />
-        <option value="$MODULE_DIR$/librepos/features/core/templates" />
-        <option value="$MODULE_DIR$/librepos/features/error/templates" />
-        <option value="$MODULE_DIR$/librepos/features/iam/templates" />
-        <option value="$MODULE_DIR$/librepos/features/user/templates" />
+        <option value="$MODULE_DIR$/librepos/main/templates" />
+        <option value="$MODULE_DIR$/librepos/auth/templates" />
+        <option value="$MODULE_DIR$/librepos/error/templates" />
       </list>
     </option>
   </component>

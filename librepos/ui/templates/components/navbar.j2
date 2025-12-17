@@ -1,0 +1,86 @@
+{% import "components/icon.j2" as Icon %}
+
+{% macro render() %}
+    <div class="nav navbar">
+        <div class="nav-wrapper">
+            {{ caller() }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro title(text) %}
+    <p class="brand-logo center my-0 flow-text">
+        {{ text|truncate(15) }}
+    </p>
+{% endmacro %}
+
+
+{% macro item(label, icon, url, dynamic=True) %}
+    {% set icon_class = "left" if label is defined else "" %}
+    <li>
+        <a href="{{ url if url is defined else "#" }}" class="waves-effect">
+            {% if icon is defined %}
+                {{ Icon.render(icon, icon_class) }}
+            {% endif %}
+            {% if label is defined %}
+                {% if dynamic %}
+                    <span class="hide-on-small-and-down">&nbsp;{{ label }}</span>
+                {% else %}
+                    {{ label }}
+                {% endif %}
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}
+
+{% macro dropdown_trigger(label, icon, target) %}
+    <!-- Dropdown Trigger -->
+    <li>
+        <a class='dropdown-trigger' href='#' data-target='{{ target if target is defined }}'>
+            {% if icon is defined %}
+                {{ Icon.render(icon) }}
+            {% endif %}
+            {% if label is defined %}
+                <span class="hide-on-small-and-down">&nbsp;{{ label }}</span>
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}
+
+{% macro dropdown(label, icon, target, class_) %}
+    <!-- Dropdown Trigger -->
+    <li>
+        <a class='dropdown-trigger' href='#' data-target='{{ target if target is defined }}'>
+            {% if icon is defined %}
+                {{ Icon.render(icon) }}
+            {% endif %}
+            {% if label is defined %}
+                <span class="hide-on-small-and-down">&nbsp;{{ label }}</span>
+            {% endif %}
+        </a>
+    </li>
+    <!-- Dropdown Structure -->
+    <ul id='{{ target if target is defined }}' class='dropdown-content'>
+        {{ caller() }}
+    </ul>
+{% endmacro %}
+
+{% macro dropdown_item(label, icon, url) %}
+    <li>
+        <a href="{{ url if url is defined }}" class="waves-effect waves-light">
+            {% if icon is defined %}
+                {{ Icon.render(icon, "left") }}
+            {% endif %}
+            {{ label if label is defined }}
+        </a>
+    </li>
+{% endmacro %}
+
+
+{% macro sidenav_trigger(target="mainMenu") %}
+    <li>
+        <a data-target="{{ target if target is defined }}" class="sidenav-trigger m-0 hide-on-large-only">
+            {{ Icon.render("menu") }}
+        </a>
+    </li>
+{% endmacro %}

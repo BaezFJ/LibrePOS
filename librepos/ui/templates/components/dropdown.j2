@@ -1,0 +1,30 @@
+{% macro render(id) %}
+    <!-- Dropdown menu -->
+    <ul id="{{ id if id is defined }}" class="dropdown-content">
+        {{ caller() }}
+    </ul>
+{% endmacro %}
+
+
+{% macro trigger(id, icon) %}
+    <a href="" class="btn-flat waves-effect dropdown-trigger"
+       data-target="{{ id if id is defined }}">
+        <i class="material-symbols-rounded">{{ icon if icon is defined else "more_vert" }}</i>
+    </a>
+{% endmacro %}
+
+
+{% macro item(label, url, icon) %}
+    <li>
+        <a href="{{ url if url is defined }}" class="waves-effect waves-light">
+            {% if icon is defined %}
+                <i class="material-symbols-rounded">{{ icon }}</i>
+            {% endif %}
+            {{ label if label is defined }}
+        </a>
+    </li>
+{% endmacro %}
+
+{% macro divider() %}
+    <li class="divider" tabindex="-1"></li>
+{% endmacro %}

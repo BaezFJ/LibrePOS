@@ -8,7 +8,6 @@ const staticAssets = [
     '/static/css/style.min.css',
     '/static/js/app.js',
     '/static/js/ui.js',
-    '/static/js/theme-switcher.js',
     '/static/manifest.json',
     '/static/images/icons/icon-72x72.png',
     '/static/images/icons/icon-96x96.png',

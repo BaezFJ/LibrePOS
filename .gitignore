@@ -334,4 +334,4 @@ FodyWeavers.xsd
 *.msp
 *.sln.iml
 !/issue_template.txt
-librepos/librepos.db
+*/librepos.db

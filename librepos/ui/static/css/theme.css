@@ -1,155 +1,178 @@
-:root[theme="dark"] {
+@media (prefers-color-scheme: dark) {
+    :root, :host {
+        color-scheme: dark;
 
-    /*Catppuccin Mocha (Dark)*/
-    --catppuccin-mocha-base: #1e1e2e;
-    --catppuccin-mocha-text: #cdd6f4;
-    --catppuccin-mocha-subtext-1: #bac2de;
-    --catppuccin-mocha-subtext-0: #a6adc8;
-    --catppuccin-mocha-crust: #11111b;
-    --catppuccin-mocha-mantle: #181825;
-    --catppuccin-mocha-mauve: #cba6f7;
-    --catppuccin-mocha-overlay-0: #6c7086;
-    --catppuccin-mocha-surface-0: #313244;
-    --catppuccin-mocha-surface-1: #45475a;
-    --catppuccin-mocha-surface-2: #585b70;
+        /*Catppuccin Mocha (Dark)*/
+        --catppuccin-mocha-base: #1e1e2e;
+        --catppuccin-mocha-text: #cdd6f4;
+        --catppuccin-mocha-subtext-1: #bac2de;
+        --catppuccin-mocha-subtext-0: #a6adc8;
+        --catppuccin-mocha-crust: #11111b;
+        --catppuccin-mocha-mantle: #181825;
+        --catppuccin-mocha-lavender: #b4befe;
+        --catppuccin-mocha-mauve: #cba6f7;
+        --catppuccin-mocha-overlay-0: #6c7086;
+        --catppuccin-mocha-surface-0: #313244;
+        --catppuccin-mocha-surface-1: #45475a;
+        --catppuccin-mocha-surface-2: #585b70;
+        --catppuccin-mocha-blue: #89b4fa; /*Info*/
+        --catppuccin-mocha-green: #a6e3a1; /*Success*/
+        --catppuccin-mocha-yellow: #f9e2af; /*Warning*/
+        --catppuccin-mocha-red: #f38ba8; /*Error*/
 
-    --catppuccin-mocha-blue: #89b4fa; /*Info*/
-    --catppuccin-mocha-green: #a6e3a1; /*Success*/
-    --catppuccin-mocha-yellow: #f9e2af; /*Warning*/
-    --catppuccin-mocha-red: #f38ba8; /*Error*/
+        /*Custom System Colors*/
+        --sys-color-info: var(--catppuccin-mocha-blue);
+        --sys-color-on-info: var(--catppuccin-mocha-crust);
+        --sys-color-success: var(--catppuccin-mocha-green);
+        --sys-color-on-success: var(--catppuccin-mocha-crust);
+        --sys-color-warning: var(--catppuccin-mocha-yellow);
+        --sys-color-on-warning: var(--catppuccin-mocha-crust);
+        --sys-color-error: var(--catppuccin-mocha-red);
+        --sys-color-on-error: var(--catppuccin-mocha-crust);
 
-    --sys-color-info: var(--catppuccin-mocha-blue);
-    --sys-color-on-info: var(--catppuccin-mocha-crust);
-    --sys-color-success: var(--catppuccin-mocha-green);
-    --sys-color-on-success: var(--catppuccin-mocha-crust);
-    --sys-color-warning: var(--catppuccin-mocha-yellow);
-    --sys-color-on-warning: var(--catppuccin-mocha-crust);
+        /*Materialize Dark*/
+        --md-sys-color-primary-dark: var(--catppuccin-mocha-lavender); /* lavender*/
+        --md-sys-color-on-primary-dark: var(--catppuccin-mocha-crust); /* crust */
+        --md-sys-color-primary-container-dark: var(--catppuccin-mocha-surface-1); /* surface1 */
+        --md-sys-color-on-primary-container-dark: var(--catppuccin-mocha-text); /* text */
 
-    --md-sys-color-background: var(--catppuccin-mocha-base); /*Main background color*/
-    --md-sys-color-error: var(--catppuccin-mocha-red);
-    /*--md-sys-color-error-container:red;*/
-    /*--md-sys-color-inverse-on-surface:;*/
-    /*--md-sys-color-inverse-primary:;*/
-    /*--md-sys-color-inverse-surface:;*/
-    --md-sys-color-on-background: var(--catppuccin-mocha-text); /*Main text color*/
-    /*--md-sys-color-on-error:;*/
-    /*--md-sys-color-on-error-container:;*/
-    --md-sys-color-on-primary: var(--catppuccin-mocha-crust); /*Text color on navbar*/
-    --md-sys-color-on-primary-container:var(--catppuccin-mocha-crust); /*Text color on floating action button*/
-    /*--md-sys-color-on-primary-fixed:;*/
-    /*--md-sys-color-on-primary-fixed-variant:;*/
-    --md-sys-color-on-secondary: var(--catppuccin-mocha-crust); /*Text color on floating action button*/
-    --md-sys-color-on-secondary-container: var(--catppuccin-mocha-subtext-1); /*Text color on tonal buttons, sidenav's*/
-    /*--md-sys-color-on-secondary-fixed:;*/
-    /*--md-sys-color-on-secondary-fixed-variant:;*/
-    /*--md-sys-color-on-surface:;*/
-    --md-sys-color-on-surface-variant: var(--catppuccin-mocha-subtext-1); /*Text color on table-header, form-elements, toggle-switch*/
-    /*--md-sys-color-on-tertiary:;*/
-    /*--md-sys-color-on-tertiary-container:;*/
-    /*--md-sys-color-on-tertiary-fixed:;*/
-    /*--md-sys-color-on-tertiary-fixed-variant:;*/
-    --md-sys-color-outline: var(--catppuccin-mocha-subtext-0); /*Color for toggle-switch in off-state*/
-    --md-sys-color-outline-variant: var(--catppuccin-mocha-surface-2); /*Color for divider*/
-    --md-sys-color-primary: var(--catppuccin-mocha-mauve); /*Color for primary buttons and actions*/
-    --md-sys-color-primary-container:var(--catppuccin-mocha-mauve); /*Color for floating action button*/
-    /*--md-sys-color-primary-fixed:;*/
-    /*--md-sys-color-primary-fixed-dim:;*/
-    /*--md-sys-color-scrim:;*/
-    /*--md-sys-color-secondary:;*/
-    --md-sys-color-secondary-container: var(--catppuccin-mocha-surface-2); /* tonal-button, elevated-button, and navbar */
-    /*--md-sys-color-secondary-fixed:;*/
-    /*--md-sys-color-secondary-fixed-dim:;*/
-    /*--md-sys-color-shadow:;*/
-    --md-sys-color-surface: var(--catppuccin-mocha-surface-0); /*Background for cards*/
-    /*--md-sys-color-surface-bright:;*/
-    /*--md-sys-color-surface-container:;*/
-    /*--md-sys-color-surface-container-high:;*/
-    /*--md-sys-color-surface-container-highest:;*/
-    /*--md-sys-color-surface-container-low:;*/
-    /*--md-sys-color-surface-container-lowest:;*/
-    /*--md-sys-color-surface-dim:;*/
-    --md-sys-color-surface-tint: var(--catppuccin-mocha-overlay-0); /*Tint color for cards and modals */
-    --md-sys-color-surface-variant: var(--catppuccin-mocha-surface-2); /*Background for toggle-switch*/
-    /*--md-sys-color-tertiary:;*/
-    /*--md-sys-color-tertiary-container:;*/
-    /*--md-sys-color-tertiary-fixed:;*/
-    /*--md-sys-color-tertiary-fixed-dim:;*/
+        --md-sys-color-secondary-dark: var(--catppuccin-mocha-blue); /* blue */
+        --md-sys-color-on-secondary-dark: var(--catppuccin-mocha-crust); /* crust */
+        --md-sys-color-secondary-container-dark: var(--catppuccin-mocha-surface-0); /* surface0 */
+        --md-sys-color-on-secondary-container-dark: var(--catppuccin-mocha-text); /* text */
+
+        --md-sys-color-tertiary-dark: var(--catppuccin-mocha-mauve); /* mauve */
+        --md-sys-color-on-tertiary-dark: var(--catppuccin-mocha-crust); /* crust */
+        --md-sys-color-tertiary-container-dark: var(--catppuccin-mocha-surface-2); /* surface2 */
+        --md-sys-color-on-tertiary-container-dark: var(--catppuccin-mocha-text); /* text */
+
+        --md-sys-color-error-dark: var(--catppuccin-mocha-red); /* red */
+        --md-sys-color-error-container-dark: var(--catppuccin-mocha-crust); /* crust (deep background) */
+        --md-sys-color-on-error-dark: var(--catppuccin-mocha-crust); /* crust on bright error */
+        --md-sys-color-on-error-container-dark: var(--catppuccin-mocha-red); /* red on dark container */
+
+        --md-sys-color-background-dark: var(--catppuccin-mocha-mantle); /* mantle */
+        --md-sys-color-on-background-dark: var(--catppuccin-mocha-text); /* text */
+        --md-sys-color-surface-dark: var(--catppuccin-mocha-base); /* base */
+        --md-sys-color-on-surface-dark: var(--catppuccin-mocha-text); /* text */
+
+        --md-sys-color-surface-variant-dark: var(--catppuccin-mocha-surface-0); /* surface0 */
+        --md-sys-color-on-surface-variant-dark: var(--catppuccin-mocha-subtext-1); /* subtext1 */
+
+        --md-sys-color-outline-dark: var(--catppuccin-mocha-overlay-0); /* overlay0 */
+        --md-sys-color-inverse-on-surface-dark: var(--catppuccin-mocha-crust); /* crust */
+        --md-sys-color-inverse-surface-dark: var(--catppuccin-mocha-text); /* text (used as light surface) */
+        --md-sys-color-inverse-primary-dark: var(--catppuccin-mocha-blue); /* blue accent on light surfaces */
+
+        --md-sys-color-shadow-dark: #000000;
+        --md-sys-color-surface-tint-dark: var(--catppuccin-mocha-lavender); /* match primary */
+        --md-sys-color-outline-variant-dark: var(--catppuccin-mocha-surface-0); /* surface0 */
+        --md-sys-color-scrim-dark: #000000;
+
+    }
 }
 
-:root[theme="light"] {
+@media (prefers-color-scheme: light) {
+    :root, :host {
+        color-scheme: light;
 
-    /*Catppuccin Latte */
-    --catppuccin-latte-base: #eff1f5;
-    --catppuccin-latte-text: #4c4f69;
-    --catppuccin-latte-subtext-1: #5c5f77;
-    --catppuccin-latte-subtext-0: #6c6f85;
-    --catppuccin-latte-crust: #dce0e8;
-    --catppuccin-latte-mantle: #e6e9ef;
-    --catppuccin-latte-mauve: #8839ef;
-    --catppuccin-latte-overlay-0: #9ca0b0;
-    --catppuccin-latte-surface-0: #ccd0da;
-    --catppuccin-latte-surface-1: #bcc0cc;
-    --catppuccin-latte-surface-2: #acb0be;
+        /*Catppuccin Latte */
+        --catppuccin-latte-base: #eff1f5;
+        --catppuccin-latte-text: #4c4f69;
+        --catppuccin-latte-subtext-1: #5c5f77;
+        --catppuccin-latte-subtext-0: #6c6f85;
+        --catppuccin-latte-crust: #dce0e8;
+        --catppuccin-latte-mantle: #e6e9ef;
+        --catppuccin-latte-mauve: #8839ef;
+        --catppuccin-latte-lavender: #967eff;
+        --catppuccin-latte-overlay-0: #9ca0b0;
+        --catppuccin-latte-surface-0: #ccd0da;
+        --catppuccin-latte-surface-1: #bcc0cc;
+        --catppuccin-latte-surface-2: #acb0be;
+        --catppuccin-latte-blue: #1e66f5; /*Info*/
+        --catppuccin-latte-green: #40a02b; /*Success*/
+        --catppuccin-latte-yellow: #df8e1d; /*Warning*/
+        --catppuccin-latte-red: #d20f39; /*Error*/
 
-    --catppuccin-latte-blue: #1e66f5; /*Info*/
-    --catppuccin-latte-green: #40a02b; /*Success*/
-    --catppuccin-latte-yellow: #df8e1d; /*Warning*/
-    --catppuccin-latte-red: #d20f39; /*Error*/
+        /*Custom System Colors*/
+        --sys-color-info: var(--catppuccin-latte-blue);
+        --sys-color-on-info: var(--catppuccin-latte-crust);
+        --sys-color-success: var(--catppuccin-latte-green);
+        --sys-color-on-success: var(--catppuccin-latte-crust);
+        --sys-color-warning: var(--catppuccin-latte-yellow);
+        --sys-color-on-warning: var(--catppuccin-latte-crust);
+        --sys-color-error: var(--catppuccin-latte-red);
+        --sys-color-on-error: var(--catppuccin-latte-crust);
 
-    --sys-color-info: var(--catppuccin-latte-blue);
-    --sys-color-on-info: var(--catppuccin-latte-crust);
-    --sys-color-success: var(--catppuccin-latte-green);
-    --sys-color-on-success: var(--catppuccin-latte-crust);
-    --sys-color-warning: var(--catppuccin-latte-yellow);
-    --sys-color-on-warning: var(--catppuccin-latte-crust);
+        /*Materialize Dark*/
+        --md-sys-color-primary-light: var(--catppuccin-latte-lavender); /* lavender*/
+        --md-sys-color-on-primary-light: var(--catppuccin-latte-crust); /* crust */
+        --md-sys-color-primary-container-light: var(--catppuccin-latte-surface-1); /* surface1 */
+        --md-sys-color-on-primary-container-light: var(--catppuccin-latte-text); /* text */
 
-    --md-sys-color-background: var(--catppuccin-latte-base); /*Main background color*/
-    --md-sys-color-error: var(--catppuccin-latte-red);
-    /*--md-sys-color-error-container:red;*/
-    /*--md-sys-color-inverse-on-surface:;*/
-    /*--md-sys-color-inverse-primary:;*/
-    /*--md-sys-color-inverse-surface:;*/
-    --md-sys-color-on-background: var(--catppuccin-latte-text); /*Main text color*/
-    /*--md-sys-color-on-error:;*/
-    /*--md-sys-color-on-error-container:;*/
-    --md-sys-color-on-primary: var(--catppuccin-latte-crust); /*Text color on navbar*/
-    --md-sys-color-on-primary-container:var(--catppuccin-latte-crust);/*Text color on floating action button*/
-    /*--md-sys-color-on-primary-fixed:;*/
-    /*--md-sys-color-on-primary-fixed-variant:;*/
-    --md-sys-color-on-secondary: var(--catppuccin-latte-crust); /*Text color on button*/
-    --md-sys-color-on-secondary-container: var(--catppuccin-latte-subtext-1); /*Text color on tonal buttons, sidenav's*/
-    /*--md-sys-color-on-secondary-fixed:;*/
-    /*--md-sys-color-on-secondary-fixed-variant:;*/
-    /*--md-sys-color-on-surface:;*/
-    --md-sys-color-on-surface-variant: var(--catppuccin-latte-subtext-1); /*Text color on table-header, form-elements, toggle-switch*/
-    /*--md-sys-color-on-tertiary:;*/
-    /*--md-sys-color-on-tertiary-container:;*/
-    /*--md-sys-color-on-tertiary-fixed:;*/
-    /*--md-sys-color-on-tertiary-fixed-variant:;*/
-    --md-sys-color-outline: var(--catppuccin-latte-subtext-0); /*Color for toggle-switch in off-state*/
-    --md-sys-color-outline-variant: var(--catppuccin-latte-surface-2); /*Color for divider*/
-    --md-sys-color-primary: var(--catppuccin-latte-mauve); /*Color for primary buttons and actions*/
-    --md-sys-color-primary-container:var(--catppuccin-latte-mauve); /*Color for floating action button*/
-    /*--md-sys-color-primary-fixed:;*/
-    /*--md-sys-color-primary-fixed-dim:;*/
-    /*--md-sys-color-scrim:;*/
-    /*--md-sys-color-secondary:;*/
-    --md-sys-color-secondary-container: var(--catppuccin-latte-surface-2); /* tonal-button, elevated-button, and navbar */
-    /*--md-sys-color-secondary-fixed:;*/
-    /*--md-sys-color-secondary-fixed-dim:;*/
-    /*--md-sys-color-shadow:;*/
-    --md-sys-color-surface: var(--catppuccin-latte-surface-0); /*Background for cards*/
-    /*--md-sys-color-surface-bright:;*/
-    /*--md-sys-color-surface-container:;*/
-    /*--md-sys-color-surface-container-high:;*/
-    /*--md-sys-color-surface-container-highest:;*/
-    /*--md-sys-color-surface-container-low:;*/
-    /*--md-sys-color-surface-container-lowest:;*/
-    /*--md-sys-color-surface-dim:;*/
-    --md-sys-color-surface-tint: var(--catppuccin-latte-overlay-0); /*Tint color for cards and modals */
-    --md-sys-color-surface-variant: var(--catppuccin-latte-surface-2); /*Background for toggle-switch*/
-    /*--md-sys-color-tertiary:;*/
-    /*--md-sys-color-tertiary-container:;*/
-    /*--md-sys-color-tertiary-fixed:;*/
-    /*--md-sys-color-tertiary-fixed-dim:;*/
+        --md-sys-color-secondary-light: var(--catppuccin-latte-blue); /* blue */
+        --md-sys-color-on-secondary-light: var(--catppuccin-latte-crust); /* crust */
+        --md-sys-color-secondary-container-light: var(--catppuccin-latte-surface-0); /* surface0 */
+        --md-sys-color-on-secondary-container-light: var(--catppuccin-latte-text); /* text */
+
+        --md-sys-color-tertiary-light: var(--catppuccin-latte-mauve); /* mauve */
+        --md-sys-color-on-tertiary-light: var(--catppuccin-latte-crust); /* crust */
+        --md-sys-color-tertiary-container-light: var(--catppuccin-latte-surface-2); /* surface2 */
+        --md-sys-color-on-tertiary-container-light: var(--catppuccin-latte-text); /* text */
+
+        --md-sys-color-error-light: var(--catppuccin-latte-red); /* red */
+        --md-sys-color-error-container-light: var(--catppuccin-latte-crust); /* crust (deep background) */
+        --md-sys-color-on-error-light: var(--catppuccin-latte-crust); /* crust on bright error */
+        --md-sys-color-on-error-container-light: var(--catppuccin-latte-red); /* red on dark container */
+
+        --md-sys-color-background-light: var(--catppuccin-latte-mantle); /* mantle */
+        --md-sys-color-on-background-light: var(--catppuccin-latte-text); /* text */
+        --md-sys-color-surface-light: var(--catppuccin-latte-base); /* base */
+        --md-sys-color-on-surface-light: var(--catppuccin-latte-text); /* text */
+
+        --md-sys-color-surface-variant-light: var(--catppuccin-latte-surface-0); /* surface0 */
+        --md-sys-color-on-surface-variant-light: var(--catppuccin-latte-subtext-1); /* subtext1 */
+
+        --md-sys-color-outline-light: var(--catppuccin-latte-overlay-0); /* overlay0 */
+        --md-sys-color-inverse-on-surface-light: var(--catppuccin-latte-crust); /* crust */
+        --md-sys-color-inverse-surface-light: var(--catppuccin-latte-text); /* text (used as light surface) */
+        --md-sys-color-inverse-primary-light: var(--catppuccin-latte-blue); /* blue accent on light surfaces */
+
+        --md-sys-color-shadow-light: #000000;
+        --md-sys-color-surface-tint-light: var(--catppuccin-latte-lavender); /* match primary */
+        --md-sys-color-outline-variant-light: var(--catppuccin-latte-surface-0); /* surface0 */
+        --md-sys-color-scrim-light: #000000;
+    }
 }
+
+/*!* Shared System Design Tokens mapped to an abstract palette *!*/
+/*--md-sys-color-primary: var(--md-sys-color-primary-dark);*/
+/*--md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);*/
+/*--md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);*/
+/*--md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-dark);*/
+/*--md-sys-color-secondary: var(--md-sys-color-secondary-dark);*/
+/*--md-sys-color-on-secondary: var(--md-sys-color-on-secondary-dark);*/
+/*--md-sys-color-secondary-container: var(--md-sys-color-secondary-container-dark);*/
+/*--md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-dark);*/
+/*--md-sys-color-tertiary: var(--md-sys-color-tertiary-dark);*/
+/*--md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-dark);*/
+/*--md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-dark);*/
+/*--md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-dark);*/
+/*--md-sys-color-error: var(--md-sys-color-error-dark);*/
+/*--md-sys-color-on-error: var(--md-sys-color-on-error-dark);*/
+/*--md-sys-color-error-container: var(--md-sys-color-error-container-dark);*/
+/*--md-sys-color-on-error-container: var(--md-sys-color-on-error-container-dark);*/
+/*--md-sys-color-outline: var(--md-sys-color-outline-dark);*/
+/*--md-sys-color-background: var(--md-sys-color-background-dark);*/
+/*--md-sys-color-on-background: var(--md-sys-color-on-background-dark);*/
+/*--md-sys-color-surface: var(--md-sys-color-surface-dark);*/
+/*--md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);*/
+/*--md-sys-color-surface-variant: var(--md-sys-color-surface-variant-dark);*/
+/*--md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-dark);*/
+/*--md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-dark);*/
+/*--md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-dark);*/
+/*--md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-dark);*/
+/*--md-sys-color-shadow: var(--md-sys-color-shadow-dark);*/
+/*--md-sys-color-surface-tint: var(--md-sys-color-surface-tint-dark);*/
+/*--md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);*/
+/*--md-sys-color-scrim: var(--md-sys-color-scrim-dark);*/
