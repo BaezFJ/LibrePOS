@@ -4,45 +4,28 @@
 
 {% block main %}
 
-    <div class="center-content">
-        <div class="auth-wrapper sidenav-padding-fix">
-            <div class="auth-card card z-depth-2">
-                <div class="card-content">
-
-                    <div class="brand-lockup">
-                        <i class="material-symbols-rounded">restaurant_menu</i>
-                        <span class="brand-name">LibrePOS</span>
-                    </div>
-
-                    <h5>Sign In</h5>
-                    <p class="grey-text">Enter your credentials to access the dashboard.</p>
-
-                    <form action="" method="POST">
-                        {{ form.hidden_tag() }}
-                        <div class="row">
-                            <div class="col s12 input-field">
-                                {{ Form.text(form.email) }}
-                            </div>
-                            <div class="col s12 input-field">
-                                {{ Form.text(form.password) }}
-                            </div>
-                            <div class="col s12">
-                                {{ Form.switch(form.remember, "No", "Yes") }}
-                            </div>
-                            <div class="col s12">
-                                {{ Form.submit("Login", "login") }}
-                            </div>
+    <div class="container">
+        <div class="center-content">
+            <div class="auth-wrapper sidenav-padding-fix">
+                <div class="auth-card card z-depth-2">
+                    <div class="card-content">
+                        <div class="brand-lockup">
+                            <i class="material-symbols-rounded">restaurant_menu</i>
+                            <span class="brand-name">LibrePOS</span>
                         </div>
-                    </form>
-
+                        <h5>Sign In</h5>
+                        <p class="grey-text">Enter your credentials to access the dashboard.</p>
+                        <form action="" method="POST">
+                            {{ Form.render_form(form) }}
+                        </form>
+                    </div>
+                    <div class="card-action">
+                        <a href="">Forgot password?</a>
+                        <a href="">Need help?</a>
+                    </div>
                 </div>
-                <div class="card-action">
-                    <a href="">Forgot password?</a>
-                    <a href="">Need help?</a>
-                </div>
+                <p class="grey-text center-align mt-4">Secure staff access &verbar; All activity is logged</p>
             </div>
-            <p class="grey-text center-align mt-4">Secure staff access &verbar; All activity is logged</p>
         </div>
     </div>
-
 {% endblock %}

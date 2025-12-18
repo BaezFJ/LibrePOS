@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% import "components/forms.j2" as Form %}
+
+{% block sidenav %}
+    {% include "auth/_sidenav.html" %}
+{% endblock %}
+
+{% block main %}
+
+    <section class="section">
+
+        <div class="container">
+            <div class="row">
+                <div class="card-panel col s12 m8 offset-m2">
+                    <form action="" method="POST">
+                        {{ Form.render_form(form) }}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}

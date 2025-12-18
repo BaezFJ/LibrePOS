@@ -3,11 +3,4 @@
 {% call Sidenav.render() %}
     {{ Sidenav.item("Dashboard", "dashboard") }}
 
-    {% call Sidenav.collapsible("Authentication", "badge") %}
-        {{ Sidenav.item("Users", "group") }}
-        {{ Sidenav.item("Groups", "groups") }}
-        {{ Sidenav.item("Permissions", "security") }}
-        {{ Sidenav.item("Reports", "summarize") }}
-        {{ Sidenav.item("Settings", "settings") }}
-    {% endcall %}
 {% endcall %}

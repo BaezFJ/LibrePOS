@@ -1,0 +1,9 @@
+{% import "components/sidenav.j2" as Sidenav with context %}
+
+{% call Sidenav.render("Staff") %}
+    {{ Sidenav.item("Members", icon="group", url=url_for("staff.members")) }}
+    {{ Sidenav.item("Roles", icon="policy", url=url_for("staff.roles")) }}
+    {{ Sidenav.item("Groups", icon="groups") }}
+    {{ Sidenav.item("Permissions", icon="security") }}
+    {{ Sidenav.item("Settings", icon="settings") }}
+{% endcall %}

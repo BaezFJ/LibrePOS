@@ -1,3 +1,5 @@
+{% import "components/icon.j2" as Icon %}
+
 {% macro render(title, id) %}
     <aside id="{{ id if id is defined else "mainMenu" }}" class="sidenav sidenav-fixed">
         <div class="sidenav-header navbar">
@@ -12,11 +14,13 @@
     </aside>
 {% endmacro %}
 
-{% macro item(label, icon, url) %}
-    <li>
-        <a href="{{ url if url is defined else "" }}" class="waves-effect waves-light">
+{% macro item(label, icon, url, active=False) %}
+    {% set is_active = active or (url is defined and request.path == url) %}
+    <li {{ "class='active'" if is_active }}>
+        <a href="{{ url if url is defined else "" }}"
+           class="waves-effect waves-light">
             {% if icon is defined %}
-                {{ Icon.render(icon, "left") }}
+                {{ Icon.render(icon) }}
             {% endif %}
             {% if label is defined %}
                 <span>&nbsp;{{ label }}</span>

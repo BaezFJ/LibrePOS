@@ -1,9 +1,9 @@
-from urllib.parse import urlsplit, urlparse
-
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
 
-from .forms import UserLoginForm
+from librepos.utils.navigation import get_redirect_url
+
+from .forms import UserLoginForm, UserRegisterForm
 from .models import AuthUser
 
 
@@ -23,20 +23,34 @@ def login_view():
             flash("Invalid email or password.")
             return redirect(url_for("auth.login"))
         login_user(user, remember=form.remember.data)
-        next_page = request.args.get("next")
-        # Ensure next_page is a safe local URL (relative only, no scheme or netloc, no backslash tricks)
-        if next_page:
-            next_page = next_page.replace("\\", "")
-            parsed_url = urlparse(next_page)
-            if parsed_url.netloc or parsed_url.scheme or not next_page.startswith("/"):
-                next_page = url_for("main.dashboard")
-        else:
-            next_page = url_for("main.dashboard")
         flash(f"Welcome back {user.fullname}.")
-        return redirect(next_page)
+        return redirect(get_redirect_url("main.dashboard"))
     return render_template("auth/login.html", **context)
 
 
 def logout_view():
     logout_user()
     return redirect(url_for("auth.login"))
+
+
+def register_view():
+    form = UserRegisterForm()
+    back_url = get_redirect_url("main.dashboard", param_name="back")
+    context = {
+        "title": "Register",
+        "form": form,
+        "back_url": back_url,
+    }
+    if form.validate_on_submit():
+        AuthUser.create(
+            email=form.email.data,
+            username=form.username.data,
+            unsecure_password=form.password.data,
+            first_name=form.first_name.data,
+            middle_name=form.middle_name.data,
+            last_name=form.last_name.data,
+            role_id=form.role_id.data,
+        )
+        flash("Registration successful. Please login.")
+        return redirect(back_url or url_for("auth.login"))
+    return render_template("auth/register.html", **context)

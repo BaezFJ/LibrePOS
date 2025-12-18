@@ -1,0 +1,20 @@
+{% macro render() %}
+
+    <footer>
+        <nav class="footer-nav">
+            {% if request.endpoint != 'main.dashboard' %}
+                {{ item("Home", icon="home", url=url_for("main.dashboard")) }}
+            {% endif %}
+            {{ caller() }}
+        </nav>
+    </footer>
+
+{% endmacro %}
+
+
+{% macro item(label, icon, url) %}
+    <a href="{{ url if url is defined }}" class="footer-nav-item btn-flat">
+        <i class="material-symbols-rounded">{{ icon if icon is defined }}</i>
+        <span>{{ label if label is defined }}</span>
+    </a>
+{% endmacro %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% import "components/footer.j2" as Footer %}
+
+{% block sidenav %}
+    {{ super() }}
+    {% include "staff/_sidenav.html" %}
+{% endblock %}
+
+{% block main %}
+    <section class="section">
+        <div class="px-4">
+            <table class="highlight striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for staff in users %}
+                    <tr>
+                        <td>
+                            <a href="">
+                                {{ staff.fullname }}
+                            </a>
+                        </td>
+                        <td>{{ staff.role.name|title }}</td>
+                        <td><span class="success-text">Active</span></td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block footer %}
+
+    {% call Footer.render() %}
+        {{ Footer.item("Search", icon="search") }}
+        {{ Footer.item("Add", icon="add_circle", url=url_for("auth.register", back="/staff/members")) }}
+        {{ Footer.item("Filter", icon="filter_alt") }}
+        {{ Footer.item("Sort", icon="sort") }}
+    {% endcall %}
+
+{% endblock %}

@@ -9,6 +9,7 @@
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
 .idea/**/sqlDataSources.xml
+.idea/data_source_mapping.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
@@ -16,6 +17,7 @@
 .idea/**/libraries
 cmake-build-*/
 .idea/**/mongoSettings.xml
+.idea/LibrePOS.iml
 *.iws
 out/
 .idea_modules/
@@ -334,4 +336,4 @@ FodyWeavers.xsd
 *.msp
 *.sln.iml
 !/issue_template.txt
-*/librepos.db
+!/librepos.db
