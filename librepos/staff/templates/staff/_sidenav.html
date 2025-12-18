@@ -1,0 +1,9 @@
+{% import "components/sidenav.j2" as Sidenav with context %}
+
+{% call Sidenav.render("Staff") %}
+    {{ Sidenav.item("Members", icon="group", url=url_for("staff.members"), active=request.endpoint == 'staff.members') }}
+    {{ Sidenav.item("Roles", icon="policy", url=url_for("staff.roles"), active=request.endpoint == 'staff.roles') }}
+    {{ Sidenav.item("Groups", icon="groups", active=request.endpoint == 'staff.groups') }}
+    {{ Sidenav.item("Permissions", icon="security", active=request.endpoint == 'staff.permissions') }}
+    {{ Sidenav.item("Settings", icon="settings", active=request.endpoint == 'staff.settings') }}
+{% endcall %}
