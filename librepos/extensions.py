@@ -63,15 +63,13 @@ def init_extensions(app):
     with app.app_context():
         # Import models so SQLAlchemy is aware of all tables before create_all
         # (avoid circular imports by importing locally)
-        from librepos.auth import models as _iam_models  # noqa: F401
+        from librepos.auth import models as iam_models
         from librepos.main import models as _main_models  # noqa: F401
 
         db.create_all()
 
-        from librepos.auth.models import AuthRole, AuthPermission
-
-        AuthPermission.seed_data()
-        AuthRole.seed_data()
+        iam_models.AuthPermission.seed_data()
+        iam_models.AuthRole.seed_data()
 
     @login_manager.user_loader
     def load_user(user_id):

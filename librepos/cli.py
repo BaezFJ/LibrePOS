@@ -119,7 +119,7 @@ def add_cli_commands(app):
                 "first_name": "Manager",
                 "middle_name": "Test",
                 "last_name": "User",
-                "role_id": 1,
+                "role_id": 3,
             },
             {
                 "username": "cashier",
@@ -163,6 +163,7 @@ def add_cli_commands(app):
                 first_name=user_data["first_name"],
                 middle_name=user_data["middle_name"],
                 last_name=user_data["last_name"],
+                role_id=user_data["role_id"],
             )
             click.echo(f"Created {username} (password: {user_data['password']})")
 
