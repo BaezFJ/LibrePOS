@@ -17,6 +17,7 @@
 .idea/**/libraries
 cmake-build-*/
 .idea/**/mongoSettings.xml
+.idea/LibrePOS.iml
 *.iws
 out/
 .idea_modules/
@@ -335,4 +336,4 @@ FodyWeavers.xsd
 *.msp
 *.sln.iml
 !/issue_template.txt
-*/librepos.db
+!/librepos.db
