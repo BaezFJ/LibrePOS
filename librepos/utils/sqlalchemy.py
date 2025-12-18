@@ -63,23 +63,3 @@ class CRUDMixin:
             existing = cls.get_first_by(name=value)
             if not existing:
                 cls.create(name=value)
-
-    # @classmethod
-    # def __init_subclass__(cls, **kwargs):
-    #     """Automatically register after_create event for models with SEED_DATA."""
-    #     super().__init_subclass__(**kwargs)
-    #
-    #     if hasattr(cls, "SEED_DATA") and hasattr(cls, "__tablename__"):
-    #
-    #         @event.listens_for(cls.__table__, "after_create")
-    #         def receive_after_create(target, connection, **kw):
-    #             """Seed data after a table is created."""
-    #             from sqlalchemy.orm import Session
-    #
-    #             # Use a local Session bound to the connection to avoid conflicts with global db.session
-    #             with Session(bind=connection) as session:
-    #                 data = getattr(cls, "SEED_DATA", [])
-    #                 for item in data:
-    #                     value = item.value if hasattr(item, "value") else item
-    #                     session.add(cls(name=value))
-    #                 session.commit()
