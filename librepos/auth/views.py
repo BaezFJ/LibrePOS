@@ -1,7 +1,7 @@
-from urllib.parse import urlparse
-
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
+
+from librepos.utils.navigation import get_redirect_url
 
 from .forms import UserLoginForm
 from .models import AuthUser
@@ -23,17 +23,8 @@ def login_view():
             flash("Invalid email or password.")
             return redirect(url_for("auth.login"))
         login_user(user, remember=form.remember.data)
-        next_page = request.args.get("next")
-        # Ensure next_page is a safe local URL (relative only, no scheme or netloc, no backslash tricks)
-        if next_page:
-            next_page = next_page.replace("\\", "")
-            parsed_url = urlparse(next_page)
-            if parsed_url.netloc or parsed_url.scheme or not next_page.startswith("/"):
-                next_page = url_for("main.dashboard")
-        else:
-            next_page = url_for("main.dashboard")
         flash(f"Welcome back {user.fullname}.")
-        return redirect(next_page)
+        return redirect(get_redirect_url("main.dashboard"))
     return render_template("auth/login.html", **context)
 
 
