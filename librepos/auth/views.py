@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user
 
 from librepos.utils.navigation import get_redirect_url
 
-from .forms import UserLoginForm
+from .forms import UserLoginForm, UserRegisterForm
 from .models import AuthUser
 
 
@@ -31,3 +31,26 @@ def login_view():
 def logout_view():
     logout_user()
     return redirect(url_for("auth.login"))
+
+
+def register_view():
+    form = UserRegisterForm()
+    back_url = get_redirect_url("main.dashboard", param_name="back")
+    context = {
+        "title": "Register",
+        "form": form,
+        "back_url": back_url,
+    }
+    if form.validate_on_submit():
+        AuthUser.create(
+            email=form.email.data,
+            username=form.username.data,
+            unsecure_password=form.password.data,
+            first_name=form.first_name.data,
+            middle_name=form.middle_name.data,
+            last_name=form.last_name.data,
+            role_id=form.role_id.data,
+        )
+        flash("Registration successful. Please login.")
+        return redirect(back_url or url_for("auth.login"))
+    return render_template("auth/register.html", **context)
