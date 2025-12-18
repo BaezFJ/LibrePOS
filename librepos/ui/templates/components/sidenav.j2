@@ -1,3 +1,5 @@
+{% import "components/icon.j2" as Icon %}
+
 {% macro render(title, id) %}
     <aside id="{{ id if id is defined else "mainMenu" }}" class="sidenav sidenav-fixed">
         <div class="sidenav-header navbar">
