@@ -1,6 +1,6 @@
 {% import "components/icon.j2" as Icon %}
 {% import "components/navbar.j2" as Navbar %}
-{% import "components/footernav.j2" as FooterNav %}
+{% import "components/footer.j2" as FooterNav %}
 
 <!doctype html>
 <html lang="en">
@@ -14,6 +14,9 @@
                 {#========== Left Menu ==========#}
                 <ul>
                     {{ Navbar.sidenav_trigger() }}
+                    {% if back_url is defined %}
+                        {{ Navbar.item("Back", "arrow_back", url=back_url) }}
+                    {% endif %}
                 </ul>
 
                 {#========== Menu Title ==========#}
@@ -49,16 +52,8 @@
     {% block main %}{% endblock %}
 </main>
 
-<footer>
-    {% call FooterNav.render() %}
-        {% if request.endpoint != 'main.dashboard' %}
-            {{ FooterNav.item("Home", icon="home", url=url_for("main.dashboard")) }}
-        {% endif %}
-        {% block footer %}
+{% block footer %}{% endblock %}
 
-        {% endblock %}
-    {% endcall %}
-</footer>
 
 {% block scripts %}{% endblock %}
 {% with messages = get_flashed_messages(with_categories=true) %}
