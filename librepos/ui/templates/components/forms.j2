@@ -1,3 +1,66 @@
+{% macro render(form, action) %}
+    {% set dynamic_class = "s12 m6" %}
+    {% if form is defined %}
+        <form method="post" action="{{ action if action is defined }}" class="row">
+            <!-- CSRF Token -->
+            {{ form.csrf_token }}
+            {# Iterate over each field in the form excluding the csrf_token #}
+            {% for field in form if field.name != 'csrf_token' %}
+                {% if field.name == "submit" %}
+                    <div class="input-field col s12 center-align">
+                        {# Render the field (input, textarea, select, etc.) #}
+                        {{ render_field(field) }}
+                    </div>
+                {% else %}
+                    <div class="input-field col {{ dynamic_class }}">
+                        {# Render the field (input, textarea, select, etc.) #}
+                        {{ render_field(field) }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </form>
+    {% endif %}
+
+{% endmacro %}
+
+{% macro render_field(field) %}
+
+    {% if field.type == "SubmitField" %}
+        <button class="btn waves-effect waves-light filled">{{ field.label.text }}</button>
+    {% elif field.type == "BooleanField" %}
+        <div class="switch">
+            <span>{{ field.label.text }}&colon; &nbsp;</span>
+            <label>
+                Off
+                {{ field() }}
+                <span class="lever"></span>
+                On
+            </label>
+        </div>
+    {% elif field.type == "FloatField" and field.name == "price" %}
+        {{ field(placeholder=" ", value=field.data|int|money) }}
+        {# Render the label if present #}
+        {% if field.label and field.type != "HiddenField" %}
+            <label for="{{ field.id }}">{{ field.label.text }}</label>
+        {% endif %}
+    {% else %}
+        {{ field(placeholder=" ") }}
+        {# Render the label if present #}
+        {% if field.label and field.type != "HiddenField" %}
+            <label for="{{ field.id }}">{{ field.label.text }}</label>
+        {% endif %}
+    {% endif %}
+
+    {# Display validation errors #}
+    {% if field.errors %}
+        <span class="helper-text">
+            {{ field.errors[0] }}
+        </span>
+    {% endif %}
+
+{% endmacro %}
+
+
 {% macro text(field) %}
 
     {# allow field-specific input classes/placeholder to stack with per-call classes #}
