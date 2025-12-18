@@ -14,11 +14,12 @@
     </aside>
 {% endmacro %}
 
-{% macro item(label, icon, url) %}
-    <li>
-        <a href="{{ url if url is defined else "" }}" class="waves-effect waves-light">
+{% macro item(label, icon, url, active) %}
+    <li {{ "class='active'" if active is defined and active == True }}>
+        <a href="{{ url if url is defined else "" }}"
+           class="waves-effect waves-light">
             {% if icon is defined %}
-                {{ Icon.render(icon, "left") }}
+                {{ Icon.render(icon) }}
             {% endif %}
             {% if label is defined %}
                 <span>&nbsp;{{ label }}</span>
