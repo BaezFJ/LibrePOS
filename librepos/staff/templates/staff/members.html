@@ -8,48 +8,6 @@
 {% endblock %}
 
 {% block main %}
-    {#    <section class="section">#}
-    {#        <div class="px-4">#}
-    {#            <div class="row">#}
-    {#                {% for staff in users %}#}
-    {#                <div class="col s12 xl3">#}
-    {#                    <div class="card hoverable">#}
-    {#                        <div class="card-content center-align">#}
-    {#                            <img src="{{ url_for('static', filename='images/default_male_user.png') }}"#}
-    {#                                 alt="{{ staff.fullname }}"#}
-    {#                                 class="circle responsive-img z-depth-1"#}
-    {#                                 style="width: 120px; height: 120px; object-fit: cover; margin-bottom: 10px; border: 2px solid #f5f5f5;">#}
-    {##}
-    {#                            <span class="card-title truncate"#}
-    {#                                  style="display: block; font-size: 1.4rem; font-weight: 500; margin-bottom: 0;">#}
-    {#                                {{ staff.fullname }}#}
-    {#                            </span>#}
-    {##}
-    {#                            <p class="grey-text small" style="margin-bottom: 15px;">{{ staff.email }}</p>#}
-    {##}
-    {#                            <div class="divider"></div>#}
-    {##}
-    {#                            <div class="section left-align" style="padding-bottom: 0;">#}
-    {#                                <p style="margin-bottom: 8px;">#}
-    {#                                    <i class="material-symbols-rounded tiny left grey-text">person_outline</i>#}
-    {#                                    <strong>&nbsp;Username:</strong> {{ staff.username }}#}
-    {#                                </p>#}
-    {#                                <p>#}
-    {#                                    <i class="material-symbols-rounded tiny left grey-text">badge</i>#}
-    {#                                    <strong>&nbsp;Role:</strong> {{ staff.role.name }}#}
-    {#                                </p>#}
-    {#                            </div>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {#                </div>#}
-    {#                {% else %}#}
-    {#                <div class="col s12">#}
-    {#                    <p class="center-align flow-text grey-text">No staff members found.</p>#}
-    {#                </div>#}
-    {#                {% endfor %}#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </section>#}
     <section class="section">
         <div class="px-4">
             <table class="highlight striped">
@@ -84,7 +42,7 @@
 
     {% call Footer.render() %}
         {{ Footer.item("Search", icon="search") }}
-        {{ Footer.item("Add", icon="add_circle", url=url_for("staff.add_staff")) }}
+        {{ Footer.item("Add", icon="add_circle", url=url_for("auth.register", back="/staff/members")) }}
         {{ Footer.item("Filter", icon="filter_alt") }}
         {{ Footer.item("Sort", icon="sort") }}
     {% endcall %}
