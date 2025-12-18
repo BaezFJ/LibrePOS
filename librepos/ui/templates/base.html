@@ -1,5 +1,6 @@
 {% import "components/icon.j2" as Icon %}
 {% import "components/navbar.j2" as Navbar %}
+{% import "components/footernav.j2" as FooterNav %}
 
 <!doctype html>
 <html lang="en">
@@ -48,9 +49,16 @@
     {% block main %}{% endblock %}
 </main>
 
-{% block footer %}
+<footer>
+    {% call FooterNav.render() %}
+        {% if request.endpoint != 'main.dashboard' %}
+            {{ FooterNav.item("Home", icon="home", url=url_for("main.dashboard")) }}
+        {% endif %}
+        {% block footer %}
 
-{% endblock %}
+        {% endblock %}
+    {% endcall %}
+</footer>
 
 {% block scripts %}{% endblock %}
 {% with messages = get_flashed_messages(with_categories=true) %}
