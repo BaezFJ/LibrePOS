@@ -14,8 +14,9 @@
     </aside>
 {% endmacro %}
 
-{% macro item(label, icon, url, active) %}
-    <li {{ "class='active'" if active is defined and active == True }}>
+{% macro item(label, icon, url, active=False) %}
+    {% set is_active = active or (url is defined and request.path == url) %}
+    <li {{ "class='active'" if is_active }}>
         <a href="{{ url if url is defined else "" }}"
            class="waves-effect waves-light">
             {% if icon is defined %}
