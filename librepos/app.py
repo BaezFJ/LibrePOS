@@ -5,7 +5,7 @@ from pathlib import Path
 from flask import Flask, render_template
 from jinja2 import FileSystemBytecodeCache, StrictUndefined, DebugUndefined
 
-from librepos.routes import register_blueprints
+from librepos.main.routes import register_blueprints
 from librepos.cli import add_cli_commands
 from librepos.extensions import init_extensions
 
