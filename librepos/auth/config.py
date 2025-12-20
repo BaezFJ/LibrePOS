@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import List, Set
 
 
 class Permissions(StrEnum):
@@ -101,267 +102,287 @@ class Roles(StrEnum):
     CUSTOMER = "customer"
 
 
+# ============================================================================
+# Permission Groups - Organized by functional area
+# ============================================================================
+
+# Common permissions all staff have
+BASIC_STAFF_PERMISSIONS: List[Permissions] = [
+    Permissions.CLOCK_IN_OUT,
+    Permissions.VIEW_MENU,
+]
+
+# Order viewing and creation
+ORDER_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_ORDERS,
+    Permissions.CREATE_ORDER,
+    Permissions.EDIT_ORDER,
+]
+
+# Advanced order operations (refunds, cancellations, etc.)
+ADVANCED_ORDER_PERMISSIONS: List[Permissions] = [
+    Permissions.DELETE_ORDER,
+    Permissions.CANCEL_ORDER,
+    Permissions.REFUND_ORDER,
+    Permissions.VOID_TRANSACTION,
+]
+
+# All payment processing
+PAYMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.PROCESS_PAYMENT,
+    Permissions.PROCESS_CASH_PAYMENT,
+    Permissions.PROCESS_CARD_PAYMENT,
+    Permissions.PROCESS_MOBILE_PAYMENT,
+    Permissions.SPLIT_PAYMENT,
+]
+
+# Basic register operations
+REGISTER_PERMISSIONS: List[Permissions] = [
+    Permissions.OPEN_REGISTER,
+    Permissions.CLOSE_REGISTER,
+    Permissions.VIEW_CASH_DRAWER,
+    Permissions.PERFORM_CASH_DROP,
+]
+
+# Advanced cash management
+CASH_MANAGEMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_CASH_DRAWER,
+    Permissions.PERFORM_PAYOUT,
+]
+
+# Discount operations
+DISCOUNT_PERMISSIONS: List[Permissions] = [
+    Permissions.APPLY_DISCOUNT,
+]
+
+# Advanced discount management
+DISCOUNT_MANAGEMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_DISCOUNTS,
+    Permissions.APPLY_COMPS,
+]
+
+# Inventory viewing
+INVENTORY_VIEW_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_INVENTORY,
+]
+
+# Full inventory management
+INVENTORY_MANAGEMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_INVENTORY,
+    Permissions.ADJUST_INVENTORY,
+]
+
+# Menu management
+MENU_MANAGEMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_MENU,
+]
+
+# Table and reservation viewing/management
+TABLE_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_TABLES,
+    Permissions.ASSIGN_TABLES,
+    Permissions.VIEW_RESERVATIONS,
+]
+
+TABLE_MANAGEMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_TABLES,
+    Permissions.MANAGE_RESERVATIONS,
+]
+
+# Customer viewing
+CUSTOMER_VIEW_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_CUSTOMERS,
+    Permissions.VIEW_CUSTOMER_HISTORY,
+]
+
+# Customer management
+CUSTOMER_MANAGEMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_CUSTOMERS,
+    Permissions.MANAGE_LOYALTY_POINTS,
+]
+
+# Kitchen display system
+KITCHEN_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_KITCHEN_ORDERS,
+    Permissions.MANAGE_KITCHEN_ORDERS,
+    Permissions.MARK_ORDER_READY,
+]
+
+# Delivery and takeout
+DELIVERY_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_DELIVERY,
+    Permissions.ASSIGN_DELIVERY,
+]
+
+TAKEOUT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_TAKEOUT,
+]
+
+# Reporting permissions
+BASIC_REPORTS_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_SALES_REPORTS,
+    Permissions.VIEW_INVENTORY_REPORTS,
+    Permissions.VIEW_EMPLOYEE_REPORTS,
+    Permissions.EXPORT_REPORTS,
+]
+
+FINANCIAL_REPORTS_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_FINANCIAL_REPORTS,
+]
+
+# Staff management
+STAFF_VIEW_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_EMPLOYEES,
+    Permissions.VIEW_TIMECLOCK,
+]
+
+STAFF_MANAGEMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_EMPLOYEES,
+    Permissions.MANAGE_TIMECLOCK,
+]
+
+# Settings
+SETTINGS_VIEW_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_SETTINGS,
+]
+
+SETTINGS_MANAGEMENT_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_SETTINGS,
+]
+
+# Tax management
+TAX_PERMISSIONS: List[Permissions] = [
+    Permissions.VIEW_TAX_SETTINGS,
+    Permissions.MANAGE_TAX_SETTINGS,
+]
+
+# System administration (most sensitive)
+SYSTEM_ADMIN_PERMISSIONS: List[Permissions] = [
+    Permissions.MANAGE_USERS,
+    Permissions.MANAGE_ROLES,
+    Permissions.MANAGE_PERMISSIONS,
+    Permissions.VIEW_AUDIT_LOGS,
+]
+
+
+# ============================================================================
+# Helper Functions
+# ============================================================================
+
+
+def combine_permissions(*permission_groups: List[Permissions]) -> List[Permissions]:
+    """Combine multiple permission groups into a single list, removing duplicates."""
+    combined: Set[Permissions] = set()
+    for group in permission_groups:
+        combined.update(group)
+    return list(combined)
+
+
+def get_all_permissions() -> List[Permissions]:
+    """Get all available permissions from the Permissions enum."""
+    return list(Permissions)
+
+
+def remove_permissions(
+    base_permissions: List[Permissions], permissions_to_remove: List[Permissions]
+) -> List[Permissions]:
+    """Remove specific permissions from a base set."""
+    return [p for p in base_permissions if p not in permissions_to_remove]
+
+
+# ============================================================================
+# Role Permissions - Composed from permission groups
+# ============================================================================
+
 ROLE_PERMISSIONS = {
-    Roles.OWNER: [
-        # All permissions
-        Permissions.VIEW_ORDERS,
-        Permissions.CREATE_ORDER,
-        Permissions.EDIT_ORDER,
-        Permissions.DELETE_ORDER,
-        Permissions.CANCEL_ORDER,
-        Permissions.REFUND_ORDER,
-        Permissions.VOID_TRANSACTION,
-        Permissions.PROCESS_PAYMENT,
-        Permissions.PROCESS_CASH_PAYMENT,
-        Permissions.PROCESS_CARD_PAYMENT,
-        Permissions.PROCESS_MOBILE_PAYMENT,
-        Permissions.SPLIT_PAYMENT,
-        Permissions.OPEN_REGISTER,
-        Permissions.CLOSE_REGISTER,
-        Permissions.VIEW_CASH_DRAWER,
-        Permissions.MANAGE_CASH_DRAWER,
-        Permissions.PERFORM_CASH_DROP,
-        Permissions.PERFORM_PAYOUT,
-        Permissions.VIEW_MENU,
-        Permissions.MANAGE_MENU,
-        Permissions.VIEW_INVENTORY,
-        Permissions.MANAGE_INVENTORY,
-        Permissions.ADJUST_INVENTORY,
-        Permissions.APPLY_DISCOUNT,
-        Permissions.MANAGE_DISCOUNTS,
-        Permissions.APPLY_COMPS,
-        Permissions.VIEW_TABLES,
-        Permissions.MANAGE_TABLES,
-        Permissions.ASSIGN_TABLES,
-        Permissions.VIEW_RESERVATIONS,
-        Permissions.MANAGE_RESERVATIONS,
-        Permissions.VIEW_SALES_REPORTS,
-        Permissions.VIEW_INVENTORY_REPORTS,
-        Permissions.VIEW_EMPLOYEE_REPORTS,
-        Permissions.VIEW_FINANCIAL_REPORTS,
-        Permissions.EXPORT_REPORTS,
-        Permissions.VIEW_EMPLOYEES,
-        Permissions.MANAGE_EMPLOYEES,
-        Permissions.VIEW_TIMECLOCK,
-        Permissions.MANAGE_TIMECLOCK,
-        Permissions.CLOCK_IN_OUT,
-        Permissions.VIEW_CUSTOMERS,
-        Permissions.MANAGE_CUSTOMERS,
-        Permissions.VIEW_CUSTOMER_HISTORY,
-        Permissions.MANAGE_LOYALTY_POINTS,
-        Permissions.VIEW_SETTINGS,
-        Permissions.MANAGE_SETTINGS,
-        Permissions.MANAGE_USERS,
-        Permissions.MANAGE_ROLES,
-        Permissions.MANAGE_PERMISSIONS,
-        Permissions.VIEW_AUDIT_LOGS,
-        Permissions.VIEW_KITCHEN_ORDERS,
-        Permissions.MANAGE_KITCHEN_ORDERS,
-        Permissions.MARK_ORDER_READY,
-        Permissions.MANAGE_DELIVERY,
-        Permissions.ASSIGN_DELIVERY,
-        Permissions.MANAGE_TAKEOUT,
-        Permissions.VIEW_TAX_SETTINGS,
-        Permissions.MANAGE_TAX_SETTINGS,
-    ],
-    Roles.ADMIN: [
-        # Most permissions except system-critical ones
-        Permissions.VIEW_ORDERS,
-        Permissions.CREATE_ORDER,
-        Permissions.EDIT_ORDER,
-        Permissions.DELETE_ORDER,
-        Permissions.CANCEL_ORDER,
-        Permissions.REFUND_ORDER,
-        Permissions.VOID_TRANSACTION,
-        Permissions.PROCESS_PAYMENT,
-        Permissions.PROCESS_CASH_PAYMENT,
-        Permissions.PROCESS_CARD_PAYMENT,
-        Permissions.PROCESS_MOBILE_PAYMENT,
-        Permissions.SPLIT_PAYMENT,
-        Permissions.OPEN_REGISTER,
-        Permissions.CLOSE_REGISTER,
-        Permissions.VIEW_CASH_DRAWER,
-        Permissions.MANAGE_CASH_DRAWER,
-        Permissions.PERFORM_CASH_DROP,
-        Permissions.PERFORM_PAYOUT,
-        Permissions.VIEW_MENU,
-        Permissions.MANAGE_MENU,
-        Permissions.VIEW_INVENTORY,
-        Permissions.MANAGE_INVENTORY,
-        Permissions.ADJUST_INVENTORY,
-        Permissions.APPLY_DISCOUNT,
-        Permissions.MANAGE_DISCOUNTS,
-        Permissions.APPLY_COMPS,
-        Permissions.VIEW_TABLES,
-        Permissions.MANAGE_TABLES,
-        Permissions.ASSIGN_TABLES,
-        Permissions.VIEW_RESERVATIONS,
-        Permissions.MANAGE_RESERVATIONS,
-        Permissions.VIEW_SALES_REPORTS,
-        Permissions.VIEW_INVENTORY_REPORTS,
-        Permissions.VIEW_EMPLOYEE_REPORTS,
-        Permissions.VIEW_FINANCIAL_REPORTS,
-        Permissions.EXPORT_REPORTS,
-        Permissions.VIEW_EMPLOYEES,
-        Permissions.MANAGE_EMPLOYEES,
-        Permissions.VIEW_TIMECLOCK,
-        Permissions.MANAGE_TIMECLOCK,
-        Permissions.CLOCK_IN_OUT,
-        Permissions.VIEW_CUSTOMERS,
-        Permissions.MANAGE_CUSTOMERS,
-        Permissions.VIEW_CUSTOMER_HISTORY,
-        Permissions.MANAGE_LOYALTY_POINTS,
-        Permissions.VIEW_SETTINGS,
-        Permissions.MANAGE_SETTINGS,
-        Permissions.VIEW_AUDIT_LOGS,
-        Permissions.VIEW_KITCHEN_ORDERS,
-        Permissions.MANAGE_KITCHEN_ORDERS,
-        Permissions.MARK_ORDER_READY,
-        Permissions.MANAGE_DELIVERY,
-        Permissions.ASSIGN_DELIVERY,
-        Permissions.MANAGE_TAKEOUT,
-        Permissions.VIEW_TAX_SETTINGS,
-        Permissions.MANAGE_TAX_SETTINGS,
-    ],
-    Roles.MANAGER: [
-        # Manager-level permissions
-        Permissions.VIEW_ORDERS,
-        Permissions.CREATE_ORDER,
-        Permissions.EDIT_ORDER,
-        Permissions.CANCEL_ORDER,
-        Permissions.REFUND_ORDER,
-        Permissions.VOID_TRANSACTION,
-        Permissions.PROCESS_PAYMENT,
-        Permissions.PROCESS_CASH_PAYMENT,
-        Permissions.PROCESS_CARD_PAYMENT,
-        Permissions.PROCESS_MOBILE_PAYMENT,
-        Permissions.SPLIT_PAYMENT,
-        Permissions.OPEN_REGISTER,
-        Permissions.CLOSE_REGISTER,
-        Permissions.VIEW_CASH_DRAWER,
-        Permissions.MANAGE_CASH_DRAWER,
-        Permissions.PERFORM_CASH_DROP,
-        Permissions.PERFORM_PAYOUT,
-        Permissions.VIEW_MENU,
-        Permissions.MANAGE_MENU,
-        Permissions.VIEW_INVENTORY,
-        Permissions.ADJUST_INVENTORY,
-        Permissions.APPLY_DISCOUNT,
-        Permissions.MANAGE_DISCOUNTS,
-        Permissions.APPLY_COMPS,
-        Permissions.VIEW_TABLES,
-        Permissions.MANAGE_TABLES,
-        Permissions.ASSIGN_TABLES,
-        Permissions.VIEW_RESERVATIONS,
-        Permissions.MANAGE_RESERVATIONS,
-        Permissions.VIEW_SALES_REPORTS,
-        Permissions.VIEW_INVENTORY_REPORTS,
-        Permissions.VIEW_EMPLOYEE_REPORTS,
-        Permissions.EXPORT_REPORTS,
-        Permissions.VIEW_EMPLOYEES,
-        Permissions.VIEW_TIMECLOCK,
-        Permissions.MANAGE_TIMECLOCK,
-        Permissions.CLOCK_IN_OUT,
-        Permissions.VIEW_CUSTOMERS,
-        Permissions.MANAGE_CUSTOMERS,
-        Permissions.VIEW_CUSTOMER_HISTORY,
-        Permissions.MANAGE_LOYALTY_POINTS,
-        Permissions.VIEW_SETTINGS,
-        Permissions.VIEW_KITCHEN_ORDERS,
-        Permissions.MANAGE_KITCHEN_ORDERS,
-        Permissions.MARK_ORDER_READY,
-        Permissions.MANAGE_DELIVERY,
-        Permissions.ASSIGN_DELIVERY,
-        Permissions.MANAGE_TAKEOUT,
-        Permissions.VIEW_TAX_SETTINGS,
-    ],
-    Roles.CASHIER: [
-        # Cashier-specific permissions
-        Permissions.VIEW_ORDERS,
-        Permissions.CREATE_ORDER,
-        Permissions.EDIT_ORDER,
-        Permissions.PROCESS_PAYMENT,
-        Permissions.PROCESS_CASH_PAYMENT,
-        Permissions.PROCESS_CARD_PAYMENT,
-        Permissions.PROCESS_MOBILE_PAYMENT,
-        Permissions.SPLIT_PAYMENT,
-        Permissions.OPEN_REGISTER,
-        Permissions.CLOSE_REGISTER,
-        Permissions.VIEW_CASH_DRAWER,
-        Permissions.PERFORM_CASH_DROP,
-        Permissions.VIEW_MENU,
-        Permissions.APPLY_DISCOUNT,
-        Permissions.VIEW_CUSTOMERS,
-        Permissions.VIEW_CUSTOMER_HISTORY,
-        Permissions.CLOCK_IN_OUT,
-        Permissions.MANAGE_TAKEOUT,
-    ],
-    Roles.WAITER: [
-        # Waiter-specific permissions
-        Permissions.VIEW_ORDERS,
-        Permissions.CREATE_ORDER,
-        Permissions.EDIT_ORDER,
-        Permissions.VIEW_MENU,
-        Permissions.APPLY_DISCOUNT,
-        Permissions.VIEW_TABLES,
-        Permissions.ASSIGN_TABLES,
-        Permissions.VIEW_RESERVATIONS,
-        Permissions.VIEW_CUSTOMERS,
-        Permissions.VIEW_CUSTOMER_HISTORY,
-        Permissions.CLOCK_IN_OUT,
-        Permissions.PROCESS_PAYMENT,
-        Permissions.PROCESS_CASH_PAYMENT,
-        Permissions.PROCESS_CARD_PAYMENT,
-        Permissions.PROCESS_MOBILE_PAYMENT,
-        Permissions.SPLIT_PAYMENT,
-    ],
-    Roles.BARTENDER: [
-        # Bartender-specific permissions
-        Permissions.VIEW_ORDERS,
-        Permissions.CREATE_ORDER,
-        Permissions.EDIT_ORDER,
-        Permissions.VIEW_MENU,
-        Permissions.APPLY_DISCOUNT,
-        Permissions.VIEW_KITCHEN_ORDERS,
-        Permissions.MARK_ORDER_READY,
-        Permissions.CLOCK_IN_OUT,
-        Permissions.PROCESS_PAYMENT,
-        Permissions.PROCESS_CASH_PAYMENT,
-        Permissions.PROCESS_CARD_PAYMENT,
-        Permissions.PROCESS_MOBILE_PAYMENT,
-        Permissions.SPLIT_PAYMENT,
-        Permissions.VIEW_CUSTOMERS,
-    ],
-    Roles.KITCHEN_STAFF: [
-        # Kitchen staff permissions
-        Permissions.VIEW_KITCHEN_ORDERS,
-        Permissions.MANAGE_KITCHEN_ORDERS,
-        Permissions.MARK_ORDER_READY,
-        Permissions.VIEW_MENU,
-        Permissions.VIEW_INVENTORY,
-        Permissions.CLOCK_IN_OUT,
-    ],
-    Roles.HOST: [
-        # Host-specific permissions
-        Permissions.VIEW_ORDERS,
-        Permissions.VIEW_TABLES,
-        Permissions.MANAGE_TABLES,
-        Permissions.ASSIGN_TABLES,
-        Permissions.VIEW_RESERVATIONS,
-        Permissions.MANAGE_RESERVATIONS,
-        Permissions.VIEW_CUSTOMERS,
-        Permissions.CLOCK_IN_OUT,
-    ],
-    Roles.DELIVERY_DRIVER: [
-        # Delivery driver permissions
-        Permissions.VIEW_ORDERS,
-        Permissions.MANAGE_DELIVERY,
-        Permissions.VIEW_CUSTOMERS,
-        Permissions.CLOCK_IN_OUT,
-        Permissions.PROCESS_CASH_PAYMENT,
-    ],
+    # Owner has ALL permissions
+    Roles.OWNER: get_all_permissions(),
+    # Admin has all permissions except system-critical role/permission management
+    Roles.ADMIN: remove_permissions(
+        get_all_permissions(),
+        [Permissions.MANAGE_USERS, Permissions.MANAGE_ROLES, Permissions.MANAGE_PERMISSIONS],
+    ),
+    # Manager has extensive operational permissions but limited system access
+    Roles.MANAGER: combine_permissions(
+        BASIC_STAFF_PERMISSIONS,
+        ORDER_PERMISSIONS,
+        [
+            Permissions.CANCEL_ORDER,
+            Permissions.REFUND_ORDER,
+            Permissions.VOID_TRANSACTION,
+        ],  # Subset of advanced order permissions
+        PAYMENT_PERMISSIONS,
+        REGISTER_PERMISSIONS,
+        CASH_MANAGEMENT_PERMISSIONS,
+        DISCOUNT_PERMISSIONS,
+        DISCOUNT_MANAGEMENT_PERMISSIONS,
+        INVENTORY_VIEW_PERMISSIONS,
+        [Permissions.ADJUST_INVENTORY],  # Can adjust but not fully manage inventory
+        MENU_MANAGEMENT_PERMISSIONS,
+        TABLE_PERMISSIONS,
+        TABLE_MANAGEMENT_PERMISSIONS,
+        CUSTOMER_VIEW_PERMISSIONS,
+        CUSTOMER_MANAGEMENT_PERMISSIONS,
+        KITCHEN_PERMISSIONS,
+        DELIVERY_PERMISSIONS,
+        TAKEOUT_PERMISSIONS,
+        BASIC_REPORTS_PERMISSIONS,
+        STAFF_VIEW_PERMISSIONS,
+        [Permissions.MANAGE_TIMECLOCK],  # Can manage timeclock but not employees
+        SETTINGS_VIEW_PERMISSIONS,
+        [Permissions.VIEW_TAX_SETTINGS],  # Can view but not manage tax settings
+    ),
+    # Cashier focuses on orders, payments, and register operations
+    Roles.CASHIER: combine_permissions(
+        BASIC_STAFF_PERMISSIONS,
+        ORDER_PERMISSIONS,
+        PAYMENT_PERMISSIONS,
+        REGISTER_PERMISSIONS,
+        DISCOUNT_PERMISSIONS,
+        CUSTOMER_VIEW_PERMISSIONS,
+        TAKEOUT_PERMISSIONS,
+    ),
+    # Waiter handles orders, payments, and table management
+    Roles.WAITER: combine_permissions(
+        BASIC_STAFF_PERMISSIONS,
+        ORDER_PERMISSIONS,
+        PAYMENT_PERMISSIONS,
+        DISCOUNT_PERMISSIONS,
+        TABLE_PERMISSIONS,
+        CUSTOMER_VIEW_PERMISSIONS,
+    ),
+    # Bartender similar to waiter but with kitchen display access
+    Roles.BARTENDER: combine_permissions(
+        BASIC_STAFF_PERMISSIONS,
+        ORDER_PERMISSIONS,
+        PAYMENT_PERMISSIONS,
+        DISCOUNT_PERMISSIONS,
+        [Permissions.VIEW_CUSTOMERS],  # Only view customers, not history
+        [Permissions.VIEW_KITCHEN_ORDERS, Permissions.MARK_ORDER_READY],
+    ),
+    # Kitchen staff focuses on kitchen operations
+    Roles.KITCHEN_STAFF: combine_permissions(
+        BASIC_STAFF_PERMISSIONS,
+        KITCHEN_PERMISSIONS,
+        INVENTORY_VIEW_PERMISSIONS,
+    ),
+    # Host manages tables and reservations
+    Roles.HOST: combine_permissions(
+        [Permissions.CLOCK_IN_OUT],  # Basic staff without VIEW_MENU
+        [Permissions.VIEW_ORDERS],
+        TABLE_PERMISSIONS,
+        TABLE_MANAGEMENT_PERMISSIONS,
+        [Permissions.VIEW_CUSTOMERS],
+    ),
+    # Delivery driver handles deliveries and cash collection
+    Roles.DELIVERY_DRIVER: combine_permissions(
+        [Permissions.CLOCK_IN_OUT],  # Basic staff without VIEW_MENU
+        [Permissions.VIEW_ORDERS],
+        [Permissions.MANAGE_DELIVERY],  # Only manage, not assign
+        [Permissions.VIEW_CUSTOMERS, Permissions.PROCESS_CASH_PAYMENT],
+    ),
+    # Customer has minimal view-only permissions
     Roles.CUSTOMER: [
-        # Customer permissions
         Permissions.VIEW_ORDERS,
         Permissions.VIEW_MENU,
         Permissions.VIEW_CUSTOMER_HISTORY,

@@ -2,15 +2,8 @@ from urllib.parse import urlparse
 
 from flask import request, url_for
 
-# Define endpoints allowed for redirection
-ALLOWED_REDIRECT_ENDPOINTS = {
-    "main.dashboard",
-    "auth.login",
-    "staff.members",
-    # add other allowed endpoints here if needed
-}
 
-def get_redirect_url(fallback, param_name="next", allowed_endpoints=None):
+def get_redirect_url(fallback, param_name="next"):
     """
     Get a safe redirect URL from request parameters or use a fallback.
 
@@ -18,11 +11,9 @@ def get_redirect_url(fallback, param_name="next", allowed_endpoints=None):
     validates it for security (prevents open redirects), and returns a safe URL.
     If no valid parameter is found, it returns the fallback URL.
 
-    :param fallback: Fallback URL or endpoint name (e.g., 'main.dashboard')
+    :param fallback: Fallback URL or endpoint name (e.g., 'main.dashboard' or '/dashboard')
     :type fallback: str
     :param param_name: Name of the query parameter to check (default: 'next')
-    :param allowed_endpoints: Set, list, or tuple of allowed endpoint names. Defaults to ALLOWED_REDIRECT_ENDPOINTS.
-    :type allowed_endpoints: set or None
     :type param_name: str
     :return: Safe URL string
     :rtype: str
@@ -39,25 +30,26 @@ def get_redirect_url(fallback, param_name="next", allowed_endpoints=None):
             "back_url": get_redirect_url('staff.members', param_name='back')
         }
     """
-    if allowed_endpoints is None:
-        allowed_endpoints = ALLOWED_REDIRECT_ENDPOINTS
-    # Get the redirect target from request parameters
-    target = request.args.get(param_name)
+    # Get the redirect URL from request parameters
+    redirect_url = request.args.get(param_name)
 
-    # If the user supplied a target, validate it
-    if target:
+    if redirect_url:
+        # Security validation: prevent open redirects
         # Remove backslash tricks
-        target = target.replace("\\", "")
-        parsed_url = urlparse(target)
-        # Allow only endpoint names in whitelist, not raw relative paths
-        # E.g., if ?back=main.dashboard, allow; if ?back=/admin, disallow
-        if target in allowed_endpoints:
-            return url_for(target)
-        # Optionally allow raw paths which exactly match those from url_for
-        # else, for defense in depth, restrict to endpoints only
+        redirect_url = redirect_url.replace("\\", "")
+        parsed_url = urlparse(redirect_url)
 
-    # If no valid target, fall back to fallback
-    if "." in fallback and not fallback.startswith("/"):
-        return url_for(fallback)
-    else:
-        return fallback
+        # Check if it's a safe local URL (relative only, no scheme or netloc)
+        if parsed_url.netloc or parsed_url.scheme or not redirect_url.startswith("/"):
+            # Not safe, use fallback
+            redirect_url = None
+
+    # If no valid redirect URL, use fallback
+    if not redirect_url:
+        # Check if fallback looks like an endpoint (contains a dot) or a URL
+        if "." in fallback and not fallback.startswith("/"):
+            redirect_url = url_for(fallback)
+        else:
+            redirect_url = fallback
+
+    return redirect_url

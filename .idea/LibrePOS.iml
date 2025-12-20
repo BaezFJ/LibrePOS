@@ -21,6 +21,7 @@
         <option value="$MODULE_DIR$/librepos/main/templates" />
         <option value="$MODULE_DIR$/librepos/auth/templates" />
         <option value="$MODULE_DIR$/librepos/error/templates" />
+        <option value="$MODULE_DIR$/librepos/staff/templates" />
       </list>
     </option>
   </component>
