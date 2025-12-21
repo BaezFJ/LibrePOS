@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% import "components/footer.j2" as Footer %}
+{% import "components/dropdown.j2" as Dropdown %}
+
+{% block sidenav %}
+    {% include "iam/_sidenav.html" %}
+{% endblock %}
+
+
+{% block main %}
+
+    <section class="section">
+        <div class="px-4">
+            <div class="card-panel">
+                {% if users %}
+                    <table class="highlight striped">
+                        <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td class="center-align">
+                                    <img src="{{ url_for('static', filename='images/default_male_user.png') }}"
+                                         alt="User avatar" class="circle avatar-nav">
+                                </td>
+                                <td>{{ user.fullname }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>Admin</td>
+                                <td>Active</td>
+                                <td>
+                                    {% set user_dropdown_id = user.slug|string+'-actions' %}
+                                    {{ Dropdown.trigger(user_dropdown_id) }}
+
+                                    {% call Dropdown.render(user_dropdown_id) %}
+                                        {{ Dropdown.item("View Profile", icon="person") }}
+                                        {{ Dropdown.item("Edit", icon="edit") }}
+                                        {{ Dropdown.item("Reset Password", icon="lock_reset") }}
+                                        {{ Dropdown.divider() }}
+                                        {{ Dropdown.item("Disable", icon="person_off", _class="red-text") }}
+                                    {% endcall %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+                {% else %}
+                    <h4 class="center-align">No users found.</h4>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block footer %}
+    {% call Footer.render() %}
+        {{ Footer.item("Search", icon="search") }}
+        {{ Footer.item("Add", icon="add_circle") }}
+        {{ Footer.item("Filter", icon="filter_alt") }}
+        {{ Footer.item("Sort", icon="sort") }}
+    {% endcall %}
+{% endblock %}
