@@ -139,8 +139,7 @@ class IAMRole(CRUDMixin, db.Model):
     is_system: Mapped[bool] = mapped_column(default=False)
 
     # **************** Relationships ****************
-    group_roles: Mapped[list["IAMGroupRole"]] = relationship(
-        foreign_keys=lambda: [IAMGroupRole.role_id],
+    users: Mapped[list["IAMUser"]] = relationship(
         back_populates="role",
     )
     role_permissions: Mapped[list["IAMRolePermission"]] = relationship(
@@ -151,11 +150,6 @@ class IAMRole(CRUDMixin, db.Model):
         foreign_keys=lambda: [IAMRolePolicy.role_id],
         back_populates="role",
     )
-
-    @property
-    def groups(self) -> list["IAMGroup"]:
-        """Get all groups that have this role."""
-        return [gr.group for gr in self.group_roles]
 
     @property
     def permissions(self) -> list["IAMPermission"]:
@@ -176,78 +170,6 @@ class IAMRole(CRUDMixin, db.Model):
         self.slug = slugify(name)
 
 
-class IAMGroupRole(CRUDMixin, AssociationModel):
-    __tablename__ = "iam_group_role"
-    # **************** Columns ****************
-    group_id: Mapped[int] = mapped_column(ForeignKey("iam_group.id"), primary_key=True)
-    role_id: Mapped[int] = mapped_column(ForeignKey("iam_role.id"), primary_key=True)
-    added_by_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
-
-    # **************** Relationships ****************
-    added_by: Mapped[Optional["IAMUser"]] = relationship(foreign_keys=[added_by_id])
-    group: Mapped["IAMGroup"] = relationship(back_populates="group_roles")
-    role: Mapped["IAMRole"] = relationship(back_populates="group_roles")
-
-    def __init__(self, group_id: int, role_id: int, **kwargs):
-        super().__init__(**kwargs)
-        self.group_id = group_id
-        self.role_id = role_id
-
-
-class IAMGroup(CRUDMixin, db.Model):
-    __tablename__ = "iam_group"
-    # **************** Columns ****************
-    name: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    description: Mapped[Optional[str]]
-
-    # **************** Relationships ****************
-    user_groups: Mapped[list["IAMUserGroup"]] = relationship(
-        foreign_keys=lambda: [IAMUserGroup.group_id],
-        back_populates="group",
-    )
-    group_roles: Mapped[list["IAMGroupRole"]] = relationship(
-        foreign_keys=lambda: [IAMGroupRole.group_id],
-        back_populates="group",
-    )
-
-    @property
-    def users(self) -> list["IAMUser"]:
-        """Get all users in this group."""
-        return [ug.user for ug in self.user_groups]
-
-    @property
-    def roles(self) -> list["IAMRole"]:
-        """Get all roles assigned to this group."""
-        return [gr.role for gr in self.group_roles]
-
-    def __init__(self, name: str, **kwargs):
-        super(IAMGroup, self).__init__(**kwargs)
-        self.name = name
-        self.slug = slugify(name)
-
-
-class IAMUserGroup(CRUDMixin, AssociationModel):
-    __tablename__ = "iam_user_group"
-    # **************** Columns ****************
-    user_id: Mapped[int] = mapped_column(ForeignKey("iam_user.id"), primary_key=True)
-    group_id: Mapped[int] = mapped_column(ForeignKey("iam_group.id"), primary_key=True)
-    added_by_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
-
-    # **************** Relationships ****************
-    added_by: Mapped[Optional["IAMUser"]] = relationship(foreign_keys=[added_by_id])
-    user: Mapped["IAMUser"] = relationship(
-        foreign_keys=[user_id],
-        back_populates="user_groups",
-    )
-    group: Mapped["IAMGroup"] = relationship(back_populates="user_groups")
-
-    def __init__(self, user_id: int, group_id: int, **kwargs):
-        super().__init__(**kwargs)
-        self.user_id = user_id
-        self.group_id = group_id
-
-
 class IAMUser(UserMixin, CRUDMixin, db.Model):
     __tablename__ = "iam_user"
     # **************** Columns ****************
@@ -258,33 +180,17 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
     first_name: Mapped[str] = mapped_column(nullable=False)
     middle_name: Mapped[Optional[str]]
     last_name: Mapped[str] = mapped_column(nullable=False)
+    role_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_role.id"), nullable=True)
 
     # ************** Relationships ****************
-    user_groups: Mapped[list["IAMUserGroup"]] = relationship(
-        foreign_keys=lambda: [IAMUserGroup.user_id],
-        back_populates="user",
-    )
-
-    @property
-    def groups(self) -> list["IAMGroup"]:
-        """Get all groups this user belongs to."""
-        return [ug.group for ug in self.user_groups]
-
-    @property
-    def roles(self) -> list["IAMRole"]:
-        """Get all roles from all groups this user belongs to."""
-        roles = []
-        for group in self.groups:
-            roles.extend(group.roles)
-        return roles
+    role: Mapped[Optional["IAMRole"]] = relationship(back_populates="users")
 
     @property
     def permissions(self) -> list["IAMPermission"]:
-        """Get all permissions from all roles across all groups."""
-        permissions = []
-        for role in self.roles:
-            permissions.extend(role.permissions)
-        return list(set(permissions))  # Remove duplicates
+        """Get all permissions from the user's role."""
+        if self.role:
+            return self.role.permissions
+        return []
 
     def __init__(self, username: str, email: str, unsecure_password: str, **kwargs):
         super(IAMUser, self).__init__(**kwargs)
@@ -300,7 +206,7 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
         return check_password_hash(str(self.hashed_password), password)
 
     def has_permission(self, permission_name: str) -> bool:
-        """Check if the user has a given permission through any of their groups' roles.
+        """Check if the user has a given permission through their role.
 
         Args:
             permission_name: Name of the permission to check for
