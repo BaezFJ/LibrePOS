@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block sidenav %}
-    {% include 'error/_sidenav.html' %}
+    {% include 'main/error/_sidenav.html' %}
 {% endblock %}
 
 {% block main %}
@@ -10,12 +10,12 @@
         <div class="col s12 m8 offset-m2 l6 offset-l3">
             <div class="card-panel center-align" style="margin-top: 100px; padding: 40px;">
                 <div style="margin-bottom: 30px;">
-                    <i class="material-symbols-rounded error-text" style="font-size: 96px;">block</i>
+                    <i class="material-symbols-rounded error-text" style="font-size: 96px;">error</i>
                 </div>
-                <h1 class="grey-text"><b>403</b></h1>
-                <h5 class="grey-text"><b>Access Forbidden</b></h5>
+                <h1 class="grey-text"><b>500</b></h1>
+                <h5 class="grey-text"><b>Internal Server Error</b></h5>
                 <p class="grey-text">
-                    You don't have permission to access this resource. If you believe this is an error, please contact your administrator.
+                    Something went wrong on our end. We're working to fix it. Please try again later or contact support if the problem persists.
                 </p>
                 <div class="row" style="margin-bottom: 0;">
                     <div class="col s12 m6">
@@ -24,8 +24,8 @@
                         </a>
                     </div>
                     <div class="col s12 m6">
-                        <a href="javascript:history.back()" class="btn-flat waves-effect waves-light btn-large">
-                            <i class="material-symbols-rounded">arrow_back</i>&nbsp;Go Back
+                        <a href="javascript:location.reload()" class="btn-flat waves-effect waves-light btn-large">
+                            <i class="material-symbols-rounded">refresh</i>&nbsp;Try Again
                         </a>
                     </div>
                 </div>

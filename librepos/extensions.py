@@ -57,22 +57,18 @@ def init_extensions(app):
     mail.init_app(app)
     csrf.init_app(app)
 
-    setattr(login_manager, "login_view", "auth.login")
+    setattr(login_manager, "login_view", "iam.login")
     login_manager.session_protection = "strong"
 
     with app.app_context():
         # Import models so SQLAlchemy is aware of all tables before create_all
         # (avoid circular imports by importing locally)
-        from librepos.auth import models as iam_models
         from librepos.main import models as _main_models  # noqa: F401
 
         db.create_all()
 
-        iam_models.AuthPermission.seed_data()
-        iam_models.AuthRole.seed_data()
-
     @login_manager.user_loader
     def load_user(user_id):
-        from librepos.auth.models import AuthUser
+        from librepos.iam.models import IAMUser
 
-        return AuthUser.get_by_id(user_id)
+        return IAMUser.get_by_id(user_id)

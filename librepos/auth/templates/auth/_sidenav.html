@@ -1,8 +1,0 @@
-{% import "components/sidenav.j2" as Sidenav with context %}
-
-
-{% call Sidenav.render("Authentication") %}
-
-    {{ Sidenav.item("Register User", icon="person_add", url=url_for("auth.register")) }}
-
-{% endcall %}

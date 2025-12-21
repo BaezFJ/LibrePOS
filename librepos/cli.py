@@ -5,7 +5,7 @@ def add_cli_commands(app):
     """Add custom commands to the Flask CLI."""
 
     from librepos.extensions import db
-    from librepos.auth.models import AuthUser
+    from librepos.iam.models import IAMUser
 
     @app.cli.command("create-bp", help="Create a new blueprint.")
     @click.argument("blueprint_name")
@@ -77,7 +77,7 @@ def add_cli_commands(app):
             click.echo("Operation cancelled.")
             return
 
-        AuthUser.create(
+        IAMUser.create(
             username=username,
             email=email,
             unsecure_password=password,
@@ -147,11 +147,11 @@ def add_cli_commands(app):
 
         for user_data in test_users:
             username = user_data["username"]
-            if AuthUser.query.filter_by(username=username).first():
+            if IAMUser.query.filter_by(username=username).first():
                 click.echo(f"User '{username}' already exists. Skipping...")
                 continue
 
-            AuthUser.create(
+            IAMUser.create(
                 username=user_data["username"],
                 email=user_data["email"],
                 unsecure_password=user_data["password"],
@@ -164,44 +164,45 @@ def add_cli_commands(app):
         click.echo("\nTest users created successfully!")
         click.echo("Note: These users are for development/testing purposes only.")
 
-    @app.cli.command("seed-role-permissions", help="Seed role permissions from config.")
-    def seed_role_permissions():
-        """Seed the role_permissions table with data from ROLE_PERMISSIONS config."""
-        from librepos.auth.models import AuthRole, AuthPermission, AuthRolePermission
-        from librepos.auth.config import ROLE_PERMISSIONS
+    @app.cli.command(
+        "seed-permissions", help="Seed groups, roles, permissions, and policies from blueprints."
+    )
+    def seed_permissions():
+        """Seed groups, roles, permissions, and policies from blueprint permission files.
 
-        click.echo("Seeding role permissions...")
+        This command auto-discovers permissions defined in each blueprint's permissions.py
+        file and creates the necessary database records for:
+        - Default groups (Employees, Suppliers, Customers)
+        - Default roles (Admin, Manager, Cashier, etc.)
+        - Permissions from all blueprints
+        - Default policies with permission mappings
+        """
+        from librepos.permissions import seed_permissions_and_roles
 
-        seeded_count = 0
-        skipped_count = 0
+        click.echo("=" * 50)
+        click.echo("Auto-seeding IAM infrastructure from blueprints...")
+        click.echo("=" * 50)
 
-        for role_name, permission_names in ROLE_PERMISSIONS.items():
-            role = AuthRole.get_first_by(name=role_name)
-            if not role:
-                click.echo(f"Warning: Role '{role_name}' not found. Skipping...")
-                continue
+        seed_permissions_and_roles(verbose=True)
 
-            for permission_name in permission_names:
-                permission = AuthPermission.get_first_by(name=permission_name)
-                if not permission:
-                    click.echo(f"Warning: Permission '{permission_name}' not found. Skipping...")
-                    continue
+    @app.cli.command(
+        "sync-permissions", help="Sync permissions with code (add new, report orphaned)."
+    )
+    def sync_permissions():
+        """Sync permissions in a database with permissions defined in code.
 
-                # Check if the role-permission relationship already exists
-                existing = AuthRolePermission.get_first_by(
-                    role_id=role.id, permission_id=permission.id
-                )
+        This command:
+        - Adds new permissions found in code
+        - Reports orphaned permissions in a database (doesn't delete them)
+        """
+        from librepos.permissions import PermissionSeeder
 
-                if existing:
-                    skipped_count += 1
-                    continue
+        click.echo("=" * 50)
+        click.echo("Syncing permissions with code...")
+        click.echo("=" * 50)
 
-                AuthRolePermission.create(role_id=role.id, permission_id=permission.id)
-                seeded_count += 1
-
-        click.echo("\nRole permissions seeded successfully!")
-        click.echo(f"Created: {seeded_count}")
-        click.echo(f"Skipped (already exist): {skipped_count}")
+        seeder = PermissionSeeder()
+        seeder.sync_permissions(verbose=True)
 
     @app.cli.command("reset-db", help="Reset the database.")
     def reset_db():

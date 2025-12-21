@@ -42,7 +42,7 @@
 
     {% call Footer.render() %}
         {{ Footer.item("Search", icon="search") }}
-        {{ Footer.item("Add", icon="add_circle", url=url_for("auth.register", back="/staff/members")) }}
+        {{ Footer.item("Add", icon="add_circle") }}
         {{ Footer.item("Filter", icon="filter_alt") }}
         {{ Footer.item("Sort", icon="sort") }}
     {% endcall %}
