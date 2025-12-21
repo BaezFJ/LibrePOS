@@ -35,6 +35,7 @@ def add_cli_commands(app):
             "models.py",
             "routes.py",
             "views.py",
+            "permissions.py",
         ]
         for file in standard_files:
             with open(os.path.join(bp_dir, file), "w") as f:
