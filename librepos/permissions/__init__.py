@@ -43,9 +43,9 @@ class PolicyDefinition(NamedTuple):
 
 
 __all__ = [
-    "PolicyDefinition",
     "PermissionRegistry",
-    "get_registry",
     "PermissionSeeder",
+    "PolicyDefinition",
+    "get_registry",
     "seed_permissions_and_roles",
 ]

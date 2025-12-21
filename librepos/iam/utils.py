@@ -1,11 +1,11 @@
-from typing import Optional
 from sqlalchemy import or_
 
 from librepos.extensions import db
+
 from .models import IAMUser
 
 
-def get_user_by_identifier(identifier: str) -> Optional[IAMUser]:
+def get_user_by_identifier(identifier: str) -> IAMUser | None:
     """Find a user by username or email.
 
     Args:
@@ -14,14 +14,12 @@ def get_user_by_identifier(identifier: str) -> Optional[IAMUser]:
     Returns:
         IAMUser if found, None otherwise
     """
-    user = db.session.execute(
+    return db.session.execute(
         db.select(IAMUser).where(or_(IAMUser.username == identifier, IAMUser.email == identifier))
     ).scalar_one_or_none()
 
-    return user
 
-
-def authenticate_user(identifier: str, password: str) -> Optional[IAMUser]:
+def authenticate_user(identifier: str, password: str) -> IAMUser | None:
     """Authenticate a user by username/email and password.
 
     Args:

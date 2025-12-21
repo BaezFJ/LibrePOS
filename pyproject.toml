@@ -8,8 +8,10 @@ authors = [
 maintainers = [
     { name = "BaezFJ", email = "baezdevs@gmail.com" }
 ]
-license = { text = "LICENSE" }
+license = "GPL-3.0-or-later"
+readme = "README.md"
 requires-python = ">=3.12"
+keywords = ["pos", "point-of-sale", "restaurant", "flask", "inventory", "orders"]
 dependencies = [
     "babel>=2.17.0",
     "better-profanity>=0.7.0",
@@ -19,12 +21,10 @@ dependencies = [
     "flask-mailman>=1.1.1",
     "flask-sqlalchemy>=3.1.1",
     "flask-wtf>=1.2.2",
-    "pathlib>=1.0.1",
     "python-dotenv>=1.2.1",
     "python-slugify>=8.0.4",
     "python-usernames>=1.1.0",
     "pytz>=2025.2",
-    "ruff>=0.14.10",
     "tzdata>=2025.3",
     "waitress>=3.0.2",
 ]
@@ -38,6 +38,18 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.12",
     "Topic :: Office/Business :: Financial :: Point-Of-Sale"
+]
+
+[project.urls]
+Homepage = "https://github.com/BaezFJ/LibrePOS"
+Repository = "https://github.com/BaezFJ/LibrePOS"
+Issues = "https://github.com/BaezFJ/LibrePOS/issues"
+Documentation = "https://github.com/BaezFJ/LibrePOS#readme"
+
+[project.optional-dependencies]
+prod = [
+    "gunicorn>=23.0.0",
+    "psycopg2-binary>=2.9.10",
 ]
 
 [build-system]
@@ -56,9 +68,71 @@ dev = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+fix = true
+show-fixes = true
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "PIE",    # flake8-pie
+    "PT",     # flake8-pytest-style
+    "RET",    # flake8-return
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "ARG",    # flake8-unused-arguments
+    "PTH",    # flake8-use-pathlib
+    "ERA",    # eradicate
+    "PL",     # pylint
+    "PERF",   # perflint
+    "RUF",    # ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "PLR0913", # too many arguments
+    "PLR2004", # magic value comparison
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # unused imports
+"tests/**/*.py" = ["ARG", "PLR2004"]  # allow unused args and magic values in tests
+
+[tool.ruff.lint.isort]
+known-first-party = ["librepos"]
 
 [tool.pyright]
-exclude = [".venv"]
+exclude = [".venv", "**/__pycache__", "build", "dist"]
 pythonVersion = "3.12"
 venvPath = "."
 venv = ".venv"
+typeCheckingMode = "basic"
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnusedVariable = true
+reportUnusedImport = true
+reportDuplicateImport = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=librepos",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]

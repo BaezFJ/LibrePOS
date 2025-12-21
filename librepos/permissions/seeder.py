@@ -65,7 +65,7 @@ class PermissionSeeder:
             Number of roles created
         """
         # Import here to avoid circular dependency
-        from librepos.iam.models import IAMRole
+        from librepos.iam.models import IAMRole  # noqa: PLC0415
 
         if verbose:
             click.echo("\nSeeding default roles...")
@@ -106,7 +106,7 @@ class PermissionSeeder:
             Number of permissions created
         """
         # Import here to avoid circular dependency
-        from librepos.iam.models import IAMPermission
+        from librepos.iam.models import IAMPermission  # noqa: PLC0415
 
         if verbose:
             click.echo("Seeding permissions...")
@@ -138,7 +138,7 @@ class PermissionSeeder:
 
         return created
 
-    def seed_policies(self, verbose: bool = True) -> int:
+    def seed_policies(self, verbose: bool = True) -> int:  # noqa: PLR0912
         """Seed default policies from blueprint permission modules.
 
         Args:
@@ -148,7 +148,11 @@ class PermissionSeeder:
             Number of policies created
         """
         # Import here to avoid circular dependency
-        from librepos.iam.models import IAMPolicy, IAMPermission, IAMPolicyPermission
+        from librepos.iam.models import (  # noqa: PLC0415
+            IAMPermission,
+            IAMPolicy,
+            IAMPolicyPermission,
+        )
 
         if verbose:
             click.echo("\nSeeding default policies...")
@@ -241,7 +245,7 @@ class PermissionSeeder:
             Number of role-policy associations created
         """
         # Import here to avoid circular dependency
-        from librepos.iam.models import IAMRole, IAMPolicy, IAMRolePolicy
+        from librepos.iam.models import IAMPolicy, IAMRole, IAMRolePolicy  # noqa: PLC0415
 
         if verbose:
             click.echo("\nAssociating Owner role with FULL_ACCESS policies...")
@@ -297,7 +301,7 @@ class PermissionSeeder:
             Number of role-permission mappings created
         """
         # Import here to avoid circular dependency
-        from librepos.iam.models import IAMRole, IAMPermission, IAMRolePermission
+        from librepos.iam.models import IAMPermission, IAMRole, IAMRolePermission  # noqa: PLC0415
 
         if verbose:
             click.echo("\nSeeding role-permission mappings (legacy)...")
@@ -388,7 +392,7 @@ class PermissionSeeder:
             verbose: Whether to print progress messages
         """
         # Import here to avoid circular dependency
-        from librepos.iam.models import IAMPermission
+        from librepos.iam.models import IAMPermission  # noqa: PLC0415
 
         if verbose:
             click.echo("Syncing permissions with code...")
@@ -415,19 +419,15 @@ class PermissionSeeder:
 
         # Find orphaned permissions in database
         orphaned_permissions = db_permissions - code_permissions
-        if orphaned_permissions:
-            if verbose:
-                click.echo(
-                    f"\n⚠ Found {len(orphaned_permissions)} orphaned permissions in database:"
-                )
-                for perm_name in sorted(orphaned_permissions):
-                    click.echo(f"  • {perm_name}")
-                click.echo("\nNote: Orphaned permissions are NOT automatically deleted.")
-                click.echo("Remove them manually if they're no longer needed.")
+        if orphaned_permissions and verbose:
+            click.echo(f"\n⚠ Found {len(orphaned_permissions)} orphaned permissions in database:")
+            for perm_name in sorted(orphaned_permissions):
+                click.echo(f"  • {perm_name}")
+            click.echo("\nNote: Orphaned permissions are NOT automatically deleted.")
+            click.echo("Remove them manually if they're no longer needed.")
 
-        if not new_permissions and not orphaned_permissions:
-            if verbose:
-                click.echo("  ✓ All permissions are in sync!")
+        if not new_permissions and not orphaned_permissions and verbose:
+            click.echo("  ✓ All permissions are in sync!")
 
 
 def seed_permissions_and_roles(verbose: bool = True):

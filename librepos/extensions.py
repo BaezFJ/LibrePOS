@@ -1,7 +1,6 @@
-from flask_login import LoginManager
 from datetime import datetime
-from typing import Optional
 
+from flask_login import LoginManager
 from flask_mailman import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
@@ -14,8 +13,6 @@ from librepos.utils.datetime import fetch_time_by_timezone
 class Base(DeclarativeBase):
     """Shared base for all models to ensure a single registry."""
 
-    pass
-
 
 class TimestampMixin:
     """Mixin to add created_at and updated_at columns."""
@@ -23,7 +20,7 @@ class TimestampMixin:
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: fetch_time_by_timezone(), nullable=False
     )
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
+    updated_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         default=lambda: fetch_time_by_timezone(),
         onupdate=lambda: fetch_time_by_timezone(),
@@ -57,18 +54,20 @@ def init_extensions(app):
     mail.init_app(app)
     csrf.init_app(app)
 
-    setattr(login_manager, "login_view", "iam.login")
+    login_manager.login_view = "iam.login"  # type: ignore[assignment]
     login_manager.session_protection = "strong"
 
     with app.app_context():
         # Import models so SQLAlchemy is aware of all tables before create_all
         # (avoid circular imports by importing locally)
-        from librepos.main import models as _main_models  # noqa: F401
+        from librepos.main import (  # noqa: PLC0415
+            models as _main_models,  # noqa: F401 # pyright: ignore[reportUnusedImport]
+        )
 
         db.create_all()
 
     @login_manager.user_loader
     def load_user(user_id):
-        from librepos.iam.models import IAMUser
+        from librepos.iam.models import IAMUser  # noqa: PLC0415
 
         return IAMUser.get_by_id(user_id)

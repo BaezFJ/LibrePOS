@@ -1,33 +1,33 @@
+import re
+from pathlib import Path
+
 import click
 
 
-def add_cli_commands(app):
+def add_cli_commands(app):  # noqa: PLR0915
     """Add custom commands to the Flask CLI."""
 
-    from librepos.extensions import db
-    from librepos.iam.models import IAMUser
+    from librepos.extensions import db  # noqa: PLC0415
+    from librepos.iam.models import IAMUser  # noqa: PLC0415
 
     @app.cli.command("create-bp", help="Create a new blueprint.")
     @click.argument("blueprint_name")
     def create_bp(blueprint_name):
         """Create a new blueprint package directory with standard files."""
-        import os
-        import re
-
         if not re.match("^[a-z][a-z0-9_]*$", blueprint_name):
             click.echo(
                 "Error: Blueprint name must be lowercase, start with a letter, and contain only letters, numbers, and underscores."
             )
             return
 
-        bp_dir = os.path.join("librepos", blueprint_name)
-        if os.path.exists(bp_dir):
+        bp_dir = Path("librepos") / blueprint_name
+        if bp_dir.exists():
             click.echo(f"Error: Blueprint '{blueprint_name}' already exists.")
             return
 
         # Create a blueprint directory and __init__.py
-        os.makedirs(bp_dir)
-        open(os.path.join(bp_dir, "__init__.py"), "w").close()
+        bp_dir.mkdir(parents=True)
+        (bp_dir / "__init__.py").touch()
 
         # Create standard blueprint files
         standard_files = [
@@ -38,12 +38,11 @@ def add_cli_commands(app):
             "permissions.py",
         ]
         for file in standard_files:
-            with open(os.path.join(bp_dir, file), "w") as f:
-                f.write(f"# {blueprint_name} {file[:-3]} module\n")
+            (bp_dir / file).write_text(f"# {blueprint_name} {file[:-3]} module\n")
 
         # Create templates directory structure
-        templates_dir = os.path.join(bp_dir, "templates", blueprint_name)
-        os.makedirs(templates_dir)
+        templates_dir = bp_dir / "templates" / blueprint_name
+        templates_dir.mkdir(parents=True)
 
         click.echo(f"Blueprint '{blueprint_name}' created successfully with standard files.")
 
@@ -63,8 +62,6 @@ def add_cli_commands(app):
     @click.option("--last-name", prompt=True, help="The last name.", required=True)
     def add_superuser(username, password, email, first_name, middle_name, last_name):
         """Add a superuser."""
-        # from librepos.auth.models import AuthGroup
-
         click.echo("\nPlease confirm the following details:")
         click.echo(f"Username: {username}")
         click.echo(f"Password: {'*' * len(password)}")
@@ -177,7 +174,7 @@ def add_cli_commands(app):
         - Permissions from all blueprints
         - Default policies with permission mappings
         """
-        from librepos.permissions import seed_permissions_and_roles
+        from librepos.permissions import seed_permissions_and_roles  # noqa: PLC0415
 
         click.echo("=" * 50)
         click.echo("Auto-seeding IAM infrastructure from blueprints...")
@@ -195,7 +192,7 @@ def add_cli_commands(app):
         - Adds new permissions found in code
         - Reports orphaned permissions in a database (doesn't delete them)
         """
-        from librepos.permissions import PermissionSeeder
+        from librepos.permissions import PermissionSeeder  # noqa: PLC0415
 
         click.echo("=" * 50)
         click.echo("Syncing permissions with code...")

@@ -3,11 +3,10 @@ from typing import Optional
 from flask_login import UserMixin
 from slugify import slugify
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from librepos.extensions import db, AssociationModel
+from librepos.extensions import AssociationModel, db
 from librepos.utils.sqlalchemy import CRUDMixin
 
 
@@ -15,7 +14,7 @@ class IAMPermission(CRUDMixin, db.Model):
     __tablename__ = "iam_permission"
     # **************** Columns ****************
     name: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    description: Mapped[Optional[str]]
+    description: Mapped[str | None]
 
     # ************** Relationships ****************
     role_permissions: Mapped[list["IAMRolePermission"]] = relationship(
@@ -38,7 +37,7 @@ class IAMPermission(CRUDMixin, db.Model):
         return [pp.policy for pp in self.policy_permissions]
 
     def __init__(self, name: str, **kwargs):
-        super(IAMPermission, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.name = name
 
 
@@ -47,7 +46,7 @@ class IAMPolicyPermission(CRUDMixin, AssociationModel):
     # **************** Columns ****************
     policy_id: Mapped[int] = mapped_column(ForeignKey("iam_policy.id"), primary_key=True)
     permission_id: Mapped[int] = mapped_column(ForeignKey("iam_permission.id"), primary_key=True)
-    added_by_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
+    added_by_id: Mapped[int | None] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
 
     # **************** Relationships ****************
     added_by: Mapped[Optional["IAMUser"]] = relationship(foreign_keys=[added_by_id])
@@ -65,7 +64,7 @@ class IAMPolicy(CRUDMixin, db.Model):
     # **************** Columns ****************
     name: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    description: Mapped[Optional[str]]
+    description: Mapped[str | None]
     is_system: Mapped[bool] = mapped_column(default=False)
 
     # **************** Relationships ****************
@@ -89,7 +88,7 @@ class IAMPolicy(CRUDMixin, db.Model):
         return [rp.role for rp in self.role_policies]
 
     def __init__(self, name: str, **kwargs):
-        super(IAMPolicy, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.name = name
         self.slug = slugify(name)
 
@@ -99,7 +98,7 @@ class IAMRolePermission(CRUDMixin, AssociationModel):
     # **************** Columns ****************
     role_id: Mapped[int] = mapped_column(ForeignKey("iam_role.id"), primary_key=True)
     permission_id: Mapped[int] = mapped_column(ForeignKey("iam_permission.id"), primary_key=True)
-    added_by_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
+    added_by_id: Mapped[int | None] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
 
     # **************** Relationships ****************
     added_by: Mapped[Optional["IAMUser"]] = relationship(foreign_keys=[added_by_id])
@@ -117,7 +116,7 @@ class IAMRolePolicy(CRUDMixin, AssociationModel):
     # **************** Columns ****************
     role_id: Mapped[int] = mapped_column(ForeignKey("iam_role.id"), primary_key=True)
     policy_id: Mapped[int] = mapped_column(ForeignKey("iam_policy.id"), primary_key=True)
-    added_by_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
+    added_by_id: Mapped[int | None] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
 
     # **************** Relationships ****************
     added_by: Mapped[Optional["IAMUser"]] = relationship(foreign_keys=[added_by_id])
@@ -135,7 +134,7 @@ class IAMRole(CRUDMixin, db.Model):
     # **************** Columns ****************
     name: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    description: Mapped[Optional[str]]
+    description: Mapped[str | None]
     is_system: Mapped[bool] = mapped_column(default=False)
 
     # **************** Relationships ****************
@@ -165,7 +164,7 @@ class IAMRole(CRUDMixin, db.Model):
         return [rp.policy for rp in self.role_policies]
 
     def __init__(self, name: str, **kwargs):
-        super(IAMRole, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.name = name
         self.slug = slugify(name)
 
@@ -178,9 +177,10 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
     email: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(nullable=False)
     first_name: Mapped[str] = mapped_column(nullable=False)
-    middle_name: Mapped[Optional[str]]
+    middle_name: Mapped[str | None] = mapped_column(nullable=True)
     last_name: Mapped[str] = mapped_column(nullable=False)
-    role_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_role.id"), nullable=True)
+    role_id: Mapped[int | None] = mapped_column(ForeignKey("iam_role.id"), nullable=True)
+    is_staff: Mapped[bool] = mapped_column(default=False)
 
     # ************** Relationships ****************
     role: Mapped[Optional["IAMRole"]] = relationship(back_populates="users")
@@ -193,7 +193,7 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
         return []
 
     def __init__(self, username: str, email: str, unsecure_password: str, **kwargs):
-        super(IAMUser, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.username = username
         self.slug = slugify(username)
         self.email = email
