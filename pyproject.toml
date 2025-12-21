@@ -20,11 +20,12 @@ dependencies = [
     "flask-sqlalchemy>=3.1.1",
     "flask-wtf>=1.2.2",
     "pathlib>=1.0.1",
-    "python-dotenv>=1.1.1",
+    "python-dotenv>=1.2.1",
     "python-slugify>=8.0.4",
     "python-usernames>=1.1.0",
     "pytz>=2025.2",
-    "tzdata>=2025.2",
+    "ruff>=0.14.10",
+    "tzdata>=2025.3",
     "waitress>=3.0.2",
 ]
 classifiers = [
@@ -45,11 +46,11 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "pre-commit>=4.3.0",
+    "pre-commit>=4.5.1",
     "pyright>=1.1.407",
-    "pytest>=8.4.2",
+    "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
-    "ruff>=0.14.2",
+    "ruff>=0.14.10",
 ]
 
 [tool.ruff]
