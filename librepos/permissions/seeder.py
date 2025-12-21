@@ -8,25 +8,9 @@ import click
 
 from .registry import get_registry
 
-
-# Default groups to seed
-DEFAULT_GROUPS = [
-    {
-        "name": "Employees",
-        "description": "All staff and employees of the organization",
-    },
-    {
-        "name": "Suppliers",
-        "description": "External suppliers and vendors",
-    },
-    {
-        "name": "Customers",
-        "description": "Customers and clients",
-    },
-]
-
 # Default roles to seed
 DEFAULT_ROLES = [
+    {"name": "Owner", "description": "Owner role with full access to all features"},
     {
         "name": "Admin",
         "description": "Administrative role with extensive permissions",
@@ -70,47 +54,6 @@ class PermissionSeeder:
         self.created_count = 0
         self.skipped_count = 0
         self.error_count = 0
-
-    def seed_groups(self, verbose: bool = True) -> int:
-        """Seed default groups into the database.
-
-        Args:
-            verbose: Whether to print progress messages
-
-        Returns:
-            Number of groups created
-        """
-        # Import here to avoid circular dependency
-        from librepos.iam.models import IAMGroup
-
-        if verbose:
-            click.echo("Seeding default groups...")
-
-        created = 0
-
-        for group_data in DEFAULT_GROUPS:
-            # Check if group already exists
-            existing = IAMGroup.get_first_by(name=group_data["name"])
-
-            if existing:
-                self.skipped_count += 1
-                continue
-
-            try:
-                # Create new group
-                IAMGroup.create(name=group_data["name"], description=group_data.get("description"))
-                created += 1
-                self.created_count += 1
-
-                if verbose:
-                    click.echo(f"  ✓ Created group: {group_data['name']}")
-
-            except Exception as e:
-                self.error_count += 1
-                if verbose:
-                    click.echo(f"  ✗ Error creating group '{group_data['name']}': {e}")
-
-        return created
 
     def seed_roles(self, verbose: bool = True) -> int:
         """Seed default roles into the database.
@@ -288,6 +231,62 @@ class PermissionSeeder:
 
         return policies_created
 
+    def associate_owner_with_full_access_policies(self, verbose: bool = True) -> int:
+        """Associate the Owner role with all policies containing '_FULL_ACCESS' in their name.
+
+        Args:
+            verbose: Whether to print progress messages
+
+        Returns:
+            Number of role-policy associations created
+        """
+        # Import here to avoid circular dependency
+        from librepos.iam.models import IAMRole, IAMPolicy, IAMRolePolicy
+
+        if verbose:
+            click.echo("\nAssociating Owner role with FULL_ACCESS policies...")
+
+        # Get the Owner role
+        owner_role = IAMRole.get_first_by(name="Owner")
+        if not owner_role:
+            if verbose:
+                click.echo("  ⚠ Warning: Owner role not found. Skipping...")
+            self.error_count += 1
+            return 0
+
+        # Get all policies with '_FULL_ACCESS' in their name
+        full_access_policies = IAMPolicy.query.filter(IAMPolicy.name.contains("_FULL_ACCESS")).all()
+
+        if not full_access_policies:
+            if verbose:
+                click.echo("  ⊙ No FULL_ACCESS policies found.")
+            return 0
+
+        created = 0
+        for policy in full_access_policies:
+            # Check if association already exists
+            existing = IAMRolePolicy.get_first_by(role_id=owner_role.id, policy_id=policy.id)
+
+            if existing:
+                self.skipped_count += 1
+                continue
+
+            try:
+                # Create role-policy association
+                IAMRolePolicy.create(role_id=owner_role.id, policy_id=policy.id)
+                created += 1
+                self.created_count += 1
+
+                if verbose:
+                    click.echo(f"  ✓ Associated policy '{policy.name}' with Owner role")
+
+            except Exception as e:
+                self.error_count += 1
+                if verbose:
+                    click.echo(f"  ✗ Error associating policy '{policy.name}': {e}")
+
+        return created
+
     def seed_role_permissions(self, verbose: bool = True) -> int:
         """Seed role-permission mappings from the registry (legacy).
 
@@ -357,9 +356,6 @@ class PermissionSeeder:
         self.skipped_count = 0
         self.error_count = 0
 
-        # Seed groups first
-        self.seed_groups(verbose=verbose)
-
         # Seed roles
         self.seed_roles(verbose=verbose)
 
@@ -368,6 +364,9 @@ class PermissionSeeder:
 
         # Seed default policies
         self.seed_policies(verbose=verbose)
+
+        # Associate Owner role with FULL_ACCESS policies
+        self.associate_owner_with_full_access_policies(verbose=verbose)
 
         # Then seed legacy role-permission mappings (if any exist)
         self.seed_role_permissions(verbose=verbose)
