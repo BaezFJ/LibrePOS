@@ -87,12 +87,28 @@ def add_cli_commands(app):  # noqa: PLR0915
         click.echo(f"Superuser '{username}' created successfully.")
 
     @app.cli.command("create-test-users", help="Create test users for development.")
-    def create_test_users():
-        """Create test users with different roles (superuser, admin, staff, customer)."""
-        click.echo("Creating test users...")
+    @click.option(
+        "--users",
+        "-u",
+        multiple=True,
+        type=click.Choice(
+            ["owner", "admin", "manager", "cashier", "waiter", "customer"], case_sensitive=False
+        ),
+        help="Specific users to create. If not provided, all test users will be created.",
+    )
+    def create_test_users(users):
+        """Create test users with different roles.
 
-        test_users = [
-            {
+        If no users are specified, all default test users will be created.
+        Use --users/-u to specify one or more users to create.
+
+        Example:
+            flask create-test-users
+            flask create-test-users --users owner --users admin
+            flask create-test-users -u cashier -u waiter
+        """
+        available_users = {
+            "owner": {
                 "username": "owner",
                 "email": "owner@test.com",
                 "password": "owner123",
@@ -100,7 +116,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "admin": {
                 "username": "admin",
                 "email": "admin@test.com",
                 "password": "admin123",
@@ -108,7 +124,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "manager": {
                 "username": "manager",
                 "email": "manager@test.com",
                 "password": "manager123",
@@ -116,7 +132,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "cashier": {
                 "username": "cashier",
                 "email": "cashier@test.com",
                 "password": "cashier123",
@@ -124,7 +140,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "waiter": {
                 "username": "waiter",
                 "email": "waiter@test.com",
                 "password": "waiter123",
@@ -132,7 +148,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "customer": {
                 "username": "customer",
                 "email": "customer@test.com",
                 "password": "customer123",
@@ -140,12 +156,24 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "middle_name": "Test",
                 "last_name": "User",
             },
-        ]
+        }
 
-        for user_data in test_users:
+        # Determine which users to create
+        if users:
+            users_to_create = [available_users[u.lower()] for u in users]
+            click.echo(f"Creating {len(users_to_create)} test user(s)...")
+        else:
+            users_to_create = list(available_users.values())
+            click.echo("Creating all test users...")
+
+        created_count = 0
+        skipped_count = 0
+
+        for user_data in users_to_create:
             username = user_data["username"]
             if IAMUser.query.filter_by(username=username).first():
                 click.echo(f"User '{username}' already exists. Skipping...")
+                skipped_count += 1
                 continue
 
             IAMUser.create(
@@ -157,8 +185,9 @@ def add_cli_commands(app):  # noqa: PLR0915
                 last_name=user_data["last_name"],
             )
             click.echo(f"Created {username} (password: {user_data['password']})")
+            created_count += 1
 
-        click.echo("\nTest users created successfully!")
+        click.echo(f"\nSummary: {created_count} created, {skipped_count} skipped")
         click.echo("Note: These users are for development/testing purposes only.")
 
     @app.cli.command(
