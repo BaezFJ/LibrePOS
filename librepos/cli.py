@@ -10,7 +10,7 @@ def add_cli_commands(app):  # noqa: PLR0915
     """Add custom commands to the Flask CLI."""
 
     from librepos.extensions import db  # noqa: PLC0415
-    from librepos.iam.models import IAMUser  # noqa: PLC0415
+    from librepos.iam.models import IAMRole, IAMUser  # noqa: PLC0415
 
     @app.cli.command("create-bp", help="Create a new blueprint.")
     @click.argument("blueprint_name")
@@ -111,6 +111,7 @@ def add_cli_commands(app):  # noqa: PLR0915
         """
         available_users = {
             "owner": {
+                "role": "owner",
                 "username": "owner",
                 "email": "owner@test.com",
                 "password": "owner123",
@@ -119,6 +120,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "last_name": "User",
             },
             "admin": {
+                "role": "admin",
                 "username": "admin",
                 "email": "admin@test.com",
                 "password": "admin123",
@@ -127,6 +129,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "last_name": "User",
             },
             "manager": {
+                "role": "manager",
                 "username": "manager",
                 "email": "manager@test.com",
                 "password": "manager123",
@@ -135,6 +138,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "last_name": "User",
             },
             "cashier": {
+                "role": "cashier",
                 "username": "cashier",
                 "email": "cashier@test.com",
                 "password": "cashier123",
@@ -143,6 +147,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "last_name": "User",
             },
             "waiter": {
+                "role": "waiter",
                 "username": "waiter",
                 "email": "waiter@test.com",
                 "password": "waiter123",
@@ -151,6 +156,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "last_name": "User",
             },
             "customer": {
+                "role": None,
                 "username": "customer",
                 "email": "customer@test.com",
                 "password": "customer123",
@@ -178,7 +184,16 @@ def add_cli_commands(app):  # noqa: PLR0915
                 skipped_count += 1
                 continue
 
+            _role = IAMRole.get_first_by(slug=user_data.get("role", None))
+            if not _role:
+                click.echo(
+                    f"Warning: Role '{user_data['role']}' not found. Skipping user '{username}'."
+                )
+                skipped_count += 1
+                continue
+
             IAMUser.create(
+                role_id=_role.id if _role else None,
                 username=user_data["username"],
                 email=user_data["email"],
                 unsecure_password=user_data["password"],
