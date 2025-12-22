@@ -3,6 +3,8 @@ from functools import wraps
 from flask import abort
 from flask_login import current_user, login_required
 
+from librepos.iam.models import UserStatus
+
 
 def permission_required(permission: str):
     """Decorator to check if the current user has a specific permission.
@@ -24,6 +26,9 @@ def permission_required(permission: str):
         @login_required
         @wraps(func)
         def decorated_view(*args, **kwargs):
+            if current_user.status != UserStatus.ACTIVE:
+                abort(403)
+
             if not current_user.has_permission(permission):
                 abort(403)
 

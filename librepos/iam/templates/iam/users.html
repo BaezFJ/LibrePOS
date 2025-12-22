@@ -34,8 +34,8 @@
                                 </td>
                                 <td>{{ user.fullname }}</td>
                                 <td>{{ user.email }}</td>
-                                <td>Admin</td>
-                                <td>Active</td>
+                                <td>{{ user.role.name if user.role else "N/A" }}</td>
+                                <td>{{ user.is_active if user.is_active else "?" }}</td>
                                 <td>
                                     {% set user_dropdown_id = user.slug|string+'-actions' %}
                                     {{ Dropdown.trigger(user_dropdown_id) }}

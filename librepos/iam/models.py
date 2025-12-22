@@ -1,3 +1,4 @@
+from enum import StrEnum
 from typing import Optional
 
 from flask_login import UserMixin
@@ -8,6 +9,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from librepos.extensions import AssociationModel, db
 from librepos.utils.sqlalchemy import CRUDMixin
+
+
+class UserStatus(StrEnum):
+    ACTIVE = "active"
+    PENDING = "pending"
+    INVITED = "invited"
+    SUSPENDED = "suspended"
+    DEACTIVATED = "deactivated"
+    LOCKED = "locked"
+    DELETED = "deleted"
 
 
 class IAMPermission(CRUDMixin, db.Model):
@@ -133,6 +144,7 @@ class IAMRole(CRUDMixin, db.Model):
     __tablename__ = "iam_role"
     # **************** Columns ****************
     name: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
+    is_staff_role: Mapped[bool] = mapped_column(default=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     description: Mapped[str | None]
     is_system: Mapped[bool] = mapped_column(default=False)
@@ -171,6 +183,10 @@ class IAMRole(CRUDMixin, db.Model):
 
 class IAMUser(UserMixin, CRUDMixin, db.Model):
     __tablename__ = "iam_user"
+
+    # **************** Foreign Keys ****************
+    role_id: Mapped[int | None] = mapped_column(ForeignKey("iam_role.id"), nullable=True)
+
     # **************** Columns ****************
     username: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
@@ -179,11 +195,14 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
     first_name: Mapped[str] = mapped_column(nullable=False)
     middle_name: Mapped[str | None] = mapped_column(nullable=True)
     last_name: Mapped[str] = mapped_column(nullable=False)
-    role_id: Mapped[int | None] = mapped_column(ForeignKey("iam_role.id"), nullable=True)
-    is_staff: Mapped[bool] = mapped_column(default=False)
+    status: Mapped[UserStatus] = mapped_column(default=UserStatus.PENDING)
 
     # ************** Relationships ****************
     role: Mapped[Optional["IAMRole"]] = relationship(back_populates="users")
+
+    @property
+    def is_staff(self) -> bool:
+        return self.role.is_staff_role if self.role else False
 
     @property
     def permissions(self) -> list["IAMPermission"]:

@@ -10,38 +10,50 @@ from .registry import get_registry
 
 # Default roles to seed
 DEFAULT_ROLES = [
-    {"name": "Owner", "description": "Owner role with full access to all features"},
+    {
+        "name": "Owner",
+        "description": "Owner role with full access to all features",
+        "is_staff_role": True,
+    },
     {
         "name": "Admin",
         "description": "Administrative role with extensive permissions",
+        "is_staff_role": True,
     },
     {
         "name": "Manager",
         "description": "Manager role with operational control",
+        "is_staff_role": True,
     },
     {
         "name": "Cashier",
         "description": "Cashier role for POS and payment operations",
+        "is_staff_role": True,
     },
     {
         "name": "Waiter",
         "description": "Server/waiter role for taking orders and serving",
+        "is_staff_role": True,
     },
     {
         "name": "Bartender",
         "description": "Bartender role for bar operations",
+        "is_staff_role": True,
     },
     {
         "name": "Kitchen Staff",
         "description": "Kitchen staff role for food preparation",
+        "is_staff_role": True,
     },
     {
         "name": "Host",
         "description": "Host/hostess role for guest management",
+        "is_staff_role": True,
     },
     {
         "name": "Delivery Driver",
         "description": "Delivery driver role for order delivery",
+        "is_staff_role": True,
     },
 ]
 
@@ -81,8 +93,12 @@ class PermissionSeeder:
                 continue
 
             try:
-                # Create new role
-                IAMRole.create(name=role_data["name"], description=role_data.get("description"))
+                # Create a new role
+                IAMRole.create(
+                    name=role_data["name"],
+                    description=role_data.get("description"),
+                    is_staff_role=role_data.get("is_staff_role", False),
+                )
                 created += 1
                 self.created_count += 1
 

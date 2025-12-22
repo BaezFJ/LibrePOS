@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user
 from librepos.iam.forms import UserLoginForm
 from librepos.iam.utils import authenticate_user
 
-from .models import IAMUser
+from .models import IAMUser, UserStatus
 
 
 def dashboard_view():
@@ -71,10 +71,28 @@ def login_view():
         identity = str(form.credentials.data)
         password = str(form.password.data)
         user = authenticate_user(identity, password)
+
         if user:
-            login_user(user, remember=form.remember.data)
-            flash(f"Welcome back {current_user.fullname}.", "success")
-            return redirect(url_for("main.dashboard"))
+            if user.status == UserStatus.ACTIVE:
+                login_user(user, remember=form.remember.data)
+                flash(f"Welcome back {current_user.fullname}.", "success")
+                return redirect(url_for("main.dashboard"))
+
+            # Specific messages based on status
+            if user.status == UserStatus.PENDING:
+                flash("Your account is pending activation. Please check your email.", "warning")
+            elif user.status in [UserStatus.SUSPENDED, UserStatus.DEACTIVATED]:
+                flash(f"Your account is {user.status}. Please contact support.", "error")
+            elif user.status == UserStatus.LOCKED:
+                flash("Your account is locked. Please contact support.", "error")
+            else:
+                flash(
+                    "There is an issue with your account. Please contact support for assistance.",
+                    "error",
+                )
+
+            return redirect(url_for("iam.login"))
+
         flash("Invalid credentials. Please try again.", "error")
         return redirect(url_for("iam.login"))
 
