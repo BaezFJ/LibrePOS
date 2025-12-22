@@ -14,11 +14,13 @@ DEFAULT_ROLES = [
         "name": "Owner",
         "description": "Owner role with full access to all features",
         "is_staff_role": True,
+        "is_system": True,
     },
     {
         "name": "Admin",
         "description": "Administrative role with extensive permissions",
         "is_staff_role": True,
+        "is_system": True,
     },
     {
         "name": "Manager",
@@ -98,6 +100,7 @@ class PermissionSeeder:
                     name=role_data["name"],
                     description=role_data.get("description"),
                     is_staff_role=role_data.get("is_staff_role", False),
+                    is_system=role_data.get("is_system", False),
                 )
                 created += 1
                 self.created_count += 1

@@ -3,6 +3,8 @@ from pathlib import Path
 
 import click
 
+from librepos.iam.models import UserStatus
+
 
 def add_cli_commands(app):  # noqa: PLR0915
     """Add custom commands to the Flask CLI."""
@@ -183,6 +185,7 @@ def add_cli_commands(app):  # noqa: PLR0915
                 first_name=user_data["first_name"],
                 middle_name=user_data["middle_name"],
                 last_name=user_data["last_name"],
+                status=user_data.get("status", UserStatus.ACTIVE),
             )
             click.echo(f"Created {username} (password: {user_data['password']})")
             created_count += 1
