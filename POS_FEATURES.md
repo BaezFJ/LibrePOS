@@ -1,177 +1,181 @@
-# LibrePOS Features
+# LibrePOS Feature Roadmap
 
-This document outlines the essential features of LibrePOS. Each feature is grouped into relevant categories with a brief description of its functionality.
+This document outlines the planned features for LibrePOS, organized by development phase. Features are prioritized to build a solid foundation before adding advanced capabilities.
 
----
+## Legend
 
-## **1. Core POS Features**
-
-- [ ] **Order Management**  
-  Allows waitstaff to take, modify, and process dine-in, takeout, or delivery orders efficiently.
-
-- [ ] **Table Management**  
-  Supports the creation of a visual table layout, helping staff manage table occupancy and reservations.
-
-- [ ] **Menu Management**  
-  Enables users to add, update, and delete menu items, including pricing, descriptions, and categories (e.g., appetizers, mains, desserts).
-
-- [ ] **Multiple Payment Methods**  
-  Supports payments via cash, credit cards, digital wallets, and split transactions between payment types.
-
-- [ ] **Receipt Printing/Emailing**  
-  Generates receipts for customers and gives the option to either print them or send them via email.
-
-- [ ] **Receipt Customization (Multi-Lingual)**  
-  Allows customers to select their preferred language for printed or emailed receipts.
-
-- [ ] **Auto-Split Bills**  
-  Automatically splits a bill evenly or by item selection for customers who want to pay separately.
-
-- [ ] **Voice Ordering Capability**  
-  Allows customers or staff to input orders using voice commands, which can be especially useful during busy hours.
-
-- [ ] **Contactless Dine-In System**  
-  Allows guests to scan a QR code at their table to view menus, place orders, and make payments without staff intervention.
+| Status | Meaning |
+|--------|---------|
+| :white_check_mark: | Completed |
+| :construction: | In Progress |
+| :white_large_square: | Planned |
 
 ---
 
-## **2. Inventory and Stock Management**
+## Phase 1: Foundation (Core Infrastructure)
 
-- [ ] **Inventory Tracking**  
-  Monitors stock levels of ingredients and items in real time to prevent shortages.
+Essential infrastructure that other features depend on.
 
-- [ ] **Low Stock Alerts**  
-  Sends notifications when inventory falls below preset thresholds, allowing for timely replenishment.
-
-- [ ] **Ingredient-Level Management**  
-  Tracks ingredients used in menu items to calculate stock levels more accurately.
-
-- [ ] **Vendor Management**  
-  Stores vendor details and automates the reordering process for supplies.
-
-- [ ] **Waste Management Reporting**  
-  Tracks food waste trends and helps identify areas for cost savings or sustainability improvements.
-
-- [ ] **Live Menu Sync Across Platforms**  
-  Automatically syncs menu updates (e.g., price changes, sold-out items) across all connected platforms, including the website and third-party delivery apps.
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_check_mark: | User Authentication | Secure login/logout with session management |
+| :white_check_mark: | Role-Based Access Control | Granular permissions based on user roles (owner, admin, manager, cashier) |
+| :white_check_mark: | User Management | Create, edit, and manage user accounts |
+| :white_check_mark: | Staff Profiles | Employee directory with contact information |
+| :white_large_square: | Business Settings | Configure business name, address, tax rates, currency |
+| :white_large_square: | Multi-Location Support | Manage multiple restaurant locations from one system |
 
 ---
 
-## **3. Employee Management**
+## Phase 2: Core POS Operations
 
-- [ ] **Role-Based Access Control (RBAC)**  
-  Configures user permissions based on roles (e.g., cashier, manager, kitchen staff).
+The fundamental features needed to run daily operations.
 
-- [ ] **Employee Time Tracking**  
-  Tracks working hours, clock-in/clock-out times, and attendance records.
+### Menu & Products
 
-- [ ] **Performance Metrics**  
-  Provides reports on employee performance, such as sales figures or average serving time.
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Menu Categories | Organize items into categories (appetizers, mains, desserts, drinks) |
+| :white_large_square: | Menu Items | Add products with name, price, description, and image |
+| :white_large_square: | Item Modifiers | Options and add-ons (size, toppings, preparation style) |
+| :white_large_square: | Item Availability | Mark items as available, sold out, or hidden |
 
-- [ ] **Accessibility Features**  
-  Includes visual and audio aids for customers or employees with disabilities (e.g., screen reader support or audio confirmations).
+### Order Management
 
----
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | New Order | Create orders for dine-in, takeout, or delivery |
+| :white_large_square: | Order Editing | Modify items, quantities, and special instructions |
+| :white_large_square: | Order Status Tracking | Track orders through placed → preparing → ready → completed |
+| :white_large_square: | Special Requests | Add notes for dietary restrictions or preparation preferences |
 
-## **4. Customer Management**
+### Payments
 
-- [ ] **Customer Profiles**  
-  Stores customer information such as names, contact details, and order history.
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Cash Payments | Process cash transactions with change calculation |
+| :white_large_square: | Card Payments | Accept credit/debit cards (integration-ready) |
+| :white_large_square: | Split Bills | Divide payment between multiple customers |
+| :white_large_square: | Tips | Add and track gratuities |
+| :white_large_square: | Receipts | Generate and print/email receipts |
 
-- [ ] **Loyalty Program**  
-  Offers features for managing reward points, discounts, or special offers for loyal customers.
+### Table Management
 
-- [ ] **Order History**  
-  Retrieves previous orders for faster reordering and personalized service.
-
-- [ ] **Allergy and Dietary Notes**  
-  Allows staff to record and store customer allergy or dietary restrictions for safer and more personalized service.
-
-- [ ] **Gamification for Loyalty Programs**  
-  Encourages repeat business by gamifying loyalty rewards (e.g., rewards for milestones like 10 visits or referrals).
-
----
-
-## **5. Reporting and Analytics**
-
-- [ ] **Sales Reports**  
-  Displays detailed sales information, including daily, weekly, and monthly performance.
-
-- [ ] **Tax Reporting**  
-  Automatically calculates and tracks sales tax information for accounting purposes.
-
-- [ ] **Inventory Reports**  
-  Offers insights on stock levels, usage trends, and waste.
-
-- [ ] **Employee Reports**  
-  Measures employee productivity and tracks staff contributions to overall sales.
-
-- [ ] **Waste Management Metrics**  
-  Provides detailed insights into food waste, helping restaurants improve inventory management and sustainability.
-
-- [ ] **Weather-Responsive Promotions**  
-  Automatically adjusts promotions or suggestions based on weather conditions (e.g., hot drinks on rainy days or iced beverages during heatwaves).
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Floor Plan | Visual layout of tables and seating areas |
+| :white_large_square: | Table Status | Track available, occupied, reserved tables |
+| :white_large_square: | Table Assignment | Assign orders to specific tables |
+| :white_large_square: | Merge/Transfer Tables | Combine or move orders between tables |
 
 ---
 
-## **6. Kitchen Management**
+## Phase 3: Kitchen & Operations
 
-- [ ] **Kitchen Display System (KDS)**  
-  Sends customer orders directly to the kitchen for preparation, eliminating the need for paper tickets.
+Features that improve kitchen efficiency and back-of-house operations.
 
-- [ ] **Order Prioritization**  
-  Allows the kitchen to prioritize specific orders based on type (e.g., dine-in vs. delivery).
+### Kitchen Display System (KDS)
 
-- [ ] **Order Modification Notifications**  
-  Notifies kitchen staff immediately if any changes are made to an active order.
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Order Queue | Display incoming orders for kitchen staff |
+| :white_large_square: | Order Prioritization | Highlight rush orders or sort by type |
+| :white_large_square: | Order Completion | Mark items/orders as prepared |
+| :white_large_square: | Modification Alerts | Highlight order changes or special requests |
 
-- [ ] **Prep Time Estimates for Orders**  
-  Calculates estimated preparation times based on kitchen load and updates staff and customers in real time.
+### Inventory
 
----
-
-## **7. Restaurant-Specific Features**
-
-- [ ] **Reservation System**  
-  Allows customers to make reservations directly, which staff can view and manage.
-
-- [ ] **Happy Hour Support**  
-  Sets discounts or special pricing for specific times and days.
-
-- [ ] **Special Requests Handling**  
-  Lets customers include specific instructions or special dietary requirements on their orders.
-
-- [ ] **Menu Upselling Prompts**  
-  Provides waitstaff with reminders or suggestions to upsell menu items such as desserts or drinks.
-
-- [ ] **Seasonal Promotions and Themed Menus**  
-  Supports creating promotional menus for events or holidays with scheduling to activate automatically.
-
-- [ ] **Dynamic Pricing/Surge Pricing**  
-  Adjusts item prices based on demand, time, or inventory availability.
-
-- [ ] **Dynamic Discounts**  
-  Links promotions to specific purchasing conditions (e.g., bundling, off-peak hours).
-
-- [ ] **Customizable Floor Plans**  
-  Enables staff to drag, drop, and modify the restaurant layout for special events or efficiency.
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Stock Tracking | Monitor inventory levels in real time |
+| :white_large_square: | Low Stock Alerts | Notifications when items fall below threshold |
+| :white_large_square: | Ingredient Management | Track ingredients used in menu items |
+| :white_large_square: | Stock Adjustments | Record waste, spillage, or manual corrections |
 
 ---
 
-## **8. POS Hardware Integration**
+## Phase 4: Reporting & Analytics
 
-- [ ] **Cash Drawer Integration**  
-  Automatically opens the cash drawer upon finalizing a sale.
+Data-driven insights for business decisions.
 
-- [ ] **Card Reader Integration**  
-  Processes credit and debit card transactions with connected card readers.
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Sales Reports | Daily, weekly, monthly revenue summaries |
+| :white_large_square: | Product Performance | Best sellers, slow movers, category breakdown |
+| :white_large_square: | Employee Reports | Sales by staff member, hours worked |
+| :white_large_square: | Tax Reports | Sales tax calculations for accounting |
+| :white_large_square: | Inventory Reports | Stock levels, usage trends, waste tracking |
+| :white_large_square: | Export Data | Download reports as CSV/PDF |
 
-- [ ] **Receipt Printer Integration**  
-  Supports different types of receipt printers for printing receipts or kitchen tickets.
+---
 
-- [ ] **Barcode Scanner Support**  
-  Scans barcodes for packaged goods, beverages, or other saleable items.
+## Phase 5: Customer Experience
 
---- 
+Features that enhance the customer-facing experience.
 
-With LibrePOS, your business now has advanced, modern capabilities to meet the most intricate needs of any restaurant.
+### Customer Management
+
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Customer Profiles | Store contact info and preferences |
+| :white_large_square: | Order History | View past orders for quick reordering |
+| :white_large_square: | Dietary Notes | Track allergies and dietary restrictions |
+
+### Loyalty & Promotions
+
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Discounts | Percentage or fixed-amount discounts |
+| :white_large_square: | Happy Hour Pricing | Time-based automatic price adjustments |
+| :white_large_square: | Loyalty Points | Reward repeat customers |
+| :white_large_square: | Promotional Codes | Single-use or campaign discount codes |
+
+### Reservations
+
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Reservation Calendar | Accept and manage table reservations |
+| :white_large_square: | Waitlist | Manage walk-in queues during busy periods |
+| :white_large_square: | Confirmation Notifications | Email/SMS reservation confirmations |
+
+---
+
+## Phase 6: Integrations & Hardware
+
+Connecting LibrePOS to external systems and devices.
+
+### Hardware Support
+
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Receipt Printers | Thermal printer support for receipts and kitchen tickets |
+| :white_large_square: | Cash Drawers | Automatic drawer open on cash transactions |
+| :white_large_square: | Barcode Scanners | Scan packaged items for quick entry |
+| :white_large_square: | Card Readers | EMV/NFC payment terminal integration |
+
+### External Integrations
+
+| Status | Feature | Description |
+|--------|---------|-------------|
+| :white_large_square: | Accounting Export | Integration with QuickBooks, Xero, etc. |
+| :white_large_square: | Delivery Platforms | Sync with DoorDash, UberEats, etc. |
+| :white_large_square: | Online Ordering | Customer-facing order website |
+
+---
+
+## Future Considerations
+
+Advanced features for future exploration:
+
+- **QR Code Ordering** - Contactless ordering from customer devices
+- **Voice Ordering** - Voice command input for hands-free operation
+- **Multi-Language Receipts** - Customer-selected language for receipts
+- **Dynamic Pricing** - Demand-based price adjustments
+- **Predictive Analytics** - AI-powered sales forecasting
+- **Vendor Management** - Automated reordering from suppliers
+
+---
+
+## Contributing
+
+Want to help build a feature? Check the [contributing guidelines](README.md#contributing) and open an issue to discuss implementation before starting work.

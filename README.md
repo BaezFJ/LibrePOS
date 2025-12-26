@@ -1,60 +1,153 @@
 # LibrePOS
 
-LibrePOS is a **free and open-source**, web-based Point of Sale (POS) system designed specifically for **restaurants** and **mobile food vendors**. Built using **Python** and **Flask**, it combines modern front-end and back-end technologies to deliver a reliable, efficient, and customizable POS experience.
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Flask](https://img.shields.io/badge/flask-3.x-green.svg)](https://flask.palletsprojects.com/)
+[![Development Status](https://img.shields.io/badge/status-early%20development-orange.svg)]()
 
-This project is ideal for **small businesses** seeking a cost-effective and flexible POS solution to manage their sales operations seamlessly.
+LibrePOS is a **free and open-source** web-based Point of Sale system designed for **restaurants** and **mobile food vendors**. Built with Python and Flask, it aims to provide small businesses with a cost-effective, flexible, and modern POS solution.
 
-## Features
+> **Note:** This project is in early development. Core infrastructure is in place, with business features actively being built.
 
-- **Inventory Management**: Track and manage items in stock to ensure you’re never out of key menu items.
-- **Customizable Menu**: Create and edit your menu or inventory items effortlessly.
-- **Multiple Payment Options**: Accept different types of payments like cash, card, and digital wallets.
-- **Multi-user Support**: Manage roles and permissions for users like cashiers, managers, or administrators.
-- **Real-time Reporting**: View sales reports and summaries in real-time.
-- **Responsive Design**: Accessible on both desktop and mobile devices.
-- **Open Source and Free**: Customize it to meet your specific needs!
+## Current Status
+
+### Implemented
+
+- **Authentication System** - User login/logout with session management
+- **Role-Based Access Control (RBAC)** - Granular permissions with policy-based authorization
+- **User Management** - Create, edit, and manage users with role assignments
+- **Staff Management** - Employee profiles and staff directory
+- **Blueprint Architecture** - Modular, extensible codebase structure
+- **CLI Tools** - Database management, user seeding, and permission syncing
+
+### In Progress
+
+See [POS_FEATURES.md](POS_FEATURES.md) for the complete feature roadmap, including:
+- Order Management
+- Menu Management
+- Table Management
+- Inventory Tracking
+- Kitchen Display System
+- Reporting & Analytics
 
 ## Technology Stack
 
-- **Backend**: Python (Flask)
-- **Frontend**: Bootstrap, JavaScript, and modern UI frameworks
-- **Database**:
-  - [**PostgreSQL**](DATABASE_CONFIGURATION.md#1-postgresql)
-  - [**MySQL**](DATABASE_CONFIGURATION.md#2-mysql)
-  - [**Oracle**](DATABASE_CONFIGURATION.md#3-oracle)
-  - [**Microsoft SQL Server**](DATABASE_CONFIGURATION.md#4-microsoft-sql-server)
-  - [**SQLite**](DATABASE_CONFIGURATION.md#5-sqlite-default-for-development-and-standalone-instances) (used for development and standalone instances)
-- **Deployment**: Compatible with popular platforms such as Docker, Heroku, and AWS.
+| Component | Technology |
+|-----------|------------|
+| Backend | Python 3.12+, Flask 3.x |
+| Database | SQLAlchemy 2.0 (SQLite for dev, PostgreSQL for production) |
+| Authentication | Flask-Login |
+| Forms | Flask-WTF, WTForms |
+| Server | Waitress (dev), Gunicorn (production) |
 
+## Quick Start
 
-## Installation
+### Prerequisites
 
-You can install LibrePOS using one of the following methods. See the [Installation Guide](INSTALLATION.md) for detailed steps:
+- Python 3.12 or higher
+- [uv](https://docs.astral.sh/uv/) package manager (recommended) or pip
 
-1. [Install from GitHub](INSTALLATION.md#1-installing-librepos-from-github)
-2. [Install from PyPI](INSTALLATION.md#2-installing-librepos-from-pypi)
-3. [Install with `uv`, `venv`, or `poetry`](INSTALLATION.md#5-using-uv-for-installation-and-management)
+### Installation
 
+```bash
+# Clone the repository
+git clone https://github.com/BaezFJ/LibrePOS.git
+cd LibrePOS
 
-## Contribution
+# Create environment file
+cp librepos/.env.sample .env
+# Edit .env with your configuration
 
-Contributions are welcome! If you'd like to improve this project or add new features, please fork the repository, make your changes, and submit a pull request.
+# Install dependencies with uv
+uv sync
 
-### Steps to Contribute:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m "Add some feature"`).
-4. Push to the branch (`git push origin feature-name`).
-5. Submit a pull request.
+# Initialize the database and seed permissions
+uv run flask reset-db
+uv run flask seed-permissions
+uv run flask create-test-users
+
+# Start the development server
+uv run flask run
+```
+
+Visit `http://127.0.0.1:5000` in your browser.
+
+### Default Test Users
+
+After running `flask create-test-users`, these accounts are available:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Owner | owner@librepos.com | librepos |
+| Admin | admin@librepos.com | librepos |
+| Manager | manager@librepos.com | librepos |
+| Cashier | cashier@librepos.com | librepos |
+
+**Important:** Change these credentials in production environments.
+
+## Development
+
+```bash
+# Run tests with coverage
+uv run pytest
+
+# Lint and format code
+uv run ruff check .
+uv run ruff format .
+
+# Type checking
+uv run pyright
+
+# Create a new blueprint
+uv run flask create-bp <name>
+
+# Sync permissions after code changes
+uv run flask sync-permissions
+```
+
+## Project Structure
+
+```
+librepos/
+├── app.py              # Application factory
+├── config.py           # Environment configurations
+├── extensions.py       # Flask extensions
+├── cli.py              # CLI commands
+├── iam/                # Identity & Access Management
+├── main/               # Dashboard, error handlers
+├── staff/              # Staff management
+├── permissions/        # Permission registry
+├── utils/              # Shared utilities
+└── ui/                 # Templates and static assets
+```
+
+## Configuration
+
+LibrePOS uses environment variables for configuration. See [ENVIRONMENT_CONFIGURATION.md](ENVIRONMENT_CONFIGURATION.md) for details.
+
+For database setup with PostgreSQL, MySQL, or other backends, see [DATABASE_CONFIGURATION.md](DATABASE_CONFIGURATION.md).
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Make your changes
+4. Run tests and linting (`pytest && ruff check .`)
+5. Commit your changes (`git commit -m "Add your feature"`)
+6. Push to the branch (`git push origin feature/your-feature`)
+7. Open a Pull Request
 
 ## License
 
-LibrePOS is licensed under the **GNU GENERAL PUBLIC LICENSE Version 3**, giving you the freedom to run, study, share, and modify the software while ensuring that all derivative works remain open source. See the [LICENSE](LICENSE) file for more details.
+LibrePOS is licensed under the [GNU General Public License v3.0](LICENSE). You are free to use, modify, and distribute this software, provided that derivative works remain open source under the same license.
 
 ## Support
 
-If you encounter any issues or have questions, feel free to open an issue on the [GitHub repository](https://github.com/BaezFJ/LibrePOS/issues).
+- **Issues:** [GitHub Issues](https://github.com/BaezFJ/LibrePOS/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/BaezFJ/LibrePOS/discussions)
 
 ---
 
-Empowering small businesses with a flexible and modern POS system!
+Built with Flask for the food service industry.
