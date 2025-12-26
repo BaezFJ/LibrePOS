@@ -1,6 +1,7 @@
-from flask import flash, redirect, render_template, url_for
+from flask import current_app, flash, redirect, render_template, url_for
 from flask_login import current_user, login_user, logout_user
 
+from librepos.utils.images import delete_user_image, process_user_image
 from librepos.utils.navigation import get_redirect_url
 
 from .decorators import permission_required
@@ -54,9 +55,30 @@ def edit_user_view(slug: str):
         return redirect(url_for("iam.users"))
 
     form = UserEditForm(user=user, current_user=current_user, obj=user)
-
     if form.validate_on_submit():
+        # Handle image upload before populate_obj
+        new_image_path = None
+        if form.image.data and hasattr(form.image.data, "filename") and form.image.data.filename:
+            # Delete an old image if it exists and is not a default
+            if user.image:
+                delete_user_image(user.image, str(current_app.static_folder))
+
+            # Process and save a new image
+            new_image_path = process_user_image(
+                file=form.image.data,
+                username=user.username,
+                static_folder=str(current_app.static_folder),
+            )
+
+        # Store the current image before populate_obj overwrites it
+        current_image = user.image
+
+        # Populate other fields
         form.populate_obj(user)
+
+        # Restore/set the correct image path (not the FileStorage object)
+        user.image = new_image_path if new_image_path else current_image
+
         user.save()
         flash("User updated successfully.", "success")
         return redirect(url_for("iam.users"))

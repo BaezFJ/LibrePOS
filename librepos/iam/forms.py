@@ -1,9 +1,12 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from wtforms import BooleanField, FileField, PasswordField, SelectField, SubmitField
 from wtforms.fields.simple import StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Optional, ValidationError
 
 from .models import IAMRole, IAMUser, UserGender, UserStatus
+
+ALLOWED_IMAGE_EXTENSIONS = ["png", "jpg", "jpeg"]
 
 
 class UserLoginForm(FlaskForm):
@@ -77,7 +80,13 @@ class UserRegisterForm(FlaskForm):
 
 
 class UserEditForm(FlaskForm):
-    image = FileField("Profile Image", validators=[Optional()])
+    image = FileField(
+        "Profile Image",
+        validators=[
+            Optional(),
+            FileAllowed(ALLOWED_IMAGE_EXTENSIONS, "Only PNG and JPEG images are allowed."),
+        ],
+    )
     role_id = SelectField("Role", coerce=int, validators=[DataRequired()])
     username = StringField("Username", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), Email()])
