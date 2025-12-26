@@ -1,33 +1,35 @@
+import re
+from pathlib import Path
+
 import click
 
+from librepos.iam.models import UserStatus
 
-def add_cli_commands(app):
+
+def add_cli_commands(app):  # noqa: PLR0915
     """Add custom commands to the Flask CLI."""
 
-    from librepos.extensions import db
-    from librepos.iam.models import IAMUser
+    from librepos.extensions import db  # noqa: PLC0415
+    from librepos.iam.models import IAMRole, IAMUser  # noqa: PLC0415
 
     @app.cli.command("create-bp", help="Create a new blueprint.")
     @click.argument("blueprint_name")
     def create_bp(blueprint_name):
         """Create a new blueprint package directory with standard files."""
-        import os
-        import re
-
         if not re.match("^[a-z][a-z0-9_]*$", blueprint_name):
             click.echo(
                 "Error: Blueprint name must be lowercase, start with a letter, and contain only letters, numbers, and underscores."
             )
             return
 
-        bp_dir = os.path.join("librepos", blueprint_name)
-        if os.path.exists(bp_dir):
+        bp_dir = Path("librepos") / blueprint_name
+        if bp_dir.exists():
             click.echo(f"Error: Blueprint '{blueprint_name}' already exists.")
             return
 
         # Create a blueprint directory and __init__.py
-        os.makedirs(bp_dir)
-        open(os.path.join(bp_dir, "__init__.py"), "w").close()
+        bp_dir.mkdir(parents=True)
+        (bp_dir / "__init__.py").touch()
 
         # Create standard blueprint files
         standard_files = [
@@ -38,12 +40,11 @@ def add_cli_commands(app):
             "permissions.py",
         ]
         for file in standard_files:
-            with open(os.path.join(bp_dir, file), "w") as f:
-                f.write(f"# {blueprint_name} {file[:-3]} module\n")
+            (bp_dir / file).write_text(f"# {blueprint_name} {file[:-3]} module\n")
 
         # Create templates directory structure
-        templates_dir = os.path.join(bp_dir, "templates", blueprint_name)
-        os.makedirs(templates_dir)
+        templates_dir = bp_dir / "templates" / blueprint_name
+        templates_dir.mkdir(parents=True)
 
         click.echo(f"Blueprint '{blueprint_name}' created successfully with standard files.")
 
@@ -63,8 +64,6 @@ def add_cli_commands(app):
     @click.option("--last-name", prompt=True, help="The last name.", required=True)
     def add_superuser(username, password, email, first_name, middle_name, last_name):
         """Add a superuser."""
-        # from librepos.auth.models import AuthGroup
-
         click.echo("\nPlease confirm the following details:")
         click.echo(f"Username: {username}")
         click.echo(f"Password: {'*' * len(password)}")
@@ -90,12 +89,29 @@ def add_cli_commands(app):
         click.echo(f"Superuser '{username}' created successfully.")
 
     @app.cli.command("create-test-users", help="Create test users for development.")
-    def create_test_users():
-        """Create test users with different roles (superuser, admin, staff, customer)."""
-        click.echo("Creating test users...")
+    @click.option(
+        "--users",
+        "-u",
+        multiple=True,
+        type=click.Choice(
+            ["owner", "admin", "manager", "cashier", "waiter", "customer"], case_sensitive=False
+        ),
+        help="Specific users to create. If not provided, all test users will be created.",
+    )
+    def create_test_users(users):
+        """Create test users with different roles.
 
-        test_users = [
-            {
+        If no users are specified, all default test users will be created.
+        Use --users/-u to specify one or more users to create.
+
+        Example:
+            flask create-test-users
+            flask create-test-users --users owner --users admin
+            flask create-test-users -u cashier -u waiter
+        """
+        available_users = {
+            "owner": {
+                "role": "owner",
                 "username": "owner",
                 "email": "owner@test.com",
                 "password": "owner123",
@@ -103,7 +119,8 @@ def add_cli_commands(app):
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "admin": {
+                "role": "admin",
                 "username": "admin",
                 "email": "admin@test.com",
                 "password": "admin123",
@@ -111,7 +128,8 @@ def add_cli_commands(app):
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "manager": {
+                "role": "manager",
                 "username": "manager",
                 "email": "manager@test.com",
                 "password": "manager123",
@@ -119,7 +137,8 @@ def add_cli_commands(app):
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "cashier": {
+                "role": "cashier",
                 "username": "cashier",
                 "email": "cashier@test.com",
                 "password": "cashier123",
@@ -127,7 +146,8 @@ def add_cli_commands(app):
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "waiter": {
+                "role": "waiter",
                 "username": "waiter",
                 "email": "waiter@test.com",
                 "password": "waiter123",
@@ -135,7 +155,8 @@ def add_cli_commands(app):
                 "middle_name": "Test",
                 "last_name": "User",
             },
-            {
+            "customer": {
+                "role": None,
                 "username": "customer",
                 "email": "customer@test.com",
                 "password": "customer123",
@@ -143,25 +164,48 @@ def add_cli_commands(app):
                 "middle_name": "Test",
                 "last_name": "User",
             },
-        ]
+        }
 
-        for user_data in test_users:
+        # Determine which users to create
+        if users:
+            users_to_create = [available_users[u.lower()] for u in users]
+            click.echo(f"Creating {len(users_to_create)} test user(s)...")
+        else:
+            users_to_create = list(available_users.values())
+            click.echo("Creating all test users...")
+
+        created_count = 0
+        skipped_count = 0
+
+        for user_data in users_to_create:
             username = user_data["username"]
             if IAMUser.query.filter_by(username=username).first():
                 click.echo(f"User '{username}' already exists. Skipping...")
+                skipped_count += 1
+                continue
+
+            _role = IAMRole.get_first_by(slug=user_data.get("role", None))
+            if not _role:
+                click.echo(
+                    f"Warning: Role '{user_data['role']}' not found. Skipping user '{username}'."
+                )
+                skipped_count += 1
                 continue
 
             IAMUser.create(
+                role_id=_role.id if _role else None,
                 username=user_data["username"],
                 email=user_data["email"],
                 unsecure_password=user_data["password"],
                 first_name=user_data["first_name"],
                 middle_name=user_data["middle_name"],
                 last_name=user_data["last_name"],
+                status=user_data.get("status", UserStatus.ACTIVE),
             )
             click.echo(f"Created {username} (password: {user_data['password']})")
+            created_count += 1
 
-        click.echo("\nTest users created successfully!")
+        click.echo(f"\nSummary: {created_count} created, {skipped_count} skipped")
         click.echo("Note: These users are for development/testing purposes only.")
 
     @app.cli.command(
@@ -177,7 +221,7 @@ def add_cli_commands(app):
         - Permissions from all blueprints
         - Default policies with permission mappings
         """
-        from librepos.permissions import seed_permissions_and_roles
+        from librepos.permissions import seed_permissions_and_roles  # noqa: PLC0415
 
         click.echo("=" * 50)
         click.echo("Auto-seeding IAM infrastructure from blueprints...")
@@ -195,7 +239,7 @@ def add_cli_commands(app):
         - Adds new permissions found in code
         - Reports orphaned permissions in a database (doesn't delete them)
         """
-        from librepos.permissions import PermissionSeeder
+        from librepos.permissions import PermissionSeeder  # noqa: PLC0415
 
         click.echo("=" * 50)
         click.echo("Syncing permissions with code...")

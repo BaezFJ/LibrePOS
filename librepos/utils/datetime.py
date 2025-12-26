@@ -1,4 +1,4 @@
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 
@@ -20,6 +20,4 @@ def timedelta_months(months, compare_date=None):
         compare_date = date.today()
 
     delta = months * 365 / 12
-    compare_date_with_delta = compare_date + timedelta(delta)
-
-    return compare_date_with_delta
+    return compare_date + timedelta(delta)

@@ -1,6 +1,6 @@
 import os
-
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -71,9 +71,7 @@ class BaseConfig:
     # Flask-SQLAlchemy Settings
     DATABASE_URL = _env_str("DATABASE_URL")
     SQLALCHEMY_DATABASE_URI = (
-        DATABASE_URL
-        if DATABASE_URL
-        else f"sqlite:///{os.path.join(BASE_DIR, DEFAULT_SQLITE_FILENAME)}"
+        DATABASE_URL if DATABASE_URL else f"sqlite:///{BASE_DIR / DEFAULT_SQLITE_FILENAME}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

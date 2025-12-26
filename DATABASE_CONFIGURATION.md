@@ -1,169 +1,141 @@
-# Database Configuration Guide for LibrePOS
+# Database Configuration
 
-This document explains how to connect LibrePOS to various databases using `Flask-SQLAlchemy`. You’ll learn how to set up your **environment file** (`.env`) and configure the SQLAlchemy URI for different database systems.
+LibrePOS uses SQLAlchemy and supports multiple database backends. This guide covers how to configure your database connection.
 
-> **Note**: This guide does not cover installing the databases themselves. It focuses solely on configuring the application to connect to an existing database.
+## Quick Reference
 
----
+| Database | Use Case | URI Format |
+|----------|----------|------------|
+| SQLite | Development, small deployments | `sqlite:///librepos.db` |
+| PostgreSQL | Production (recommended) | `postgresql://user:pass@host:5432/db` |
+| MySQL | Production (alternative) | `mysql+pymysql://user:pass@host:3306/db` |
 
-## Prerequisites
+## SQLite (Default)
 
-- Ensure that your desired database system is installed and running.
-- Use the correct database credentials when setting up your `.env` file.
+SQLite requires no additional setup and is ideal for development or single-user deployments.
 
-LibrePOS uses the `SQLALCHEMY_DATABASE_URI` setting from the `.env` file to connect to the database. Below are connection configurations for the most common database systems.
-
----
-
-## 1. PostgreSQL
-
-To use PostgreSQL, configure your `.env` file as follows:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=postgresql://username:password@host:port/database_name
-```
-
-### Example:
-If your PostgreSQL server is running on `localhost` with:
-- Username: `postgres`
-- Password: `securepassword`
-- Port: `5432`
-- Database name: `librepos`
-
-Your `.env` file should look like this:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=postgresql://postgres:securepassword@localhost:5432/librepos
-```
-
----
-
-## 2. MySQL
-
-To use MySQL, configure your `.env` file as follows:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=mysql+pymysql://username:password@host:port/database_name
-```
-
-### Example:
-If your MySQL server is running on `localhost` with:
-- Username: `root`
-- Password: `securepassword`
-- Port: `3306`
-- Database name: `librepos`
-
-Your `.env` file should look like this:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:securepassword@localhost:3306/librepos
-```
-
-> **Note**: Install the `pymysql` Python package for MySQL support by running:
-> ```bash
-> pip install pymysql
-> ```
-
----
-
-## 3. Oracle
-
-To use Oracle, configure your `.env` file as follows:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=oracle+cx_oracle://username:password@host:port/?service_name=service_name
-```
-
-### Example:
-If your Oracle instance is running on `192.168.1.100` with:
-- Username: `admin`
-- Password: `securepassword`
-- Port: `1521`
-- Service name: `xe`
-
-Your `.env` file should look like this:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=oracle+cx_oracle://admin:securepassword@192.168.1.100:1521/?service_name=xe
-```
-
-> **Note**: Install the `cx_Oracle` package for Oracle support by running:
-> ```bash
-> pip install cx_Oracle
-> ```
-
----
-
-## 4. Microsoft SQL Server
-
-To use Microsoft SQL Server, configure your `.env` file as follows:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=mssql+pyodbc://username:password@host:port/database_name?driver=ODBC+Driver+17+for+SQL+Server
-```
-
-### Example:
-If your SQL Server instance is running on `localhost` with:
-- Username: `sa`
-- Password: `securepassword`
-- Port: `1433`
-- Database name: `librepos`
-
-Your `.env` file should look like this:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=mssql+pyodbc://sa:securepassword@localhost:1433/librepos?driver=ODBC+Driver+17+for+SQL+Server
-```
-
-> **Note**:
-> - Install the `pyodbc` Python package for SQL Server support by running:
-> ```bash
-> pip install pyodbc
-> ```
-> - Make sure the correct ODBC driver (e.g., `ODBC Driver 17 for SQL Server`) is installed on your system.
-
----
-
-## 5. SQLite (Default for Development and Standalone Instances)
-
-SQLite is lightweight and easy to use, making it ideal for standalone installations or during development. To use SQLite, configure your `.env` file as follows:
-
-```plaintext
-SQLALCHEMY_DATABASE_URI=sqlite:///absolute/path/to/your/database.db
-```
-
-### Example:
-For a database file named `librepos.db` in your project folder, configure your `.env` file like this:
-
-```plaintext
+```bash
+# .env
 SQLALCHEMY_DATABASE_URI=sqlite:///librepos.db
 ```
 
-SQLite doesn't require additional software installations or drivers. The database file will be created automatically if it doesn’t exist.
+The database file is created automatically. No drivers needed.
 
----
+## PostgreSQL (Recommended for Production)
 
-## Testing the Configuration
+PostgreSQL is the recommended database for production deployments.
 
-Once the database is configured, test the connection by running database migrations or starting the application.
+### 1. Install the driver
 
-### Example Command (for Flask-Migrate):
 ```bash
-  flask db upgrade
+# With uv (includes psycopg2-binary)
+uv sync --extra prod
+
+# Or with pip
+pip install psycopg2-binary
 ```
 
-If the configuration is correct, this command will connect to the database and apply migrations without errors.
+### 2. Configure the connection
 
----
+```bash
+# .env
+SQLALCHEMY_DATABASE_URI=postgresql://username:password@localhost:5432/librepos
+```
+
+### Example
+
+```bash
+# Local PostgreSQL with user 'postgres', password 'secret', database 'librepos'
+SQLALCHEMY_DATABASE_URI=postgresql://postgres:secret@localhost:5432/librepos
+
+# Remote server
+SQLALCHEMY_DATABASE_URI=postgresql://librepos_user:strongpass@db.example.com:5432/librepos_prod
+```
+
+## MySQL / MariaDB
+
+### 1. Install the driver
+
+```bash
+uv add pymysql
+# or
+pip install pymysql
+```
+
+### 2. Configure the connection
+
+```bash
+# .env
+SQLALCHEMY_DATABASE_URI=mysql+pymysql://username:password@localhost:3306/librepos
+```
+
+## Initializing the Database
+
+After configuring your connection, initialize the database:
+
+```bash
+# Reset and create tables (development only - destroys existing data)
+uv run flask reset-db
+
+# Seed permissions
+uv run flask seed-permissions
+
+# Create test users (optional)
+uv run flask create-test-users
+```
+
+## Connection String Format
+
+The general format for SQLAlchemy database URIs:
+
+```
+dialect+driver://username:password@host:port/database
+```
+
+| Component | Description |
+|-----------|-------------|
+| `dialect` | Database type (postgresql, mysql, sqlite) |
+| `driver` | Python driver (optional, e.g., pymysql) |
+| `username` | Database user |
+| `password` | Database password (URL-encode special characters) |
+| `host` | Server hostname or IP |
+| `port` | Server port |
+| `database` | Database name |
+
+### Special Characters in Passwords
+
+If your password contains special characters, URL-encode them:
+
+| Character | Encoded |
+|-----------|---------|
+| `@` | `%40` |
+| `:` | `%3A` |
+| `/` | `%2F` |
+| `#` | `%23` |
+
+Example: password `p@ss:word` becomes `p%40ss%3Aword`
 
 ## Troubleshooting
 
-If you encounter connection issues:
-1. Double-check the credentials and host information in your `.env` file.
-2. Verify that your database server is running and accessible from your application’s host.
-3. Ensure any necessary Python driver packages (e.g., `pymysql`, `cx_Oracle`, `pyodbc`) are installed.
-4. Review the full error message for additional clues.
+**Connection refused**
+- Verify the database server is running
+- Check host and port are correct
+- Ensure firewall allows connections
 
----
+**Authentication failed**
+- Verify username and password
+- Check the user has access to the specified database
+- URL-encode special characters in password
 
-With the above configurations, LibrePOS can connect to and interact with a variety of databases using Flask-SQLAlchemy. Happy coding!
+**Driver not found**
+- Install the appropriate Python driver package
+- For PostgreSQL: `psycopg2-binary`
+- For MySQL: `pymysql`
+
+**Database does not exist**
+- Create the database first: `CREATE DATABASE librepos;`
+- SQLite creates the file automatically; others require manual creation
+
+## Other Databases
+
+LibrePOS can work with any SQLAlchemy-supported database. For Oracle or SQL Server, refer to the [SQLAlchemy documentation](https://docs.sqlalchemy.org/en/20/core/engines.html).

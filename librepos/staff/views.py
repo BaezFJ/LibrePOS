@@ -1,7 +1,7 @@
 from flask import render_template
 
-from librepos.iam.models import IAMUser, IAMRole
 from librepos.iam.decorators import permission_required
+from librepos.iam.models import IAMRole, IAMUser
 
 from .permissions import StaffPermissions
 

@@ -3,11 +3,13 @@ from importlib.metadata import version
 from pathlib import Path
 
 from flask import Flask, render_template
-from jinja2 import FileSystemBytecodeCache, StrictUndefined, DebugUndefined
+from jinja2 import DebugUndefined, FileSystemBytecodeCache, StrictUndefined
 
-from librepos.main.routes import register_blueprints
 from librepos.cli import add_cli_commands
 from librepos.extensions import init_extensions
+from librepos.main.routes import register_blueprints
+
+from .config import CONFIG_BY_NAME, BaseConfig, DevelopmentConfig
 
 
 def create_app(config: str | type | None = None):
@@ -15,8 +17,6 @@ def create_app(config: str | type | None = None):
     _static_dir = "ui/static"
 
     app = Flask(__name__, template_folder=_template_dir, static_folder=_static_dir)
-
-    from .config import CONFIG_BY_NAME, DevelopmentConfig, BaseConfig
 
     cfg = config
     if cfg is None:
@@ -56,7 +56,7 @@ def create_app(config: str | type | None = None):
     def inject_global_variables():
         librepos_version = version("librepos")
         business_name = app.config.get("BUSINESS_NAME") or "LibrePOS"
-        return dict(app_version=librepos_version, business_name=business_name)
+        return {"app_version": librepos_version, "business_name": business_name}
 
     # load extensions
     init_extensions(app)

@@ -1,21 +1,32 @@
+import secrets
+from enum import StrEnum
 from typing import Optional
 
 from flask_login import UserMixin
 from slugify import slugify
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from librepos.extensions import db, AssociationModel
+from librepos.extensions import AssociationModel, db
 from librepos.utils.sqlalchemy import CRUDMixin
+
+
+class UserStatus(StrEnum):
+    ACTIVE = "active"
+    PENDING = "pending"
+    INVITED = "invited"
+    SUSPENDED = "suspended"
+    DEACTIVATED = "deactivated"
+    LOCKED = "locked"
+    DELETED = "deleted"
 
 
 class IAMPermission(CRUDMixin, db.Model):
     __tablename__ = "iam_permission"
     # **************** Columns ****************
     name: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    description: Mapped[Optional[str]]
+    description: Mapped[str | None]
 
     # ************** Relationships ****************
     role_permissions: Mapped[list["IAMRolePermission"]] = relationship(
@@ -38,7 +49,7 @@ class IAMPermission(CRUDMixin, db.Model):
         return [pp.policy for pp in self.policy_permissions]
 
     def __init__(self, name: str, **kwargs):
-        super(IAMPermission, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.name = name
 
 
@@ -47,7 +58,7 @@ class IAMPolicyPermission(CRUDMixin, AssociationModel):
     # **************** Columns ****************
     policy_id: Mapped[int] = mapped_column(ForeignKey("iam_policy.id"), primary_key=True)
     permission_id: Mapped[int] = mapped_column(ForeignKey("iam_permission.id"), primary_key=True)
-    added_by_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
+    added_by_id: Mapped[int | None] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
 
     # **************** Relationships ****************
     added_by: Mapped[Optional["IAMUser"]] = relationship(foreign_keys=[added_by_id])
@@ -65,7 +76,7 @@ class IAMPolicy(CRUDMixin, db.Model):
     # **************** Columns ****************
     name: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    description: Mapped[Optional[str]]
+    description: Mapped[str | None]
     is_system: Mapped[bool] = mapped_column(default=False)
 
     # **************** Relationships ****************
@@ -89,7 +100,7 @@ class IAMPolicy(CRUDMixin, db.Model):
         return [rp.role for rp in self.role_policies]
 
     def __init__(self, name: str, **kwargs):
-        super(IAMPolicy, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.name = name
         self.slug = slugify(name)
 
@@ -99,7 +110,7 @@ class IAMRolePermission(CRUDMixin, AssociationModel):
     # **************** Columns ****************
     role_id: Mapped[int] = mapped_column(ForeignKey("iam_role.id"), primary_key=True)
     permission_id: Mapped[int] = mapped_column(ForeignKey("iam_permission.id"), primary_key=True)
-    added_by_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
+    added_by_id: Mapped[int | None] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
 
     # **************** Relationships ****************
     added_by: Mapped[Optional["IAMUser"]] = relationship(foreign_keys=[added_by_id])
@@ -117,7 +128,7 @@ class IAMRolePolicy(CRUDMixin, AssociationModel):
     # **************** Columns ****************
     role_id: Mapped[int] = mapped_column(ForeignKey("iam_role.id"), primary_key=True)
     policy_id: Mapped[int] = mapped_column(ForeignKey("iam_policy.id"), primary_key=True)
-    added_by_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
+    added_by_id: Mapped[int | None] = mapped_column(ForeignKey("iam_user.id"), nullable=True)
 
     # **************** Relationships ****************
     added_by: Mapped[Optional["IAMUser"]] = relationship(foreign_keys=[added_by_id])
@@ -134,8 +145,9 @@ class IAMRole(CRUDMixin, db.Model):
     __tablename__ = "iam_role"
     # **************** Columns ****************
     name: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
+    is_staff_role: Mapped[bool] = mapped_column(default=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    description: Mapped[Optional[str]]
+    description: Mapped[str | None]
     is_system: Mapped[bool] = mapped_column(default=False)
 
     # **************** Relationships ****************
@@ -164,26 +176,40 @@ class IAMRole(CRUDMixin, db.Model):
         """Get all policies assigned to this role."""
         return [rp.policy for rp in self.role_policies]
 
+    @classmethod
+    def get_all_staff_roles(cls):
+        """Get all staff roles."""
+        return [role for role in cls.get_all() if role.is_staff_role]
+
     def __init__(self, name: str, **kwargs):
-        super(IAMRole, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.name = name
         self.slug = slugify(name)
 
 
 class IAMUser(UserMixin, CRUDMixin, db.Model):
     __tablename__ = "iam_user"
+
+    # **************** Foreign Keys ****************
+    role_id: Mapped[int | None] = mapped_column(ForeignKey("iam_role.id"), nullable=True)
+
     # **************** Columns ****************
     username: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     email: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    hashed_password: Mapped[str] = mapped_column(nullable=False)
+    hashed_password: Mapped[str | None] = mapped_column(nullable=True)
     first_name: Mapped[str] = mapped_column(nullable=False)
-    middle_name: Mapped[Optional[str]]
+    middle_name: Mapped[str | None] = mapped_column(nullable=True)
     last_name: Mapped[str] = mapped_column(nullable=False)
-    role_id: Mapped[Optional[int]] = mapped_column(ForeignKey("iam_role.id"), nullable=True)
+    status: Mapped[UserStatus] = mapped_column(default=UserStatus.PENDING)
+    verification_token: Mapped[str | None] = mapped_column(unique=True, index=True, nullable=True)
 
     # ************** Relationships ****************
     role: Mapped[Optional["IAMRole"]] = relationship(back_populates="users")
+
+    @property
+    def is_staff(self) -> bool:
+        return self.role.is_staff_role if self.role else False
 
     @property
     def permissions(self) -> list["IAMPermission"]:
@@ -192,12 +218,14 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
             return self.role.permissions
         return []
 
-    def __init__(self, username: str, email: str, unsecure_password: str, **kwargs):
-        super(IAMUser, self).__init__(**kwargs)
+    def __init__(self, username: str, email: str, **kwargs):
+        super().__init__(**kwargs)
         self.username = username
         self.slug = slugify(username)
         self.email = email
-        self.set_password(unsecure_password)
+
+        if kwargs.get("unsecure_password") is not None:
+            self.set_password(kwargs["unsecure_password"])
 
     def set_password(self, password: str):
         self.hashed_password = generate_password_hash(password)
@@ -215,6 +243,32 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
             bool: True if the user has the permission, False otherwise
         """
         return any(perm.name == permission_name for perm in self.permissions)
+
+    def generate_verification_token(self) -> str:
+        """Generate a secure verification token for passwordless registration.
+
+        Returns:
+            str: A URL-safe token string
+        """
+        token = secrets.token_urlsafe(32)
+        self.verification_token = token
+        return token
+
+    def verify_token(self, token: str) -> bool:
+        """Validate a verification token against the stored token.
+
+        Args:
+            token: The token to verify
+
+        Returns:
+            bool: True if the token matches, False otherwise
+        """
+        _token = str(self.verification_token)
+        return self.verification_token is not None and secrets.compare_digest(_token, token)
+
+    def clear_verification_token(self):
+        """Clear the verification token after successful verification."""
+        self.verification_token = None
 
     @property
     def fullname(self) -> str:

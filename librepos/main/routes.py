@@ -1,8 +1,9 @@
 from flask import Blueprint, redirect, url_for
 
-from . import views
-from librepos.staff.routes import staff_bp
 from librepos.iam.routes import iam_bp
+from librepos.staff.routes import staff_bp
+
+from . import views
 
 main_bp = Blueprint("main", __name__, template_folder="templates", url_prefix="/")
 

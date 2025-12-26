@@ -6,17 +6,18 @@
 {% endmacro %}
 
 
-{% macro trigger(id, icon) %}
+{% macro trigger(id, icon, aria_label) %}
+    {% set aria_label = aira_label if aria_label is defined else id|replace("-", " ") %}
     <a href="" class="btn-flat waves-effect dropdown-trigger"
-       data-target="{{ id if id is defined }}">
+       data-target="{{ id if id is defined }}" aria-label="{{ aria_label }}">
         <i class="material-symbols-rounded">{{ icon if icon is defined else "more_vert" }}</i>
     </a>
 {% endmacro %}
 
 
-{% macro item(label, url, icon) %}
+{% macro item(label, url, icon, _class) %}
     <li>
-        <a href="{{ url if url is defined }}" class="waves-effect waves-light">
+        <a href="{{ url if url is defined }}" class="waves-effect waves-light{{ ' '+_class if _class is defined }}">
             {% if icon is defined %}
                 <i class="material-symbols-rounded">{{ icon }}</i>
             {% endif %}

@@ -220,13 +220,10 @@ POS_MANAGER_POLICY = PolicyDefinition(
         CashManagementPermissions.MANAGE_CASH_DRAWER,
         CashManagementPermissions.PERFORM_CASH_DROP,
         CashManagementPermissions.PERFORM_PAYOUT,
-        # Inventory (view and adjust)
         InventoryPermissions.VIEW_INVENTORY,
         InventoryPermissions.ADJUST_INVENTORY,
-        # Menu
         MenuPermissions.VIEW_MENU,
         MenuPermissions.MANAGE_MENU,
-        # Discounts
         DiscountPermissions.APPLY_DISCOUNT,
         DiscountPermissions.MANAGE_DISCOUNTS,
         DiscountPermissions.APPLY_COMPS,

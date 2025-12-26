@@ -66,6 +66,14 @@ header, main, footer {
     }
 }
 
+.modal.small {
+    width: 35%;
+}
+
+.modal.large {
+    width: 95%;
+}
+
 .sidenav {
     display: flex;
     flex-direction: column;

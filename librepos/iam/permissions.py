@@ -9,6 +9,8 @@ class IAMPermissions(StrEnum):
     """Permissions for identity and access management functionality."""
 
     # User Management
+    VIEW_USERS = "view:users"
+    CREATE_USERS = "create:users"
     MANAGE_USERS = "manage_users"
 
     # Role & Permission Management
@@ -27,6 +29,8 @@ IAM_FULL_ACCESS_POLICY = PolicyDefinition(
     name="IAM Full Access",
     description="Complete access to all IAM functionality including user, role, and permission management",
     permissions=[
+        IAMPermissions.VIEW_USERS,
+        IAMPermissions.CREATE_USERS,
         IAMPermissions.MANAGE_USERS,
         IAMPermissions.MANAGE_ROLES,
         IAMPermissions.MANAGE_PERMISSIONS,

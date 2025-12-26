@@ -1,198 +1,174 @@
-# Installation Guide for LibrePOS
+# Installation Guide
 
-This guide explains how to install LibrePOS using different methods, including Git and PyPI. It also covers installation using `venv`, `poetry`, and the `uv` package manager from Astral.
+This guide covers how to install and run LibrePOS for development or production use.
 
-## Important: Environment Configuration
-
-Before proceeding with any installation method, you must create a `.env` file in the root directory of the project. This
-file is required for the application to run properly.
-
-Please refer to the [Environment Configuration](ENVIRONMENT_CONFIGURATION.md) file for detailed information about
-required environment variables and how to configure them. This step is crucial for the proper functioning of LibrePOS.
-
-## Default Admin Credentials
-
-After installation, you can log in to the system using these default administrator credentials:
-
-- Email: admin@librepos.com
-- Password: librepos
-
-**Important**: It is strongly recommended to change these credentials immediately after your first login for security
-purposes.
-
-## 1. Installing LibrePOS from GitHub
-
-### Prerequisites
-
-Ensure you have the following installed:
+## Prerequisites
 
 - Python 3.12 or higher
-- pip (Python package installer)
 - Git
+- [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
-Remember to create the `.env` file as described in the [Environment Configuration](ENVIRONMENT_CONFIGURATION.md) before proceeding.
+## Quick Start with uv (Recommended)
 
-### Steps
+[uv](https://docs.astral.sh/uv/) is a fast Python package manager that handles virtual environments automatically.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/BaezFJ/LibrePOS.git
-   cd LibrePOS
-   ```
+### 1. Install uv
 
-2. Set up a virtual environment (optional but recommended):
-   ```bash
-   python3 -m venv env
-   source env/bin/activate  # On Windows: env\Scripts\activate
-   ```
+```bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-3. Install the required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
-4. Set up the database:
-   ```bash
-   flask initdb
-   ```
+# Or with pip
+pip install uv
+```
 
-5. Run the application:
-   ```bash
-   waitress-serve --call librepos:create_app
-   ```
+### 2. Clone and install
 
-6. Open your browser and navigate to:
-   ```
-   http://127.0.0.1:5000
-   ```
+```bash
+git clone https://github.com/BaezFJ/LibrePOS.git
+cd LibrePOS
+```
 
----
+### 3. Configure environment
 
-## 2. Installing LibrePOS from PyPI
+```bash
+cp librepos/.env.sample .env
+```
 
-LibrePOS can also be installed directly as a Python package from [PyPI](https://pypi.org/project/librepos/).
+Edit `.env` with your settings. See [Environment Configuration](ENVIRONMENT_CONFIGURATION.md) for details.
 
-### Steps
+### 4. Install dependencies and initialize
 
-1. Ensure you have Python 3.12 or higher and pip installed.
+```bash
+# Install dependencies
+uv sync
 
-2. Install the LibrePOS package from PyPI:
-   ```bash
-   pip install librepos
-   ```
+# Initialize database
+uv run flask reset-db
 
-3. After installation, set up the database:
-   ```bash
-   flask --app librepos initdb
-   ```
+# Seed permissions and test users
+uv run flask seed-permissions
+uv run flask create-test-users
+```
 
-4. Start the application:
-   ```bash
-   waitress-serve --call librepos:create_app
-   ```
+### 5. Run the application
 
-5. Open your browser and navigate to:
-   ```
-   http://127.0.0.1:5000
-   ```
+```bash
+# Development server
+uv run flask run
 
----
+# Production server
+uv run waitress-serve --port=5000 --call librepos:create_app
+```
 
-## 3. Using a Virtual Environment with `venv`
+Visit http://127.0.0.1:5000
 
-`venv` can be used to create an isolated Python environment for LibrePOS.
+## Alternative: pip Installation
 
-### Steps
+If you prefer using pip and venv:
 
-1. Create a virtual environment:
-   ```bash
-   python3 -m venv env
-   ```
+```bash
+# Clone repository
+git clone https://github.com/BaezFJ/LibrePOS.git
+cd LibrePOS
 
-2. Activate the virtual environment:
-   ```bash
-   source env/bin/activate  # On Windows: env\Scripts\activate
-   ```
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
-3. Install the required dependencies via pip:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Install dependencies
+pip install -e .
 
-4. Follow the steps in Section 1 (Installing LibrePOS from GitHub) or Section 2 (Installing LibrePOS from PyPI) to complete the installation process.
+# Configure environment
+cp librepos/.env.sample .env
+# Edit .env with your settings
 
----
+# Initialize database
+flask reset-db
+flask seed-permissions
+flask create-test-users
 
-## 4. Using Poetry
+# Run development server
+flask run
+```
 
-[Poetry](https://python-poetry.org/) is a dependency manager and build tool for Python projects.
+## Test User Accounts
 
-### Prerequisites
+After running `flask create-test-users`, these accounts are available:
 
-- Poetry installed. Use the following command to install if needed:
-  ```bash
-  curl -sSL https://install.python-poetry.org | python3 -
-  ```
+| Role | Email | Password |
+|------|-------|----------|
+| Owner | owner@librepos.com | librepos |
+| Admin | admin@librepos.com | librepos |
+| Manager | manager@librepos.com | librepos |
+| Cashier | cashier@librepos.com | librepos |
 
-### Steps
+**Change these credentials before deploying to production.**
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/LibrePOS.git
-   cd LibrePOS
-   ```
+## Production Setup
 
-2. Install the project's dependencies using Poetry:
-   ```bash
-   poetry install
-   ```
+For production deployments:
 
-3. Run the application in Poetry's virtual environment:
-   ```bash
-   poetry run flask --app librepos initdb
-   poetry run waitress-serve --call librepos:create_app
-   ```
+### 1. Install with production dependencies
 
-4. Open your browser and navigate to:
-   ```
-   http://127.0.0.1:5000
-   ```
+```bash
+uv sync --extra prod
+```
 
----
+This includes `gunicorn` and `psycopg2-binary` for PostgreSQL.
 
-## 5. Using `uv` for Installation and Management
+### 2. Configure PostgreSQL
 
-[uv](https://docs.astral.sh/uv/) is a lightweight Python package manager developed by Astral. You can use it to install and manage LibrePOS and its dependencies with ease.
+See [Database Configuration](DATABASE_CONFIGURATION.md) for PostgreSQL setup.
 
-### Prerequisites
+### 3. Set production environment variables
 
-- Install the `uv` package manager:
-  ```bash
-  pip install uv
-  ```
+```bash
+# .env
+FLASK_ENV=production
+SECRET_KEY=your-secure-random-key
+SQLALCHEMY_DATABASE_URI=postgresql://user:pass@localhost:5432/librepos
+```
 
-### Steps
+Generate a secure secret key:
 
-1. Use `uv` to install LibrePOS:
-   ```bash
-   uv tool install librepos
-   ```
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
 
-2. Set up the database:
-   ```bash
-   flask --app librepos initdb
-   ```
+### 4. Run with Gunicorn
 
-3. Run the LibrePOS application:
-   ```bash
-   waitress-serve --call librepos:create_app
-   ```
+```bash
+uv run gunicorn --bind 0.0.0.0:8000 --workers 4 "librepos:create_app()"
+```
 
-4. Access the application in your browser at:
-   ```
-   http://127.0.0.1:5000
-   ```
+## Verifying Installation
 
----
+After starting the server, verify everything is working:
 
-Choose the installation method that best fits your workflow. Options such as `venv`, `poetry`, or `uv` provide flexibility for both development and production setups.
+1. Open http://127.0.0.1:5000 in your browser
+2. Log in with one of the test accounts
+3. Navigate to the dashboard
+
+## Troubleshooting
+
+**"Command not found: flask"**
+- Ensure your virtual environment is activated
+- With uv, use `uv run flask` instead of `flask`
+
+**Database errors on startup**
+- Run `flask reset-db` to recreate tables
+- Check your `SQLALCHEMY_DATABASE_URI` in `.env`
+
+**Permission errors**
+- Run `flask seed-permissions` to sync permissions
+- Run `flask sync-permissions` if you've added new permissions
+
+## Next Steps
+
+- [Environment Configuration](ENVIRONMENT_CONFIGURATION.md) - Configure environment variables
+- [Database Configuration](DATABASE_CONFIGURATION.md) - Set up PostgreSQL or MySQL
+- [README](README.md) - Development commands and project structure
