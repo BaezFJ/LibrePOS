@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% import "components/forms.j2" as Form %}
+
+{% block sidenav %}
+    {% include 'iam/_sidenav.html' %}
+{% endblock %}
+
+
+{% block main %}
+
+    <section class="section">
+        <div class="row mx-4">
+            <!-- User Profile Card -->
+            <div class="col s12 m4">
+                <div class="card-panel center-align">
+                    <img src="{{ url_for('static', filename='images/default_male_user.png') }}"
+                         alt="User avatar" class="circle responsive-img" style="width: 120px; height: 120px;">
+                    <h5 class="mt-2">{{ user.fullname }}</h5>
+                    <p class="grey-text">@{{ user.username }}</p>
+
+                    <div class="divider my-2"></div>
+
+                    <div class="left-align">
+                        <p>
+                            <i class="material-symbols-rounded tiny">badge</i>
+                            <strong>Role:</strong>
+                            {{ user.role.name|replace("_", " ")|title if user.role else "N/A" }}
+                        </p>
+                        <p>
+                            <i class="material-symbols-rounded tiny">mail</i>
+                            <strong>Email:</strong>
+                            {{ user.email }}
+                        </p>
+                        <p>
+                            <i class="material-symbols-rounded tiny">
+                                {% if user.status.value == 'active' %}check_circle
+                                {% elif user.status.value == 'pending' %}hourglass_empty
+                                {% elif user.status.value == 'suspended' %}pause_circle
+                                {% elif user.status.value == 'locked' %}lock
+                                {% else %}cancel{% endif %}
+                            </i>
+                            <strong>Status:</strong>
+                            <span class="{% if user.status.value == 'active' %}green-text{% elif user.status.value == 'pending' %}orange-text{% else %}red-text{% endif %}">
+                                    {{ user.status.value|replace("_", " ")|title }}
+                                </span>
+                        </p>
+                        <p>
+                            <i class="material-symbols-rounded tiny">calendar_today</i>
+                            <strong>Created:</strong>
+                            {{ user.created_at.strftime('%b %d, %Y') if user.created_at else 'N/A' }}
+                        </p>
+                        {% if user.updated_at %}
+                            <p>
+                                <i class="material-symbols-rounded tiny">update</i>
+                                <strong>Last Updated:</strong>
+                                {{ user.updated_at.strftime('%b %d, %Y') }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Form Card -->
+            <div class="col s12 m8">
+                <div class="card-panel">
+                    <h5 class="card-title">Edit User</h5>
+                    <form action="" method="post">
+                        {{ Form.render_form(form, {
+                                'role_id': 'm6',
+                                'status': 'm6',
+                                'username': 'm6',
+                                'email': 'm6',
+                                'first_name': 'm4',
+                                'middle_name': 'm4',
+                                'last_name': 'm4'
+                            }) }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

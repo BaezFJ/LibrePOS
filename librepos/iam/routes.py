@@ -10,6 +10,12 @@ iam_bp.add_url_rule("/users", endpoint="users", view_func=views.users_view)
 iam_bp.add_url_rule(
     "/users/add", endpoint="add_user", view_func=views.add_user_view, methods=["GET", "POST"]
 )
+iam_bp.add_url_rule(
+    "/users/<slug>/edit",
+    endpoint="edit_user",
+    view_func=views.edit_user_view,
+    methods=["GET", "POST"],
+)
 iam_bp.add_url_rule("/roles", endpoint="roles", view_func=views.roles_view)
 iam_bp.add_url_rule("/policies", endpoint="policies", view_func=views.policies_view)
 iam_bp.add_url_rule("/permissions", endpoint="permissions", view_func=views.permissions_view)

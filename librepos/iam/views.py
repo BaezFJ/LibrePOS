@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user
 from librepos.utils.navigation import get_redirect_url
 
 from .decorators import permission_required
-from .forms import UserLoginForm, UserRegisterForm
+from .forms import UserEditForm, UserLoginForm, UserRegisterForm
 from .models import IAMUser, UserStatus
 from .permissions import IAMPermissions
 from .utils import authenticate_user
@@ -43,6 +43,31 @@ def add_user_view():
         flash("User created successfully.", "success")
         return redirect(url_for("iam.users"))
     return render_template("iam/add_user.html", **context)
+
+
+@permission_required(IAMPermissions.EDIT_USERS)
+def edit_user_view(slug: str):
+    """Render the edit user page."""
+    user = IAMUser.get_first_by(slug=slug)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for("iam.users"))
+
+    form = UserEditForm(user=user, current_user=current_user, obj=user)
+
+    if form.validate_on_submit():
+        form.populate_obj(user)
+        user.save()
+        flash("User updated successfully.", "success")
+        return redirect(url_for("iam.users"))
+
+    context = {
+        "title": f"Edit User: {user.fullname}",
+        "user": user,
+        "form": form,
+        "back_url": get_redirect_url("iam.users", param_name="back"),
+    }
+    return render_template("iam/edit_user.html", **context)
 
 
 def roles_view():

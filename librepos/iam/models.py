@@ -218,14 +218,14 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
             return self.role.permissions
         return []
 
-    def __init__(self, username: str, email: str, **kwargs):
+    def __init__(self, username: str, email: str, unsecure_password: str | None = None, **kwargs):
         super().__init__(**kwargs)
         self.username = username
         self.slug = slugify(username)
         self.email = email
 
-        if kwargs.get("unsecure_password") is not None:
-            self.set_password(kwargs["unsecure_password"])
+        if unsecure_password is not None:
+            self.set_password(unsecure_password)
 
     def set_password(self, password: str):
         self.hashed_password = generate_password_hash(password)
