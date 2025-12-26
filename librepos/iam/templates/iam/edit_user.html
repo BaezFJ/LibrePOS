@@ -14,7 +14,7 @@
             <!-- User Profile Card -->
             <div class="col s12 m4">
                 <div class="card-panel center-align">
-                    <img src="{{ url_for('static', filename='images/default_male_user.png') }}"
+                    <img src="{{ url_for('static', filename='images/'+user.image) }}"
                          alt="User avatar" class="circle responsive-img" style="width: 120px; height: 120px;">
                     <h5 class="mt-2">{{ user.fullname }}</h5>
                     <p class="grey-text">@{{ user.username }}</p>
@@ -67,8 +67,10 @@
                     <h5 class="card-title">Edit User</h5>
                     <form action="" method="post">
                         {{ Form.render_form(form, {
+                                'image': 's12',
                                 'role_id': 'm6',
                                 'status': 'm6',
+                                'gender': 'm6',
                                 'username': 'm6',
                                 'email': 'm6',
                                 'first_name': 'm4',

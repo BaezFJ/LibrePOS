@@ -42,7 +42,6 @@
                                     {{ Dropdown.trigger(user_dropdown_id) }}
 
                                     {% call Dropdown.render(user_dropdown_id) %}
-                                        {{ Dropdown.item("View Profile", icon="person", url=url_for("iam.edit_user", slug=user.slug)) }}
                                         {{ Dropdown.item("Edit", icon="edit", url=url_for("iam.edit_user", slug=user.slug)) }}
                                         {{ Dropdown.item("Reset Password", icon="lock_reset") }}
                                         {{ Dropdown.divider() }}

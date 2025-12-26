@@ -5,7 +5,7 @@ from typing import Optional
 from flask_login import UserMixin
 from slugify import slugify
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from librepos.extensions import AssociationModel, db
@@ -20,6 +20,13 @@ class UserStatus(StrEnum):
     DEACTIVATED = "deactivated"
     LOCKED = "locked"
     DELETED = "deleted"
+
+
+class UserGender(StrEnum):
+    MALE = "male"
+    FEMALE = "female"
+    OTHER = "other"
+    NOT_SPECIFIED = "not_specified"
 
 
 class IAMPermission(CRUDMixin, db.Model):
@@ -194,6 +201,7 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
     role_id: Mapped[int | None] = mapped_column(ForeignKey("iam_role.id"), nullable=True)
 
     # **************** Columns ****************
+    image: Mapped[str | None] = mapped_column(nullable=True)
     username: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     email: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
@@ -201,6 +209,9 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
     first_name: Mapped[str] = mapped_column(nullable=False)
     middle_name: Mapped[str | None] = mapped_column(nullable=True)
     last_name: Mapped[str] = mapped_column(nullable=False)
+    gender: Mapped[str | None] = mapped_column(
+        nullable=True, default=UserGender.NOT_SPECIFIED.value
+    )
     status: Mapped[UserStatus] = mapped_column(default=UserStatus.PENDING)
     verification_token: Mapped[str | None] = mapped_column(unique=True, index=True, nullable=True)
 
@@ -226,6 +237,29 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
 
         if unsecure_password is not None:
             self.set_password(unsecure_password)
+
+        # Trigger the image validator to set default if not provided
+        if "image" not in kwargs:
+            self.image = None
+
+    @validates("image")
+    def validate_image(self, _key, value):
+        """Validate and set the default image based on gender if the value is None or empty.
+
+        Returns:
+        - The provided value if it's not None/empty
+        - 'default_male_user.png' if gender is MALE
+        - 'default_female_user.png' if gender is FEMALE
+        - 'profile_image_light.png' if the gender is OTHER or NOT_SPECIFIED
+        """
+        if value is None or value == "":
+            gender = getattr(self, "gender", UserGender.NOT_SPECIFIED.value)
+            if gender == UserGender.MALE.value:
+                return "default_male_user.png"
+            if gender == UserGender.FEMALE.value:
+                return "default_female_user.png"
+            return "profile_image_light.png"
+        return value
 
     def set_password(self, password: str):
         self.hashed_password = generate_password_hash(password)

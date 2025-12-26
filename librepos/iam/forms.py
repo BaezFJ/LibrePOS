@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, PasswordField, SelectField, SubmitField
+from wtforms import BooleanField, FileField, PasswordField, SelectField, SubmitField
 from wtforms.fields.simple import StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Optional, ValidationError
 
-from .models import IAMRole, IAMUser, UserStatus
+from .models import IAMRole, IAMUser, UserGender, UserStatus
 
 
 class UserLoginForm(FlaskForm):
@@ -77,6 +77,7 @@ class UserRegisterForm(FlaskForm):
 
 
 class UserEditForm(FlaskForm):
+    image = FileField("Profile Image", validators=[Optional()])
     role_id = SelectField("Role", coerce=int, validators=[DataRequired()])
     username = StringField("Username", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), Email()])
@@ -84,6 +85,11 @@ class UserEditForm(FlaskForm):
     middle_name = StringField("Middle Name", validators=[Optional()])
     last_name = StringField("Last Name", validators=[DataRequired()])
     status = SelectField("Status", validators=[DataRequired()])
+    gender = SelectField(
+        "Gender",
+        choices=[(gender.value, gender.value.replace("_", " ").title()) for gender in UserGender],
+        validators=[Optional()],
+    )
     submit = SubmitField("Save Changes")
 
     def __init__(self, user=None, current_user=None, *args, **kwargs):
