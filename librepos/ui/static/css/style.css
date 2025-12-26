@@ -406,3 +406,7 @@ span.counter::after {
 .footer-nav-item span {
     font-size: 12px;
 }
+
+.profile-image-container:hover .image-overlay {
+    opacity: 1 !important;
+}

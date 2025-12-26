@@ -5,7 +5,7 @@ from librepos.utils.images import delete_user_image, process_user_image
 from librepos.utils.navigation import get_redirect_url
 
 from .decorators import permission_required
-from .forms import UserEditForm, UserLoginForm, UserRegisterForm
+from .forms import UserEditForm, UserImageForm, UserLoginForm, UserRegisterForm
 from .models import IAMUser, UserStatus
 from .permissions import IAMPermissions
 from .utils import authenticate_user
@@ -55,41 +55,52 @@ def edit_user_view(slug: str):
         return redirect(url_for("iam.users"))
 
     form = UserEditForm(user=user, current_user=current_user, obj=user)
+    image_form = UserImageForm()
+
     if form.validate_on_submit():
-        # Handle image upload before populate_obj
-        new_image_path = None
-        if form.image.data and hasattr(form.image.data, "filename") and form.image.data.filename:
-            # Delete an old image if it exists and is not a default
-            if user.image:
-                delete_user_image(user.image, str(current_app.static_folder))
-
-            # Process and save a new image
-            new_image_path = process_user_image(
-                file=form.image.data,
-                username=user.username,
-                static_folder=str(current_app.static_folder),
-            )
-
-        # Store the current image before populate_obj overwrites it
-        current_image = user.image
-
-        # Populate other fields
         form.populate_obj(user)
-
-        # Restore/set the correct image path (not the FileStorage object)
-        user.image = new_image_path if new_image_path else current_image
-
         user.save()
         flash("User updated successfully.", "success")
-        return redirect(url_for("iam.users"))
+        return redirect(url_for("iam.edit_user", slug=user.slug))
 
     context = {
         "title": f"Edit User: {user.fullname}",
         "user": user,
         "form": form,
+        "image_form": image_form,
         "back_url": get_redirect_url("iam.users", param_name="back"),
     }
     return render_template("iam/edit_user.html", **context)
+
+
+@permission_required(IAMPermissions.EDIT_USERS)
+def update_user_image_view(slug: str):
+    """Handle user profile image upload."""
+    user = IAMUser.get_first_by(slug=slug)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for("iam.users"))
+
+    form = UserImageForm()
+    if form.validate_on_submit():
+        # Delete old image if it exists and is not a default
+        if user.image:
+            delete_user_image(user.image, str(current_app.static_folder))
+
+        # Process and save new image
+        image_path = process_user_image(
+            file=form.image.data,
+            username=user.username,
+            static_folder=str(current_app.static_folder),
+        )
+        user.image = image_path
+        user.save()
+        flash("Profile image updated successfully.", "success")
+    else:
+        for error in form.image.errors:
+            flash(error, "error")
+
+    return redirect(url_for("iam.edit_user", slug=slug))
 
 
 def roles_view():

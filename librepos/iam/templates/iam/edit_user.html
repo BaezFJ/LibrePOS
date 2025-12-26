@@ -14,8 +14,17 @@
             <!-- User Profile Card -->
             <div class="col s12 m4">
                 <div class="card-panel center-align">
-                    <img src="{{ url_for('static', filename='images/'+user.image) }}"
-                         alt="User avatar" class="circle responsive-img" style="width: 120px; height: 120px;">
+                    <div class="profile-image-container"
+                         style="position: relative; display: inline-block; cursor: pointer;">
+                        <a href="javascript:imageUploadModal.showPopover()">
+                            <img src="{{ url_for('static', filename='images/'+user.image) }}"
+                                 alt="User avatar" class="circle responsive-img" style="width: 120px; height: 120px;">
+                            <div class="image-overlay"
+                                 style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 4px; border-radius: 0 0 50% 50%; opacity: 0; transition: opacity 0.3s;">
+                                <i class="material-symbols-rounded tiny">photo_camera</i>
+                            </div>
+                        </a>
+                    </div>
                     <h5 class="mt-2">{{ user.fullname }}</h5>
                     <p class="grey-text">@{{ user.username }}</p>
 
@@ -65,14 +74,13 @@
             <div class="col s12 m8">
                 <div class="card-panel">
                     <h5 class="card-title">Edit User</h5>
-                    <form action="" method="post" enctype="multipart/form-data">
+                    <form action="" method="post">
                         {{ Form.render_form(form, {
-                                'image': 's12',
-                                'role_id': 'm6',
-                                'status': 'm6',
-                                'gender': 'm6',
-                                'username': 'm6',
-                                'email': 'm6',
+                                'role_id': 'm4',
+                                'status': 'm4',
+                                'gender': 'm4',
+                                'username': 'm4',
+                                'email': 'm7',
                                 'first_name': 'm4',
                                 'middle_name': 'm4',
                                 'last_name': 'm4'
@@ -82,5 +90,47 @@
             </div>
         </div>
     </section>
+
+    <!-- Image Upload Modal -->
+    <div id="imageUploadModal" class="modal small" popover>
+        <div class="modal-header">
+            <h5>Update Profile Image</h5>
+        </div>
+        <div class="modal-content">
+            <div class="center-align mb-2">
+                <img src="{{ url_for('static', filename='images/'+user.image) }}"
+                     alt="Current avatar" class="circle responsive-img" style="width: 100px; height: 100px;">
+                <p class="grey-text">Current Image</p>
+            </div>
+            <form action="{{ url_for('iam.update_user_image', slug=user.slug) }}" method="post"
+                  enctype="multipart/form-data">
+                {{ image_form.hidden_tag() }}
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span><i class="material-symbols-rounded">upload</i></span>
+                        {{ image_form.image(accept="image/png,image/jpeg") }}
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Select an image (PNG or JPEG)">
+                    </div>
+                </div>
+                {% if image_form.image.errors %}
+                    {% for error in image_form.image.errors %}
+                        <span class="helper-text red-text">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+                <p class="grey-text text-darken-1" style="font-size: 0.85rem;">
+                    <i class="material-symbols-rounded tiny">info</i>
+                    Images will be resized to 400x400 pixels and optimized for storage.
+                </p>
+                <div class="modal-footer">
+                    <button type="button" class="btn-flat waves-effect" popovertarget="imageUploadModal">Cancel</button>
+                    <button type="submit" class="btn filled waves-effect waves-light">
+                        <i class="material-symbols-rounded">upload</i> Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}

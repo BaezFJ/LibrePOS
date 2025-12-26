@@ -79,26 +79,33 @@ class UserRegisterForm(FlaskForm):
             raise ValidationError("That email is already in use. Please choose another one.")
 
 
-class UserEditForm(FlaskForm):
+class UserImageForm(FlaskForm):
+    """Form for uploading user profile image."""
+
     image = FileField(
         "Profile Image",
         validators=[
-            Optional(),
+            DataRequired("Please select an image to upload."),
             FileAllowed(ALLOWED_IMAGE_EXTENSIONS, "Only PNG and JPEG images are allowed."),
         ],
     )
+    submit = SubmitField("Upload")
+
+
+class UserEditForm(FlaskForm):
     role_id = SelectField("Role", coerce=int, validators=[DataRequired()])
-    username = StringField("Username", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    first_name = StringField("First Name", validators=[DataRequired()])
-    middle_name = StringField("Middle Name", validators=[Optional()])
-    last_name = StringField("Last Name", validators=[DataRequired()])
     status = SelectField("Status", validators=[DataRequired()])
     gender = SelectField(
         "Gender",
         choices=[(gender.value, gender.value.replace("_", " ").title()) for gender in UserGender],
         validators=[Optional()],
     )
+    username = StringField("Username", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    first_name = StringField("First Name", validators=[DataRequired()])
+    middle_name = StringField("Middle Name", validators=[Optional()])
+    last_name = StringField("Last Name", validators=[DataRequired()])
+
     submit = SubmitField("Save Changes")
 
     def __init__(self, user=None, current_user=None, *args, **kwargs):
