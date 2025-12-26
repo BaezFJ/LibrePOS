@@ -30,7 +30,7 @@
                         {% for user in users %}
                             <tr>
                                 <td class="center-align">
-                                    <img src="{{ url_for('static', filename='images/default_male_user.png') }}"
+                                    <img src="{{ url_for('static', filename='images/'+user.image) }}"
                                          alt="User avatar" class="circle avatar-nav">
                                 </td>
                                 <td>{{ user.fullname }}</td>
