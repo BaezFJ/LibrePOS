@@ -1,3 +1,4 @@
+import secrets
 from enum import StrEnum
 from typing import Optional
 
@@ -175,6 +176,11 @@ class IAMRole(CRUDMixin, db.Model):
         """Get all policies assigned to this role."""
         return [rp.policy for rp in self.role_policies]
 
+    @classmethod
+    def get_all_staff_roles(cls):
+        """Get all staff roles."""
+        return [role for role in cls.get_all() if role.is_staff_role]
+
     def __init__(self, name: str, **kwargs):
         super().__init__(**kwargs)
         self.name = name
@@ -191,11 +197,12 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
     username: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     slug: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
     email: Mapped[str] = mapped_column(unique=True, index=True, nullable=False)
-    hashed_password: Mapped[str] = mapped_column(nullable=False)
+    hashed_password: Mapped[str | None] = mapped_column(nullable=True)
     first_name: Mapped[str] = mapped_column(nullable=False)
     middle_name: Mapped[str | None] = mapped_column(nullable=True)
     last_name: Mapped[str] = mapped_column(nullable=False)
     status: Mapped[UserStatus] = mapped_column(default=UserStatus.PENDING)
+    verification_token: Mapped[str | None] = mapped_column(unique=True, index=True, nullable=True)
 
     # ************** Relationships ****************
     role: Mapped[Optional["IAMRole"]] = relationship(back_populates="users")
@@ -211,12 +218,14 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
             return self.role.permissions
         return []
 
-    def __init__(self, username: str, email: str, unsecure_password: str, **kwargs):
+    def __init__(self, username: str, email: str, **kwargs):
         super().__init__(**kwargs)
         self.username = username
         self.slug = slugify(username)
         self.email = email
-        self.set_password(unsecure_password)
+
+        if kwargs.get("unsecure_password") is not None:
+            self.set_password(kwargs["unsecure_password"])
 
     def set_password(self, password: str):
         self.hashed_password = generate_password_hash(password)
@@ -234,6 +243,32 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
             bool: True if the user has the permission, False otherwise
         """
         return any(perm.name == permission_name for perm in self.permissions)
+
+    def generate_verification_token(self) -> str:
+        """Generate a secure verification token for passwordless registration.
+
+        Returns:
+            str: A URL-safe token string
+        """
+        token = secrets.token_urlsafe(32)
+        self.verification_token = token
+        return token
+
+    def verify_token(self, token: str) -> bool:
+        """Validate a verification token against the stored token.
+
+        Args:
+            token: The token to verify
+
+        Returns:
+            bool: True if the token matches, False otherwise
+        """
+        _token = str(self.verification_token)
+        return self.verification_token is not None and secrets.compare_digest(_token, token)
+
+    def clear_verification_token(self):
+        """Clear the verification token after successful verification."""
+        self.verification_token = None
 
     @property
     def fullname(self) -> str:

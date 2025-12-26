@@ -1,10 +1,13 @@
 from flask import flash, redirect, render_template, url_for
 from flask_login import current_user, login_user, logout_user
 
-from librepos.iam.forms import UserLoginForm
-from librepos.iam.utils import authenticate_user
+from librepos.utils.navigation import get_redirect_url
 
+from .decorators import permission_required
+from .forms import UserLoginForm, UserRegisterForm
 from .models import IAMUser, UserStatus
+from .permissions import IAMPermissions
+from .utils import authenticate_user
 
 
 def dashboard_view():
@@ -15,6 +18,7 @@ def dashboard_view():
     return render_template("iam/dashboard.html", **context)
 
 
+@permission_required(IAMPermissions.VIEW_USERS)
 def users_view():
     """Render the IAM Users page."""
     context = {
@@ -22,6 +26,23 @@ def users_view():
         "users": IAMUser.get_all(),
     }
     return render_template("iam/users.html", **context)
+
+
+@permission_required(IAMPermissions.CREATE_USERS)
+def add_user_view():
+    form = UserRegisterForm()
+    context = {
+        "title": "Add User",
+        "form": form,
+        "back_url": get_redirect_url("iam.users", param_name="back"),
+    }
+    if form.validate_on_submit():
+        user = IAMUser(username=str(form.username.data), email=str(form.email.data))
+        form.populate_obj(user)
+        user.save()
+        flash("User created successfully.", "success")
+        return redirect(url_for("iam.users"))
+    return render_template("iam/add_user.html", **context)
 
 
 def roles_view():

@@ -2,6 +2,7 @@
 
 {% import "components/footer.j2" as Footer %}
 {% import "components/dropdown.j2" as Dropdown %}
+{% import "components/forms.j2" as Form %}
 
 {% block sidenav %}
     {% include "iam/_sidenav.html" %}
@@ -67,8 +68,25 @@
 {% block footer %}
     {% call Footer.render() %}
         {{ Footer.item("Search", icon="search") }}
-        {{ Footer.item("Add", icon="add_circle") }}
+        {{ Footer.item("Add", icon="add_circle", url=url_for("iam.add_user")) }}
         {{ Footer.item("Filter", icon="filter_alt") }}
         {{ Footer.item("Sort", icon="sort") }}
     {% endcall %}
+
+
+{#    <div id="addUserModal" class="modal small" popover>#}
+{#        <div class="modal-header">#}
+{#            <h4>Add User</h4>#}
+{#        </div>#}
+{#        <div class="modal-content">#}
+{#            <form action="" method="POST">#}
+{#                {{ Form.render_form(form) }}#}
+{#            </form>#}
+{#        </div>#}
+{#        <div class="modal-footer">#}
+{#            <button tabindex="0" class="waves-effect btn-flat" popovertarget="addUserModal">Close</button>#}
+{#        </div>#}
+{#    </div>#}
+
+
 {% endblock %}
