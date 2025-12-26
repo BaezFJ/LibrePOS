@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import BooleanField, FileField, PasswordField, SelectField, SubmitField
 from wtforms.fields.simple import StringField
-from wtforms.validators import DataRequired, Email, EqualTo, Optional, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, ValidationError
 
 from .models import IAMRole, IAMUser, UserGender, UserStatus
 
@@ -148,3 +148,16 @@ class UserEditForm(FlaskForm):
         user = IAMUser.get_first_by(email=field.data)
         if user and self.user and user.id != self.user.id:
             raise ValidationError("That email is already in use. Please choose another one.")
+
+
+class UserProfileForm(FlaskForm):
+    bio = StringField("Bio", validators=[Length(max=500)])
+    address = StringField("Address", validators=[Length(max=255)])
+    city = StringField("City", validators=[Length(max=100)])
+    state = StringField("State", validators=[Length(max=100)])
+    country = StringField("Country", validators=[Length(max=100)])
+    zipcode = StringField("Zipcode", validators=[Length(max=10)])
+    phone = StringField("Phone", validators=[Length(max=20)])
+    country_code = StringField("Country Code", validators=[Length(max=10)])
+    date_of_birth = StringField("Date of Birth", validators=[Length(max=10)])
+    submit = SubmitField("Save Changes")

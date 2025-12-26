@@ -11,6 +11,48 @@
 
     <section class="section">
         <div class="row mx-4">
+
+
+            <div class="col s12 m8 row">
+                <div class="col s12">
+                    <!-- Edit Form Card -->
+                    <div class="card-panel">
+                        <h5 class="card-title">Edit User</h5>
+                        <form action="" method="post">
+                            {{ Form.render_form(form, {
+                                'role_id': 'm4',
+                                'status': 'm4',
+                                'gender': 'm4',
+                                'username': 'm4',
+                                'email': 'm7',
+                                'first_name': 'm4',
+                                'middle_name': 'm4',
+                                'last_name': 'm4'
+                            }) }}
+                        </form>
+                    </div>
+                </div>
+                <!-- Profile Form Card -->
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h5 class="card-title">Profile Information</h5>
+                        <form action="{{ url_for('iam.update_user_profile', slug=user.slug) }}" method="post">
+                            {{ Form.render_form(profile_form, {
+                                'bio': 's12',
+                                'phone': 'm6',
+                                'country_code': 'm6',
+                                'date_of_birth': 'm6',
+                                'address': 's12',
+                                'city': 'm6',
+                                'state': 'm6',
+                                'country': 'm6',
+                                'zipcode': 'm6'
+                            }) }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- User Profile Card -->
             <div class="col s12 m4">
                 <div class="card-panel center-align">
@@ -70,24 +112,6 @@
                 </div>
             </div>
 
-            <!-- Edit Form Card -->
-            <div class="col s12 m8">
-                <div class="card-panel">
-                    <h5 class="card-title">Edit User</h5>
-                    <form action="" method="post">
-                        {{ Form.render_form(form, {
-                                'role_id': 'm4',
-                                'status': 'm4',
-                                'gender': 'm4',
-                                'username': 'm4',
-                                'email': 'm7',
-                                'first_name': 'm4',
-                                'middle_name': 'm4',
-                                'last_name': 'm4'
-                            }) }}
-                    </form>
-                </div>
-            </div>
         </div>
     </section>
 

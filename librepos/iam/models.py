@@ -4,7 +4,7 @@ from typing import Optional
 
 from flask_login import UserMixin
 from slugify import slugify
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -217,6 +217,7 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
 
     # ************** Relationships ****************
     role: Mapped[Optional["IAMRole"]] = relationship(back_populates="users")
+    profile: Mapped["IAMUserProfile"] = relationship(back_populates="user", uselist=False)
 
     @property
     def is_staff(self) -> bool:
@@ -309,3 +310,30 @@ class IAMUser(UserMixin, CRUDMixin, db.Model):
         if self.middle_name:
             return f"{self.first_name} {self.middle_name} {self.last_name}"
         return f"{self.first_name} {self.last_name}"
+
+
+class IAMUserProfile(CRUDMixin, AssociationModel):
+    __tablename__ = "iam_user_profile"
+
+    # **************** Foreign Keys ****************
+    user_id: Mapped[int] = mapped_column(ForeignKey("iam_user.id"), primary_key=True)
+
+    # **************** Columns ****************
+    bio: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    address: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    city: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    state: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    country: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    zipcode: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    country_code: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    date_of_birth: Mapped[str | None] = mapped_column(String(10), nullable=True)
+
+    # ************** Relationships ****************
+    user: Mapped[IAMUser] = relationship(back_populates="profile", uselist=False)
+
+    @property
+    def full_address(self) -> str:
+        if self.address and self.city and self.state and self.country and self.zipcode:
+            return f"{self.address}, {self.city}, {self.state}, {self.country} {self.zipcode}"
+        return ""

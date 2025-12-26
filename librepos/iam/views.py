@@ -5,8 +5,8 @@ from librepos.utils.images import delete_user_image, process_user_image
 from librepos.utils.navigation import get_redirect_url
 
 from .decorators import permission_required
-from .forms import UserEditForm, UserImageForm, UserLoginForm, UserRegisterForm
-from .models import IAMUser, UserStatus
+from .forms import UserEditForm, UserImageForm, UserLoginForm, UserProfileForm, UserRegisterForm
+from .models import IAMUser, IAMUserProfile, UserStatus
 from .permissions import IAMPermissions
 from .utils import authenticate_user
 
@@ -56,6 +56,7 @@ def edit_user_view(slug: str):
 
     form = UserEditForm(user=user, current_user=current_user, obj=user)
     image_form = UserImageForm()
+    profile_form = UserProfileForm(obj=user.profile)
 
     if form.validate_on_submit():
         form.populate_obj(user)
@@ -68,6 +69,7 @@ def edit_user_view(slug: str):
         "user": user,
         "form": form,
         "image_form": image_form,
+        "profile_form": profile_form,
         "back_url": get_redirect_url("iam.users", param_name="back"),
     }
     return render_template("iam/edit_user.html", **context)
@@ -99,6 +101,33 @@ def update_user_image_view(slug: str):
     else:
         for error in form.image.errors:
             flash(error, "error")
+
+    return redirect(url_for("iam.edit_user", slug=slug))
+
+
+@permission_required(IAMPermissions.EDIT_USERS)
+def update_user_profile_view(slug: str):
+    """Handle user profile update."""
+    user = IAMUser.get_first_by(slug=slug)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for("iam.users"))
+
+    form = UserProfileForm()
+    if form.validate_on_submit():
+        # Create profile if it doesn't exist
+        if not user.profile:
+            profile = IAMUserProfile(user_id=user.id)
+            profile.save()
+            user.profile = profile
+
+        form.populate_obj(user.profile)
+        user.profile.save()
+        flash("Profile updated successfully.", "success")
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"{field}: {error}", "error")
 
     return redirect(url_for("iam.edit_user", slug=slug))
 
