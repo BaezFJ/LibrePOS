@@ -1,178 +1,267 @@
+/*
+ * LibrePOS Theme: Warm Bistro
+ * A hospitality-focused palette designed for readability in both
+ * bright kitchens and dimly-lit dining rooms.
+ *
+ * Design principles:
+ * - Warm undertones throughout (reduces eye strain on long shifts)
+ * - High contrast for quick scanning during busy service
+ * - Amber/copper accents (dark) and terracotta/rust accents (light)
+ * - Semantic colors that feel organic, not synthetic
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK THEME - Evening Shift / Low Light
+   ═══════════════════════════════════════════════════════════════════════════ */
 @media (prefers-color-scheme: dark) {
     :root, :host {
         color-scheme: dark;
 
-        /*Catppuccin Mocha (Dark)*/
-        --catppuccin-mocha-base: #1e1e2e;
-        --catppuccin-mocha-text: #cdd6f4;
-        --catppuccin-mocha-subtext-1: #bac2de;
-        --catppuccin-mocha-subtext-0: #a6adc8;
-        --catppuccin-mocha-crust: #11111b;
-        --catppuccin-mocha-mantle: #181825;
-        --catppuccin-mocha-lavender: #b4befe;
-        --catppuccin-mocha-mauve: #cba6f7;
-        --catppuccin-mocha-overlay-0: #6c7086;
-        --catppuccin-mocha-surface-0: #313244;
-        --catppuccin-mocha-surface-1: #45475a;
-        --catppuccin-mocha-surface-2: #585b70;
-        --catppuccin-mocha-blue: #89b4fa; /*Info*/
-        --catppuccin-mocha-green: #a6e3a1; /*Success*/
-        --catppuccin-mocha-yellow: #f9e2af; /*Warning*/
-        --catppuccin-mocha-red: #f38ba8; /*Error*/
+        /* ── Base Palette: Warm Charcoal ── */
+        --bistro-base: #1c1a18;           /* Deep warm charcoal */
+        --bistro-mantle: #151311;         /* Darker backdrop */
+        --bistro-crust: #0e0c0a;          /* Deepest background */
 
-        /*Custom System Colors*/
-        --sys-color-info: var(--catppuccin-mocha-blue);
-        --sys-color-on-info: var(--catppuccin-mocha-crust);
-        --sys-color-success: var(--catppuccin-mocha-green);
-        --sys-color-on-success: var(--catppuccin-mocha-crust);
-        --sys-color-warning: var(--catppuccin-mocha-yellow);
-        --sys-color-on-warning: var(--catppuccin-mocha-crust);
-        --sys-color-error: var(--catppuccin-mocha-red);
-        --sys-color-on-error: var(--catppuccin-mocha-crust);
+        /* ── Surface Hierarchy ── */
+        --bistro-surface-0: #262320;      /* Elevated cards */
+        --bistro-surface-1: #302c28;      /* Higher elevation */
+        --bistro-surface-2: #3a3632;      /* Highest elevation */
 
-        /*Materialize Dark*/
-        --md-sys-color-primary-dark: var(--catppuccin-mocha-lavender); /* lavender*/
-        --md-sys-color-on-primary-dark: var(--catppuccin-mocha-crust); /* crust */
-        --md-sys-color-primary-container-dark: var(--catppuccin-mocha-surface-1); /* surface1 */
-        --md-sys-color-on-primary-container-dark: var(--catppuccin-mocha-text); /* text */
+        /* ── Text Hierarchy ── */
+        --bistro-text: #f5f0e8;           /* Primary text - warm white */
+        --bistro-subtext-1: #d4cfc5;      /* Secondary text */
+        --bistro-subtext-0: #a8a299;      /* Tertiary/muted text */
 
-        --md-sys-color-secondary-dark: var(--catppuccin-mocha-blue); /* blue */
-        --md-sys-color-on-secondary-dark: var(--catppuccin-mocha-crust); /* crust */
-        --md-sys-color-secondary-container-dark: var(--catppuccin-mocha-surface-0); /* surface0 */
-        --md-sys-color-on-secondary-container-dark: var(--catppuccin-mocha-text); /* text */
+        /* ── Accent Colors: Amber & Copper ── */
+        --bistro-primary: #f0b866;        /* Warm amber - primary actions */
+        --bistro-primary-container: #4a3d24; /* Container for primary */
+        --bistro-secondary: #d4a574;      /* Soft copper - secondary actions */
+        --bistro-secondary-container: #3d3024; /* Container for secondary */
+        --bistro-tertiary: #b8a088;       /* Muted tan - tertiary elements */
+        --bistro-tertiary-container: #3a322a; /* Container for tertiary */
 
-        --md-sys-color-tertiary-dark: var(--catppuccin-mocha-mauve); /* mauve */
-        --md-sys-color-on-tertiary-dark: var(--catppuccin-mocha-crust); /* crust */
-        --md-sys-color-tertiary-container-dark: var(--catppuccin-mocha-surface-2); /* surface2 */
-        --md-sys-color-on-tertiary-container-dark: var(--catppuccin-mocha-text); /* text */
+        /* ── Dividers & Outlines ── */
+        --bistro-overlay: #5c564e;        /* Borders, dividers */
+        --bistro-outline: #6e675e;        /* Strong outlines */
 
-        --md-sys-color-error-dark: var(--catppuccin-mocha-red); /* red */
-        --md-sys-color-error-container-dark: var(--catppuccin-mocha-crust); /* crust (deep background) */
-        --md-sys-color-on-error-dark: var(--catppuccin-mocha-crust); /* crust on bright error */
-        --md-sys-color-on-error-container-dark: var(--catppuccin-mocha-red); /* red on dark container */
+        /* ── Semantic: Status Colors (warm-shifted) ── */
+        --bistro-success: #8bc68b;        /* Sage green - completed orders */
+        --bistro-success-container: #1f3320;
+        --bistro-info: #7eb8d4;           /* Soft sky blue - informational */
+        --bistro-info-container: #1a2e38;
+        --bistro-warning: #e6c06e;        /* Warm gold - attention needed */
+        --bistro-warning-container: #3d3418;
+        --bistro-error: #e8847a;          /* Soft coral - errors, voids */
+        --bistro-error-container: #3d1f1f;
 
-        --md-sys-color-background-dark: var(--catppuccin-mocha-mantle); /* mantle */
-        --md-sys-color-on-background-dark: var(--catppuccin-mocha-text); /* text */
-        --md-sys-color-surface-dark: var(--catppuccin-mocha-base); /* base */
-        --md-sys-color-on-surface-dark: var(--catppuccin-mocha-text); /* text */
+        /* ═══ System Color Mappings ═══ */
+        --sys-color-info: var(--bistro-info);
+        --sys-color-on-info: var(--bistro-crust);
+        --sys-color-success: var(--bistro-success);
+        --sys-color-on-success: var(--bistro-crust);
+        --sys-color-warning: var(--bistro-warning);
+        --sys-color-on-warning: var(--bistro-crust);
+        --sys-color-error: var(--bistro-error);
+        --sys-color-on-error: var(--bistro-crust);
 
-        --md-sys-color-surface-variant-dark: var(--catppuccin-mocha-surface-0); /* surface0 */
-        --md-sys-color-on-surface-variant-dark: var(--catppuccin-mocha-subtext-1); /* subtext1 */
+        /* ═══ Material Design System Token Mappings ═══ */
+        --md-sys-color-primary: var(--bistro-primary);
+        --md-sys-color-on-primary: var(--bistro-crust);
+        --md-sys-color-primary-container: var(--bistro-primary-container);
+        --md-sys-color-on-primary-container: var(--bistro-text);
 
-        --md-sys-color-outline-dark: var(--catppuccin-mocha-overlay-0); /* overlay0 */
-        --md-sys-color-inverse-on-surface-dark: var(--catppuccin-mocha-crust); /* crust */
-        --md-sys-color-inverse-surface-dark: var(--catppuccin-mocha-text); /* text (used as light surface) */
-        --md-sys-color-inverse-primary-dark: var(--catppuccin-mocha-blue); /* blue accent on light surfaces */
+        --md-sys-color-secondary: var(--bistro-secondary);
+        --md-sys-color-on-secondary: var(--bistro-crust);
+        --md-sys-color-secondary-container: var(--bistro-secondary-container);
+        --md-sys-color-on-secondary-container: var(--bistro-text);
 
-        --md-sys-color-shadow-dark: #000000;
-        --md-sys-color-surface-tint-dark: var(--catppuccin-mocha-lavender); /* match primary */
-        --md-sys-color-outline-variant-dark: var(--catppuccin-mocha-surface-0); /* surface0 */
-        --md-sys-color-scrim-dark: #000000;
+        --md-sys-color-tertiary: var(--bistro-tertiary);
+        --md-sys-color-on-tertiary: var(--bistro-crust);
+        --md-sys-color-tertiary-container: var(--bistro-tertiary-container);
+        --md-sys-color-on-tertiary-container: var(--bistro-text);
 
+        --md-sys-color-error: var(--bistro-error);
+        --md-sys-color-on-error: var(--bistro-crust);
+        --md-sys-color-error-container: var(--bistro-error-container);
+        --md-sys-color-on-error-container: var(--bistro-error);
+
+        --md-sys-color-background: var(--bistro-mantle);
+        --md-sys-color-on-background: var(--bistro-text);
+        --md-sys-color-surface: var(--bistro-base);
+        --md-sys-color-on-surface: var(--bistro-text);
+
+        --md-sys-color-surface-variant: var(--bistro-surface-0);
+        --md-sys-color-on-surface-variant: var(--bistro-subtext-1);
+
+        --md-sys-color-outline: var(--bistro-outline);
+        --md-sys-color-outline-variant: var(--bistro-overlay);
+
+        --md-sys-color-inverse-surface: var(--bistro-text);
+        --md-sys-color-inverse-on-surface: var(--bistro-crust);
+        --md-sys-color-inverse-primary: #8b6b2a;
+
+        --md-sys-color-shadow: rgba(0, 0, 0, 0.5);
+        --md-sys-color-scrim: rgba(0, 0, 0, 0.6);
+        --md-sys-color-surface-tint: var(--bistro-primary);
+
+        /* ═══ Legacy Compatibility (dark suffix) ═══ */
+        --md-sys-color-primary-dark: var(--md-sys-color-primary);
+        --md-sys-color-on-primary-dark: var(--md-sys-color-on-primary);
+        --md-sys-color-primary-container-dark: var(--md-sys-color-primary-container);
+        --md-sys-color-on-primary-container-dark: var(--md-sys-color-on-primary-container);
+        --md-sys-color-secondary-dark: var(--md-sys-color-secondary);
+        --md-sys-color-on-secondary-dark: var(--md-sys-color-on-secondary);
+        --md-sys-color-secondary-container-dark: var(--md-sys-color-secondary-container);
+        --md-sys-color-on-secondary-container-dark: var(--md-sys-color-on-secondary-container);
+        --md-sys-color-tertiary-dark: var(--md-sys-color-tertiary);
+        --md-sys-color-on-tertiary-dark: var(--md-sys-color-on-tertiary);
+        --md-sys-color-tertiary-container-dark: var(--md-sys-color-tertiary-container);
+        --md-sys-color-on-tertiary-container-dark: var(--md-sys-color-on-tertiary-container);
+        --md-sys-color-error-dark: var(--md-sys-color-error);
+        --md-sys-color-on-error-dark: var(--md-sys-color-on-error);
+        --md-sys-color-error-container-dark: var(--md-sys-color-error-container);
+        --md-sys-color-on-error-container-dark: var(--md-sys-color-on-error-container);
+        --md-sys-color-background-dark: var(--md-sys-color-background);
+        --md-sys-color-on-background-dark: var(--md-sys-color-on-background);
+        --md-sys-color-surface-dark: var(--md-sys-color-surface);
+        --md-sys-color-on-surface-dark: var(--md-sys-color-on-surface);
+        --md-sys-color-surface-variant-dark: var(--md-sys-color-surface-variant);
+        --md-sys-color-on-surface-variant-dark: var(--md-sys-color-on-surface-variant);
+        --md-sys-color-outline-dark: var(--md-sys-color-outline);
+        --md-sys-color-outline-variant-dark: var(--md-sys-color-outline-variant);
+        --md-sys-color-inverse-surface-dark: var(--md-sys-color-inverse-surface);
+        --md-sys-color-inverse-on-surface-dark: var(--md-sys-color-inverse-on-surface);
+        --md-sys-color-inverse-primary-dark: var(--md-sys-color-inverse-primary);
+        --md-sys-color-shadow-dark: var(--md-sys-color-shadow);
+        --md-sys-color-scrim-dark: var(--md-sys-color-scrim);
+        --md-sys-color-surface-tint-dark: var(--md-sys-color-surface-tint);
     }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT THEME - Day Shift / Bright Environment
+   ═══════════════════════════════════════════════════════════════════════════ */
 @media (prefers-color-scheme: light) {
     :root, :host {
         color-scheme: light;
 
-        /*Catppuccin Latte */
-        --catppuccin-latte-base: #eff1f5;
-        --catppuccin-latte-text: #4c4f69;
-        --catppuccin-latte-subtext-1: #5c5f77;
-        --catppuccin-latte-subtext-0: #6c6f85;
-        --catppuccin-latte-crust: #dce0e8;
-        --catppuccin-latte-mantle: #e6e9ef;
-        --catppuccin-latte-mauve: #8839ef;
-        --catppuccin-latte-lavender: #967eff;
-        --catppuccin-latte-overlay-0: #9ca0b0;
-        --catppuccin-latte-surface-0: #ccd0da;
-        --catppuccin-latte-surface-1: #bcc0cc;
-        --catppuccin-latte-surface-2: #acb0be;
-        --catppuccin-latte-blue: #1e66f5; /*Info*/
-        --catppuccin-latte-green: #40a02b; /*Success*/
-        --catppuccin-latte-yellow: #df8e1d; /*Warning*/
-        --catppuccin-latte-red: #d20f39; /*Error*/
+        /* ── Base Palette: Warm Cream ── */
+        --bistro-base: #faf8f4;           /* Warm off-white */
+        --bistro-mantle: #f0ede6;         /* Slightly warmer */
+        --bistro-crust: #e6e2d9;          /* Warmest light tone */
 
-        /*Custom System Colors*/
-        --sys-color-info: var(--catppuccin-latte-blue);
-        --sys-color-on-info: var(--catppuccin-latte-crust);
-        --sys-color-success: var(--catppuccin-latte-green);
-        --sys-color-on-success: var(--catppuccin-latte-crust);
-        --sys-color-warning: var(--catppuccin-latte-yellow);
-        --sys-color-on-warning: var(--catppuccin-latte-crust);
-        --sys-color-error: var(--catppuccin-latte-red);
-        --sys-color-on-error: var(--catppuccin-latte-crust);
+        /* ── Surface Hierarchy ── */
+        --bistro-surface-0: #ebe7de;      /* Cards, elevated surfaces */
+        --bistro-surface-1: #dfdbd2;      /* Higher elevation */
+        --bistro-surface-2: #d4d0c6;      /* Highest elevation */
 
-        /*Materialize Dark*/
-        --md-sys-color-primary-light: var(--catppuccin-latte-lavender); /* lavender*/
-        --md-sys-color-on-primary-light: var(--catppuccin-latte-crust); /* crust */
-        --md-sys-color-primary-container-light: var(--catppuccin-latte-surface-1); /* surface1 */
-        --md-sys-color-on-primary-container-light: var(--catppuccin-latte-text); /* text */
+        /* ── Text Hierarchy ── */
+        --bistro-text: #2a2520;           /* Primary text - warm near-black */
+        --bistro-subtext-1: #4a443c;      /* Secondary text */
+        --bistro-subtext-0: #6e665c;      /* Tertiary/muted text */
 
-        --md-sys-color-secondary-light: var(--catppuccin-latte-blue); /* blue */
-        --md-sys-color-on-secondary-light: var(--catppuccin-latte-crust); /* crust */
-        --md-sys-color-secondary-container-light: var(--catppuccin-latte-surface-0); /* surface0 */
-        --md-sys-color-on-secondary-container-light: var(--catppuccin-latte-text); /* text */
+        /* ── Accent Colors: Terracotta & Rust ── */
+        --bistro-primary: #b85c38;        /* Rich terracotta - primary actions */
+        --bistro-primary-container: #f5ddd2; /* Light terracotta container */
+        --bistro-secondary: #8a6e4c;      /* Warm sienna - secondary actions */
+        --bistro-secondary-container: #e8ddd0; /* Warm container */
+        --bistro-tertiary: #6b7a5c;       /* Olive sage - tertiary elements */
+        --bistro-tertiary-container: #dce4d4; /* Sage container */
 
-        --md-sys-color-tertiary-light: var(--catppuccin-latte-mauve); /* mauve */
-        --md-sys-color-on-tertiary-light: var(--catppuccin-latte-crust); /* crust */
-        --md-sys-color-tertiary-container-light: var(--catppuccin-latte-surface-2); /* surface2 */
-        --md-sys-color-on-tertiary-container-light: var(--catppuccin-latte-text); /* text */
+        /* ── Dividers & Outlines ── */
+        --bistro-overlay: #bab4a8;        /* Borders, dividers */
+        --bistro-outline: #8c867a;        /* Strong outlines */
 
-        --md-sys-color-error-light: var(--catppuccin-latte-red); /* red */
-        --md-sys-color-error-container-light: var(--catppuccin-latte-crust); /* crust (deep background) */
-        --md-sys-color-on-error-light: var(--catppuccin-latte-crust); /* crust on bright error */
-        --md-sys-color-on-error-container-light: var(--catppuccin-latte-red); /* red on dark container */
+        /* ── Semantic: Status Colors (legible on light) ── */
+        --bistro-success: #3d7a3d;        /* Forest green - completed orders */
+        --bistro-success-container: #d4ecd4;
+        --bistro-info: #2a6b8a;           /* Deep teal - informational */
+        --bistro-info-container: #d0e6f0;
+        --bistro-warning: #a67c1a;        /* Burnt gold - attention needed */
+        --bistro-warning-container: #f5ecd0;
+        --bistro-error: #b83838;          /* Brick red - errors, voids */
+        --bistro-error-container: #f5d4d4;
 
-        --md-sys-color-background-light: var(--catppuccin-latte-mantle); /* mantle */
-        --md-sys-color-on-background-light: var(--catppuccin-latte-text); /* text */
-        --md-sys-color-surface-light: var(--catppuccin-latte-base); /* base */
-        --md-sys-color-on-surface-light: var(--catppuccin-latte-text); /* text */
+        /* ═══ System Color Mappings ═══ */
+        --sys-color-info: var(--bistro-info);
+        --sys-color-on-info: #ffffff;
+        --sys-color-success: var(--bistro-success);
+        --sys-color-on-success: #ffffff;
+        --sys-color-warning: var(--bistro-warning);
+        --sys-color-on-warning: #ffffff;
+        --sys-color-error: var(--bistro-error);
+        --sys-color-on-error: #ffffff;
 
-        --md-sys-color-surface-variant-light: var(--catppuccin-latte-surface-0); /* surface0 */
-        --md-sys-color-on-surface-variant-light: var(--catppuccin-latte-subtext-1); /* subtext1 */
+        /* ═══ Material Design System Token Mappings ═══ */
+        --md-sys-color-primary: var(--bistro-primary);
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: var(--bistro-primary-container);
+        --md-sys-color-on-primary-container: #4a2010;
 
-        --md-sys-color-outline-light: var(--catppuccin-latte-overlay-0); /* overlay0 */
-        --md-sys-color-inverse-on-surface-light: var(--catppuccin-latte-crust); /* crust */
-        --md-sys-color-inverse-surface-light: var(--catppuccin-latte-text); /* text (used as light surface) */
-        --md-sys-color-inverse-primary-light: var(--catppuccin-latte-blue); /* blue accent on light surfaces */
+        --md-sys-color-secondary: var(--bistro-secondary);
+        --md-sys-color-on-secondary: #ffffff;
+        --md-sys-color-secondary-container: var(--bistro-secondary-container);
+        --md-sys-color-on-secondary-container: #3a2e1c;
 
-        --md-sys-color-shadow-light: #000000;
-        --md-sys-color-surface-tint-light: var(--catppuccin-latte-lavender); /* match primary */
-        --md-sys-color-outline-variant-light: var(--catppuccin-latte-surface-0); /* surface0 */
-        --md-sys-color-scrim-light: #000000;
+        --md-sys-color-tertiary: var(--bistro-tertiary);
+        --md-sys-color-on-tertiary: #ffffff;
+        --md-sys-color-tertiary-container: var(--bistro-tertiary-container);
+        --md-sys-color-on-tertiary-container: #2a3324;
+
+        --md-sys-color-error: var(--bistro-error);
+        --md-sys-color-on-error: #ffffff;
+        --md-sys-color-error-container: var(--bistro-error-container);
+        --md-sys-color-on-error-container: var(--bistro-error);
+
+        --md-sys-color-background: var(--bistro-mantle);
+        --md-sys-color-on-background: var(--bistro-text);
+        --md-sys-color-surface: var(--bistro-base);
+        --md-sys-color-on-surface: var(--bistro-text);
+
+        --md-sys-color-surface-variant: var(--bistro-surface-0);
+        --md-sys-color-on-surface-variant: var(--bistro-subtext-1);
+
+        --md-sys-color-outline: var(--bistro-outline);
+        --md-sys-color-outline-variant: var(--bistro-overlay);
+
+        --md-sys-color-inverse-surface: var(--bistro-text);
+        --md-sys-color-inverse-on-surface: var(--bistro-base);
+        --md-sys-color-inverse-primary: #e8a080;
+
+        --md-sys-color-shadow: rgba(42, 37, 32, 0.15);
+        --md-sys-color-scrim: rgba(42, 37, 32, 0.4);
+        --md-sys-color-surface-tint: var(--bistro-primary);
+
+        /* ═══ Legacy Compatibility (light suffix) ═══ */
+        --md-sys-color-primary-light: var(--md-sys-color-primary);
+        --md-sys-color-on-primary-light: var(--md-sys-color-on-primary);
+        --md-sys-color-primary-container-light: var(--md-sys-color-primary-container);
+        --md-sys-color-on-primary-container-light: var(--md-sys-color-on-primary-container);
+        --md-sys-color-secondary-light: var(--md-sys-color-secondary);
+        --md-sys-color-on-secondary-light: var(--md-sys-color-on-secondary);
+        --md-sys-color-secondary-container-light: var(--md-sys-color-secondary-container);
+        --md-sys-color-on-secondary-container-light: var(--md-sys-color-on-secondary-container);
+        --md-sys-color-tertiary-light: var(--md-sys-color-tertiary);
+        --md-sys-color-on-tertiary-light: var(--md-sys-color-on-tertiary);
+        --md-sys-color-tertiary-container-light: var(--md-sys-color-tertiary-container);
+        --md-sys-color-on-tertiary-container-light: var(--md-sys-color-on-tertiary-container);
+        --md-sys-color-error-light: var(--md-sys-color-error);
+        --md-sys-color-on-error-light: var(--md-sys-color-on-error);
+        --md-sys-color-error-container-light: var(--md-sys-color-error-container);
+        --md-sys-color-on-error-container-light: var(--md-sys-color-on-error-container);
+        --md-sys-color-background-light: var(--md-sys-color-background);
+        --md-sys-color-on-background-light: var(--md-sys-color-on-background);
+        --md-sys-color-surface-light: var(--md-sys-color-surface);
+        --md-sys-color-on-surface-light: var(--md-sys-color-on-surface);
+        --md-sys-color-surface-variant-light: var(--md-sys-color-surface-variant);
+        --md-sys-color-on-surface-variant-light: var(--md-sys-color-on-surface-variant);
+        --md-sys-color-outline-light: var(--md-sys-color-outline);
+        --md-sys-color-outline-variant-light: var(--md-sys-color-outline-variant);
+        --md-sys-color-inverse-surface-light: var(--md-sys-color-inverse-surface);
+        --md-sys-color-inverse-on-surface-light: var(--md-sys-color-inverse-on-surface);
+        --md-sys-color-inverse-primary-light: var(--md-sys-color-inverse-primary);
+        --md-sys-color-shadow-light: var(--md-sys-color-shadow);
+        --md-sys-color-scrim-light: var(--md-sys-color-scrim);
+        --md-sys-color-surface-tint-light: var(--md-sys-color-surface-tint);
     }
 }
-
-/*!* Shared System Design Tokens mapped to an abstract palette *!*/
-/*--md-sys-color-primary: var(--md-sys-color-primary-dark);*/
-/*--md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);*/
-/*--md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);*/
-/*--md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-dark);*/
-/*--md-sys-color-secondary: var(--md-sys-color-secondary-dark);*/
-/*--md-sys-color-on-secondary: var(--md-sys-color-on-secondary-dark);*/
-/*--md-sys-color-secondary-container: var(--md-sys-color-secondary-container-dark);*/
-/*--md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-dark);*/
-/*--md-sys-color-tertiary: var(--md-sys-color-tertiary-dark);*/
-/*--md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-dark);*/
-/*--md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-dark);*/
-/*--md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-dark);*/
-/*--md-sys-color-error: var(--md-sys-color-error-dark);*/
-/*--md-sys-color-on-error: var(--md-sys-color-on-error-dark);*/
-/*--md-sys-color-error-container: var(--md-sys-color-error-container-dark);*/
-/*--md-sys-color-on-error-container: var(--md-sys-color-on-error-container-dark);*/
-/*--md-sys-color-outline: var(--md-sys-color-outline-dark);*/
-/*--md-sys-color-background: var(--md-sys-color-background-dark);*/
-/*--md-sys-color-on-background: var(--md-sys-color-on-background-dark);*/
-/*--md-sys-color-surface: var(--md-sys-color-surface-dark);*/
-/*--md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);*/
-/*--md-sys-color-surface-variant: var(--md-sys-color-surface-variant-dark);*/
-/*--md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-dark);*/
-/*--md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-dark);*/
-/*--md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-dark);*/
-/*--md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-dark);*/
-/*--md-sys-color-shadow: var(--md-sys-color-shadow-dark);*/
-/*--md-sys-color-surface-tint: var(--md-sys-color-surface-tint-dark);*/
-/*--md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);*/
-/*--md-sys-color-scrim: var(--md-sys-color-scrim-dark);*/
