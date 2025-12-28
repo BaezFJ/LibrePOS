@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from librepos.extensions import db
 
 
 class CRUDMixin:
+    if TYPE_CHECKING:
+        id: int  # Type hint for pyright - the actual column comes from db.Model
+
     @classmethod
     def get_by_id(cls, record_id):
         """Get a record by its primary key."""
