@@ -85,6 +85,15 @@ header, main, footer {
     }
 }
 
+.primary-color {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+
+.primary-color-text {
+    color: var(--md-sys-color-primary);
+}
+
 .primary-border {
     border: 1px solid var(--md-sys-color-primary);
 }
