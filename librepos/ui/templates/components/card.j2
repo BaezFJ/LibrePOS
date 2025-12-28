@@ -1,0 +1,10 @@
+{% macro action_card(icon, label, url) %}
+    <a href="{{ url if url is defined else '#!' }}" class="card-panel center-align hoverable" style="display: block;">
+        {% if icon is defined %}
+            <i class="material-symbols-rounded" style="font-size: 3rem; color: var(--bistro-primary);">{{ icon }}</i>
+        {% endif %}
+        {% if label is defined %}
+            <p class="mb-0"><strong>{{ label }}</strong></p>
+        {% endif %}
+    </a>
+{% endmacro %}
