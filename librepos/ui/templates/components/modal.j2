@@ -1,0 +1,62 @@
+{# ---------- Modal Component ---------- #}
+{# Usage:
+   {% import "components/modal.j2" as Modal %}
+
+   {{ Modal.trigger("my-modal", label="Open Modal", icon="add") }}
+
+   {% call Modal.render("my-modal", title="Modal Title") %}
+       <p>Modal content here</p>
+   {% endcall %}
+#}
+
+{% macro trigger(modal_id, label=None, icon=None, _class='') %}
+    <a href="javascript:'{{ modal_id }}'.showPopover()" class="modal-trigger {{ _class }}">
+        {% if icon %}<i class="material-symbols-rounded">{{ icon }}</i>{% endif %}
+        {% if label %}<span>{{ label }}</span>{% endif %}
+    </a>
+{% endmacro %}
+
+
+{% macro render(modal_id, title=None, _class='') %}
+    <div id="{{ modal_id }}" class="modal {{ _class if _class is defined }}" popover>
+        {% if title %}
+            <div class="modal-header">
+                <h5>{{ title }}</h5>
+            </div>
+        {% endif %}
+        <div class="modal-content">
+            {{ caller() }}
+        </div>
+        {% if footer %}
+            <div class="modal-footer">
+                <button class="btn-flat waves-effect" popovertarget="{{ modal_id }}">Cancel</button>
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+
+{% macro form_modal(modal_id, title, action='', method='post', _class='') %}
+    <div id="{{ modal_id }}" class="modal {{ _class if _class is defined }}" popover>
+        <form action="{{ action }}" method="{{ method }}">
+            {% if title %}
+                <div class="modal-header">
+                    <h5>{{ title }}</h5>
+                </div>
+            {% endif %}
+            <div class="modal-content">
+                {{ caller() }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn text waves-effect" popovertarget="{{ modal_id }}">
+                    <i class="material-symbols-rounded">cancel</i>
+                    <span>&nbsp;Cancel</span>
+                </button>
+                <button type="submit" class="btn filled waves-effect waves-light">
+                    <i class="material-symbols-rounded">save</i>
+                    <span>&nbsp;Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+{% endmacro %}
