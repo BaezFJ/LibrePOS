@@ -40,3 +40,7 @@ ul {
 .card-panel .card-title {
     font-size: 24px;
 }
+
+.modal .modal-content {
+    padding-bottom: 0.5rem;
+}
