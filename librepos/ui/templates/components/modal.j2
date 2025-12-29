@@ -27,18 +27,16 @@
         <div class="modal-content">
             {{ caller() }}
         </div>
-        {% if footer %}
-            <div class="modal-footer">
-                <button class="btn-flat waves-effect" popovertarget="{{ modal_id }}">Cancel</button>
-            </div>
-        {% endif %}
+        <div class="modal-footer">
+            <button class="btn-flat waves-effect" popovertarget="{{ modal_id }}">Cancel</button>
+        </div>
     </div>
 {% endmacro %}
 
 
 {% macro form_modal(modal_id, title, action='', method='post', _class='') %}
-    <div id="{{ modal_id }}" class="modal {{ _class if _class is defined }}" popover>
-        <form action="{{ action }}" method="{{ method }}">
+    <div id="{{ modal_id }}Modal" class="modal {{ _class if _class is defined }}" popover>
+        <form id="{{ modal_id }}Form" action="{{ action }}" method="{{ method }}">
             {% if title %}
                 <div class="modal-header">
                     <h5>{{ title }}</h5>
@@ -48,11 +46,11 @@
                 {{ caller() }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn text waves-effect" popovertarget="{{ modal_id }}">
+                <button type="button" class="btn text waves-effect" popovertarget="{{ modal_id }}Modal">
                     <i class="material-symbols-rounded">cancel</i>
                     <span>&nbsp;Cancel</span>
                 </button>
-                <button type="submit" class="btn filled waves-effect waves-light">
+                <button type="submit" form="{{ modal_id }}Form" class="btn filled waves-effect waves-light">
                     <i class="material-symbols-rounded">save</i>
                     <span>&nbsp;Save</span>
                 </button>
