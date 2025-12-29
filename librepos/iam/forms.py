@@ -16,6 +16,13 @@ class UserLoginForm(FlaskForm):
     submit = SubmitField("Sign In")
 
 
+class PasswordConfirmForm(FlaskForm):
+    """Form for re-authentication / password confirmation."""
+
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField("Confirm")
+
+
 class UserResetPasswordForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     submit = SubmitField("Reset Password")
