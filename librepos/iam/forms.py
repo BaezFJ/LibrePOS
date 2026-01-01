@@ -1,10 +1,17 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import BooleanField, FileField, PasswordField, SelectField, SubmitField
-from wtforms.fields.simple import StringField
+from wtforms import (
+    BooleanField,
+    DateField,
+    FileField,
+    PasswordField,
+    SelectField,
+    StringField,
+    SubmitField,
+)
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, ValidationError
 
-from .models import IAMRole, IAMUser, UserGender, UserStatus
+from .models import IAMRole, IAMUser, UserGender
 
 ALLOWED_IMAGE_EXTENSIONS = ["png", "jpg", "jpeg"]
 
@@ -23,6 +30,12 @@ class PasswordConfirmForm(FlaskForm):
     submit = SubmitField("Confirm")
 
 
+class ConfirmActionForm(FlaskForm):
+    """Form for inline password confirmation on sensitive actions."""
+
+    password = PasswordField("Password", validators=[DataRequired()])
+
+
 class UserResetPasswordForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     submit = SubmitField("Reset Password")
@@ -37,12 +50,26 @@ class UserChangePasswordForm(FlaskForm):
     submit = SubmitField("Update Password")
 
 
+class AdminResetPasswordForm(FlaskForm):
+    """Form for admin to reset a user's password."""
+
+    new_password = PasswordField(
+        "New Password",
+        validators=[
+            DataRequired(),
+            Length(min=8, message="Password must be at least 8 characters."),
+            EqualTo("confirm_password", message="Passwords must match."),
+        ],
+    )
+    confirm_password = PasswordField("Confirm Password", validators=[DataRequired()])
+    submit = SubmitField("Reset Password")
+
+
 class UserRegisterForm(FlaskForm):
     role_id = SelectField("Role", coerce=int, validators=[DataRequired()])
     username = StringField("Username", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), Email()])
     first_name = StringField("First Name", validators=[DataRequired()])
-    middle_name = StringField("Middle Name", validators=[Optional()])
     last_name = StringField("Last Name", validators=[DataRequired()])
     submit = SubmitField("Register")
 
@@ -101,28 +128,13 @@ class UserImageForm(FlaskForm):
 
 class UserEditForm(FlaskForm):
     role_id = SelectField("Role", coerce=int, validators=[DataRequired()])
-    status = SelectField("Status", validators=[DataRequired()])
-    gender = SelectField(
-        "Gender",
-        choices=[(gender.value, gender.value.replace("_", " ").title()) for gender in UserGender],
-        validators=[Optional()],
-    )
     username = StringField("Username", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), Email()])
-    first_name = StringField("First Name", validators=[DataRequired()])
-    middle_name = StringField("Middle Name", validators=[Optional()])
-    last_name = StringField("Last Name", validators=[DataRequired()])
-
     submit = SubmitField("Save Changes")
 
     def __init__(self, user=None, current_user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
-
-        # Populate status choices from UserStatus enum
-        self.status.choices = [
-            (status.value, status.value.replace("_", " ").title()) for status in UserStatus
-        ]
 
         # Get all staff roles
         all_roles = IAMRole.get_all_staff_roles()
@@ -158,13 +170,26 @@ class UserEditForm(FlaskForm):
 
 
 class UserProfileForm(FlaskForm):
-    bio = StringField("Bio", validators=[Length(max=500)])
+    first_name = StringField("First Name", validators=[Length(max=100)])
+    middle_name = StringField("Middle Name", validators=[Length(max=100)])
+    last_name = StringField("Last Name", validators=[Length(max=100)])
+    phone = StringField("Phone", validators=[Length(max=20)])
+    date_of_birth = DateField("Date of Birth", validators=[Optional()])
+    gender = SelectField("Gender", coerce=str, validators=[Optional()])
+    submit = SubmitField("Save Changes")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.gender.choices = [
+            (gender.value, gender.value.replace("_", " ").title()) for gender in UserGender
+        ]
+
+
+class UserAddressForm(FlaskForm):
     address = StringField("Address", validators=[Length(max=255)])
     city = StringField("City", validators=[Length(max=100)])
     state = StringField("State", validators=[Length(max=100)])
     country = StringField("Country", validators=[Length(max=100)])
     zipcode = StringField("Zipcode", validators=[Length(max=10)])
-    phone = StringField("Phone", validators=[Length(max=20)])
-    country_code = StringField("Country Code", validators=[Length(max=10)])
-    date_of_birth = StringField("Date of Birth", validators=[Length(max=10)])
     submit = SubmitField("Save Changes")

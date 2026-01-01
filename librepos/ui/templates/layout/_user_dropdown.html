@@ -2,9 +2,9 @@
 <ul id="user-dropdown" class="dropdown-content user-dropdown">
     <!-- Custom header -->
     <li class="user-dropdown-header">
-        <img src="{{ url_for("static", filename="images/"+current_user.image) }}"
-             alt="{{ current_user.fullname or 'User avatar' }}" class="circle user-dropdown-avatar">
-        <span class="user-dropdown-name">{{ current_user.fullname or 'Guest User' }}</span>
+        <img src="{{ url_for("static", filename="images/"+current_user.profile.image) }}"
+             alt="{{ current_user.profile.fullname or 'User avatar' }}" class="circle user-dropdown-avatar">
+        <span class="user-dropdown-name">{{ current_user.profile.fullname or 'Guest User' }}</span>
     </li>
 
     <li class="divider" tabindex="-1"></li>

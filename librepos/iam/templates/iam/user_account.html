@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% import "components/forms.j2" as Form %}
+{% import "components/icon.j2" as Icon %}
+
+{% block sidenav %}
+    {% include 'iam/_sidenav.html' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include '_partials/breadcrumbs.html' %}
+{% endblock %}
+
+{% block main %}
+
+    <section class="section">
+        <div class="mx-4 row">
+
+            <!-- Account Summary Card -->
+            <div class="col s12 m4">
+                <div class="card-panel center-align">
+                    <div class="mb-2">
+                        {% if user.profile and user.profile.image %}
+                            <img src="{{ url_for('static', filename='images/'+user.profile.image) }}"
+                                 alt="{{ user.username }}"
+                                 class="circle responsive-img"
+                                 style="width: 120px; height: 120px; object-fit: cover;">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/default_profile_image.png') }}"
+                                 alt="{{ user.username }}"
+                                 class="circle responsive-img"
+                                 style="width: 120px; height: 120px; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                    <h5 class="mb-0">{{ user.profile.fullname if user.profile else user.username }}</h5>
+                    <p class="grey-text">@{{ user.username }}</p>
+
+                    <div class="divider my-2"></div>
+
+                    <!-- Account Status -->
+                    <div class="left-align">
+                        <p class="mb-1">
+                            {{ Icon.render('badge', class_='tiny primary-color-text') }}
+                            <strong>Role:</strong>
+                            {{ user.role.name|replace("_", " ")|title if user.role else "N/A" }}
+                        </p>
+                        <p class="mb-1">
+                            <i class="material-symbols-rounded tiny {% if user.status.value == 'active' %}green-text{% elif user.status.value == 'pending' %}orange-text{% else %}red-text{% endif %}">
+                                {% if user.status.value == 'active' %}check_circle
+                                {% elif user.status.value == 'pending' %}hourglass_empty
+                                {% else %}cancel{% endif %}
+                            </i>
+                            <strong>Status:</strong>
+                            <span class="{% if user.status.value == 'active' %}green-text{% elif user.status.value == 'pending' %}orange-text{% else %}red-text{% endif %}">
+                                {{ user.status.value|title }}
+                            </span>
+                        </p>
+                        <p class="mb-0">
+                            {{ Icon.render('calendar_month', class_='tiny primary-color-text') }}
+                            <strong>Member since:</strong>
+                            {{ user.created_at.strftime('%b %d, %Y') if user.created_at else 'N/A' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12 m8 row">
+
+                <!-- Account Settings -->
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h6 class="mb-2">
+                            {{ Icon.render('manage_accounts', class_='primary-color-text') }}
+                            <span>Account Settings</span>
+                        </h6>
+                        <p class="grey-text" style="font-size: 0.9rem;">
+                            Update username, email address, and role assignment.
+                        </p>
+                        <div class="divider mb-2"></div>
+
+                        <form action="{{ url_for('iam.user_account', slug=user.slug) }}" method="post">
+                            {{ Form.render_form(form, extra_wrappers={
+                            'username': 'm6',
+                            'email': 'm6',
+                            'role_id': 'm12'
+                        }) }}
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="col s12">
+                    <div class="card-panel">
+                        <h6 class="mb-2">
+                            {{ Icon.render('bolt', class_='primary-color-text') }}
+                            <span>Quick Actions</span>
+                        </h6>
+                        <div class="divider mb-2"></div>
+
+                        <div class="row mb-0">
+                            <div class="col s12 m6">
+                                <a href="{{ url_for('iam.reset_user_password', slug=user.slug) }}"
+                                   class="btn-flat waves-effect full-width left-align">
+                                    {{ Icon.render('lock_reset') }}
+                                    <span>Reset Password</span>
+                                </a>
+                            </div>
+                            <div class="col s12 m6">
+                                <a href="{{ url_for('iam.user_profile', slug=user.slug) }}"
+                                   class="btn-flat waves-effect full-width left-align">
+                                    {{ Icon.render('person') }}
+                                    <span>Edit Profile</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
