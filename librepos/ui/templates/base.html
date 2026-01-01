@@ -30,7 +30,7 @@
                     <li>
                         <a href="" class="dropdown-trigger"
                            data-target="user-dropdown">
-                            <img src="{{ url_for("static", filename="images/"+current_user.image) }}"
+                            <img src="{{ url_for("static", filename="images/"+current_user.profile.image) }}"
                                  alt="User Avatar" class="circle avatar-nav">
                         </a>
                     </li>
@@ -49,6 +49,7 @@
 
 
 <main id="main">
+    {% block breadcrumb %}{% endblock %}
     {% block main %}{% endblock %}
 </main>
 
