@@ -2,7 +2,7 @@
 {% if breadcrumb and breadcrumb is iterable %}
     <nav class="breadcrumb-wrapper pt-4">
         <div class="col s12">
-            <a href="{{ url_for("core.dashboard") }}" class="breadcrumb">Dashboard</a>
+            <a href="{{ url_for("main.dashboard") }}" class="breadcrumb">Dashboard</a>
             {% for crumb in breadcrumb %}
                 {% if crumb is mapping and 'label' in crumb %}
                     {% if crumb.url %}
