@@ -1,13 +1,101 @@
 {% extends 'base.html' %}
 
+{% import "components/card.j2" as Card %}
+
 {% block sidenav %}
-    {% include "iam/_sidenav.html" %}
+    {% include 'iam/_sidenav.html' %}
 {% endblock %}
 
 {% block main %}
 
     <section class="section">
-        <h1 class="center-align">IAM Dashboard page.</h1>
+        <div class="mx-4">
+
+            <!-- User Statistics Row -->
+            <div class="row mb-5">
+                <div class="col s6 m3">
+                    {{ Card.stat_card('group', total_users, 'Total Users') }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.stat_card('check_circle', active_users, 'Active Users', color='green') }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.stat_card('lock', locked_users, 'Locked', color='red') }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.stat_card('hourglass_empty', pending_users, 'Pending', color='orange') }}
+                </div>
+            </div>
+
+            <!-- Role/Permission Statistics Row -->
+            <div class="row mb-5">
+                <div class="col s6 m3">
+                    {{ Card.stat_card('badge', total_roles, 'Roles') }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.stat_card('policy', total_policies, 'Policies') }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.stat_card('shield', total_permissions, 'Permissions') }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.stat_card('warning', failed_logins_24h, 'Failed Logins (24h)',
+                        color='orange' if failed_logins_24h > 0 else 'green') }}
+                </div>
+            </div>
+
+            <!-- Quick Actions Row -->
+            <div class="row mb-5">
+                <div class="col s6 m3">
+                    {{ Card.action_card('person_add', 'Add User', url=url_for('iam.add_user')) }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.action_card('badge', 'Manage Roles', url=url_for('iam.roles')) }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.action_card('policy', 'Policies', url=url_for('iam.policies')) }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.action_card('shield', 'Permissions', url=url_for('iam.permissions')) }}
+                </div>
+            </div>
+
+            <!-- Activity & Distribution Row -->
+            <div class="row">
+                <!-- Recent Activity -->
+                <div class="col s12 m8">
+                    <div class="card-panel">
+                        {{ Card.panel_header('history', 'Recent Activity') }}
+
+                        {# HTMX container for activity table #}
+                        <div id="activity-content">
+                            {% include 'iam/_activity_table.html' %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users by Role -->
+                <div class="col s12 m4">
+                    <div class="card-panel">
+                        {{ Card.panel_header('group', 'Users by Role') }}
+
+                        {% if users_by_role %}
+                            <ul class="collection mb-0">
+                                {% for role_name, count in users_by_role %}
+                                    <li class="collection-item">
+                                        <span class="badge primary-color white-text">{{ count }}</span>
+                                        {{ role_name|replace("_", " ")|title }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            {{ Card.empty_state('group', 'No role data available.') }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </section>
 
 {% endblock %}

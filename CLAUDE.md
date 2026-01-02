@@ -79,3 +79,44 @@ Environment-based configs in `librepos/config.py`: `DevelopmentConfig`, `Testing
 
 ### Templates
 Base layout at `ui/templates/base.html`. Reusable Jinja2 macros in `ui/templates/components/`. Each blueprint has templates at `{blueprint}/templates/{blueprint}/`.
+
+## Naming Conventions
+
+### Core Principle
+Everything derives from the endpoint name:
+```
+endpoint: "edit_user"
+    → view function: edit_user_view()
+    → template: edit_user.html
+    → URL path: /users/<slug>/edit
+```
+
+### Endpoint Names
+- Format: `snake_case`
+- Collection views: plural (`users`, `roles`)
+- Detail views: singular (`user`, `role`)
+- Actions: `{action}_{resource}` (`add_user`, `edit_user`, `delete_user`)
+- Nested: `{action}_{resource}_{sub}` (`update_user_image`, `reset_user_password`)
+
+### View Functions
+- Format: `{endpoint}_view()`
+- Examples: `users_view()`, `edit_user_view(slug: str)`
+
+### Templates
+- Format: `{blueprint}/{endpoint}.html`
+- Partials use `_` prefix: `_sidenav.html`
+- Error pages in subfolder: `error/404.html`
+
+### URL Paths
+- Multi-word segments: `kebab-case` (`/reset-password`, `/confirm-password`)
+- Actions after identifier: `/users/<slug>/edit` (not `/users/edit/<slug>`)
+- Prefer `<slug>` over `<id>` for user-facing URLs
+
+### Quick Reference
+| URL Path | Endpoint | View Function | Template |
+|----------|----------|---------------|----------|
+| `/users` | `users` | `users_view()` | `users.html` |
+| `/users/add` | `add_user` | `add_user_view()` | `add_user.html` |
+| `/users/<slug>` | `user` | `user_view()` | `user.html` |
+| `/users/<slug>/edit` | `edit_user` | `edit_user_view()` | `edit_user.html` |
+| `/users/<slug>/reset-password` | `reset_user_password` | `reset_user_password_view()` | `reset_user_password.html` |

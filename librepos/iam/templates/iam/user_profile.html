@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% import "components/card.j2" as Card %}
+{% import "components/forms.j2" as Form %}
+{% import "iam/_user_card.j2" as UserCard %}
+
+{% block sidenav %}
+    {% include 'iam/_sidenav.html' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include '_partials/breadcrumbs.html' %}
+{% endblock %}
+
+{% block main %}
+
+    <section class="section">
+        <div class="mx-4 row">
+
+            <!-- Profile Image Card -->
+            <div class="col s12 m4">
+                {% call UserCard.sidebar(user, size='large', show_email=true) %}
+                    {% if image_form %}
+                    <!-- Image Upload Form -->
+                    <div class="divider my-2"></div>
+                    <form action="{{ url_for('iam.update_user_image', slug=user.slug) }}"
+                          method="post"
+                          enctype="multipart/form-data">
+                        {{ image_form.hidden_tag() }}
+                        <div class="file-field input-field">
+                            <div class="btn btn-small">
+                                <i class="material-symbols-rounded">photo_camera</i>
+                                {{ image_form.image() }}
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text" placeholder="Upload image">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-small waves-effect waves-light">
+                            <i class="material-symbols-rounded">upload</i>
+                            <span>Upload</span>
+                        </button>
+                    </form>
+                    {% endif %}
+                {% endcall %}
+            </div>
+
+            <!-- Profile Form Card -->
+            <div class="col s12 m8">
+                <div class="card-panel">
+                    {{ Card.panel_header('person', 'Profile Information',
+                        'Update personal details and contact information.') }}
+
+                    <form action="{{ url_for('iam.user_profile', slug=user.slug) }}" method="post">
+                        {{ Form.render_form(form, extra_wrappers={
+                            'first_name': 'm4',
+                            'middle_name': 'm4',
+                            'last_name': 'm4',
+                            'phone': 'm6',
+                            'date_of_birth': 'm6',
+                            'gender': 'm6'
+                        }) }}
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

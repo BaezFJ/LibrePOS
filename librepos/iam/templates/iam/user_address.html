@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% import "components/card.j2" as Card %}
+{% import "components/forms.j2" as Form %}
+{% import "iam/_user_card.j2" as UserCard %}
+
+{% block sidenav %}
+    {% include 'iam/_sidenav.html' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include '_partials/breadcrumbs.html' %}
+{% endblock %}
+
+{% block main %}
+
+    <section class="section">
+        <div class="mx-4 row">
+
+            <!-- Current Address Card -->
+            <div class="col s12 m4">
+                <div class="card-panel">
+                    {{ Card.panel_header('location_on', 'Current Address') }}
+
+                    {% if user.address and user.address.full_address %}
+                        <p class="mb-1">
+                            <strong>{{ user.address.address }}</strong>
+                        </p>
+                        <p class="grey-text mb-0">
+                            {{ user.address.city }}, {{ user.address.state }}
+                        </p>
+                        <p class="grey-text mb-0">
+                            {{ user.address.country }} {{ user.address.zipcode }}
+                        </p>
+                    {% else %}
+                        {{ Card.empty_state('location_off', 'No address on file') }}
+                    {% endif %}
+                </div>
+
+                <!-- User Info Card -->
+                {{ UserCard.sidebar(user, size='small') }}
+            </div>
+
+            <!-- Address Form Card -->
+            <div class="col s12 m8">
+                <div class="card-panel">
+                    {{ Card.panel_header('edit_location', 'Edit Address',
+                        'Update mailing address and location details.') }}
+
+                    <form action="{{ url_for('iam.user_address', slug=user.slug) }}" method="post">
+                        {{ Form.render_form(form, extra_wrappers={
+                            'address': 'm12',
+                            'city': 'm6',
+                            'state': 'm6',
+                            'country': 'm6',
+                            'zipcode': 'm6'
+                        }) }}
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

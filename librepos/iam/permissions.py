@@ -11,6 +11,7 @@ class IAMPermissions(StrEnum):
     # User Management
     VIEW_USERS = "view:users"
     CREATE_USERS = "create:users"
+    EDIT_USERS = "edit:users"
     MANAGE_USERS = "manage_users"
 
     # Role & Permission Management
@@ -31,6 +32,7 @@ IAM_FULL_ACCESS_POLICY = PolicyDefinition(
     permissions=[
         IAMPermissions.VIEW_USERS,
         IAMPermissions.CREATE_USERS,
+        IAMPermissions.EDIT_USERS,
         IAMPermissions.MANAGE_USERS,
         IAMPermissions.MANAGE_ROLES,
         IAMPermissions.MANAGE_PERMISSIONS,

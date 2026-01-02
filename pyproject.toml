@@ -21,6 +21,7 @@ dependencies = [
     "flask-mailman>=1.1.1",
     "flask-sqlalchemy>=3.1.1",
     "flask-wtf>=1.2.2",
+    "pillow>=11.0.0",
     "python-dotenv>=1.2.1",
     "python-slugify>=8.0.4",
     "python-usernames>=1.1.0",

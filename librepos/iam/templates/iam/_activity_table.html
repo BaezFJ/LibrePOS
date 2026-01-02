@@ -1,0 +1,58 @@
+{#
+    Activity Table Partial
+
+    Renders the login history table with HTMX pagination.
+    Used both for initial page load and HTMX partial updates.
+#}
+{% import "components/card.j2" as Card %}
+{% import "components/pagination_htmx.j2" as Pagination %}
+
+{# Loading indicator - shown during HTMX requests #}
+<div class="htmx-indicator center-align py-2">
+    <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-primary-only">
+            <div class="circle-clipper left"><div class="circle"></div></div>
+            <div class="gap-patch"><div class="circle"></div></div>
+            <div class="circle-clipper right"><div class="circle"></div></div>
+        </div>
+    </div>
+</div>
+
+{% if recent_logins %}
+    <table class="striped responsive-table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Device</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for login in recent_logins %}
+                <tr>
+                    <td>
+                        {% if login.user %}
+                            <a href="{{ url_for('iam.user', slug=login.user.slug) }}">
+                                {{ login.user.profile.fullname if login.user.profile else login.user.username }}
+                            </a>
+                        {% else %}
+                            <span class="grey-text">Unknown</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ login.login_at|timeago }}</td>
+                    <td>{{ Card.login_status(login.is_successful) }}</td>
+                    <td>
+                        <span class="grey-text" style="font-size: 0.85rem;">
+                            {{ login.browser or 'Unknown' }}
+                            {% if login.os %} / {{ login.os }}{% endif %}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {{ Pagination.render(login_pagination, 'iam.dashboard_activity', '#activity-content') }}
+{% else %}
+    {{ Card.empty_state('history', 'No recent login activity.') }}
+{% endif %}

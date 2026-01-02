@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% import "components/forms.j2" as Form %}
+{% import "iam/_auth_card.j2" as AuthCard %}
+
+{% block main %}
+
+    {% call AuthCard.render(
+        title="Welcome, " ~ user.profile.first_name ~ "!",
+        description="Set your password to complete your account setup."
+    ) %}
+        <form action="" method="POST">
+            {{ Form.render_form(form) }}
+        </form>
+        {{ AuthCard.password_hint() }}
+    {% endcall %}
+
+{% endblock %}

@@ -75,7 +75,7 @@ class BaseConfig:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    # Mail Settings
+    # Mail Settings (SMTP - Flask-Mailman)
     MAIL_SERVER = _env_str("MAIL_SERVER")
     MAIL_PORT = _env_int("MAIL_PORT")
     MAIL_USERNAME = _env_str("MAIL_USERNAME")

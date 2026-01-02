@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% import "components/card.j2" as Card %}
+{% import "iam/_user_card.j2" as UserCard %}
+{% import "iam/_settings.j2" as Settings %}
+
+{% block sidenav %}
+    {% include 'iam/_sidenav.html' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include '_partials/breadcrumbs.html' %}
+{% endblock %}
+
+{% block main %}
+
+    <section class="section">
+        <div class="mx-4 row">
+
+            <!-- Left Panels -->
+            <div class="col s12 m4">
+
+                <div class="row">
+                    <!-- User Profile Image Card -->
+                    <div class="col s12">
+                        {{ UserCard.sidebar(user, size='small') }}
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="col s12">
+                        <div class="card-panel">
+                            {{ Card.panel_header('link', 'Quick Links') }}
+                            <ul class="collection mb-0">
+                                {{ Card.link_item('person', 'Edit Profile', url_for('iam.user_profile', slug=user.slug)) }}
+                                {{ Card.link_item('manage_accounts', 'Account Settings', url_for('iam.user_account', slug=user.slug)) }}
+                                {{ Card.link_item('location_on', 'Address', url_for('iam.user_address', slug=user.slug)) }}
+                                {{ Card.link_item('history', 'Login History', url_for('iam.user_login_history', slug=user.slug)) }}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Panels -->
+            <div class="col s12 m8">
+                <div class="row">
+
+                    <!-- Security Settings -->
+                    <div class="col s12">
+                        {% call Settings.panel('security', 'Security', 'Manage security settings and authentication options.') %}
+                            {{ Settings.item('Password', 'Change or reset the account password',
+                                url=url_for('iam.reset_user_password', slug=user.slug), action='Change') }}
+                            {{ Settings.item('Two-Factor Authentication', 'Add an extra layer of security',
+                                action='Coming Soon', disabled=true) }}
+                            {{ Settings.item('Active Sessions', 'View and manage active login sessions',
+                                action='Coming Soon', disabled=true) }}
+                        {% endcall %}
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div class="col s12">
+                        {% call Settings.panel('notifications', 'Notifications', 'Configure how and when you receive notifications.') %}
+                            {{ Settings.item('Email Notifications', 'Receive updates and alerts via email',
+                                action='Coming Soon', disabled=true) }}
+                            {{ Settings.item('Push Notifications', 'Browser and mobile push notifications',
+                                action='Coming Soon', disabled=true) }}
+                        {% endcall %}
+                    </div>
+
+                    <!-- Privacy Settings -->
+                    <div class="col s12">
+                        {% call Settings.panel('visibility', 'Privacy', 'Control your privacy and data sharing preferences.') %}
+                            {{ Settings.item('Profile Visibility', 'Control who can view your profile',
+                                action='Coming Soon', disabled=true) }}
+                            {{ Settings.item('Data Export', 'Download a copy of your data',
+                                action='Coming Soon', disabled=true) }}
+                        {% endcall %}
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

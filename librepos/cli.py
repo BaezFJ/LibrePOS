@@ -60,20 +60,24 @@ def add_cli_commands(app):  # noqa: PLR0915
     )
     @click.option("--email", prompt=True, help="The email address.", required=True)
     @click.option("--first-name", prompt=True, help="The first name.", required=True)
-    @click.option("--middle-name", prompt=True, help="The middle name.", required=False)
     @click.option("--last-name", prompt=True, help="The last name.", required=True)
-    def add_superuser(username, password, email, first_name, middle_name, last_name):
+    def add_superuser(username, password, email, first_name, last_name):
         """Add a superuser."""
         click.echo("\nPlease confirm the following details:")
         click.echo(f"Username: {username}")
         click.echo(f"Password: {'*' * len(password)}")
         click.echo(f"Email: {email if email else '<empty>'}")
         click.echo(f"First name: {first_name}")
-        click.echo(f"Middle name: {middle_name if middle_name else '<empty>'}")
         click.echo(f"Last name: {last_name}")
 
         if not click.confirm("\nDo you want to create this superuser?"):
             click.echo("Operation cancelled.")
+            return
+
+        # Get the owner role for superuser
+        owner_role = IAMRole.get_first_by(slug="owner")
+        if not owner_role:
+            click.echo("Error: Owner role not found. Run 'flask seed-permissions' first.")
             return
 
         IAMUser.create(
@@ -81,10 +85,9 @@ def add_cli_commands(app):  # noqa: PLR0915
             email=email,
             unsecure_password=password,
             first_name=first_name,
-            middle_name=middle_name,
             last_name=last_name,
-            is_active=True,
-            is_admin=True,
+            role_id=owner_role.id,
+            status=UserStatus.ACTIVE,
         )
         click.echo(f"Superuser '{username}' created successfully.")
 
@@ -116,7 +119,6 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "email": "owner@test.com",
                 "password": "owner123",
                 "first_name": "Owner",
-                "middle_name": "Test",
                 "last_name": "User",
             },
             "admin": {
@@ -125,7 +127,6 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "email": "admin@test.com",
                 "password": "admin123",
                 "first_name": "Admin",
-                "middle_name": "Test",
                 "last_name": "User",
             },
             "manager": {
@@ -134,7 +135,6 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "email": "manager@test.com",
                 "password": "manager123",
                 "first_name": "Manager",
-                "middle_name": "Test",
                 "last_name": "User",
             },
             "cashier": {
@@ -143,7 +143,6 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "email": "cashier@test.com",
                 "password": "cashier123",
                 "first_name": "Cashier",
-                "middle_name": "Test",
                 "last_name": "User",
             },
             "waiter": {
@@ -152,7 +151,6 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "email": "waiter@test.com",
                 "password": "waiter123",
                 "first_name": "Waiter",
-                "middle_name": "Test",
                 "last_name": "User",
             },
             "customer": {
@@ -161,7 +159,6 @@ def add_cli_commands(app):  # noqa: PLR0915
                 "email": "customer@test.com",
                 "password": "customer123",
                 "first_name": "Customer",
-                "middle_name": "Test",
                 "last_name": "User",
             },
         }
@@ -198,7 +195,6 @@ def add_cli_commands(app):  # noqa: PLR0915
                 email=user_data["email"],
                 unsecure_password=user_data["password"],
                 first_name=user_data["first_name"],
-                middle_name=user_data["middle_name"],
                 last_name=user_data["last_name"],
                 status=user_data.get("status", UserStatus.ACTIVE),
             )

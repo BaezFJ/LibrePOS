@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% import "components/card.j2" as Card %}
+{% import "iam/_user_card.j2" as UserCard %}
+
+{% block sidenav %}
+    {% include 'iam/_sidenav.html' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include '_partials/breadcrumbs.html' %}
+{% endblock %}
+
+{% block main %}
+
+    <section class="section">
+        <div class="mx-4 row">
+
+            <!-- User Info Card -->
+            <div class="col s12 m4 l3">
+                {% call UserCard.sidebar(user, size='small') %}
+                    <div class="divider my-2"></div>
+                    <div class="left-align">
+                        {{ UserCard.stat_item('login', 'Total Logins', user.login_count or 0) }}
+                        {{ UserCard.stat_item('schedule', 'Last Login', user.last_login_at|timeago if user.last_login_at else 'Never') }}
+                    </div>
+                {% endcall %}
+            </div>
+
+            <!-- Login History Table -->
+            <div class="col s12 m8 l9">
+                <div class="card-panel">
+                    {{ Card.panel_header('history', 'Login History') }}
+
+                    {% if login_history %}
+                        <table class="striped responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>IP Address</th>
+                                    <th>Device</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in login_history %}
+                                    <tr>
+                                        <td>
+                                            {{ record.login_at.strftime('%b %d, %Y') }}<br>
+                                            <span class="grey-text" style="font-size: 0.85rem;">
+                                                {{ record.login_at.strftime('%H:%M:%S') }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{ Card.login_status(record.is_successful) }}
+                                            {% if not record.is_successful and record.failure_reason %}
+                                                <br>
+                                                <span class="grey-text" style="font-size: 0.8rem;">
+                                                    {{ record.failure_reason }}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <code style="font-size: 0.85rem;">{{ record.ip_address or 'Unknown' }}</code>
+                                        </td>
+                                        <td>
+                                            {% if record.browser or record.os %}
+                                                {{ record.browser or '' }}
+                                                {% if record.browser and record.os %}<br>{% endif %}
+                                                <span class="grey-text" style="font-size: 0.85rem;">
+                                                    {{ record.os or '' }}
+                                                </span>
+                                            {% else %}
+                                                <span class="grey-text">Unknown</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if record.city or record.country %}
+                                                {{ record.city or '' }}{% if record.city and record.country %}, {% endif %}{{ record.country or '' }}
+                                            {% else %}
+                                                <span class="grey-text">-</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        {{ Card.empty_state('history', 'No login history available.') }}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

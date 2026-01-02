@@ -8,6 +8,7 @@ from jinja2 import DebugUndefined, FileSystemBytecodeCache, StrictUndefined
 from librepos.cli import add_cli_commands
 from librepos.extensions import init_extensions
 from librepos.main.routes import register_blueprints
+from librepos.utils.jinja import init_jinja_filters
 
 from .config import CONFIG_BY_NAME, BaseConfig, DevelopmentConfig
 
@@ -60,6 +61,9 @@ def create_app(config: str | type | None = None):
 
     # load extensions
     init_extensions(app)
+
+    # load jinja filters
+    init_jinja_filters(app)
 
     if app.config.get("INITIAL_SETUP_COMPLETED"):
         # register blueprints and core routes

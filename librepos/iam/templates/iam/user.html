@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% import "components/card.j2" as Card %}
+{% import "components/modal.j2" as Modal %}
+
+{% block sidenav %}
+    {% include 'iam/_sidenav.html' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include '_partials/breadcrumbs.html' %}
+{% endblock %}
+
+{% block main %}
+
+    <section class="section">
+        <div class="mx-4 row">
+
+            <!-- User Summary Card -->
+            <div class="col s12">
+                <div class="card-panel">
+                    <div class="row mb-0">
+                        {{ Card.info_item('calendar_month', 'Created', user.created_at|timeago) }}
+                        {{ Card.info_item('badge', 'Role', user.role.name|replace("_", " ")|title if user.role else "N/A") }}
+                        {{ Card.status_info_item(user.status) }}
+                        {{ Card.info_item('login', 'Total Logins', user.login_count or 0) }}
+                        {{ Card.info_item('schedule', 'Last Login', user.last_login_at|timeago) }}
+                        {{ Card.info_item('update', 'Last Updated', user.updated_at|timeago) }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Cards -->
+            <div class="col s6 m3 l4">
+                {{ Card.action_card('lock_reset', 'Reset Password', url=url_for('iam.reset_user_password',slug=user.slug)) }}
+            </div>
+
+            <div class="col s6 m3 l4">
+                {{ Card.action_card('person', 'Profile', url=url_for('iam.user_profile', slug=user.slug)) }}
+            </div>
+
+            <div class="col s6 m3 l4">
+                {{ Card.action_card('location_on', 'Address', url=url_for('iam.user_address', slug=user.slug)) }}
+            </div>
+
+            <div class="col s6 m3 l4">
+                {{ Card.action_card('manage_accounts', 'Account', url=url_for('iam.user_account', slug=user.slug)) }}
+            </div>
+
+            <div class="col s6 m3 l4">
+                {{ Card.action_card('settings', 'Settings', url=url_for('iam.user_settings', slug=user.slug)) }}
+            </div>
+
+            <div class="col s12 m6 l4">
+                {{ Card.action_card('history', 'Login History', url=url_for('iam.user_login_history', slug=user.slug)) }}
+            </div>
+
+            {% if user.status.value == 'invited' %}
+            <div class="col s12 m6 l4">
+                {{ Card.form_action_card('forward_to_inbox', 'Resend Invitation', url_for('iam.resend_invitation', slug=user.slug)) }}
+            </div>
+            {% endif %}
+
+            <div class="col s12 m6 l4">
+                {% if user.status.value == 'locked' %}
+                    {{ Card.action_card('lock_open', 'Unlock', modal='unlockUser') }}
+                {% else %}
+                    {{ Card.action_card('lock', 'Lock', modal='lockUser') }}
+                {% endif %}
+            </div>
+
+            <div class="col s12 m6 l4">
+                {{ Card.action_card('delete', 'Delete', modal='deleteUser', color='red') }}
+            </div>
+
+        </div>
+    </section>
+
+    {% set user_display_name = user.profile.fullname if user.profile else user.username %}
+
+    {{ Modal.confirmation(
+        modal_id='lockUser',
+        title='Lock User',
+        action=url_for('iam.lock_user', slug=user.slug),
+        message='Are you sure you want to lock <strong>' ~ user_display_name ~ '</strong>?',
+        warning='This will prevent the user from logging in. You can unlock the account later.',
+        confirm_text='Lock',
+        confirm_icon='lock',
+        require_password=true
+    ) }}
+
+    {{ Modal.confirmation(
+        modal_id='unlockUser',
+        title='Unlock User',
+        action=url_for('iam.unlock_user', slug=user.slug),
+        message='Are you sure you want to unlock <strong>' ~ user_display_name ~ '</strong>?',
+        warning='This will restore the user\'s ability to log in.',
+        confirm_text='Unlock',
+        confirm_icon='lock_open',
+        confirm_color='green',
+        require_password=true
+    ) }}
+
+    {{ Modal.confirmation(
+        modal_id='deleteUser',
+        title='Delete User',
+        action=url_for('iam.delete_user', slug=user.slug),
+        message='Are you sure you want to delete <strong>' ~ user_display_name ~ '</strong>?',
+        warning='This action cannot be easily undone.',
+        confirm_text='Delete',
+        confirm_icon='delete',
+        confirm_color='red',
+        require_password=true
+    ) }}
+
+{% endblock %}

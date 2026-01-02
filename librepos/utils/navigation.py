@@ -1,6 +1,23 @@
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 from flask import request, url_for
+
+
+def is_safe_url(target: str) -> bool:
+    """Check if URL is safe for redirection (same host).
+
+    Prevents open redirect attacks by ensuring the target URL
+    is on the same host as the current request.
+
+    Args:
+        target: The URL to validate
+
+    Returns:
+        True if the URL is safe, False otherwise
+    """
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
 
 
 def get_redirect_url(fallback, param_name="next"):

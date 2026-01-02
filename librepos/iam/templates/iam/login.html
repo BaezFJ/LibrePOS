@@ -1,31 +1,21 @@
 {% extends 'base.html' %}
 
 {% import "components/forms.j2" as Form %}
+{% import "iam/_auth_card.j2" as AuthCard %}
 
 {% block main %}
 
-    <div class="container">
-        <div class="center-content">
-            <div class="auth-wrapper sidenav-padding-fix">
-                <div class="auth-card card z-depth-2">
-                    <div class="card-content">
-                        <div class="brand-lockup">
-                            <i class="material-symbols-rounded">restaurant_menu</i>
-                            <span class="brand-name">LibrePOS</span>
-                        </div>
-                        <h5>Sign In</h5>
-                        <p class="grey-text">Enter your credentials to access the dashboard.</p>
-                        <form action="" method="POST">
-                            {{ Form.render_form(form) }}
-                        </form>
-                    </div>
-                    <div class="card-action">
-                        <a href="">Forgot password?</a>
-                        <a href="">Need help?</a>
-                    </div>
-                </div>
-                <p class="grey-text center-align mt-4">Secure staff access &verbar; All activity is logged</p>
-            </div>
-        </div>
-    </div>
+    {% call AuthCard.render(
+        title="Sign In",
+        description="Enter your credentials to access the dashboard.",
+        links=[
+            {'url': url_for('iam.forgot_password'), 'label': 'Forgot password?'},
+            {'url': '', 'label': 'Need help?'}
+        ]
+    ) %}
+        <form action="" method="POST">
+            {{ Form.render_form(form) }}
+        </form>
+    {% endcall %}
+
 {% endblock %}

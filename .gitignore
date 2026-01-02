@@ -336,4 +336,4 @@ venv/
 wheels/
 x64/
 x86/
-~$*
+librepos/ui/static/images/users/

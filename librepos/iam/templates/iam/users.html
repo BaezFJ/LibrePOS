@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
 
-{% import "components/footer.j2" as Footer %}
+{% import "components/card.j2" as Card %}
 {% import "components/dropdown.j2" as Dropdown %}
+{% import "components/footer.j2" as Footer %}
 {% import "components/forms.j2" as Form %}
+{% import "components/modal.j2" as Modal %}
 
 {% block sidenav %}
-    {% include "iam/_sidenav.html" %}
+    {% include 'iam/_sidenav.html' %}
 {% endblock %}
 
+{% block breadcrumb %}
+    {% include '_partials/breadcrumbs.html' %}
+{% endblock %}
 
 {% block main %}
 
@@ -19,36 +24,26 @@
                         <thead>
                         <tr>
                             <th>Image</th>
-                            <th>Name</th>
-                            <th>Email</th>
+                            <th>Username</th>
                             <th>Role</th>
+                            <th>Last Active</th>
                             <th>Status</th>
-                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for user in users %}
                             <tr>
                                 <td class="center-align">
-                                    <img src="{{ url_for('static', filename='images/default_male_user.png') }}"
-                                         alt="User avatar" class="circle avatar-nav">
+                                    {{ Card.avatar(user.profile.image, alt=user.username) }}
                                 </td>
-                                <td>{{ user.fullname }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.role.name if user.role else "N/A" }}</td>
-                                <td>{{ user.status|title }}</td>
                                 <td>
-                                    {% set user_dropdown_id = user.slug|string+'-actions' %}
-                                    {{ Dropdown.trigger(user_dropdown_id) }}
-
-                                    {% call Dropdown.render(user_dropdown_id) %}
-                                        {{ Dropdown.item("View Profile", icon="person") }}
-                                        {{ Dropdown.item("Edit", icon="edit") }}
-                                        {{ Dropdown.item("Reset Password", icon="lock_reset") }}
-                                        {{ Dropdown.divider() }}
-                                        {{ Dropdown.item("Disable", icon="person_off", _class="red-text") }}
-                                    {% endcall %}
+                                    <a href="{{ url_for('iam.user', slug=user.slug) }}">
+                                        {{ user.username|title }}
+                                    </a>
                                 </td>
+                                <td>{{ user.role.name if user.role else "N/A" }}</td>
+                                <td>{{ user.last_login_at|timeago }}</td>
+                                <td>{{ user.status|title }}</td>
                             </tr>
                         {% endfor %}
 
@@ -56,7 +51,7 @@
 
                     </table>
                 {% else %}
-                    <h4 class="center-align">No users found.</h4>
+                    {{ Card.empty_state('group', 'No users found.') }}
                 {% endif %}
             </div>
         </div>
@@ -67,26 +62,42 @@
 
 {% block footer %}
     {% call Footer.render() %}
-        {{ Footer.item("Search", icon="search") }}
-        {{ Footer.item("Add", icon="add_circle", url=url_for("iam.add_user")) }}
-        {{ Footer.item("Filter", icon="filter_alt") }}
-        {{ Footer.item("Sort", icon="sort") }}
+        {{ Footer.item("Search", icon="search", modal="searchModal") }}
+        {{ Footer.item("Add", icon="add_circle", url=url_for('iam.add_user')) }}
+        {{ Footer.item("Filter", icon="filter_alt", dropdown="filter-dropdown") }}
+        {{ Footer.item("Sort", icon="sort", dropdown="sort-dropdown") }}
+        {{ Footer.item("Export", icon="download", dropdown="export-dropdown") }}
     {% endcall %}
 
+    {{ Modal.search('search', url_for('iam.users'), placeholder='Search by username or email...') }}
 
-{#    <div id="addUserModal" class="modal small" popover>#}
-{#        <div class="modal-header">#}
-{#            <h4>Add User</h4>#}
-{#        </div>#}
-{#        <div class="modal-content">#}
-{#            <form action="" method="POST">#}
-{#                {{ Form.render_form(form) }}#}
-{#            </form>#}
-{#        </div>#}
-{#        <div class="modal-footer">#}
-{#            <button tabindex="0" class="waves-effect btn-flat" popovertarget="addUserModal">Close</button>#}
-{#        </div>#}
-{#    </div>#}
+    {# Filter Dropdown #}
+    {% call Dropdown.render("filter-dropdown") %}
+        {{ Dropdown.item("All Users", icon="group", url="?status=") }}
+        {{ Dropdown.divider() }}
+        {{ Dropdown.item("Active", icon="check_circle", url="?status=active") }}
+        {{ Dropdown.item("Pending", icon="hourglass_top", url="?status=pending") }}
+        {{ Dropdown.item("Invited", icon="mail", url="?status=invited") }}
+        {{ Dropdown.item("Suspended", icon="pause_circle", url="?status=suspended") }}
+        {{ Dropdown.item("Deactivated", icon="cancel", url="?status=deactivated") }}
+        {{ Dropdown.item("Locked", icon="lock", url="?status=locked") }}
+    {% endcall %}
 
+    {# Sort Dropdown #}
+    {% call Dropdown.render("sort-dropdown") %}
+        {{ Dropdown.item("Username", icon="person", url="?sort=username") }}
+        {{ Dropdown.item("Role", icon="badge", url="?sort=role") }}
+        {{ Dropdown.item("Last Active", icon="schedule", url="?sort=last_active") }}
+        {{ Dropdown.item("Status", icon="toggle_on", url="?sort=status") }}
+    {% endcall %}
 
+    {# Export Dropdown #}
+    {% call Dropdown.render("export-dropdown") %}
+        {{ Dropdown.item("Export CSV", icon="download", url="?export=csv") }}
+    {% endcall %}
+
+    {# Add User Modal #}
+    {% call Modal.form_modal("addUserModal", title="Add User", action=url_for("iam.add_user"), _class="small") %}
+        {{ Form.render_form(form, extra_wrappers={'submit': 'hide'}) }}
+    {% endcall %}
 {% endblock %}

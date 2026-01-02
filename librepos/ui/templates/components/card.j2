@@ -1,0 +1,273 @@
+{% macro action_card(icon, label, url=none, modal=none, color='primary') %}
+{#
+    Renders a clickable action card.
+
+    Args:
+        icon: Material symbol icon name
+        label: Card label text
+        url: Navigation URL (optional)
+        modal: Modal ID to trigger on click (optional, without 'Modal' suffix)
+        color: Icon color - 'primary', 'red', 'green', etc. (default: 'primary')
+
+    Usage:
+        {{ Card.action_card('person', 'Profile', url=url_for('...')) }}
+        {{ Card.action_card('delete', 'Delete', modal='deleteUser', color='red') }}
+#}
+{% set color_map = {
+    'primary': 'var(--bistro-primary)',
+    'red': 'var(--bistro-error)',
+    'green': 'var(--bistro-success, green)',
+    'orange': 'orange'
+} %}
+{% set icon_color = color_map.get(color, color) %}
+
+{% if modal %}
+    <a href="javascript:document.getElementById('{{ modal }}Modal').showPopover()"
+       class="card-panel center-align hoverable" style="display: block;">
+{% else %}
+    <a href="{{ url if url else '#!' }}" class="card-panel center-align hoverable" style="display: block;">
+{% endif %}
+        <i class="material-symbols-rounded" style="font-size: 3rem; color: {{ icon_color }};">{{ icon }}</i>
+        <p class="mb-0"><strong>{{ label }}</strong></p>
+    </a>
+{% endmacro %}
+
+
+{% macro form_action_card(icon, label, action, color='primary') %}
+{#
+    Renders an action card that submits a POST form.
+
+    Args:
+        icon: Material symbol icon name
+        label: Card label text
+        action: Form action URL
+        color: Icon color - 'primary', 'red', 'green', etc. (default: 'primary')
+
+    Usage:
+        {{ Card.form_action_card('forward_to_inbox', 'Resend Invitation', url_for('...')) }}
+#}
+{% set color_map = {
+    'primary': 'var(--bistro-primary)',
+    'red': 'var(--bistro-error)',
+    'green': 'var(--bistro-success, green)',
+    'orange': 'orange'
+} %}
+{% set icon_color = color_map.get(color, color) %}
+
+<form action="{{ action }}" method="post" style="margin: 0;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="card-panel center-align hoverable"
+            style="display: block; width: 100%; border: none; cursor: pointer; background: white;">
+        <i class="material-symbols-rounded" style="font-size: 3rem; color: {{ icon_color }};">{{ icon }}</i>
+        <p class="mb-0"><strong>{{ label }}</strong></p>
+    </button>
+</form>
+{% endmacro %}
+
+
+{% macro action_button(icon, label, url) %}
+{#
+    Renders a flat button-style link with icon.
+
+    Args:
+        icon: Material symbol icon name
+        label: Button label text
+        url: Navigation URL
+
+    Usage:
+        {{ Card.action_button('lock_reset', 'Reset Password', url_for('...')) }}
+#}
+<a href="{{ url }}" class="btn-flat waves-effect full-width left-align">
+    <i class="material-symbols-rounded">{{ icon }}</i>
+    <span>{{ label }}</span>
+</a>
+{% endmacro %}
+
+
+{% macro avatar(image_path, alt='Avatar', size='nav') %}
+{#
+    Renders a circular avatar image.
+
+    Args:
+        image_path: Path relative to static/images/
+        alt: Alt text for image
+        size: 'nav' (default), 'small', 'medium', 'large'
+
+    Usage:
+        {{ Card.avatar(user.profile.image) }}
+        {{ Card.avatar(user.profile.image, alt=user.username, size='medium') }}
+#}
+{% set sizes = {'nav': 'avatar-nav', 'small': 'avatar-small', 'medium': 'avatar-medium', 'large': 'avatar-large'} %}
+<img src="{{ url_for('static', filename='images/' + image_path) }}"
+     alt="{{ alt }}" class="circle {{ sizes.get(size, 'avatar-nav') }}">
+{% endmacro %}
+
+
+{% macro info_item(icon, label, value, color='primary') %}
+{#
+    Renders an info item for summary cards (icon + label + value).
+
+    Args:
+        icon: Material symbol icon name
+        label: Description label (grey text)
+        value: The value to display (bold)
+        color: Icon color - 'primary', 'green', 'red', 'orange'
+
+    Usage:
+        {{ Card.info_item('calendar_month', 'Created', user.created_at|timeago) }}
+#}
+<div class="col s6 m4 l2 center-align">
+    <i class="material-symbols-rounded {{ color }}-color-text" style="font-size: 2rem;">{{ icon }}</i>
+    <p class="grey-text mb-0" style="font-size: 0.85rem;">{{ label }}</p>
+    <p class="mb-0"><strong>{{ value }}</strong></p>
+</div>
+{% endmacro %}
+
+
+{% macro status_info_item(status) %}
+{#
+    Renders a status info item with conditional icon and color.
+
+    Args:
+        status: UserStatus enum or status string value
+
+    Usage:
+        {{ Card.status_info_item(user.status) }}
+#}
+{% set status_value = status.value if status.value is defined else status %}
+{% set status_config = {
+    'active': {'icon': 'check_circle', 'color': 'green'},
+    'pending': {'icon': 'hourglass_empty', 'color': 'orange'},
+    'invited': {'icon': 'mail', 'color': 'orange'},
+    'suspended': {'icon': 'pause_circle', 'color': 'red'},
+    'locked': {'icon': 'lock', 'color': 'red'},
+    'deactivated': {'icon': 'cancel', 'color': 'red'}
+} %}
+{% set config = status_config.get(status_value, {'icon': 'help', 'color': 'grey'}) %}
+
+<div class="col s6 m4 l2 center-align">
+    <i class="material-symbols-rounded {{ config.color }}-text" style="font-size: 2rem;">{{ config.icon }}</i>
+    <p class="grey-text mb-0" style="font-size: 0.85rem;">Status</p>
+    <p class="mb-0 {{ config.color }}-text"><strong>{{ status_value|title }}</strong></p>
+</div>
+{% endmacro %}
+
+
+{% macro panel_header(icon, title, description=none) %}
+{#
+    Renders a panel header with icon, title, optional description, and divider.
+
+    Args:
+        icon: Material symbol icon name
+        title: Header title text
+        description: Optional subtitle text (grey)
+
+    Usage:
+        {{ Card.panel_header('history', 'Recent Activity') }}
+        {{ Card.panel_header('person', 'Profile', 'Update your info.') }}
+#}
+<h6 class="mb-2">
+    <i class="material-symbols-rounded primary-color-text">{{ icon }}</i>
+    <span>{{ title }}</span>
+</h6>
+{% if description %}
+<p class="grey-text" style="font-size: 0.9rem;">{{ description }}</p>
+{% endif %}
+<div class="divider mb-2"></div>
+{% endmacro %}
+
+
+{% macro empty_state(icon, message) %}
+{#
+    Renders an empty state placeholder with icon and message.
+
+    Args:
+        icon: Material symbol icon name
+        message: Message to display
+
+    Usage:
+        {{ Card.empty_state('history', 'No login history available.') }}
+#}
+<div class="center-align py-4">
+    <i class="material-symbols-rounded large grey-text">{{ icon }}</i>
+    <p class="grey-text">{{ message }}</p>
+</div>
+{% endmacro %}
+
+
+{% macro login_status(is_successful, show_label=true) %}
+{#
+    Renders a login status indicator (success/failed).
+
+    Args:
+        is_successful: Boolean indicating login success
+        show_label: Whether to show text label (default: true)
+
+    Usage:
+        {{ Card.login_status(record.is_successful) }}
+        {{ Card.login_status(login.is_successful, show_label=false) }}
+#}
+{% if is_successful %}
+    <span class="green-text">
+        <i class="material-symbols-rounded tiny">check_circle</i>
+        {% if show_label %}Success{% endif %}
+    </span>
+{% else %}
+    <span class="red-text">
+        <i class="material-symbols-rounded tiny">cancel</i>
+        {% if show_label %}Failed{% endif %}
+    </span>
+{% endif %}
+{% endmacro %}
+
+
+{% macro link_item(icon, label, url) %}
+{#
+    Renders a collection item with icon and link.
+
+    Args:
+        icon: Material symbol icon name
+        label: Link text
+        url: Navigation URL
+
+    Usage:
+        {{ Card.link_item('person', 'Edit Profile', url_for('...')) }}
+#}
+<li class="collection-item">
+    <a href="{{ url }}">
+        <i class="material-symbols-rounded tiny">{{ icon }}</i> {{ label }}
+    </a>
+</li>
+{% endmacro %}
+
+
+{% macro stat_card(icon, value, label, color='primary') %}
+{#
+    Renders a statistics card for dashboards.
+
+    Args:
+        icon: Material symbol icon name
+        value: The statistic value to display
+        label: Description text below the value
+        color: Icon color - 'primary', 'green', 'red', 'orange', or full class name
+
+    Usage:
+        {{ Card.stat_card('group', total_users, 'Total Users') }}
+        {{ Card.stat_card('lock', locked_users, 'Locked', color='red') }}
+#}
+{% set color_map = {
+    'primary': 'primary-color-text',
+    'green': 'green-text',
+    'red': 'red-text',
+    'orange': 'orange-text',
+    'grey': 'grey-text'
+} %}
+{% set icon_color = color_map.get(color, color) %}
+
+<div class="card-panel center-align">
+    <i class="material-symbols-rounded {{ icon_color }}"
+       style="font-size: 2.5rem;">{{ icon }}</i>
+    <h4 class="mb-0">{{ value }}</h4>
+    <p class="grey-text mb-0">{{ label }}</p>
+</div>
+{% endmacro %}
