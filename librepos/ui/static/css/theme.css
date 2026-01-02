@@ -265,3 +265,21 @@
         --md-sys-color-surface-tint-light: var(--md-sys-color-surface-tint);
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HTMX Loading States
+   ═══════════════════════════════════════════════════════════════════════════ */
+.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .htmx-indicator {
+    display: block;
+}
+
+.htmx-request table,
+.htmx-request .collection {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
