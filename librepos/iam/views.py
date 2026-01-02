@@ -851,10 +851,10 @@ def confirm_password_view():
     to routes protected by @reauthenticate_required.
     """
     form = PasswordConfirmForm()
-    next_url = request.args.get("next") or url_for("main.dashboard")
-
-    # Validate next_url is safe (same host) to prevent open redirect
-    if not is_safe_url(next_url):
+    requested_next = request.args.get("next")
+    if requested_next and is_safe_url(requested_next):
+        next_url = requested_next
+    else:
         next_url = url_for("main.dashboard")
 
     if form.validate_on_submit():
