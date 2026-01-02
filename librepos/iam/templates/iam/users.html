@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
-{% import "components/footer.j2" as Footer %}
+{% import "components/card.j2" as Card %}
 {% import "components/dropdown.j2" as Dropdown %}
+{% import "components/footer.j2" as Footer %}
 {% import "components/forms.j2" as Form %}
 {% import "components/modal.j2" as Modal %}
 
 {% block sidenav %}
-    {% include "iam/_sidenav.html" %}
+    {% include 'iam/_sidenav.html' %}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -33,8 +34,7 @@
                         {% for user in users %}
                             <tr>
                                 <td class="center-align">
-                                    <img src="{{ url_for('static', filename='images/'+user.profile.image) }}"
-                                         alt="User avatar" class="circle avatar-nav">
+                                    {{ Card.avatar(user.profile.image, alt=user.username) }}
                                 </td>
                                 <td>
                                     <a href="{{ url_for('iam.user', slug=user.slug) }}">
@@ -51,7 +51,7 @@
 
                     </table>
                 {% else %}
-                    <h4 class="center-align">No users found.</h4>
+                    {{ Card.empty_state('group', 'No users found.') }}
                 {% endif %}
             </div>
         </div>
@@ -69,34 +69,7 @@
         {{ Footer.item("Export", icon="download", dropdown="export-dropdown") }}
     {% endcall %}
 
-    {# Search Modal #}
-    <div id="searchModal" class="modal small" popover>
-        <form action="{{ url_for('iam.users') }}" method="get">
-            <div class="modal-header">
-                <h5>Search Users</h5>
-            </div>
-            <div class="modal-content">
-                <div class="input-field">
-                    <i class="material-symbols-rounded prefix">search</i>
-                    <input type="text" id="search-input" name="q"
-                           value="{{ request.args.get('q', '') }}"
-                           placeholder="Search by username or email..."
-                           autofocus>
-                    <label for="search-input" class="sr-only">Search users</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <a href="{{ url_for('iam.users') }}" class="btn text waves-effect">
-                    <i class="material-symbols-rounded">clear</i>
-                    <span>&nbsp;Clear</span>
-                </a>
-                <button type="submit" class="btn filled waves-effect waves-light">
-                    <i class="material-symbols-rounded">search</i>
-                    <span>&nbsp;Search</span>
-                </button>
-            </div>
-        </form>
-    </div>
+    {{ Modal.search('search', url_for('iam.users'), placeholder='Search by username or email...') }}
 
     {# Filter Dropdown #}
     {% call Dropdown.render("filter-dropdown") %}

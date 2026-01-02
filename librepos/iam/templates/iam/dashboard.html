@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 
-{% import "components/icon.j2" as Icon %}
 {% import "components/card.j2" as Card %}
 
 {% block sidenav %}
-    {% include "iam/_sidenav.html" %}
+    {% include 'iam/_sidenav.html' %}
 {% endblock %}
 
 {% block main %}
@@ -15,72 +14,33 @@
             <!-- User Statistics Row -->
             <div class="row mb-5">
                 <div class="col s6 m3">
-                    <div class="card-panel center-align">
-                        <i class="material-symbols-rounded primary-color-text"
-                           style="font-size: 2.5rem;">group</i>
-                        <h4 class="mb-0">{{ total_users }}</h4>
-                        <p class="grey-text mb-0">Total Users</p>
-                    </div>
+                    {{ Card.stat_card('group', total_users, 'Total Users') }}
                 </div>
                 <div class="col s6 m3">
-                    <div class="card-panel center-align">
-                        <i class="material-symbols-rounded green-text"
-                           style="font-size: 2.5rem;">check_circle</i>
-                        <h4 class="mb-0">{{ active_users }}</h4>
-                        <p class="grey-text mb-0">Active Users</p>
-                    </div>
+                    {{ Card.stat_card('check_circle', active_users, 'Active Users', color='green') }}
                 </div>
                 <div class="col s6 m3">
-                    <div class="card-panel center-align">
-                        <i class="material-symbols-rounded red-text"
-                           style="font-size: 2.5rem;">lock</i>
-                        <h4 class="mb-0">{{ locked_users }}</h4>
-                        <p class="grey-text mb-0">Locked</p>
-                    </div>
+                    {{ Card.stat_card('lock', locked_users, 'Locked', color='red') }}
                 </div>
                 <div class="col s6 m3">
-                    <div class="card-panel center-align">
-                        <i class="material-symbols-rounded orange-text"
-                           style="font-size: 2.5rem;">hourglass_empty</i>
-                        <h4 class="mb-0">{{ pending_users }}</h4>
-                        <p class="grey-text mb-0">Pending</p>
-                    </div>
+                    {{ Card.stat_card('hourglass_empty', pending_users, 'Pending', color='orange') }}
                 </div>
             </div>
 
             <!-- Role/Permission Statistics Row -->
             <div class="row mb-5">
                 <div class="col s6 m3">
-                    <div class="card-panel center-align">
-                        <i class="material-symbols-rounded primary-color-text"
-                           style="font-size: 2.5rem;">badge</i>
-                        <h4 class="mb-0">{{ total_roles }}</h4>
-                        <p class="grey-text mb-0">Roles</p>
-                    </div>
+                    {{ Card.stat_card('badge', total_roles, 'Roles') }}
                 </div>
                 <div class="col s6 m3">
-                    <div class="card-panel center-align">
-                        <i class="material-symbols-rounded primary-color-text"
-                           style="font-size: 2.5rem;">policy</i>
-                        <h4 class="mb-0">{{ total_policies }}</h4>
-                        <p class="grey-text mb-0">Policies</p>
-                    </div>
+                    {{ Card.stat_card('policy', total_policies, 'Policies') }}
                 </div>
                 <div class="col s6 m3">
-                    <div class="card-panel center-align">
-                        <i class="material-symbols-rounded primary-color-text"
-                           style="font-size: 2.5rem;">shield</i>
-                        <h4 class="mb-0">{{ total_permissions }}</h4>
-                        <p class="grey-text mb-0">Permissions</p>
-                    </div>
+                    {{ Card.stat_card('shield', total_permissions, 'Permissions') }}
                 </div>
                 <div class="col s6 m3">
-                    <div class="card-panel center-align">
-                        <i class="material-symbols-rounded {% if failed_logins_24h > 0 %}orange-text{% else %}green-text{% endif %}"
-                           style="font-size: 2.5rem;">warning</i>
-                        <h4 class="mb-0">{{ failed_logins_24h }}</h4>
-                        <p class="grey-text mb-0">Failed Logins (24h)</p>
-                    </div>
+                    {{ Card.stat_card('warning', failed_logins_24h, 'Failed Logins (24h)',
+                        color='orange' if failed_logins_24h > 0 else 'green') }}
                 </div>
             </div>
 
@@ -105,15 +65,11 @@
                 <!-- Recent Activity -->
                 <div class="col s12 m8">
                     <div class="card-panel">
-                        <h6 class="mb-2">
-                            {{ Icon.render('history', class_='primary-color-text') }}
-                            <span>Recent Activity</span>
-                        </h6>
-                        <div class="divider mb-2"></div>
+                        {{ Card.panel_header('history', 'Recent Activity') }}
 
                         {# HTMX container for activity table #}
                         <div id="activity-content">
-                            {% include "iam/_activity_table.html" %}
+                            {% include 'iam/_activity_table.html' %}
                         </div>
                     </div>
                 </div>
@@ -121,11 +77,7 @@
                 <!-- Users by Role -->
                 <div class="col s12 m4">
                     <div class="card-panel">
-                        <h6 class="mb-2">
-                            {{ Icon.render('group', class_='primary-color-text') }}
-                            <span>Users by Role</span>
-                        </h6>
-                        <div class="divider mb-2"></div>
+                        {{ Card.panel_header('group', 'Users by Role') }}
 
                         {% if users_by_role %}
                             <ul class="collection mb-0">
@@ -137,10 +89,7 @@
                                 {% endfor %}
                             </ul>
                         {% else %}
-                            <div class="center-align py-4">
-                                {{ Icon.render('group', class_='large grey-text') }}
-                                <p class="grey-text">No role data available.</p>
-                            </div>
+                            {{ Card.empty_state('group', 'No role data available.') }}
                         {% endif %}
                     </div>
                 </div>

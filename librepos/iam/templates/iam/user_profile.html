@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
+{% import "components/card.j2" as Card %}
 {% import "components/forms.j2" as Form %}
-{% import "components/icon.j2" as Icon %}
+{% import "iam/_user_card.j2" as UserCard %}
 
 {% block sidenav %}
     {% include 'iam/_sidenav.html' %}
@@ -18,27 +19,7 @@
 
             <!-- Profile Image Card -->
             <div class="col s12 m4">
-                <div class="card-panel center-align">
-                    <div class="mb-2">
-                        {% if user.profile and user.profile.image %}
-                            <img src="{{ url_for('static', filename='images/'+user.profile.image) }}"
-                                 alt="{{ user.username }}"
-                                 class="circle responsive-img"
-                                 style="width: 150px; height: 150px; object-fit: cover;">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='images/default_profile_image.png') }}"
-                                 alt="{{ user.username }}"
-                                 class="circle responsive-img"
-                                 style="width: 150px; height: 150px; object-fit: cover;">
-                        {% endif %}
-                    </div>
-                    <h5 class="mb-0">{{ user.profile.fullname if user.profile else user.username }}</h5>
-                    <p class="grey-text">@{{ user.username }}</p>
-                    <p class="grey-text mb-0" style="font-size: 0.85rem;">
-                        {{ Icon.render('email', class_='tiny') }}
-                        {{ user.email }}
-                    </p>
-
+                {% call UserCard.sidebar(user, size='large', show_email=true) %}
                     {% if image_form %}
                     <!-- Image Upload Form -->
                     <div class="divider my-2"></div>
@@ -48,7 +29,7 @@
                         {{ image_form.hidden_tag() }}
                         <div class="file-field input-field">
                             <div class="btn btn-small">
-                                {{ Icon.render('photo_camera') }}
+                                <i class="material-symbols-rounded">photo_camera</i>
                                 {{ image_form.image() }}
                             </div>
                             <div class="file-path-wrapper">
@@ -56,25 +37,19 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-small waves-effect waves-light">
-                            {{ Icon.render('upload') }}
+                            <i class="material-symbols-rounded">upload</i>
                             <span>Upload</span>
                         </button>
                     </form>
                     {% endif %}
-                </div>
+                {% endcall %}
             </div>
 
             <!-- Profile Form Card -->
             <div class="col s12 m8">
                 <div class="card-panel">
-                    <h6 class="mb-2">
-                        {{ Icon.render('person', class_='primary-color-text') }}
-                        <span>Profile Information</span>
-                    </h6>
-                    <p class="grey-text" style="font-size: 0.9rem;">
-                        Update personal details and contact information.
-                    </p>
-                    <div class="divider mb-2"></div>
+                    {{ Card.panel_header('person', 'Profile Information',
+                        'Update personal details and contact information.') }}
 
                     <form action="{{ url_for('iam.user_profile', slug=user.slug) }}" method="post">
                         {{ Form.render_form(form, extra_wrappers={

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
+{% import "components/card.j2" as Card %}
 {% import "components/forms.j2" as Form %}
-{% import "components/icon.j2" as Icon %}
+{% import "iam/_user_card.j2" as UserCard %}
 
 {% block sidenav %}
     {% include 'iam/_sidenav.html' %}
@@ -19,11 +20,7 @@
             <!-- Current Address Card -->
             <div class="col s12 m4">
                 <div class="card-panel">
-                    <h6 class="mb-2">
-                        {{ Icon.render('location_on', class_='primary-color-text') }}
-                        <span>Current Address</span>
-                    </h6>
-                    <div class="divider mb-2"></div>
+                    {{ Card.panel_header('location_on', 'Current Address') }}
 
                     {% if user.address and user.address.full_address %}
                         <p class="mb-1">
@@ -36,46 +33,19 @@
                             {{ user.address.country }} {{ user.address.zipcode }}
                         </p>
                     {% else %}
-                        <p class="grey-text center-align">
-                            {{ Icon.render('location_off', class_='medium grey-text') }}
-                        </p>
-                        <p class="grey-text center-align">
-                            No address on file
-                        </p>
+                        {{ Card.empty_state('location_off', 'No address on file') }}
                     {% endif %}
                 </div>
 
                 <!-- User Info Card -->
-                <div class="card-panel center-align">
-                    <div class="mb-2">
-                        {% if user.profile and user.profile.image %}
-                            <img src="{{ url_for('static', filename='images/'+user.profile.image) }}"
-                                 alt="{{ user.username }}"
-                                 class="circle responsive-img"
-                                 style="width: 80px; height: 80px; object-fit: cover;">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='images/default_profile_image.png') }}"
-                                 alt="{{ user.username }}"
-                                 class="circle responsive-img"
-                                 style="width: 80px; height: 80px; object-fit: cover;">
-                        {% endif %}
-                    </div>
-                    <h6 class="mb-0">{{ user.profile.fullname if user.profile else user.username }}</h6>
-                    <p class="grey-text">@{{ user.username }}</p>
-                </div>
+                {{ UserCard.sidebar(user, size='small') }}
             </div>
 
             <!-- Address Form Card -->
             <div class="col s12 m8">
                 <div class="card-panel">
-                    <h6 class="mb-2">
-                        {{ Icon.render('edit_location', class_='primary-color-text') }}
-                        <span>Edit Address</span>
-                    </h6>
-                    <p class="grey-text" style="font-size: 0.9rem;">
-                        Update mailing address and location details.
-                    </p>
-                    <div class="divider mb-2"></div>
+                    {{ Card.panel_header('edit_location', 'Edit Address',
+                        'Update mailing address and location details.') }}
 
                     <form action="{{ url_for('iam.user_address', slug=user.slug) }}" method="post">
                         {{ Form.render_form(form, extra_wrappers={

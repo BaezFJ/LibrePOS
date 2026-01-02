@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 
 {% import "components/card.j2" as Card %}
-{% import "components/icon.j2" as Icon %}
 {% import "components/modal.j2" as Modal %}
-{% import "components/forms.j2" as Form %}
 
 {% block sidenav %}
     {% include 'iam/_sidenav.html' %}
@@ -22,59 +20,12 @@
             <div class="col s12">
                 <div class="card-panel">
                     <div class="row mb-0">
-                        <!-- Created Date -->
-                        <div class="col s6 m4 l2 center-align">
-                            {{ Icon.render('calendar_month', class_='primary-color-text') }}
-                            <p class="grey-text mb-0" style="font-size: 0.85rem;">Created</p>
-                            <p class="mb-0"><strong>{{ user.created_at|timeago }}</strong></p>
-                        </div>
-
-                        <!-- Role -->
-                        <div class="col s6 m4 l2 center-align">
-                            {{ Icon.render('badge', class_='primary-color-text') }}
-                            <p class="grey-text mb-0" style="font-size: 0.85rem;">Role</p>
-                            <p class="mb-0">
-                                <strong>{{ user.role.name|replace("_", " ")|title if user.role else "N/A" }}</strong>
-                            </p>
-                        </div>
-
-                        <!-- Status -->
-                        <div class="col s6 m4 l2 center-align">
-                            <i class="material-symbols-rounded {% if user.status.value == 'active' %}green-text{% elif user.status.value in ['pending', 'invited'] %}orange-text{% else %}red-text{% endif %}"
-                               style="font-size: 2rem;">
-                                {% if user.status.value == 'active' %}check_circle
-                                {% elif user.status.value == 'pending' %}hourglass_empty
-                                {% elif user.status.value == 'invited' %}mail
-                                {% elif user.status.value == 'suspended' %}pause_circle
-                                {% elif user.status.value == 'locked' %}lock
-                                {% else %}cancel{% endif %}
-                            </i>
-                            <p class="grey-text mb-0" style="font-size: 0.85rem;">Status</p>
-                            <p class="mb-0 {% if user.status.value == 'active' %}green-text{% elif user.status.value in ['pending', 'invited'] %}orange-text{% else %}red-text{% endif %}">
-                                <strong>{{ user.status.value|title }}</strong>
-                            </p>
-                        </div>
-
-                        <!-- Login Count -->
-                        <div class="col s6 m4 l2 center-align">
-                            {{ Icon.render('login', class_='primary-color-text') }}
-                            <p class="grey-text mb-0" style="font-size: 0.85rem;">Total Logins</p>
-                            <p class="mb-0"><strong>{{ user.login_count or 0 }}</strong></p>
-                        </div>
-
-                        <!-- Last Login -->
-                        <div class="col s6 m4 l2 center-align">
-                            {{ Icon.render('schedule', class_='primary-color-text') }}
-                            <p class="grey-text mb-0" style="font-size: 0.85rem;">Last Login</p>
-                            <p class="mb-0"><strong>{{ user.last_login_at|timeago }}</strong></p>
-                        </div>
-
-                        <!-- Last Updated -->
-                        <div class="col s6 m4 l2 center-align">
-                            {{ Icon.render('update', class_='primary-color-text') }}
-                            <p class="grey-text mb-0" style="font-size: 0.85rem;">Last Updated</p>
-                            <p class="mb-0"><strong>{{ user.updated_at|timeago }}</strong></p>
-                        </div>
+                        {{ Card.info_item('calendar_month', 'Created', user.created_at|timeago) }}
+                        {{ Card.info_item('badge', 'Role', user.role.name|replace("_", " ")|title if user.role else "N/A") }}
+                        {{ Card.status_info_item(user.status) }}
+                        {{ Card.info_item('login', 'Total Logins', user.login_count or 0) }}
+                        {{ Card.info_item('schedule', 'Last Login', user.last_login_at|timeago) }}
+                        {{ Card.info_item('update', 'Last Updated', user.updated_at|timeago) }}
                     </div>
                 </div>
             </div>
@@ -106,133 +57,60 @@
 
             {% if user.status.value == 'invited' %}
             <div class="col s12 m6 l4">
-                <!-- Resend Invitation Card -->
-                <form action="{{ url_for('iam.resend_invitation', slug=user.slug) }}" method="post" style="margin: 0;">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="card-panel center-align hoverable" style="display: block; width: 100%; border: none; cursor: pointer; background: white;">
-                        <i class="material-symbols-rounded" style="font-size: 3rem; color: var(--bistro-primary);">forward_to_inbox</i>
-                        <p class="mb-0"><strong>Resend Invitation</strong></p>
-                    </button>
-                </form>
+                {{ Card.form_action_card('forward_to_inbox', 'Resend Invitation', url_for('iam.resend_invitation', slug=user.slug)) }}
             </div>
             {% endif %}
 
             <div class="col s12 m6 l4">
                 {% if user.status.value == 'locked' %}
-                    <!-- Unlock Card - triggers confirmation modal -->
-                    <a href="javascript:document.getElementById('unlockUserModal').showPopover()"
-                       class="card-panel center-align hoverable" style="display: block;">
-                        <i class="material-symbols-rounded" style="font-size: 3rem; color: var(--bistro-primary);">lock_open</i>
-                        <p class="mb-0"><strong>Unlock</strong></p>
-                    </a>
+                    {{ Card.action_card('lock_open', 'Unlock', modal='unlockUser') }}
                 {% else %}
-                    <!-- Lock Card - triggers confirmation modal -->
-                    <a href="javascript:document.getElementById('lockUserModal').showPopover()"
-                       class="card-panel center-align hoverable" style="display: block;">
-                        <i class="material-symbols-rounded"
-                           style="font-size: 3rem; color: var(--bistro-primary);">lock</i>
-                        <p class="mb-0"><strong>Lock</strong></p>
-                    </a>
+                    {{ Card.action_card('lock', 'Lock', modal='lockUser') }}
                 {% endif %}
             </div>
 
             <div class="col s12 m6 l4">
-                <!-- Delete Card - triggers confirmation modal -->
-                <a href="javascript:document.getElementById('deleteUserModal').showPopover()"
-                   class="card-panel center-align hoverable" style="display: block;">
-                    <i class="material-symbols-rounded" style="font-size: 3rem; color: var(--bistro-error);">delete</i>
-                    <p class="mb-0"><strong>Delete</strong></p>
-                </a>
+                {{ Card.action_card('delete', 'Delete', modal='deleteUser', color='red') }}
             </div>
 
         </div>
     </section>
 
-    <!-- Lock Confirmation Modal -->
-    <div id="lockUserModal" class="modal" popover>
-        <form action="{{ url_for('iam.lock_user', slug=user.slug) }}" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="modal-header">
-                <h5>Lock User</h5>
-            </div>
-            <div class="modal-content">
-                <p>Are you sure you want to lock
-                    <strong>{{ user.profile.fullname if user.profile else user.username }}</strong>?</p>
-                <p class="grey-text">This will prevent the user from logging in. You can unlock the account later.</p>
-                <div class="input-field">
-                    <input type="password" name="password" id="lock-password" required>
-                    <label for="lock-password">Confirm your password</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn text waves-effect" popovertarget="lockUserModal">
-                    {{ Icon.render('cancel') }}
-                    <span>&nbsp;Cancel</span>
-                </button>
-                <button type="submit" class="btn filled waves-effect waves-light">
-                    {{ Icon.render('lock') }}
-                    <span>&nbsp;Lock</span>
-                </button>
-            </div>
-        </form>
-    </div>
+    {% set user_display_name = user.profile.fullname if user.profile else user.username %}
 
-    <!-- Unlock Confirmation Modal -->
-    <div id="unlockUserModal" class="modal" popover>
-        <form action="{{ url_for('iam.unlock_user', slug=user.slug) }}" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="modal-header">
-                <h5>Unlock User</h5>
-            </div>
-            <div class="modal-content">
-                <p>Are you sure you want to unlock
-                    <strong>{{ user.profile.fullname if user.profile else user.username }}</strong>?</p>
-                <p class="grey-text">This will restore the user's ability to log in.</p>
-                <div class="input-field">
-                    <input type="password" name="password" id="unlock-password" required>
-                    <label for="unlock-password">Confirm your password</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn text waves-effect" popovertarget="unlockUserModal">
-                    {{ Icon.render('cancel') }}
-                    <span>&nbsp;Cancel</span>
-                </button>
-                <button type="submit" class="btn filled waves-effect waves-light green">
-                    {{ Icon.render('lock_open') }}
-                    <span>&nbsp;Unlock</span>
-                </button>
-            </div>
-        </form>
-    </div>
+    {{ Modal.confirmation(
+        modal_id='lockUser',
+        title='Lock User',
+        action=url_for('iam.lock_user', slug=user.slug),
+        message='Are you sure you want to lock <strong>' ~ user_display_name ~ '</strong>?',
+        warning='This will prevent the user from logging in. You can unlock the account later.',
+        confirm_text='Lock',
+        confirm_icon='lock',
+        require_password=true
+    ) }}
 
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteUserModal" class="modal" popover>
-        <form action="{{ url_for('iam.delete_user', slug=user.slug) }}" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="modal-header">
-                <h5>Delete User</h5>
-            </div>
-            <div class="modal-content">
-                <p>Are you sure you want to delete
-                    <strong>{{ user.profile.fullname if user.profile else user.username }}</strong>?</p>
-                <p class="red-text">This action cannot be easily undone.</p>
-                <div class="input-field">
-                    <input type="password" name="password" id="delete-password" required>
-                    <label for="delete-password">Confirm your password</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn text waves-effect" popovertarget="deleteUserModal">
-                    {{ Icon.render('cancel') }}
-                    <span>&nbsp;Cancel</span>
-                </button>
-                <button type="submit" class="btn filled waves-effect waves-light red">
-                    {{ Icon.render('delete') }}
-                    <span>&nbsp;Delete</span>
-                </button>
-            </div>
-        </form>
-    </div>
+    {{ Modal.confirmation(
+        modal_id='unlockUser',
+        title='Unlock User',
+        action=url_for('iam.unlock_user', slug=user.slug),
+        message='Are you sure you want to unlock <strong>' ~ user_display_name ~ '</strong>?',
+        warning='This will restore the user\'s ability to log in.',
+        confirm_text='Unlock',
+        confirm_icon='lock_open',
+        confirm_color='green',
+        require_password=true
+    ) }}
+
+    {{ Modal.confirmation(
+        modal_id='deleteUser',
+        title='Delete User',
+        action=url_for('iam.delete_user', slug=user.slug),
+        message='Are you sure you want to delete <strong>' ~ user_display_name ~ '</strong>?',
+        warning='This action cannot be easily undone.',
+        confirm_text='Delete',
+        confirm_icon='delete',
+        confirm_color='red',
+        require_password=true
+    ) }}
 
 {% endblock %}

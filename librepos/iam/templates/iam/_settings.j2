@@ -1,0 +1,72 @@
+{# ---------- Settings Components ---------- #}
+{# Usage:
+   {% import "iam/_settings.j2" as Settings %}
+
+   {{ Settings.item('Password', 'Change or reset password', url=url_for('...'), action='Change') }}
+   {{ Settings.item('Two-Factor Auth', 'Add extra security', disabled=true) }}
+
+   {% call Settings.panel('security', 'Security', 'Manage security settings.') %}
+       {{ Settings.item(...) }}
+       {{ Settings.item(...) }}
+   {% endcall %}
+#}
+
+{% import "components/icon.j2" as Icon %}
+
+
+{% macro item(title, description, url='#!', action='Configure', disabled=false) %}
+{#
+    Renders a settings item row with title, description, and action button.
+
+    Args:
+        title: Setting name
+        description: Brief description
+        url: Action URL (default: '#!')
+        action: Button text (default: 'Configure')
+        disabled: Whether the action is disabled (default: false)
+#}
+<li class="collection-item">
+    <div class="row mb-0 valign-wrapper">
+        <div class="col s8">
+            <strong>{{ title }}</strong>
+            <p class="grey-text mb-0" style="font-size: 0.85rem;">
+                {{ description }}
+            </p>
+        </div>
+        <div class="col s4 right-align">
+            <a href="{{ url }}"
+               class="btn text waves-effect waves-light{% if disabled %} disabled{% endif %}">
+                {{ action }}
+            </a>
+        </div>
+    </div>
+</li>
+{% endmacro %}
+
+
+{% macro panel(icon, title, description) %}
+{#
+    Renders a settings panel with header, description, and items.
+
+    Args:
+        icon: Material symbol icon name
+        title: Panel title
+        description: Panel description
+
+    Caller: Settings items to render inside the panel
+#}
+<div class="card-panel">
+    <h6 class="mb-2">
+        {{ Icon.render(icon, class_='primary-color-text') }}
+        <span>{{ title }}</span>
+    </h6>
+    <p class="grey-text" style="font-size: 0.9rem;">
+        {{ description }}
+    </p>
+    <div class="divider mb-2"></div>
+
+    <ul class="collection mb-0">
+        {{ caller() }}
+    </ul>
+</div>
+{% endmacro %}

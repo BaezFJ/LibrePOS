@@ -1,0 +1,77 @@
+{# ---------- Auth Card Component ---------- #}
+{# Usage:
+   {% import "iam/_auth_card.j2" as AuthCard %}
+
+   Simple form:
+   {% call AuthCard.render(title="Sign In", description="Enter your credentials.") %}
+       <form action="" method="POST">
+           {{ Form.render_form(form) }}
+       </form>
+   {% endcall %}
+
+   With action links:
+   {% call AuthCard.render(
+       title="Sign In",
+       description="Enter your credentials.",
+       links=[
+           {'url': url_for('iam.forgot_password'), 'label': 'Forgot password?'},
+           {'url': '', 'label': 'Need help?'}
+       ]
+   ) %}
+       <form action="" method="POST">
+           {{ Form.render_form(form) }}
+       </form>
+   {% endcall %}
+#}
+
+
+{% macro render(title, description, links=none) %}
+{#
+    Renders a centered auth card for public authentication pages.
+
+    Args:
+        title: Card title (h5)
+        description: Subtitle/description text
+        links: Optional list of {'url': '...', 'label': '...'} for card-action
+
+    Caller: Form and any additional content (e.g., password hints)
+#}
+<div class="container">
+    <div class="center-content">
+        <div class="auth-wrapper sidenav-padding-fix">
+            <div class="auth-card card z-depth-2">
+                <div class="card-content">
+                    <div class="brand-lockup">
+                        <i class="material-symbols-rounded">restaurant_menu</i>
+                        <span class="brand-name">LibrePOS</span>
+                    </div>
+                    <h5>{{ title }}</h5>
+                    <p class="grey-text">{{ description }}</p>
+
+                    {{ caller() }}
+                </div>
+                {% if links %}
+                <div class="card-action">
+                    {% for link in links %}
+                        <a href="{{ link.url }}">{{ link.label }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <p class="grey-text center-align mt-4">Secure staff access &verbar; All activity is logged</p>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+
+{% macro password_hint() %}
+{#
+    Renders a standard password requirements hint.
+#}
+<div class="divider my-2"></div>
+<p class="grey-text" style="font-size: 0.85rem;">
+    <i class="material-symbols-rounded tiny">info</i>
+    Password must be at least 8 characters.
+</p>
+{% endmacro %}

@@ -1,0 +1,94 @@
+{# ---------- User Card Component ---------- #}
+{# Usage:
+   {% import "iam/_user_card.j2" as UserCard %}
+
+   {{ UserCard.sidebar(user, size='medium') }}
+   {{ UserCard.sidebar(user, size='large', show_email=true) }}
+#}
+
+{% import "components/icon.j2" as Icon %}
+
+
+{% macro sidebar(user, size='medium', show_email=false) %}
+{#
+    Renders a user profile card for sidebars.
+
+    Args:
+        user: IAMUser object
+        size: 'small' (80px), 'medium' (120px), or 'large' (150px)
+        show_email: Whether to display email address
+#}
+{% set sizes = {'small': '80px', 'medium': '120px', 'large': '150px'} %}
+{% set img_size = sizes.get(size, '120px') %}
+
+<div class="card-panel center-align">
+    <div class="mb-2">
+        {% if user.profile and user.profile.image %}
+            <img src="{{ url_for('static', filename='images/' + user.profile.image) }}"
+                 alt="{{ user.username }}"
+                 class="circle responsive-img"
+                 style="width: {{ img_size }}; height: {{ img_size }}; object-fit: cover;">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/default_profile_image.png') }}"
+                 alt="{{ user.username }}"
+                 class="circle responsive-img"
+                 style="width: {{ img_size }}; height: {{ img_size }}; object-fit: cover;">
+        {% endif %}
+    </div>
+    {% if size == 'small' %}
+        <h6 class="mb-0">{{ user.profile.fullname if user.profile else user.username }}</h6>
+    {% else %}
+        <h5 class="mb-0">{{ user.profile.fullname if user.profile else user.username }}</h5>
+    {% endif %}
+    <p class="grey-text">@{{ user.username }}</p>
+    {% if show_email %}
+        <p class="grey-text mb-0" style="font-size: 0.85rem;">
+            {{ Icon.render('email', class_='tiny') }}
+            {{ user.email }}
+        </p>
+    {% endif %}
+    {{ caller() if caller is defined }}
+</div>
+{% endmacro %}
+
+
+{% macro status_badge(status) %}
+{#
+    Renders a status badge with appropriate icon and color.
+
+    Args:
+        status: UserStatus enum or status string value
+#}
+{% set status_value = status.value if status.value is defined else status %}
+{% set status_config = {
+    'active': {'icon': 'check_circle', 'color': 'green-text'},
+    'pending': {'icon': 'hourglass_empty', 'color': 'orange-text'},
+    'invited': {'icon': 'mail', 'color': 'orange-text'},
+    'suspended': {'icon': 'pause_circle', 'color': 'red-text'},
+    'locked': {'icon': 'lock', 'color': 'red-text'},
+    'inactive': {'icon': 'cancel', 'color': 'grey-text'}
+} %}
+{% set config = status_config.get(status_value, {'icon': 'help', 'color': 'grey-text'}) %}
+
+<i class="material-symbols-rounded {{ config.color }}">{{ config.icon }}</i>
+<span class="{{ config.color }}">{{ status_value|title }}</span>
+{% endmacro %}
+
+
+{% macro stat_item(icon, label, value) %}
+{#
+    Renders a stat item for sidebar cards (icon + label: value).
+
+    Args:
+        icon: Material symbol icon name
+        label: Stat label (bold)
+        value: Stat value
+
+    Usage:
+        {{ UserCard.stat_item('login', 'Total Logins', user.login_count) }}
+#}
+<p class="mb-1">
+    <i class="material-symbols-rounded tiny primary-color-text">{{ icon }}</i>
+    <strong>{{ label }}:</strong> {{ value }}
+</p>
+{% endmacro %}

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
-{% import "components/icon.j2" as Icon %}
+{% import "components/card.j2" as Card %}
+{% import "iam/_user_card.j2" as UserCard %}
 
 {% block sidenav %}
     {% include 'iam/_sidenav.html' %}
@@ -17,48 +18,19 @@
 
             <!-- User Info Card -->
             <div class="col s12 m4 l3">
-                <div class="card-panel center-align">
-                    <div class="mb-2">
-                        {% if user.profile and user.profile.image %}
-                            <img src="{{ url_for('static', filename='images/'+user.profile.image) }}"
-                                 alt="{{ user.username }}"
-                                 class="circle responsive-img"
-                                 style="width: 80px; height: 80px; object-fit: cover;">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='images/default_profile_image.png') }}"
-                                 alt="{{ user.username }}"
-                                 class="circle responsive-img"
-                                 style="width: 80px; height: 80px; object-fit: cover;">
-                        {% endif %}
-                    </div>
-                    <h6 class="mb-0">{{ user.profile.fullname if user.profile else user.username }}</h6>
-                    <p class="grey-text">@{{ user.username }}</p>
-
+                {% call UserCard.sidebar(user, size='small') %}
                     <div class="divider my-2"></div>
-
-                    <!-- Stats -->
                     <div class="left-align">
-                        <p class="mb-1">
-                            {{ Icon.render('login', class_='tiny primary-color-text') }}
-                            <strong>Total Logins:</strong> {{ user.login_count or 0 }}
-                        </p>
-                        <p class="mb-0">
-                            {{ Icon.render('schedule', class_='tiny primary-color-text') }}
-                            <strong>Last Login:</strong>
-                            {{ user.last_login_at|timeago if user.last_login_at else 'Never' }}
-                        </p>
+                        {{ UserCard.stat_item('login', 'Total Logins', user.login_count or 0) }}
+                        {{ UserCard.stat_item('schedule', 'Last Login', user.last_login_at|timeago if user.last_login_at else 'Never') }}
                     </div>
-                </div>
+                {% endcall %}
             </div>
 
             <!-- Login History Table -->
             <div class="col s12 m8 l9">
                 <div class="card-panel">
-                    <h6 class="mb-2">
-                        {{ Icon.render('history', class_='primary-color-text') }}
-                        <span>Login History</span>
-                    </h6>
-                    <div class="divider mb-2"></div>
+                    {{ Card.panel_header('history', 'Login History') }}
 
                     {% if login_history %}
                         <table class="striped responsive-table">
@@ -81,22 +53,12 @@
                                             </span>
                                         </td>
                                         <td>
-                                            {% if record.is_successful %}
-                                                <span class="green-text">
-                                                    {{ Icon.render('check_circle', class_='tiny') }}
-                                                    Success
+                                            {{ Card.login_status(record.is_successful) }}
+                                            {% if not record.is_successful and record.failure_reason %}
+                                                <br>
+                                                <span class="grey-text" style="font-size: 0.8rem;">
+                                                    {{ record.failure_reason }}
                                                 </span>
-                                            {% else %}
-                                                <span class="red-text">
-                                                    {{ Icon.render('cancel', class_='tiny') }}
-                                                    Failed
-                                                </span>
-                                                {% if record.failure_reason %}
-                                                    <br>
-                                                    <span class="grey-text" style="font-size: 0.8rem;">
-                                                        {{ record.failure_reason }}
-                                                    </span>
-                                                {% endif %}
                                             {% endif %}
                                         </td>
                                         <td>
@@ -125,10 +87,7 @@
                             </tbody>
                         </table>
                     {% else %}
-                        <div class="center-align py-4">
-                            {{ Icon.render('history', class_='large grey-text') }}
-                            <p class="grey-text">No login history available.</p>
-                        </div>
+                        {{ Card.empty_state('history', 'No login history available.') }}
                     {% endif %}
                 </div>
             </div>

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
-{% import "components/icon.j2" as Icon %}
+{% import "components/card.j2" as Card %}
+{% import "iam/_user_card.j2" as UserCard %}
+{% import "iam/_settings.j2" as Settings %}
 
 {% block sidenav %}
     {% include 'iam/_sidenav.html' %}
@@ -21,54 +23,18 @@
                 <div class="row">
                     <!-- User Profile Image Card -->
                     <div class="col s12">
-                        <div class="card-panel center-align">
-                            <div class="mb-2">
-                                {% if user.profile and user.profile.image %}
-                                    <img src="{{ url_for('static', filename='images/'+user.profile.image) }}"
-                                         alt="{{ user.username }}"
-                                         class="circle responsive-img"
-                                         style="width: 80px; height: 80px; object-fit: cover;">
-                                {% else %}
-                                    <img src="{{ url_for('static', filename='images/default_profile_image.png') }}"
-                                         alt="{{ user.username }}"
-                                         class="circle responsive-img"
-                                         style="width: 80px; height: 80px; object-fit: cover;">
-                                {% endif %}
-                            </div>
-                            <h6 class="mb-0">{{ user.profile.fullname if user.profile else user.username }}</h6>
-                            <p class="grey-text">@{{ user.username }}</p>
-                        </div>
+                        {{ UserCard.sidebar(user, size='small') }}
                     </div>
 
                     <!-- Quick Links -->
                     <div class="col s12">
                         <div class="card-panel">
-                            <h6 class="mb-2">
-                                {{ Icon.render('link', class_='primary-color-text') }}
-                                <span>Quick Links</span>
-                            </h6>
-                            <div class="divider mb-2"></div>
+                            {{ Card.panel_header('link', 'Quick Links') }}
                             <ul class="collection mb-0">
-                                <li class="collection-item">
-                                    <a href="{{ url_for('iam.user_profile', slug=user.slug) }}">
-                                        {{ Icon.render('person', class_='tiny') }} Edit Profile
-                                    </a>
-                                </li>
-                                <li class="collection-item">
-                                    <a href="{{ url_for('iam.user_account', slug=user.slug) }}">
-                                        {{ Icon.render('manage_accounts', class_='tiny') }} Account Settings
-                                    </a>
-                                </li>
-                                <li class="collection-item">
-                                    <a href="{{ url_for('iam.user_address', slug=user.slug) }}">
-                                        {{ Icon.render('location_on', class_='tiny') }} Address
-                                    </a>
-                                </li>
-                                <li class="collection-item">
-                                    <a href="{{ url_for('iam.user_login_history', slug=user.slug) }}">
-                                        {{ Icon.render('history', class_='tiny') }} Login History
-                                    </a>
-                                </li>
+                                {{ Card.link_item('person', 'Edit Profile', url_for('iam.user_profile', slug=user.slug)) }}
+                                {{ Card.link_item('manage_accounts', 'Account Settings', url_for('iam.user_account', slug=user.slug)) }}
+                                {{ Card.link_item('location_on', 'Address', url_for('iam.user_address', slug=user.slug)) }}
+                                {{ Card.link_item('history', 'Login History', url_for('iam.user_login_history', slug=user.slug)) }}
                             </ul>
                         </div>
                     </div>
@@ -82,170 +48,37 @@
 
                     <!-- Security Settings -->
                     <div class="col s12">
-                        <div class="card-panel">
-                            <h6 class="mb-2">
-                                {{ Icon.render('security', class_='primary-color-text') }}
-                                <span>Security</span>
-                            </h6>
-                            <p class="grey-text">
-                                Manage security settings and authentication options.
-                            </p>
-                            <div class="divider mb-2"></div>
-
-                            <ul class="collection mb-0">
-                                <li class="collection-item">
-                                    <div class="row mb-0 valign-wrapper">
-                                        <div class="col s8">
-                                            <strong>Password</strong>
-                                            <p class="grey-text mb-0" style="font-size: 0.85rem;">
-                                                Change or reset the account password
-                                            </p>
-                                        </div>
-                                        <div class="col s4 right-align">
-                                            <a href="{{ url_for('iam.reset_user_password', slug=user.slug) }}"
-                                               class="btn text waves-effect waves-light">
-                                                Change
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="collection-item">
-                                    <div class="row mb-0 valign-wrapper">
-                                        <div class="col s8">
-                                            <strong>Two-Factor Authentication</strong>
-                                            <p class="grey-text mb-0" style="font-size: 0.85rem;">
-                                                Add an extra layer of security
-                                            </p>
-                                        </div>
-                                        <div class="col s4 right-align">
-                                            <a href="#!"
-                                               class="btn text disabled waves-effect waves-light">
-                                                Coming Soon
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="collection-item">
-                                    <div class="row mb-0 valign-wrapper">
-                                        <div class="col s8">
-                                            <strong>Active Sessions</strong>
-                                            <p class="grey-text mb-0" style="font-size: 0.85rem;">
-                                                View and manage active login sessions
-                                            </p>
-                                        </div>
-                                        <div class="col s4 right-align">
-                                            <a href="#!"
-                                               class="btn text disabled waves-effect waves-light">
-                                                Coming Soon
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        {% call Settings.panel('security', 'Security', 'Manage security settings and authentication options.') %}
+                            {{ Settings.item('Password', 'Change or reset the account password',
+                                url=url_for('iam.reset_user_password', slug=user.slug), action='Change') }}
+                            {{ Settings.item('Two-Factor Authentication', 'Add an extra layer of security',
+                                action='Coming Soon', disabled=true) }}
+                            {{ Settings.item('Active Sessions', 'View and manage active login sessions',
+                                action='Coming Soon', disabled=true) }}
+                        {% endcall %}
                     </div>
 
                     <!-- Notification Settings -->
                     <div class="col s12">
-                        <div class="card-panel">
-                            <h6 class="mb-2">
-                                {{ Icon.render('notifications', class_='primary-color-text') }}
-                                <span>Notifications</span>
-                            </h6>
-                            <p class="grey-text" style="font-size: 0.9rem;">
-                                Configure how and when you receive notifications.
-                            </p>
-                            <div class="divider mb-2"></div>
-
-                            <ul class="collection mb-0">
-                                <li class="collection-item">
-                                    <div class="row mb-0 valign-wrapper">
-                                        <div class="col s8">
-                                            <strong>Email Notifications</strong>
-                                            <p class="grey-text mb-0" style="font-size: 0.85rem;">
-                                                Receive updates and alerts via email
-                                            </p>
-                                        </div>
-                                        <div class="col s4 right-align">
-                                            <a href="#!"
-                                               class="btn text disabled waves-effect waves-light">
-                                                Coming Soon
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="collection-item">
-                                    <div class="row mb-0 valign-wrapper">
-                                        <div class="col s8">
-                                            <strong>Push Notifications</strong>
-                                            <p class="grey-text mb-0" style="font-size: 0.85rem;">
-                                                Browser and mobile push notifications
-                                            </p>
-                                        </div>
-                                        <div class="col s4 right-align">
-                                            <a href="#!"
-                                               class="btn text disabled waves-effect waves-light">
-                                                Coming Soon
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        {% call Settings.panel('notifications', 'Notifications', 'Configure how and when you receive notifications.') %}
+                            {{ Settings.item('Email Notifications', 'Receive updates and alerts via email',
+                                action='Coming Soon', disabled=true) }}
+                            {{ Settings.item('Push Notifications', 'Browser and mobile push notifications',
+                                action='Coming Soon', disabled=true) }}
+                        {% endcall %}
                     </div>
 
                     <!-- Privacy Settings -->
                     <div class="col s12">
-                        <div class="card-panel">
-                            <h6 class="mb-2">
-                                {{ Icon.render('visibility', class_='primary-color-text') }}
-                                <span>Privacy</span>
-                            </h6>
-                            <p class="grey-text" style="font-size: 0.9rem;">
-                                Control your privacy and data sharing preferences.
-                            </p>
-                            <div class="divider mb-2"></div>
-
-                            <ul class="collection mb-0">
-                                <li class="collection-item">
-                                    <div class="row mb-0 valign-wrapper">
-                                        <div class="col s8">
-                                            <strong>Profile Visibility</strong>
-                                            <p class="grey-text mb-0" style="font-size: 0.85rem;">
-                                                Control who can view your profile
-                                            </p>
-                                        </div>
-                                        <div class="col s4 right-align">
-                                            <a href="#!"
-                                               class="btn text disabled waves-effect waves-light">
-                                                Coming Soon
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="collection-item">
-                                    <div class="row mb-0 valign-wrapper">
-                                        <div class="col s8">
-                                            <strong>Data Export</strong>
-                                            <p class="grey-text mb-0" style="font-size: 0.85rem;">
-                                                Download a copy of your data
-                                            </p>
-                                        </div>
-                                        <div class="col s4 right-align">
-                                            <a href="#!"
-                                               class="btn text disabled waves-effect waves-light">
-                                                Coming Soon
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        {% call Settings.panel('visibility', 'Privacy', 'Control your privacy and data sharing preferences.') %}
+                            {{ Settings.item('Profile Visibility', 'Control who can view your profile',
+                                action='Coming Soon', disabled=true) }}
+                            {{ Settings.item('Data Export', 'Download a copy of your data',
+                                action='Coming Soon', disabled=true) }}
+                        {% endcall %}
                     </div>
 
                 </div>
-
-
             </div>
 
         </div>

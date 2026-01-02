@@ -4,7 +4,7 @@
     Renders the login history table with HTMX pagination.
     Used both for initial page load and HTMX partial updates.
 #}
-{% import "components/icon.j2" as Icon %}
+{% import "components/card.j2" as Card %}
 {% import "components/pagination_htmx.j2" as Pagination %}
 
 {# Loading indicator - shown during HTMX requests #}
@@ -41,19 +41,7 @@
                         {% endif %}
                     </td>
                     <td>{{ login.login_at|timeago }}</td>
-                    <td>
-                        {% if login.is_successful %}
-                            <span class="green-text">
-                                {{ Icon.render('check_circle', class_='tiny') }}
-                                Success
-                            </span>
-                        {% else %}
-                            <span class="red-text">
-                                {{ Icon.render('cancel', class_='tiny') }}
-                                Failed
-                            </span>
-                        {% endif %}
-                    </td>
+                    <td>{{ Card.login_status(login.is_successful) }}</td>
                     <td>
                         <span class="grey-text" style="font-size: 0.85rem;">
                             {{ login.browser or 'Unknown' }}
@@ -66,8 +54,5 @@
     </table>
     {{ Pagination.render(login_pagination, 'iam.dashboard_activity', '#activity-content') }}
 {% else %}
-    <div class="center-align py-4">
-        {{ Icon.render('history', class_='large grey-text') }}
-        <p class="grey-text">No recent login activity.</p>
-    </div>
+    {{ Card.empty_state('history', 'No recent login activity.') }}
 {% endif %}
