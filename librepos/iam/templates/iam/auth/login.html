@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
 {% import "components/forms.j2" as Form %}
-{% import "iam/_auth_card.j2" as AuthCard %}
+{% import "iam/components/_auth_card.j2" as AuthCard %}
 
 {% block main %}
 
     {% call AuthCard.render(
-        title="Forgot Password",
-        description="Enter your username or email to receive a password reset link.",
+        title="Sign In",
+        description="Enter your credentials to access the dashboard.",
         links=[
-            {'url': url_for('iam.login'), 'label': 'Back to login'}
+            {'url': url_for('iam.forgot_password'), 'label': 'Forgot password?'},
+            {'url': '', 'label': 'Need help?'}
         ]
     ) %}
         <form action="" method="POST">

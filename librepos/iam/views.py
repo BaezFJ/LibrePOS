@@ -107,7 +107,7 @@ def dashboard_activity_view():
     login_pagination = paginate_query(login_query, per_page=5)
 
     return render_template(
-        "iam/_activity_table.html",
+        "iam/users/_activity_table.html",
         recent_logins=login_pagination.items,
         login_pagination=login_pagination,
     )
@@ -149,7 +149,7 @@ def users_view():
             {"url": None, "label": "Users"},
         ],
     }
-    return render_template("iam/users.html", **context)
+    return render_template("iam/users/users.html", **context)
 
 
 @permission_required(IAMPermissions.VIEW_USERS)
@@ -169,7 +169,7 @@ def user_view(slug: str | None = None):
             {"url": None, "label": display_name},
         ],
     }
-    return render_template("iam/user.html", **context)
+    return render_template("iam/users/user.html", **context)
 
 
 @permission_required(IAMPermissions.VIEW_USERS)
@@ -213,7 +213,7 @@ def user_profile_view(slug: str):
             {"url": None, "label": "Profile"},
         ],
     }
-    return render_template("iam/user_profile.html", **context)
+    return render_template("iam/users/user_profile.html", **context)
 
 
 @permission_required(IAMPermissions.VIEW_USERS)
@@ -250,7 +250,7 @@ def user_account_view(slug: str):
             {"url": None, "label": "Account"},
         ],
     }
-    return render_template("iam/user_account.html", **context)
+    return render_template("iam/users/user_account.html", **context)
 
 
 @permission_required(IAMPermissions.VIEW_USERS)
@@ -288,7 +288,7 @@ def user_address_view(slug: str):
             {"url": None, "label": "Address"},
         ],
     }
-    return render_template("iam/user_address.html", **context)
+    return render_template("iam/users/user_address.html", **context)
 
 
 @permission_required(IAMPermissions.CREATE_USERS)
@@ -338,7 +338,7 @@ def add_user_view():
             {"url": None, "label": "Add User"},
         ],
     }
-    return render_template("iam/add_user.html", **context)
+    return render_template("iam/users/add_user.html", **context)
 
 
 @permission_required(IAMPermissions.EDIT_USERS)
@@ -400,7 +400,7 @@ def reset_user_password_view(slug: str):
         flash(f"Password for {user.profile.fullname} has been reset successfully.", "success")
         return redirect(url_for("iam.user", slug=slug))
 
-    return render_template("iam/reset_password.html", **context)
+    return render_template("iam/users/reset_password.html", **context)
 
 
 @permission_required(IAMPermissions.EDIT_USERS)
@@ -524,7 +524,7 @@ def user_login_history_view(slug: str):
             {"url": None, "label": "Login History"},
         ],
     }
-    return render_template("iam/user_login_history.html", **context)
+    return render_template("iam/users/user_login_history.html", **context)
 
 
 @permission_required(IAMPermissions.VIEW_USERS)
@@ -546,7 +546,7 @@ def user_settings_view(slug: str):
             {"url": None, "label": "Settings"},
         ],
     }
-    return render_template("iam/user_settings.html", **context)
+    return render_template("iam/users/user_settings.html", **context)
 
 
 # =============================================================================
@@ -597,7 +597,7 @@ def accept_invitation_view(token: str):
         "form": form,
         "user": user,
     }
-    return render_template("iam/accept_invitation.html", **context)
+    return render_template("iam/auth/accept_invitation.html", **context)
 
 
 @permission_required(IAMPermissions.EDIT_USERS)
@@ -642,7 +642,7 @@ def roles_view():
             {"url": None, "label": "Roles"},
         ],
     }
-    return render_template("iam/roles.html", **context)
+    return render_template("iam/access/roles.html", **context)
 
 
 # =============================================================================
@@ -659,7 +659,7 @@ def policies_view():
             {"url": None, "label": "Policies"},
         ],
     }
-    return render_template("iam/policies.html", **context)
+    return render_template("iam/access/policies.html", **context)
 
 
 # =============================================================================
@@ -676,7 +676,7 @@ def permissions_view():
             {"url": None, "label": "Permissions"},
         ],
     }
-    return render_template("iam/permissions.html", **context)
+    return render_template("iam/access/permissions.html", **context)
 
 
 # =============================================================================
@@ -693,7 +693,7 @@ def settings_view():
             {"url": None, "label": "Settings"},
         ],
     }
-    return render_template("iam/settings.html", **context)
+    return render_template("iam/access/settings.html", **context)
 
 
 # =============================================================================
@@ -753,7 +753,7 @@ def login_view():
         flash("Invalid credentials. Please try again.", "error")
         return redirect(url_for("iam.login"))
 
-    return render_template("iam/login.html", **context)
+    return render_template("iam/auth/login.html", **context)
 
 
 def logout_view():
@@ -796,7 +796,7 @@ def forgot_password_view():
         "title": "Forgot Password",
         "form": form,
     }
-    return render_template("iam/forgot_password.html", **context)
+    return render_template("iam/auth/forgot_password.html", **context)
 
 
 def reset_password_view(token: str):
@@ -840,7 +840,7 @@ def reset_password_view(token: str):
         "form": form,
         "user": user,
     }
-    return render_template("iam/reset_password_token.html", **context)
+    return render_template("iam/auth/reset_password_token.html", **context)
 
 
 @login_required
@@ -869,4 +869,4 @@ def confirm_password_view():
         "form": form,
         "next_url": next_url,
     }
-    return render_template("iam/confirm_password.html", **context)
+    return render_template("iam/auth/confirm_password.html", **context)
