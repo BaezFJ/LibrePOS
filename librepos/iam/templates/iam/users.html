@@ -63,7 +63,7 @@
 {% block footer %}
     {% call Footer.render() %}
         {{ Footer.item("Search", icon="search", modal="searchModal") }}
-        {{ Footer.item("Add", icon="add_circle", modal="addUserModal") }}
+        {{ Footer.item("Add", icon="add_circle", url=url_for('iam.add_user')) }}
         {{ Footer.item("Filter", icon="filter_alt", dropdown="filter-dropdown") }}
         {{ Footer.item("Sort", icon="sort", dropdown="sort-dropdown") }}
         {{ Footer.item("Export", icon="download", dropdown="export-dropdown") }}

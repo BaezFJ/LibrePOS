@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 
+{% import "components/icon.j2" as Icon %}
+{% import "components/card.j2" as Card %}
+
 {% block sidenav %}
     {% include "iam/_sidenav.html" %}
 {% endblock %}
@@ -7,7 +10,191 @@
 {% block main %}
 
     <section class="section">
-        <h1 class="center-align">IAM Dashboard page.</h1>
+        <div class="mx-4">
+
+            <!-- User Statistics Row -->
+            <div class="row mb-5">
+                <div class="col s6 m3">
+                    <div class="card-panel center-align">
+                        <i class="material-symbols-rounded primary-color-text"
+                           style="font-size: 2.5rem;">group</i>
+                        <h4 class="mb-0">{{ total_users }}</h4>
+                        <p class="grey-text mb-0">Total Users</p>
+                    </div>
+                </div>
+                <div class="col s6 m3">
+                    <div class="card-panel center-align">
+                        <i class="material-symbols-rounded green-text"
+                           style="font-size: 2.5rem;">check_circle</i>
+                        <h4 class="mb-0">{{ active_users }}</h4>
+                        <p class="grey-text mb-0">Active Users</p>
+                    </div>
+                </div>
+                <div class="col s6 m3">
+                    <div class="card-panel center-align">
+                        <i class="material-symbols-rounded red-text"
+                           style="font-size: 2.5rem;">lock</i>
+                        <h4 class="mb-0">{{ locked_users }}</h4>
+                        <p class="grey-text mb-0">Locked</p>
+                    </div>
+                </div>
+                <div class="col s6 m3">
+                    <div class="card-panel center-align">
+                        <i class="material-symbols-rounded orange-text"
+                           style="font-size: 2.5rem;">hourglass_empty</i>
+                        <h4 class="mb-0">{{ pending_users }}</h4>
+                        <p class="grey-text mb-0">Pending</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role/Permission Statistics Row -->
+            <div class="row mb-5">
+                <div class="col s6 m3">
+                    <div class="card-panel center-align">
+                        <i class="material-symbols-rounded primary-color-text"
+                           style="font-size: 2.5rem;">badge</i>
+                        <h4 class="mb-0">{{ total_roles }}</h4>
+                        <p class="grey-text mb-0">Roles</p>
+                    </div>
+                </div>
+                <div class="col s6 m3">
+                    <div class="card-panel center-align">
+                        <i class="material-symbols-rounded primary-color-text"
+                           style="font-size: 2.5rem;">policy</i>
+                        <h4 class="mb-0">{{ total_policies }}</h4>
+                        <p class="grey-text mb-0">Policies</p>
+                    </div>
+                </div>
+                <div class="col s6 m3">
+                    <div class="card-panel center-align">
+                        <i class="material-symbols-rounded primary-color-text"
+                           style="font-size: 2.5rem;">shield</i>
+                        <h4 class="mb-0">{{ total_permissions }}</h4>
+                        <p class="grey-text mb-0">Permissions</p>
+                    </div>
+                </div>
+                <div class="col s6 m3">
+                    <div class="card-panel center-align">
+                        <i class="material-symbols-rounded {% if failed_logins_24h > 0 %}orange-text{% else %}green-text{% endif %}"
+                           style="font-size: 2.5rem;">warning</i>
+                        <h4 class="mb-0">{{ failed_logins_24h }}</h4>
+                        <p class="grey-text mb-0">Failed Logins (24h)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Row -->
+            <div class="row mb-5">
+                <div class="col s6 m3">
+                    {{ Card.action_card('person_add', 'Add User', url=url_for('iam.add_user')) }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.action_card('badge', 'Manage Roles', url=url_for('iam.roles')) }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.action_card('policy', 'Policies', url=url_for('iam.policies')) }}
+                </div>
+                <div class="col s6 m3">
+                    {{ Card.action_card('shield', 'Permissions', url=url_for('iam.permissions')) }}
+                </div>
+            </div>
+
+            <!-- Activity & Distribution Row -->
+            <div class="row">
+                <!-- Recent Activity -->
+                <div class="col s12 m8">
+                    <div class="card-panel">
+                        <h6 class="mb-2">
+                            {{ Icon.render('history', class_='primary-color-text') }}
+                            <span>Recent Activity</span>
+                        </h6>
+                        <div class="divider mb-2"></div>
+
+                        {% if recent_logins %}
+                            <table class="striped responsive-table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                        <th>Device</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for login in recent_logins %}
+                                        <tr>
+                                            <td>
+                                                {% if login.user %}
+                                                    <a href="{{ url_for('iam.user', slug=login.user.slug) }}">
+                                                        {{ login.user.profile.fullname if login.user.profile else login.user.username }}
+                                                    </a>
+                                                {% else %}
+                                                    <span class="grey-text">Unknown</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ login.login_at|timeago }}</td>
+                                            <td>
+                                                {% if login.is_successful %}
+                                                    <span class="green-text">
+                                                        {{ Icon.render('check_circle', class_='tiny') }}
+                                                        Success
+                                                    </span>
+                                                {% else %}
+                                                    <span class="red-text">
+                                                        {{ Icon.render('cancel', class_='tiny') }}
+                                                        Failed
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="grey-text" style="font-size: 0.85rem;">
+                                                    {{ login.browser or 'Unknown' }}
+                                                    {% if login.os %} / {{ login.os }}{% endif %}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="center-align py-4">
+                                {{ Icon.render('history', class_='large grey-text') }}
+                                <p class="grey-text">No recent login activity.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Users by Role -->
+                <div class="col s12 m4">
+                    <div class="card-panel">
+                        <h6 class="mb-2">
+                            {{ Icon.render('group', class_='primary-color-text') }}
+                            <span>Users by Role</span>
+                        </h6>
+                        <div class="divider mb-2"></div>
+
+                        {% if users_by_role %}
+                            <ul class="collection mb-0">
+                                {% for role_name, count in users_by_role %}
+                                    <li class="collection-item">
+                                        <span class="badge primary-color white-text">{{ count }}</span>
+                                        {{ role_name|replace("_", " ")|title }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="center-align py-4">
+                                {{ Icon.render('group', class_='large grey-text') }}
+                                <p class="grey-text">No role data available.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </section>
 
 {% endblock %}

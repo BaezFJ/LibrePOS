@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% import "components/forms.j2" as Form %}
+
+{% block sidenav %}
+    {% include 'iam/_sidenav.html' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include '_partials/breadcrumbs.html' %}
+{% endblock %}
+
+{% block main %}
+
+    <section class="section">
+        <div class="row mx-4">
+            <div class="col s12 m10 offset-m1 l8 offset-l2">
+                <div class="card-panel">
+                    <div class="center-align mb-2">
+                        <i class="material-symbols-rounded" style="font-size: 3rem; color: var(--bistro-primary);">person_add</i>
+                        <h5>Add New User</h5>
+                        <p class="grey-text">Create a new user account. An invitation email will be sent to set their password.</p>
+                    </div>
+
+                    <form action="{{ url_for('iam.add_user') }}" method="post">
+                        {{ Form.render_form(form, extra_wrappers={
+                            'role_id': 'col s12 m6',
+                            'username': 'col s12 m6',
+                            'email': 'col s12',
+                            'first_name': 'col s12 m6',
+                            'last_name': 'col s12 m6',
+                        }) }}
+                    </form>
+
+                    <div class="divider my-2"></div>
+                    <p class="grey-text" style="font-size: 0.85rem;">
+                        <i class="material-symbols-rounded tiny">info</i>
+                        The user will receive an email with instructions to set their password.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

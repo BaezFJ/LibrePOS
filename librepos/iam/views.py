@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from flask import abort, current_app, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
@@ -7,10 +9,13 @@ from librepos.utils.images import delete_user_image, process_user_image
 from librepos.utils.navigation import get_redirect_url, is_safe_url
 
 from .decorators import REAUTH_SESSION_KEY, permission_required, reauthenticate_required
+from .email import send_invitation_email, send_password_reset_email, send_welcome_email
 from .forms import (
     AdminResetPasswordForm,
     ConfirmActionForm,
+    ForgotPasswordForm,
     PasswordConfirmForm,
+    SetPasswordForm,
     UserAddressForm,
     UserEditForm,
     UserImageForm,
@@ -18,9 +23,18 @@ from .forms import (
     UserProfileForm,
     UserRegisterForm,
 )
-from .models import IAMRole, IAMUser, IAMUserAddress, IAMUserProfile, UserStatus
+from .models import (
+    IAMPermission,
+    IAMPolicy,
+    IAMRole,
+    IAMUser,
+    IAMUserAddress,
+    IAMUserLoginHistory,
+    IAMUserProfile,
+    UserStatus,
+)
 from .permissions import IAMPermissions
-from .utils import authenticate_user
+from .utils import authenticate_user, get_user_by_identifier
 
 # Export field definitions for users
 USER_EXPORT_FIELDS = [
@@ -34,11 +48,58 @@ USER_EXPORT_FIELDS = [
     ),
 ]
 
+_iam_dashboard = "iam.dashboard"
+
 
 def dashboard_view():
-    """Render the IAM dashboard page."""
+    """Render the IAM dashboard with statistics."""
+    # User statistics
+    total_users = IAMUser.query.count()
+    active_users = IAMUser.query.filter_by(status=UserStatus.ACTIVE).count()
+    locked_users = IAMUser.query.filter_by(status=UserStatus.LOCKED).count()
+    pending_users = IAMUser.query.filter_by(status=UserStatus.PENDING).count()
+
+    # Role/Permission statistics
+    total_roles = IAMRole.query.count()
+    total_policies = IAMPolicy.query.count()
+    total_permissions = IAMPermission.query.count()
+
+    # Security statistics (failed logins in last 24h)
+    yesterday = datetime.now() - timedelta(days=1)
+    failed_logins = IAMUserLoginHistory.query.filter(
+        IAMUserLoginHistory.is_successful == False,  # noqa: E712
+        IAMUserLoginHistory.login_at >= yesterday,
+    ).count()
+
+    # Recent activity (last 10 logins)
+    recent_logins = (
+        IAMUserLoginHistory.query.order_by(IAMUserLoginHistory.login_at.desc()).limit(10).all()
+    )
+
+    # Users by role
+    users_by_role = (
+        db.session.query(IAMRole.name, db.func.count(IAMUser.id))
+        .join(IAMUser)
+        .group_by(IAMRole.name)
+        .all()
+    )
+
     context = {
-        "title": "Dashboard",
+        "title": "IAM Dashboard",
+        # User stats
+        "total_users": total_users,
+        "active_users": active_users,
+        "locked_users": locked_users,
+        "pending_users": pending_users,
+        # Role/Perm stats
+        "total_roles": total_roles,
+        "total_policies": total_policies,
+        "total_permissions": total_permissions,
+        # Security
+        "failed_logins_24h": failed_logins,
+        "recent_logins": recent_logins,
+        # Distribution
+        "users_by_role": users_by_role,
     }
     return render_template("iam/dashboard.html", **context)
 
@@ -106,7 +167,7 @@ def users_view():
         "users": users,
         "form": form,
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": None, "label": "Users"},
         ],
     }
@@ -125,7 +186,7 @@ def user_view(slug: str | None = None):
         "user": user,
         "back_url": get_redirect_url("iam.users", param_name="back"),
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": url_for("iam.users"), "label": "Users"},
             {"url": None, "label": display_name},
         ],
@@ -168,7 +229,7 @@ def user_profile_view(slug: str):
         "image_form": image_form,
         "back_url": url_for("iam.user", slug=slug),
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": url_for("iam.users"), "label": "Users"},
             {"url": url_for("iam.user", slug=slug), "label": display_name},
             {"url": None, "label": "Profile"},
@@ -205,7 +266,7 @@ def user_account_view(slug: str):
         "form": form,
         "back_url": url_for("iam.user", slug=slug),
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": url_for("iam.users"), "label": "Users"},
             {"url": url_for("iam.user", slug=slug), "label": display_name},
             {"url": None, "label": "Account"},
@@ -243,7 +304,7 @@ def user_address_view(slug: str):
         "form": form,
         "back_url": url_for("iam.user", slug=slug),
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": url_for("iam.users"), "label": "Users"},
             {"url": url_for("iam.user", slug=slug), "label": display_name},
             {"url": None, "label": "Address"},
@@ -254,8 +315,11 @@ def user_address_view(slug: str):
 
 @permission_required(IAMPermissions.CREATE_USERS)
 def add_user_view():
-    form = UserRegisterForm()
+    """Render standalone user creation page with invitation flow."""
+    form = UserRegisterForm(current_user=current_user)
+
     if form.validate_on_submit():
+        # Create user with INVITED status (no password)
         user = IAMUser(
             username=str(form.username.data),
             email=str(form.email.data),
@@ -263,11 +327,40 @@ def add_user_view():
             last_name=str(form.last_name.data),
             role_id=form.role_id.data,
         )
+        user.status = UserStatus.INVITED
+
+        # Generate verification token
+        token = user.generate_verification_token()
         user.save()
-        flash("User created successfully.", "success")
-        return redirect(url_for("iam.edit_user", slug=user.slug))
-    flash("Form validation failed. Please check your input.", "error")
-    return redirect(url_for("iam.users"))
+
+        # Send invitation email
+        email_sent = send_invitation_email(user, token)
+
+        if email_sent:
+            flash(
+                f"User {user.profile.fullname} created successfully. "
+                f"An invitation email has been sent to {user.email}.",
+                "success",
+            )
+        else:
+            flash(
+                f"User {user.profile.fullname} created, but the invitation email "
+                f"could not be sent. You may need to resend the invitation.",
+                "warning",
+            )
+
+        return redirect(url_for("iam.user", slug=user.slug))
+
+    context = {
+        "title": "Add User",
+        "form": form,
+        "breadcrumb": [
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
+            {"url": url_for("iam.users"), "label": "Users"},
+            {"url": None, "label": "Add User"},
+        ],
+    }
+    return render_template("iam/add_user.html", **context)
 
 
 @permission_required(IAMPermissions.EDIT_USERS)
@@ -317,7 +410,7 @@ def reset_user_password_view(slug: str):
         "form": form,
         "back_url": url_for("iam.user", slug=slug),
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": url_for("iam.users"), "label": "Users"},
             {"url": url_for("iam.user", slug=slug), "label": display_name},
             {"url": None, "label": "Reset Password"},
@@ -447,7 +540,7 @@ def user_login_history_view(slug: str):
         "login_history": login_history,
         "back_url": url_for("iam.user", slug=slug),
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": url_for("iam.users"), "label": "Users"},
             {"url": url_for("iam.user", slug=slug), "label": display_name},
             {"url": None, "label": "Login History"},
@@ -469,13 +562,92 @@ def user_settings_view(slug: str):
         "user": user,
         "back_url": url_for("iam.user", slug=slug),
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": url_for("iam.users"), "label": "Users"},
             {"url": url_for("iam.user", slug=slug), "label": display_name},
             {"url": None, "label": "Settings"},
         ],
     }
     return render_template("iam/user_settings.html", **context)
+
+
+# =============================================================================
+# Invitation Views
+# =============================================================================
+
+
+def accept_invitation_view(token: str):
+    """Handle invitation acceptance and password setup.
+
+    This view is public (no login required) - user sets password here.
+    """
+    # Find user by verification token
+    user = IAMUser.get_first_by(verification_token=token)
+
+    if not user:
+        flash("Invalid or expired invitation link.", "error")
+        return redirect(url_for("iam.login"))
+
+    # Verify user is in INVITED status
+    if user.status != UserStatus.INVITED:
+        flash(
+            "This invitation has already been used or the account is not in invited status.",
+            "warning",
+        )
+        return redirect(url_for("iam.login"))
+
+    form = SetPasswordForm()
+
+    if form.validate_on_submit():
+        # Set password and activate account
+        user.set_password(str(form.password.data))
+        user.status = UserStatus.ACTIVE
+        user.clear_verification_token()
+        user.save()
+
+        # Send welcome email (optional, best effort)
+        send_welcome_email(user)
+
+        flash(
+            "Your password has been set successfully. You can now log in.",
+            "success",
+        )
+        return redirect(url_for("iam.login"))
+
+    context = {
+        "title": "Accept Invitation",
+        "form": form,
+        "user": user,
+    }
+    return render_template("iam/accept_invitation.html", **context)
+
+
+@permission_required(IAMPermissions.EDIT_USERS)
+def resend_invitation_view(slug: str):
+    """Resend invitation email to a user in INVITED status."""
+    user = IAMUser.get_first_by(slug=slug)
+
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for("iam.users"))
+
+    if user.status != UserStatus.INVITED:
+        flash("Can only resend invitations to users with 'Invited' status.", "warning")
+        return redirect(url_for("iam.user", slug=slug))
+
+    # Generate new token (invalidates old one)
+    token = user.generate_verification_token()
+    user.save()
+
+    # Send invitation email
+    email_sent = send_invitation_email(user, token)
+
+    if email_sent:
+        flash(f"Invitation email has been resent to {user.email}.", "success")
+    else:
+        flash("Failed to send invitation email. Please try again.", "error")
+
+    return redirect(url_for("iam.user", slug=slug))
 
 
 # =============================================================================
@@ -488,7 +660,7 @@ def roles_view():
     context = {
         "title": "Roles",
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": None, "label": "Roles"},
         ],
     }
@@ -505,7 +677,7 @@ def policies_view():
     context = {
         "title": "Policies",
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": None, "label": "Policies"},
         ],
     }
@@ -522,7 +694,7 @@ def permissions_view():
     context = {
         "title": "Permissions",
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": None, "label": "Permissions"},
         ],
     }
@@ -539,7 +711,7 @@ def settings_view():
     context = {
         "title": "Settings",
         "breadcrumb": [
-            {"url": url_for("iam.dashboard"), "label": "IAM"},
+            {"url": url_for(_iam_dashboard), "label": "IAM"},
             {"url": None, "label": "Settings"},
         ],
     }
@@ -610,6 +782,87 @@ def logout_view():
     """Log the user out."""
     logout_user()
     return redirect(url_for("iam.login"))
+
+
+def forgot_password_view():
+    """Handle forgot password requests.
+
+    This view is public (no login required). User enters username or email,
+    and if found with ACTIVE status, receives a password reset email.
+    Always shows success message to prevent user enumeration.
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for("main.dashboard"))
+
+    form = ForgotPasswordForm()
+
+    if form.validate_on_submit():
+        identifier = str(form.identifier.data).strip()
+        user = get_user_by_identifier(identifier)
+
+        # Only send email if user exists and is ACTIVE
+        if user and user.status == UserStatus.ACTIVE:
+            token = user.generate_verification_token()
+            user.save()
+            send_password_reset_email(user, token)
+
+        # Always show same message to prevent user enumeration
+        flash(
+            "If an account exists with that username or email, "
+            "a password reset link has been sent.",
+            "info",
+        )
+        return redirect(url_for("iam.login"))
+
+    context = {
+        "title": "Forgot Password",
+        "form": form,
+    }
+    return render_template("iam/forgot_password.html", **context)
+
+
+def reset_password_view(token: str):
+    """Handle password reset via token.
+
+    This view is public (no login required). User clicks link from email
+    and sets a new password.
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for("main.dashboard"))
+
+    # Find user by verification token
+    user = IAMUser.get_first_by(verification_token=token)
+
+    if not user:
+        flash("Invalid or expired password reset link.", "error")
+        return redirect(url_for("iam.login"))
+
+    # Verify token is still valid (not expired)
+    if not user.verify_token(token):
+        flash("This password reset link has expired. Please request a new one.", "error")
+        return redirect(url_for("iam.forgot_password"))
+
+    # Only allow reset for ACTIVE users
+    if user.status != UserStatus.ACTIVE:
+        flash("Unable to reset password for this account. Please contact support.", "error")
+        return redirect(url_for("iam.login"))
+
+    form = SetPasswordForm()
+
+    if form.validate_on_submit():
+        user.set_password(str(form.password.data))
+        user.clear_verification_token()
+        user.save()
+
+        flash("Your password has been reset successfully. You can now log in.", "success")
+        return redirect(url_for("iam.login"))
+
+    context = {
+        "title": "Reset Password",
+        "form": form,
+        "user": user,
+    }
+    return render_template("iam/reset_password_token.html", **context)
 
 
 @login_required

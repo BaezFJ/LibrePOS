@@ -13,19 +13,23 @@
                             <i class="material-symbols-rounded">restaurant_menu</i>
                             <span class="brand-name">LibrePOS</span>
                         </div>
-                        <h5>Sign In</h5>
-                        <p class="grey-text">Enter your credentials to access the dashboard.</p>
+                        <h5>Welcome, {{ user.profile.first_name }}!</h5>
+                        <p class="grey-text">Set your password to complete your account setup.</p>
+
                         <form action="" method="POST">
                             {{ Form.render_form(form) }}
                         </form>
-                    </div>
-                    <div class="card-action">
-                        <a href="{{ url_for('iam.forgot_password') }}">Forgot password?</a>
-                        <a href="">Need help?</a>
+
+                        <div class="divider my-2"></div>
+                        <p class="grey-text" style="font-size: 0.85rem;">
+                            <i class="material-symbols-rounded tiny">info</i>
+                            Password must be at least 8 characters.
+                        </p>
                     </div>
                 </div>
                 <p class="grey-text center-align mt-4">Secure staff access &verbar; All activity is logged</p>
             </div>
         </div>
     </div>
+
 {% endblock %}

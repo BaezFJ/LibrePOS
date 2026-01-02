@@ -14,8 +14,9 @@ def reauthenticate_required(func):
     This decorator redirects users to a password confirmation page
     before allowing access to sensitive operations.
 
-    The session flag is single-use: it's cleared after the protected
-    route is accessed, requiring re-confirmation for subsequent requests.
+    The session flag is consumed on POST requests (when actions are performed),
+    but preserved on GET requests (when forms are rendered). This allows
+    form-based views to render and submit without requiring re-confirmation.
 
     Example:
         @reauthenticate_required
@@ -33,9 +34,13 @@ def reauthenticate_required(func):
     @login_required
     @wraps(func)
     def decorated_view(*args, **kwargs):
-        # Check if the user has confirmed password for this request
-        if not session.pop(REAUTH_SESSION_KEY, False):
-            # Store the target URL and redirect to the confirmation page
+        if request.method == "POST":
+            # POST: consume the key (one-time use for the action)
+            if not session.pop(REAUTH_SESSION_KEY, False):
+                next_url = request.url
+                return redirect(url_for("iam.confirm_password", next=next_url))
+        # GET: check but don't consume (form still needs to submit)
+        elif not session.get(REAUTH_SESSION_KEY, False):
             next_url = request.url
             return redirect(url_for("iam.confirm_password", next=next_url))
 

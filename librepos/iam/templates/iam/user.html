@@ -40,16 +40,17 @@
 
                         <!-- Status -->
                         <div class="col s6 m4 l2 center-align">
-                            <i class="material-symbols-rounded {% if user.status.value == 'active' %}green-text{% elif user.status.value == 'pending' %}orange-text{% else %}red-text{% endif %}"
+                            <i class="material-symbols-rounded {% if user.status.value == 'active' %}green-text{% elif user.status.value in ['pending', 'invited'] %}orange-text{% else %}red-text{% endif %}"
                                style="font-size: 2rem;">
                                 {% if user.status.value == 'active' %}check_circle
                                 {% elif user.status.value == 'pending' %}hourglass_empty
+                                {% elif user.status.value == 'invited' %}mail
                                 {% elif user.status.value == 'suspended' %}pause_circle
                                 {% elif user.status.value == 'locked' %}lock
                                 {% else %}cancel{% endif %}
                             </i>
                             <p class="grey-text mb-0" style="font-size: 0.85rem;">Status</p>
-                            <p class="mb-0 {% if user.status.value == 'active' %}green-text{% elif user.status.value == 'pending' %}orange-text{% else %}red-text{% endif %}">
+                            <p class="mb-0 {% if user.status.value == 'active' %}green-text{% elif user.status.value in ['pending', 'invited'] %}orange-text{% else %}red-text{% endif %}">
                                 <strong>{{ user.status.value|title }}</strong>
                             </p>
                         </div>
@@ -102,6 +103,19 @@
             <div class="col s12 m6 l4">
                 {{ Card.action_card('history', 'Login History', url=url_for('iam.user_login_history', slug=user.slug)) }}
             </div>
+
+            {% if user.status.value == 'invited' %}
+            <div class="col s12 m6 l4">
+                <!-- Resend Invitation Card -->
+                <form action="{{ url_for('iam.resend_invitation', slug=user.slug) }}" method="post" style="margin: 0;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="card-panel center-align hoverable" style="display: block; width: 100%; border: none; cursor: pointer; background: white;">
+                        <i class="material-symbols-rounded" style="font-size: 3rem; color: var(--bistro-primary);">forward_to_inbox</i>
+                        <p class="mb-0"><strong>Resend Invitation</strong></p>
+                    </button>
+                </form>
+            </div>
+            {% endif %}
 
             <div class="col s12 m6 l4">
                 {% if user.status.value == 'locked' %}

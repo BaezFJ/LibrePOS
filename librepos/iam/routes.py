@@ -75,6 +75,22 @@ iam_bp.add_url_rule(
     view_func=views.user_settings_view,
     methods=["GET"],
 )
+iam_bp.add_url_rule(
+    "/users/<slug>/resend-invitation",
+    endpoint="resend_invitation",
+    view_func=views.resend_invitation_view,
+    methods=["POST"],
+)
+
+# =============================================================================
+# Invitation Routes (Public - No Auth Required)
+# =============================================================================
+iam_bp.add_url_rule(
+    "/invitation/<token>",
+    endpoint="accept_invitation",
+    view_func=views.accept_invitation_view,
+    methods=["GET", "POST"],
+)
 
 # =============================================================================
 # Role Management Routes
@@ -101,6 +117,18 @@ iam_bp.add_url_rule("/settings", endpoint="settings", view_func=views.settings_v
 # =============================================================================
 iam_bp.add_url_rule("/login", endpoint="login", view_func=views.login_view, methods=["GET", "POST"])
 iam_bp.add_url_rule("/logout", endpoint="logout", view_func=views.logout_view)
+iam_bp.add_url_rule(
+    "/forgot-password",
+    endpoint="forgot_password",
+    view_func=views.forgot_password_view,
+    methods=["GET", "POST"],
+)
+iam_bp.add_url_rule(
+    "/reset-password/<token>",
+    endpoint="reset_password",
+    view_func=views.reset_password_view,
+    methods=["GET", "POST"],
+)
 iam_bp.add_url_rule(
     "/confirm-password",
     endpoint="confirm_password",

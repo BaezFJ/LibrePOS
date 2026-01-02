@@ -41,6 +41,16 @@ class UserResetPasswordForm(FlaskForm):
     submit = SubmitField("Reset Password")
 
 
+class ForgotPasswordForm(FlaskForm):
+    """Form for requesting a password reset via username or email."""
+
+    identifier = StringField(
+        "Username or Email",
+        validators=[DataRequired(), Length(min=3, max=150)],
+    )
+    submit = SubmitField("Send Reset Link")
+
+
 class UserChangePasswordForm(FlaskForm):
     old_password = PasswordField("Old Password", validators=[DataRequired()])
     new_password = PasswordField(
@@ -63,6 +73,21 @@ class AdminResetPasswordForm(FlaskForm):
     )
     confirm_password = PasswordField("Confirm Password", validators=[DataRequired()])
     submit = SubmitField("Reset Password")
+
+
+class SetPasswordForm(FlaskForm):
+    """Form for setting password during invitation acceptance."""
+
+    password = PasswordField(
+        "Password",
+        validators=[
+            DataRequired(),
+            Length(min=8, message="Password must be at least 8 characters."),
+            EqualTo("confirm_password", message="Passwords must match."),
+        ],
+    )
+    confirm_password = PasswordField("Confirm Password", validators=[DataRequired()])
+    submit = SubmitField("Set Password")
 
 
 class UserRegisterForm(FlaskForm):
