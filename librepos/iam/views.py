@@ -7,6 +7,7 @@ from librepos.extensions import db
 from librepos.utils.export import ExportField, export_to_csv
 from librepos.utils.images import delete_user_image, process_user_image
 from librepos.utils.navigation import get_redirect_url, is_safe_url
+from librepos.utils.pagination import paginate_query
 
 from .decorators import REAUTH_SESSION_KEY, permission_required, reauthenticate_required
 from .email import send_invitation_email, send_password_reset_email, send_welcome_email
@@ -71,10 +72,9 @@ def dashboard_view():
         IAMUserLoginHistory.login_at >= yesterday,
     ).count()
 
-    # Recent activity (last 10 logins)
-    recent_logins = (
-        IAMUserLoginHistory.query.order_by(IAMUserLoginHistory.login_at.desc()).limit(10).all()
-    )
+    # Recent activity (paginated)
+    login_query = IAMUserLoginHistory.query.order_by(IAMUserLoginHistory.login_at.desc())
+    login_pagination = paginate_query(login_query, per_page=5)
 
     # Users by role
     users_by_role = (
@@ -83,7 +83,6 @@ def dashboard_view():
         .group_by(IAMRole.name)
         .all()
     )
-
     context = {
         "title": "IAM Dashboard",
         # User stats
@@ -97,11 +96,24 @@ def dashboard_view():
         "total_permissions": total_permissions,
         # Security
         "failed_logins_24h": failed_logins,
-        "recent_logins": recent_logins,
+        "recent_logins": login_pagination.items,
+        "login_pagination": login_pagination,
         # Distribution
         "users_by_role": users_by_role,
     }
     return render_template("iam/dashboard.html", **context)
+
+
+def dashboard_activity_view():
+    """Return paginated activity table partial for HTMX requests."""
+    login_query = IAMUserLoginHistory.query.order_by(IAMUserLoginHistory.login_at.desc())
+    login_pagination = paginate_query(login_query, per_page=5)
+
+    return render_template(
+        "iam/_activity_table.html",
+        recent_logins=login_pagination.items,
+        login_pagination=login_pagination,
+    )
 
 
 # =============================================================================

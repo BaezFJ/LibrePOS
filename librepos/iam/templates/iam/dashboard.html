@@ -111,58 +111,10 @@
                         </h6>
                         <div class="divider mb-2"></div>
 
-                        {% if recent_logins %}
-                            <table class="striped responsive-table">
-                                <thead>
-                                    <tr>
-                                        <th>User</th>
-                                        <th>Time</th>
-                                        <th>Status</th>
-                                        <th>Device</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for login in recent_logins %}
-                                        <tr>
-                                            <td>
-                                                {% if login.user %}
-                                                    <a href="{{ url_for('iam.user', slug=login.user.slug) }}">
-                                                        {{ login.user.profile.fullname if login.user.profile else login.user.username }}
-                                                    </a>
-                                                {% else %}
-                                                    <span class="grey-text">Unknown</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>{{ login.login_at|timeago }}</td>
-                                            <td>
-                                                {% if login.is_successful %}
-                                                    <span class="green-text">
-                                                        {{ Icon.render('check_circle', class_='tiny') }}
-                                                        Success
-                                                    </span>
-                                                {% else %}
-                                                    <span class="red-text">
-                                                        {{ Icon.render('cancel', class_='tiny') }}
-                                                        Failed
-                                                    </span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <span class="grey-text" style="font-size: 0.85rem;">
-                                                    {{ login.browser or 'Unknown' }}
-                                                    {% if login.os %} / {{ login.os }}{% endif %}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <div class="center-align py-4">
-                                {{ Icon.render('history', class_='large grey-text') }}
-                                <p class="grey-text">No recent login activity.</p>
-                            </div>
-                        {% endif %}
+                        {# HTMX container for activity table #}
+                        <div id="activity-content">
+                            {% include "iam/_activity_table.html" %}
+                        </div>
                     </div>
                 </div>
 

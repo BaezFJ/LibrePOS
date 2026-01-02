@@ -6,6 +6,11 @@ iam_bp = Blueprint("iam", __name__, template_folder="templates", url_prefix="/ia
 
 iam_bp.add_url_rule("/", endpoint="index", view_func=lambda: redirect(url_for("iam.dashboard")))
 iam_bp.add_url_rule("/dashboard", endpoint="dashboard", view_func=views.dashboard_view)
+iam_bp.add_url_rule(
+    "/dashboard/activity",
+    endpoint="dashboard_activity",
+    view_func=views.dashboard_activity_view,
+)
 
 # =============================================================================
 # User Management Routes
