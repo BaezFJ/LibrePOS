@@ -1,10 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'iam/_base.html' %}
 
 {% import "components/card.j2" as Card %}
-
-{% block sidenav %}
-    {% include 'iam/_sidenav.html' %}
-{% endblock %}
 
 {% block main %}
 
@@ -69,7 +65,7 @@
 
                         {# HTMX container for activity table #}
                         <div id="activity-content">
-                            {% include 'iam/_activity_table.html' %}
+                            {% include 'iam/users/_activity_table.html' %}
                         </div>
                     </div>
                 </div>

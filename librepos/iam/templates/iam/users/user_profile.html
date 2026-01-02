@@ -1,16 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'iam/_base.html' %}
 
 {% import "components/card.j2" as Card %}
 {% import "components/forms.j2" as Form %}
-{% import "iam/_user_card.j2" as UserCard %}
-
-{% block sidenav %}
-    {% include 'iam/_sidenav.html' %}
-{% endblock %}
-
-{% block breadcrumb %}
-    {% include '_partials/breadcrumbs.html' %}
-{% endblock %}
+{% import "iam/components/_user_card.j2" as UserCard %}
 
 {% block main %}
 

@@ -1,5 +1,5 @@
 
-{% if breadcrumb and breadcrumb is iterable %}
+{% if breadcrumb is defined and breadcrumb is iterable %}
     <nav class="breadcrumb-wrapper pt-4">
         <div class="col s12">
             {% for crumb in breadcrumb %}
