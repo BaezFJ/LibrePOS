@@ -30,11 +30,16 @@ from .models import (
     IAMRole,
     IAMUser,
     IAMUserAddress,
-    IAMUserLoginHistory,
     IAMUserProfile,
     UserStatus,
 )
 from .permissions import IAMPermissions
+from .queries import (
+    failed_logins_query,
+    latest_login_per_user_query,
+    users_count_by_role,
+    users_list_query,
+)
 from .utils import authenticate_user, get_user_by_identifier
 
 # Export field definitions for users
@@ -67,22 +72,14 @@ def dashboard_view():
 
     # Security statistics (failed logins in last 24h)
     yesterday = datetime.now() - timedelta(days=1)
-    failed_logins = IAMUserLoginHistory.query.filter(
-        IAMUserLoginHistory.is_successful == False,  # noqa: E712
-        IAMUserLoginHistory.login_at >= yesterday,
-    ).count()
+    failed_logins = failed_logins_query(yesterday).count()
 
-    # Recent activity (paginated)
-    login_query = IAMUserLoginHistory.query.order_by(IAMUserLoginHistory.login_at.desc())
+    # Recent activity - latest login per user (paginated)
+    login_query = latest_login_per_user_query()
     login_pagination = paginate_query(login_query, per_page=5)
 
     # Users by role
-    users_by_role = (
-        db.session.query(IAMRole.name, db.func.count(IAMUser.id))
-        .join(IAMUser)
-        .group_by(IAMRole.name)
-        .all()
-    )
+    users_by_role = users_count_by_role()
     context = {
         "title": "IAM Dashboard",
         # User stats
@@ -106,7 +103,7 @@ def dashboard_view():
 
 def dashboard_activity_view():
     """Return paginated activity table partial for HTMX requests."""
-    login_query = IAMUserLoginHistory.query.order_by(IAMUserLoginHistory.login_at.desc())
+    login_query = latest_login_per_user_query()
     login_pagination = paginate_query(login_query, per_page=5)
 
     return render_template(
@@ -126,47 +123,16 @@ def users_view():
     """Render the IAM Users page."""
     form = UserRegisterForm(current_user=current_user)
 
-    # Handle search
+    # Handle search, filter, and sort
     search_query = request.args.get("q", "").strip()
-
-    # Handle filtering by status
     status_filter = request.args.get("status", "")
-    valid_statuses = {s.value for s in UserStatus}
-
-    # Handle sorting
     sort_field = request.args.get("sort", "username")
-    sort_options = {
-        "username": IAMUser.username,
-        "role": IAMRole.name,
-        "last_active": IAMUser.last_login_at.desc(),
-        "status": IAMUser.status,
-    }
 
-    # Build query
-    query = db.select(IAMUser)
-
-    # Apply search filter
-    if search_query:
-        search_pattern = f"%{search_query}%"
-        query = query.where(
-            db.or_(
-                IAMUser.username.ilike(search_pattern),
-                IAMUser.email.ilike(search_pattern),
-            )
-        )
-
-    # Apply status filter if valid
-    if status_filter in valid_statuses:
-        query = query.where(IAMUser.status == status_filter)
-
-    # Apply sorting
-    if sort_field == "role":
-        query = query.outerjoin(IAMRole).order_by(sort_options[sort_field])
-    elif sort_field in sort_options:
-        query = query.order_by(sort_options[sort_field])
-    else:
-        query = query.order_by(IAMUser.username)
-
+    query = users_list_query(
+        search=search_query or None,
+        status=status_filter or None,
+        sort=sort_field,
+    )
     users = db.session.execute(query).scalars().all()
 
     # Handle export
