@@ -2,9 +2,6 @@
 
     <footer>
         <nav class="footer-nav">
-            {% if request.endpoint != 'main.dashboard' %}
-                {{ item("Home", icon="home", url=url_for("main.dashboard")) }}
-            {% endif %}
             {{ caller() }}
         </nav>
     </footer>
