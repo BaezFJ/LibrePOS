@@ -24,20 +24,15 @@ from .forms import (
     UserProfileForm,
     UserRegisterForm,
 )
-from .models import (
-    IAMPermission,
-    IAMPolicy,
-    IAMRole,
-    IAMUser,
-    IAMUserAddress,
-    IAMUserProfile,
-    UserStatus,
-)
+from .models import IAMUser, IAMUserAddress, IAMUserProfile, UserStatus
 from .permissions import IAMPermissions
 from .queries import (
     failed_logins_query,
+    iam_entity_counts,
     latest_login_per_user_query,
+    user_login_history_query,
     users_count_by_role,
+    users_count_by_status,
     users_list_query,
 )
 from .utils import authenticate_user, get_user_by_identifier
@@ -59,16 +54,9 @@ _iam_dashboard = "iam.dashboard"
 
 def dashboard_view():
     """Render the IAM dashboard with statistics."""
-    # User statistics
-    total_users = IAMUser.query.count()
-    active_users = IAMUser.query.filter_by(status=UserStatus.ACTIVE).count()
-    locked_users = IAMUser.query.filter_by(status=UserStatus.LOCKED).count()
-    pending_users = IAMUser.query.filter_by(status=UserStatus.PENDING).count()
-
-    # Role/Permission statistics
-    total_roles = IAMRole.query.count()
-    total_policies = IAMPolicy.query.count()
-    total_permissions = IAMPermission.query.count()
+    # User and entity statistics
+    user_stats = users_count_by_status()
+    entity_counts = iam_entity_counts()
 
     # Security statistics (failed logins in last 24h)
     yesterday = datetime.now() - timedelta(days=1)
@@ -83,14 +71,14 @@ def dashboard_view():
     context = {
         "title": "IAM Dashboard",
         # User stats
-        "total_users": total_users,
-        "active_users": active_users,
-        "locked_users": locked_users,
-        "pending_users": pending_users,
+        "total_users": user_stats["total"],
+        "active_users": user_stats["active"],
+        "locked_users": user_stats["locked"],
+        "pending_users": user_stats["pending"],
         # Role/Perm stats
-        "total_roles": total_roles,
-        "total_policies": total_policies,
-        "total_permissions": total_permissions,
+        "total_roles": entity_counts["roles"],
+        "total_policies": entity_counts["policies"],
+        "total_permissions": entity_counts["permissions"],
         # Security
         "failed_logins_24h": failed_logins,
         "recent_logins": login_pagination.items,
@@ -503,19 +491,19 @@ def delete_user_view(slug: str):
 
 @permission_required(IAMPermissions.VIEW_USERS)
 def user_login_history_view(slug: str):
-    """View user login history."""
+    """View user login history with pagination."""
     user = IAMUser.get_first_by(slug=slug)
     if not user:
         abort(404, description="User not found")
 
-    # Get login history (already ordered by login_at desc via relationship)
-    login_history = user.login_history
+    pagination = paginate_query(user_login_history_query(user.id), per_page=5)
 
     display_name = user.profile.fullname if user.profile else user.username
     context = {
         "title": f"{display_name} - Login History",
         "user": user,
-        "login_history": login_history,
+        "login_history": pagination.items,
+        "pagination": pagination,
         "back_url": url_for("iam.user", slug=slug),
         "breadcrumb": [
             {"url": url_for(_iam_dashboard), "label": "IAM"},
@@ -525,6 +513,23 @@ def user_login_history_view(slug: str):
         ],
     }
     return render_template("iam/users/user_login_history.html", **context)
+
+
+@permission_required(IAMPermissions.VIEW_USERS)
+def user_login_history_table_view(slug: str):
+    """Return paginated login history table partial for HTMX requests."""
+    user = IAMUser.get_first_by(slug=slug)
+    if not user:
+        abort(404, description="User not found")
+
+    pagination = paginate_query(user_login_history_query(user.id), per_page=5)
+
+    return render_template(
+        "iam/users/_login_history_table.html",
+        user=user,
+        login_history=pagination.items,
+        pagination=pagination,
+    )
 
 
 @permission_required(IAMPermissions.VIEW_USERS)

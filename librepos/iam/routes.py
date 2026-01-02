@@ -75,6 +75,12 @@ iam_bp.add_url_rule(
     methods=["GET"],
 )
 iam_bp.add_url_rule(
+    "/users/<slug>/login-history/table",
+    endpoint="user_login_history_table",
+    view_func=views.user_login_history_table_view,
+    methods=["GET"],
+)
+iam_bp.add_url_rule(
     "/users/<slug>/settings",
     endpoint="user_settings",
     view_func=views.user_settings_view,

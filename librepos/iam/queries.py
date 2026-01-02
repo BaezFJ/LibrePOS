@@ -12,7 +12,14 @@ from datetime import datetime
 
 from librepos.extensions import db
 
-from .models import IAMRole, IAMUser, IAMUserLoginHistory, UserStatus
+from .models import (
+    IAMPermission,
+    IAMPolicy,
+    IAMRole,
+    IAMUser,
+    IAMUserLoginHistory,
+    UserStatus,
+)
 
 
 def latest_login_per_user_query():
@@ -138,3 +145,56 @@ def users_list_query(
         query = query.order_by(IAMUser.username)
 
     return query
+
+
+def user_login_history_query(user_id: int):
+    """Query for a user's login history, ordered by most recent first.
+
+    Args:
+        user_id: The user's ID
+
+    Returns:
+        Query: SQLAlchemy query object (not executed)
+
+    Example:
+        query = user_login_history_query(user.id)
+        pagination = paginate_query(query, per_page=10)
+    """
+    return IAMUserLoginHistory.query.filter_by(user_id=user_id).order_by(
+        IAMUserLoginHistory.login_at.desc()
+    )
+
+
+def users_count_by_status() -> dict[str, int]:
+    """Get user counts grouped by status.
+
+    Returns:
+        dict: Keys are 'total', 'active', 'locked', 'pending' with int counts
+
+    Example:
+        stats = users_count_by_status()
+        print(f"Active: {stats['active']} / {stats['total']}")
+    """
+    return {
+        "total": IAMUser.query.count(),
+        "active": IAMUser.query.filter_by(status=UserStatus.ACTIVE).count(),
+        "locked": IAMUser.query.filter_by(status=UserStatus.LOCKED).count(),
+        "pending": IAMUser.query.filter_by(status=UserStatus.PENDING).count(),
+    }
+
+
+def iam_entity_counts() -> dict[str, int]:
+    """Get counts for IAM entities (roles, policies, permissions).
+
+    Returns:
+        dict: Keys are 'roles', 'policies', 'permissions' with int counts
+
+    Example:
+        counts = iam_entity_counts()
+        print(f"Total roles: {counts['roles']}")
+    """
+    return {
+        "roles": IAMRole.query.count(),
+        "policies": IAMPolicy.query.count(),
+        "permissions": IAMPermission.query.count(),
+    }

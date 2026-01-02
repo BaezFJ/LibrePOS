@@ -24,63 +24,10 @@
                 <div class="card-panel">
                     {{ Card.panel_header('history', 'Login History') }}
 
-                    {% if login_history %}
-                        <table class="striped responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>Date & Time</th>
-                                    <th>Status</th>
-                                    <th>IP Address</th>
-                                    <th>Device</th>
-                                    <th>Location</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for record in login_history %}
-                                    <tr>
-                                        <td>
-                                            {{ record.login_at.strftime('%b %d, %Y') }}<br>
-                                            <span class="grey-text" style="font-size: 0.85rem;">
-                                                {{ record.login_at.strftime('%H:%M:%S') }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {{ Card.login_status(record.is_successful) }}
-                                            {% if not record.is_successful and record.failure_reason %}
-                                                <br>
-                                                <span class="grey-text" style="font-size: 0.8rem;">
-                                                    {{ record.failure_reason }}
-                                                </span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <code style="font-size: 0.85rem;">{{ record.ip_address or 'Unknown' }}</code>
-                                        </td>
-                                        <td>
-                                            {% if record.browser or record.os %}
-                                                {{ record.browser or '' }}
-                                                {% if record.browser and record.os %}<br>{% endif %}
-                                                <span class="grey-text" style="font-size: 0.85rem;">
-                                                    {{ record.os or '' }}
-                                                </span>
-                                            {% else %}
-                                                <span class="grey-text">Unknown</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if record.city or record.country %}
-                                                {{ record.city or '' }}{% if record.city and record.country %}, {% endif %}{{ record.country or '' }}
-                                            {% else %}
-                                                <span class="grey-text">-</span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        {{ Card.empty_state('history', 'No login history available.') }}
-                    {% endif %}
+                    {# HTMX container for login history table #}
+                    <div id="history-content">
+                        {% include 'iam/users/_login_history_table.html' %}
+                    </div>
                 </div>
             </div>
 
