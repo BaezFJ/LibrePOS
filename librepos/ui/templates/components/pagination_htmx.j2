@@ -1,0 +1,78 @@
+{#
+    HTMX Pagination Component
+
+    Renders HTMX-enabled pagination controls using MaterializeCSS styling.
+    Supports URL updates and loading indicators.
+
+    Parameters:
+        pagination: Flask-SQLAlchemy Pagination object
+        endpoint: The route endpoint for fetching pages
+        target: CSS selector for the swap target (e.g., "#activity-content")
+        push_url: Whether to update browser URL (default: true)
+
+    Usage:
+        {% import "components/pagination_htmx.j2" as Pagination %}
+        {{ Pagination.render(pagination, 'iam.dashboard_activity', '#activity-content') }}
+#}
+
+{% macro render(pagination, endpoint, target, push_url=true) %}
+{% if pagination.pages > 1 %}
+<ul class="pagination center-align">
+    {# Previous button #}
+    <li class="{{ 'disabled' if not pagination.has_prev else 'waves-effect' }}">
+        {% if pagination.has_prev %}
+            <a href="{{ url_for(endpoint, page=pagination.prev_num) }}"
+               hx-get="{{ url_for(endpoint, page=pagination.prev_num) }}"
+               hx-target="{{ target }}"
+               hx-swap="innerHTML"
+               {% if push_url %}hx-push-url="true"{% endif %}
+               hx-indicator="{{ target }} .htmx-indicator">
+                <i class="material-symbols-rounded">chevron_left</i>
+            </a>
+        {% else %}
+            <a href="#!"><i class="material-symbols-rounded">chevron_left</i></a>
+        {% endif %}
+    </li>
+
+    {# Page numbers with ellipsis #}
+    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% if page_num %}
+            <li class="{{ 'active' if page_num == pagination.page else 'waves-effect' }}">
+                {% if page_num == pagination.page %}
+                    <a href="#!">{{ page_num }}</a>
+                {% else %}
+                    <a href="{{ url_for(endpoint, page=page_num) }}"
+                       hx-get="{{ url_for(endpoint, page=page_num) }}"
+                       hx-target="{{ target }}"
+                       hx-swap="innerHTML"
+                       {% if push_url %}hx-push-url="true"{% endif %}
+                       hx-indicator="{{ target }} .htmx-indicator">{{ page_num }}</a>
+                {% endif %}
+            </li>
+        {% else %}
+            <li class="disabled"><a href="#!">...</a></li>
+        {% endif %}
+    {% endfor %}
+
+    {# Next button #}
+    <li class="{{ 'disabled' if not pagination.has_next else 'waves-effect' }}">
+        {% if pagination.has_next %}
+            <a href="{{ url_for(endpoint, page=pagination.next_num) }}"
+               hx-get="{{ url_for(endpoint, page=pagination.next_num) }}"
+               hx-target="{{ target }}"
+               hx-swap="innerHTML"
+               {% if push_url %}hx-push-url="true"{% endif %}
+               hx-indicator="{{ target }} .htmx-indicator">
+                <i class="material-symbols-rounded">chevron_right</i>
+            </a>
+        {% else %}
+            <a href="#!"><i class="material-symbols-rounded">chevron_right</i></a>
+        {% endif %}
+    </li>
+</ul>
+
+<p class="center-align grey-text" style="font-size: 0.9rem;">
+    Showing {{ pagination.first }} - {{ pagination.last }} of {{ pagination.total }}
+</p>
+{% endif %}
+{% endmacro %}
