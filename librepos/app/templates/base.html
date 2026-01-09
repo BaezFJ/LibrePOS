@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    {% set default_description = "Open Source web-based point of sale system for restaurants." %}
+    <meta name="description" content="{{ head_description if head_description is defined else default_description }}">
+    <meta property="og:title" content="LibrePOS">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:image:alt" content="">
+
+    <meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- Theme color adapts to light/dark mode -->
+    <meta name="theme-color" content="#1c1a18" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f0ede6" media="(prefers-color-scheme: light)">
+
+    <title>{{ head_title if head_title is defined else business_name }}</title>
+
+    <!--HTMX-->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Material Symbols - Rounded Set -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendor/google/css/material_symbols_rounded.min.css') }}">
+
+    <!--MaterializeCSS-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/materialize/css/materialize.min.css') }}">
+    <!--MaterializeCSS overrides-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/override.min.css') }}">
+    <!--Custom Variables (Theme colors, fonts, etc.)-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.min.css') }}">
+    <!--Custom CSS-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/utilities.min.css') }}">
+
+    <!--Favicon-->
+    <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-72x72.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-96x96.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-128x128.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-144x144.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-152x152.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-192x192.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-384x384.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-512x512.png') }}" type="image/png">
+
+
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/icons/icon-144x144.png') }}"
+          type="image/png">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/icons/icon-192x192.png') }}"
+          type="image/png">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/icons/icon-512x512.png') }}"
+          type="image/png">
+
+    <!--PWA-->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    {% block styles %}{% endblock %}
+</head>
+<body>
+
+{% block header %}
+
+{% endblock %}
+
+<main id="main">
+    {% block breadcrumb %}{% endblock %}
+    {% block main %}{% endblock %}
+</main>
+
+{% block footer %}
+
+{% endblock %}
+
+</body>
+{% block scripts %}{% endblock %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <template id="message-template-{{ category }}">
+                <div class="{{ category }}">
+                    <p class="flow-text"><b>{{ category|upper }}: </b> {{ message }}</p>
+                </div>
+            </template>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<!--MaterializeCSS JavaScript-->
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/materialize/js/materialize.min.js') }}"></script>
+<!--Application JavaScript-->
+<script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/utils.min.js') }}"></script>
+<!-- Flask Message -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    new M.Toast({
+                        toastId: 'message-template-{{ category }}',
+                    });
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    });
+</script>
+<script>
+    document.body.addEventListener("htmx:configRequest", (event) => {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        event.detail.headers['X-CSRFToken'] = csrfToken;
+    });
+</script>
+</html>

@@ -1,0 +1,661 @@
+/* ==========================================================================
+   MAIN.CSS - LibrePOS Global Styles
+   ==========================================================================
+   Table of Contents:
+   1. Reset & Base Styles
+   2. Layout Structure
+   3. Modals
+   4. Sidenav
+   5. Navbar & Branding
+   6. Dropdowns (User & Apps)
+   7. Navigation (Bottom & Footer)
+   8. Components (Counter, Numpad, etc.)
+   9. Utilities
+   10. Floating Action Bar
+   11. Placeholder States
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. RESET & BASE STYLES
+   ========================================================================== */
+
+/* Smooth scrolling for users without motion sensitivity */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Hide scrollbars globally (all browsers) */
+*,
+*::before,
+*::after {
+    -webkit-scrollbar {
+        display: none !important;
+    }
+}
+
+* {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+/* Remove number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+/* ==========================================================================
+   2. LAYOUT STRUCTURE
+   ========================================================================== */
+
+html {
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    max-height: 100vh;
+    flex-direction: column;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+    overflow: hidden;
+}
+
+body::-webkit-scrollbar {
+    display: none !important;
+}
+
+main {
+    flex: 1 1 auto;
+    overflow: scroll;
+}
+
+/* Sidenav offset for desktop */
+header,
+main,
+footer {
+    padding-left: 300px;
+}
+
+footer{
+    background-color: hsl(from var(--md-sys-color-surface) h s l);
+    color: var(--md-sys-color-on-surface);
+}
+
+@media only screen and (max-width: 992px) {
+    header,
+    main,
+    footer {
+        padding-left: 0;
+    }
+}
+
+
+/* ==========================================================================
+   3. MODALS
+   ========================================================================== */
+
+.modal.small {
+    width: 35%;
+}
+
+.modal.large {
+    width: 95%;
+}
+
+
+/* ==========================================================================
+   4. SIDENAV
+   ========================================================================== */
+
+.sidenav {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidenav-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    height: var(--navbar-height);
+    line-height: var(--navbar-height);
+    overflow: hidden;
+    font-size: clamp(1rem, 2vw + 1rem, 1.25rem);
+    white-space: nowrap;
+    transition: width 0.3s ease-in-out;
+}
+
+.sidenav-content {
+    flex: 1 1 auto;
+    overflow: scroll;
+    padding-top: 1rem;
+}
+
+.sidenav-footer {
+    padding: 1rem 1.5rem;
+    text-align: center;
+    color: var(--md-sys-color-on-surface);
+    background: var(--md-sys-color-surface-variant);
+}
+
+@media only screen and (min-width: 993px) {
+    .sidenav-padding-fix {
+        padding-right: 300px;
+    }
+}
+
+
+/* ==========================================================================
+   5. NAVBAR & BRANDING
+   ========================================================================== */
+
+.brand-lockup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.avatar-nav {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    vertical-align: middle;
+}
+
+
+/* ==========================================================================
+   6. DROPDOWNS
+   ========================================================================== */
+
+/* --- User Dropdown --- */
+.dropdown-content.user-dropdown {
+    width: 260px;
+    padding-top: 8px;
+}
+
+.user-dropdown-header {
+    padding: 16px 16px 8px;
+    text-align: center;
+}
+
+.user-dropdown-avatar {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 8px;
+}
+
+.user-dropdown-name {
+    display: block;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.dropdown-content.user-dropdown > li > a {
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dropdown-content.user-dropdown .material-symbols-rounded {
+    font-size: 1.3rem;
+}
+
+/* --- Apps Dropdown --- */
+.dropdown-content.apps-dropdown {
+    border-radius: 16px;
+    padding: 12px;
+    overflow: visible;
+    min-width: 260px;
+}
+
+.apps-dropdown-inner {
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.app-tile {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.app-tile:hover {
+    background: rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.app-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.app-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.2;
+    display: block;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+
+/* ==========================================================================
+   7. NAVIGATION (Bottom & Footer)
+   ========================================================================== */
+
+/* --- Bottom Nav (Mobile) --- */
+.bottom-nav {
+    color: var(--md-sys-color-on-primary);
+    background-color: var(--md-sys-color-secondary-container);
+    width: 100%;
+    height: var(--navbar-height-mobile);
+    line-height: var(--navbar-height-mobile);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.bottom-nav-item {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1.2;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.bottom-nav-item .material-icons {
+    font-size: 20px;
+    line-height: 20px;
+    margin-bottom: 2px;
+}
+
+.bottom-nav-item.active {
+    color: #69f0ae;
+}
+
+@media (min-width: 993px) {
+    .bottom-nav {
+        display: none;
+    }
+}
+
+/* --- Footer Nav (Desktop) --- */
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: var(--navbar-height);
+    padding: 0;
+}
+
+.footer-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex-grow: 1;
+    height: 100%;
+    color: var(--md-sys-color-on-surface);
+}
+
+.footer-nav-item i {
+    font-size: 24px;
+    margin-bottom: 2px;
+}
+
+.footer-nav-item span {
+    font-size: 12px;
+    color: var(--md-sys-color-on-surface);
+}
+
+
+/* ==========================================================================
+   8. COMPONENTS
+   ========================================================================== */
+
+/* --- Counter Badge --- */
+span.counter {
+    color: color-mix(in srgb, var(--md-sys-color-on-background) 70%, black 30%);
+}
+
+span.counter::before {
+    content: "(";
+}
+
+span.counter::after {
+    content: ")";
+}
+
+/* --- Numpad (POS) --- */
+.numpad-btn {
+    width: 100%;
+    height: 64px;
+    font-size: 1.5rem;
+}
+
+#keypadQuantity {
+    height: 5rem;
+    font-size: 4rem;
+    text-align: center;
+}
+
+/* --- Profile Image --- */
+.profile-image-container:hover .image-overlay {
+    opacity: 1 !important;
+}
+
+
+/* ==========================================================================
+   9. UTILITIES
+   ========================================================================== */
+
+.icon-bottom {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+
+/* ==========================================================================
+   10. FLOATING ACTION BAR
+   ========================================================================== */
+
+/* --- Container --- */
+.action-bar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    padding: 0 1rem;
+}
+
+/* --- Inner pill container --- */
+.action-bar-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--md-sys-color-surface);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 9999px;
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+    pointer-events: auto;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* --- Action items --- */
+.action-bar-item {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.125rem;
+    padding: 0.5rem 0.75rem;
+    min-width: 3.5rem;
+    border-radius: 1.5rem;
+    background: transparent;
+    color: var(--md-sys-color-on-surface);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+}
+
+.action-bar-item:hover,
+.action-bar-item:focus {
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-primary);
+}
+
+.action-bar-item:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+}
+
+.action-bar-item:active {
+    background-color: var(--md-sys-color-primary-container);
+}
+
+/* --- Icon styling --- */
+.action-bar-item .material-symbols-rounded {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+/* --- Label styling --- */
+.action-bar-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+/* --- Divider --- */
+.action-bar-divider {
+    width: 1px;
+    height: 2rem;
+    background-color: var(--md-sys-color-outline-variant);
+    margin: 0 0.25rem;
+}
+
+/* --- Active/selected state --- */
+.action-bar-item.active {
+    color: var(--md-sys-color-primary);
+    background-color: var(--md-sys-color-primary-container);
+}
+
+/* --- Dropdowns open upward from action bar --- */
+.action-bar .dropdown-content {
+    bottom: 100%;
+    top: auto !important;
+    margin-bottom: 0.5rem;
+    transform-origin: bottom center;
+}
+
+/* --- Responsive: Mobile --- */
+@media only screen and (max-width: 600px) {
+    .action-bar {
+        bottom: 1rem;
+        left: 0;
+        right: 0;
+        transform: none;
+        padding: 0 0.75rem;
+    }
+
+    .action-bar-inner {
+        width: 100%;
+        justify-content: space-around;
+        padding: 0.375rem 0.5rem;
+    }
+
+    .action-bar-item {
+        flex: 1;
+        min-width: unset;
+        padding: 0.375rem 0.25rem;
+    }
+
+    .action-bar-label {
+        font-size: 0.625rem;
+    }
+}
+
+/* --- Desktop: Adjust for sidenav offset --- */
+@media only screen and (min-width: 993px) {
+    .action-bar {
+        padding-left: 300px;
+    }
+}
+
+/* --- Animation on load --- */
+@media (prefers-reduced-motion: no-preference) {
+    .action-bar-inner {
+        animation: actionBarSlideUp 0.3s ease-out;
+    }
+
+    @keyframes actionBarSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(1rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+
+/* ==========================================================================
+   11. PLACEHOLDER STATES
+   ========================================================================== */
+
+/* --- Full Page Placeholder --- */
+.placeholder-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 2rem;
+}
+
+.placeholder-content {
+    text-align: center;
+    max-width: 480px;
+}
+
+.placeholder-icon {
+    margin-bottom: 1.5rem;
+}
+
+.placeholder-icon .material-symbols-rounded {
+    font-size: 5rem;
+    color: var(--md-sys-color-outline);
+    opacity: 0.6;
+}
+
+.placeholder-title {
+    margin-bottom: 0.75rem;
+    color: var(--md-sys-color-on-surface);
+}
+
+.placeholder-description {
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.placeholder-actions {
+    margin-top: 1.5rem;
+}
+
+/* --- Card Placeholder --- */
+.placeholder-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: var(--md-sys-color-surface-variant);
+    border-radius: 12px;
+    border: 1px dashed var(--md-sys-color-outline-variant);
+}
+
+.placeholder-card-icon .material-symbols-rounded {
+    font-size: 3rem;
+    color: var(--md-sys-color-outline);
+    opacity: 0.6;
+}
+
+.placeholder-card-title {
+    margin: 1rem 0 0.5rem;
+    color: var(--md-sys-color-on-surface);
+}
+
+.placeholder-card-description {
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0;
+    max-width: 320px;
+}
+
+/* --- Empty State Placeholder --- */
+.placeholder-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.placeholder-empty-icon .material-symbols-rounded {
+    font-size: 4rem;
+    color: var(--md-sys-color-outline);
+    opacity: 0.5;
+}
+
+.placeholder-empty-title {
+    margin: 1rem 0 0.5rem;
+    color: var(--md-sys-color-on-surface);
+}
+
+.placeholder-empty-description {
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 1.5rem;
+    max-width: 360px;
+}

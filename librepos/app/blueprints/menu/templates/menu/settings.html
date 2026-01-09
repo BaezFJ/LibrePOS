@@ -1,0 +1,12 @@
+{% extends 'menu/_base.html' %}
+
+{% import 'macros/placeholder.html' as Placeholder %}
+
+{% block main %}
+    {{ Placeholder.page(
+        title="Menu Settings",
+        description="The menu settings page is under development. You'll soon be able to configure menu display options, default values, and other preferences.",
+        icon="settings",
+        back_url=url_for('menu.index')
+    ) }}
+{% endblock %}

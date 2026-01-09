@@ -1,0 +1,64 @@
+{% import "macros/icon.html" as Icon %}
+
+{% macro render(title, id) %}
+    <aside id="{{ id if id is defined else "mainMenu" }}" class="sidenav sidenav-fixed">
+        <div class="sidenav-header navbar">
+            <span class="brand-logo">{{ sidenav_title if sidenav_title is defined else "LibrePOS" }}</span>
+        </div>
+        <div class="sidenav-content">
+            {{ caller() }}
+        </div>
+        {% if app_version is defined %}
+            <footer class="sidenav-footer">
+                <p class="my-0">Version {{ app_version }}</p>
+            </footer>
+        {% endif %}
+    </aside>
+{% endmacro %}
+
+{% macro item(label, icon, url, active=False) %}
+    {% set is_active = active or (url is defined and request.path == url) %}
+    <li {{ "class=active" if is_active }}>
+        <a href="{{ url if url is defined else "" }}"
+           class="waves-effect waves-light">
+            {% if icon is defined %}
+                {{ Icon.render(icon) }}
+            {% endif %}
+            {% if label is defined %}
+                <span>&nbsp;{{ label }}</span>
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}
+
+{% macro collapsible(text, icon) %}
+    <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+            <li>
+                <a class="collapsible-header">
+                    {% if icon is defined %}
+                        {{ Icon.render(icon, "left") }}
+                    {% endif %}
+                    {{ text if text is defined }}
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {{ caller() }}
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </li>
+{% endmacro %}
+
+{% macro divider() %}
+    <li>
+        <div class="divider"></div>
+    </li>
+{% endmacro %}
+
+{% macro subheader(label) %}
+    {% if label is defined %}
+        <li><a class="subheader">{{ label }}</a></li>
+    {% endif %}
+{% endmacro %}

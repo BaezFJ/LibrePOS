@@ -1,0 +1,380 @@
+/* Menu Item Card */
+.menu-item-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s ease;
+}
+
+.menu-item-card:hover {
+    transform: translateY(-2px);
+}
+
+.menu-item-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.menu-item-card .category-name {
+    font-size: 0.85rem;
+    flex: 1;
+    margin-right: 8px;
+}
+
+.menu-item-card .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.menu-item-card .status-dot.green {
+    background-color: #4caf50;
+}
+
+.menu-item-card .status-dot.grey {
+    background-color: #9e9e9e;
+}
+
+.menu-item-card .status-dot.red {
+    background-color: #f44336;
+}
+
+.menu-item-card .status-dot.orange {
+    background-color: #ff9800;
+}
+
+.menu-item-card .status-dot.yellow {
+    background-color: #ffeb3b;
+}
+
+.menu-item-card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.menu-item-card .description {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.menu-item-card .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.menu-item-card .price {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.menu-item-card .sku {
+    font-family: monospace;
+    font-size: 0.75rem;
+}
+
+/* Category Card */
+.category-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+}
+
+.category-card .card-image {
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.category-card .card-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
+}
+
+.category-card .card-content {
+    position: relative;
+}
+
+.category-card .status-dot {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.category-card .status-dot.green {
+    background-color: #4caf50;
+}
+
+.category-card .status-dot.red {
+    background-color: #f44336;
+}
+
+.category-card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.category-card .parent-name {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.category-card .description {
+    font-size: 0.85rem;
+}
+
+/* Dropdown Headers */
+.dropdown-content .dropdown-header {
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--md-sys-color-on-surface-variant);
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Category Detail Card
+   ========================================================================== */
+
+.category-detail-card {
+    overflow: hidden;
+}
+
+.category-detail-card .card-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.category-detail-card .card-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+}
+
+.category-detail-card .status-dot {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.category-detail-card .status-dot.green {
+    background-color: #4caf50;
+}
+
+.category-detail-card .status-dot.red {
+    background-color: #f44336;
+}
+
+.category-detail-card .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.category-detail-card .category-status {
+    margin-bottom: 1.5rem;
+}
+
+.category-detail-card .category-description,
+.category-detail-card .category-parent,
+.category-detail-card .category-meta,
+.category-detail-card .category-children {
+    margin-bottom: 1.5rem;
+}
+
+.category-detail-card .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.category-detail-card .chip {
+    margin: 0;
+}
+
+.category-detail-card .chip.hoverable:hover {
+    background-color: var(--md-sys-color-primary-container);
+}
+
+.category-detail-card .collection {
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0;
+}
+
+.category-detail-card .collection-item {
+    display: flex;
+    align-items: center;
+}
+
+.category-detail-card .collection-item .status-dot {
+    position: static;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border: none;
+    box-shadow: none;
+}
+
+/* Screen reader only text (accessibility) */
+.category-detail-card .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Definition list styling for metadata */
+.category-detail-card dl {
+    margin: 0;
+}
+
+.category-detail-card dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.category-detail-card dd {
+    margin: 0;
+}
+
+/* Heading resets for section labels */
+.category-detail-card h1.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.category-detail-card h2.section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.5rem 0;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+/* ==========================================================================
+   Category Detail Page - Multi-Card Layout
+   ========================================================================== */
+
+/* Card spacing for stacked layout */
+.category-detail-card,
+.category-settings-card,
+.category-children-card {
+    margin-bottom: 1rem;
+}
+
+/* Card panel title with icon */
+.card-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: var(--md-sys-color-on-surface);
+}
+
+.card-panel-title .material-symbols-rounded {
+    font-size: 1.25rem;
+    color: var(--md-sys-color-primary);
+}
+
+/* ==========================================================================
+   Category Settings Card
+   ========================================================================== */
+
+.category-settings-card .settings-grid {
+    margin: 0;
+}
+
+.category-settings-card .settings-grid dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.category-settings-card .settings-grid dd {
+    margin: 0;
+}
+
+.category-settings-card .chip {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Category Children Card
+   ========================================================================== */
+
+.category-children-card .collection {
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0;
+}
+
+.category-children-card .collection-item {
+    display: flex;
+    align-items: center;
+}
+
+.category-children-card .collection-item .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+
+.category-children-card .collection-item .status-dot.green {
+    background-color: #4caf50;
+}
+
+.category-children-card .collection-item .status-dot.red {
+    background-color: #f44336;
+}

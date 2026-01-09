@@ -22,7 +22,7 @@ LibrePOS is a **free and open-source** web-based Point of Sale system designed f
 
 ### In Progress
 
-See [POS_FEATURES.md](POS_FEATURES.md) for the complete feature roadmap, including:
+See [docs/roadmap.md](docs/roadmap.md) for the complete feature roadmap, including:
 - Order Management
 - Menu Management
 - Table Management
@@ -123,9 +123,9 @@ librepos/
 
 ## Configuration
 
-LibrePOS uses environment variables for configuration. See [ENVIRONMENT_CONFIGURATION.md](ENVIRONMENT_CONFIGURATION.md) for details.
+LibrePOS uses environment variables for configuration. See [docs/guides/environment.md](docs/guides/environment.md) for details.
 
-For database setup with PostgreSQL, MySQL, or other backends, see [DATABASE_CONFIGURATION.md](DATABASE_CONFIGURATION.md).
+For database setup with PostgreSQL, MySQL, or other backends, see [docs/guides/database.md](docs/guides/database.md).
 
 ## Contributing
 

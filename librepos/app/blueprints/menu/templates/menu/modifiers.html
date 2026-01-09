@@ -1,0 +1,12 @@
+{% extends 'menu/_base.html' %}
+
+{% import 'macros/placeholder.html' as Placeholder %}
+
+{% block main %}
+    {{ Placeholder.page(
+        title="Modifiers",
+        description="The modifiers management page is under development. You'll soon be able to create and manage item modifiers like extra toppings, sides, and customizations.",
+        icon="tune",
+        back_url=url_for('menu.index')
+    ) }}
+{% endblock %}

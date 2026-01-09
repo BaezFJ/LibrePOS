@@ -1,0 +1,179 @@
+{# ---------- Modal Component ---------- #}
+{# Usage:
+   {% import "components/modal.j2" as Modal %}
+
+   {{ Modal.trigger("my-modal", label="Open Modal", icon="add") }}
+
+   {% call Modal.render("my-modal", title="Modal Title") %}
+       <p>Modal content here</p>
+   {% endcall %}
+#}
+
+{% macro trigger(modal_id, label=None, icon=None, _class='') %}
+    <button class="btn{{ ' '+_class if _class is defined else '' }} waves-effect waves-light" popovertarget="{{ modal_id }}">
+        {% if icon is defined and label is defined %}
+            <i class="material-symbols-rounded">{{ icon }}</i>
+            <span class="hide-on-med-and-down">&nbsp;{{ label }}</span>
+        {% elif icon is defined %}
+            <i class="material-symbols-rounded">{{ icon }}</i>
+        {% else %}
+            <span>{{ label if label is defined }}</span>
+        {% endif %}
+    </button>
+{% endmacro %}
+
+
+{% macro render(modal_id, title=None, _class='') %}
+    <div id="{{ modal_id }}" class="modal {{ _class if _class is defined }}" popover>
+        {% if title %}
+            <div class="modal-header flex-row space-between">
+                <h5>{{ title }}</h5>
+                <button class="btn-flat" popovertarget="{{ modal_id }}">
+                    <i class="material-symbols-rounded">close</i>
+                </button>
+            </div>
+        {% endif %}
+        <div class="modal-content">
+            {{ caller() }}
+        </div>
+        <div class="modal-footer">
+            <button class="btn-flat waves-effect" popovertarget="{{ modal_id }}">Cancel</button>
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro form_modal(modal_id, title, action='', method='post', _class='', submit_text=None, enctype=None) %}
+    <div id="{{ modal_id }}Modal" class="modal {{ _class if _class is defined }}" popover>
+        <form id="{{ modal_id }}Form" action="{{ action }}" method="{{ method }}"{% if enctype %}
+              enctype="{{ enctype }}"{% endif %}>
+            {% if title %}
+                <div class="modal-header flex-row space-between">
+                    <h5>{{ title }}</h5>
+                    <button type="button" class="btn-flat" popovertarget="{{ modal_id }}Modal">
+                        <i class="material-symbols-rounded">close</i>
+                    </button>
+                </div>
+            {% endif %}
+            <div class="modal-content">
+                <div class="my-4">
+                    {{ caller() }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn text waves-effect" popovertarget="{{ modal_id }}Modal">
+                    <i class="material-symbols-rounded">cancel</i>
+                    <span>&nbsp;Cancel</span>
+                </button>
+                <button type="submit" form="{{ modal_id }}Form" class="btn filled waves-effect waves-light">
+                    <i class="material-symbols-rounded">save</i>
+                    <span>&nbsp;{{ submit_text if submit_text else 'Save' }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+{% endmacro %}
+
+
+{% macro confirmation(
+    modal_id,
+    title,
+    action,
+    message,
+    warning=none,
+    confirm_text='Confirm',
+    confirm_icon='check',
+    confirm_color='',
+    require_password=false,
+    method='post'
+) %}
+    {#
+    Renders a confirmation modal with optional password verification.
+
+    Args:
+        modal_id: Unique ID for the modal (without 'Modal' suffix)
+        title: Modal header title
+        action: Form action URL
+        message: Main confirmation message (HTML allowed)
+        warning: Optional warning text (displayed in grey or red)
+        confirm_text: Text for confirm button
+        confirm_icon: Icon for confirm button
+        confirm_color: Button color class (e.g., 'red', 'green')
+        require_password: Whether to show password confirmation field
+        method: Form method (default: post)
+#}
+    <div id="{{ modal_id }}Modal" class="modal" popover>
+        <form action="{{ action }}" method="{{ method }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal-header">
+                <h5>{{ title }}</h5>
+            </div>
+            <div class="modal-content">
+                <p>{{ message|safe }}</p>
+                {% if warning %}
+                    <p class="{% if confirm_color == 'red' %}red-text{% else %}grey-text{% endif %}">{{ warning }}</p>
+                {% endif %}
+                {% if require_password %}
+                    <div class="input-field">
+                        <input type="password" name="password" id="{{ modal_id }}-password" required>
+                        <label for="{{ modal_id }}-password">Confirm your password</label>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn text waves-effect" popovertarget="{{ modal_id }}Modal">
+                    <i class="material-symbols-rounded">cancel</i>
+                    <span>&nbsp;Cancel</span>
+                </button>
+                <button type="submit" class="btn filled waves-effect waves-light {{ confirm_color }}">
+                    <i class="material-symbols-rounded">{{ confirm_icon }}</i>
+                    <span>&nbsp;{{ confirm_text }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+{% endmacro %}
+
+
+{% macro search(modal_id, action, placeholder='Search...', param='q', clear_url=none) %}
+    {#
+    Renders a search modal with input field and clear/search buttons.
+
+    Args:
+        modal_id: Unique ID for the modal (without 'Modal' suffix)
+        action: Form action URL
+        placeholder: Input placeholder text
+        param: Query parameter name (default: 'q')
+        clear_url: URL for clear button (defaults to action)
+
+    Usage:
+        {{ Modal.search('search', url_for('iam.users'), placeholder='Search users...') }}
+#}
+    <div id="{{ modal_id }}Modal" class="modal small" popover>
+        <form action="{{ action }}" method="get">
+            <div class="modal-header">
+                <h5>Search</h5>
+            </div>
+            <div class="modal-content">
+                <div class="input-field">
+                    <i class="material-symbols-rounded prefix">search</i>
+                    <input type="text" id="{{ modal_id }}-input" name="{{ param }}"
+                           value="{{ request.args.get(param, '') }}"
+                           placeholder="{{ placeholder }}"
+                           autofocus>
+                    <label for="{{ modal_id }}-input" class="sr-only">Search</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{{ clear_url or action }}" class="btn text waves-effect">
+                    <i class="material-symbols-rounded">clear</i>
+                    <span>&nbsp;Clear</span>
+                </a>
+                <button type="submit" class="btn filled waves-effect waves-light">
+                    <i class="material-symbols-rounded">search</i>
+                    <span>&nbsp;Search</span>
+                </button>
+            </div>
+        </form>
+    </div>
+{% endmacro %}

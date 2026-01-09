@@ -1,0 +1,44 @@
+{% macro render(id, class_=None) %}
+    <!-- Dropdown Structure -->
+    <ul id="{{ id if id is defined }}" class="dropdown-content {{ class_ if class_ is defined }}">
+        {{ caller() }}
+    </ul>
+{% endmacro %}
+
+{% macro tile(icon, label, url) %}
+    <a href="{{ url if url is defined }}" class="app-tile">
+        <span class="material-symbols-rounded app-icon">{{ icon if icon is defined }}</span>
+        {% if label is defined %}
+            <span class="app-label">{{ label }}</span>
+        {% endif %}
+    </a>
+{% endmacro %}
+
+
+{% macro trigger(id, icon, aria_label) %}
+    {% set aria_label = aria_label if aria_label is defined else id|replace("-", " ") %}
+    <a href="" class="btn-flat waves-effect dropdown-trigger"
+       data-target="{{ id if id is defined }}" aria-label="{{ aria_label }}">
+        <i class="material-symbols-rounded">{{ icon if icon is defined else "more_vert" }}</i>
+    <span class="hide-on-med-and-down">&nbsp;{{ aria_label }}</span>
+    </a>
+{% endmacro %}
+
+
+{% macro item(label, url, icon, badge, _class) %}
+    <li>
+        <a href="{{ url if url is defined }}" class="waves-effect waves-light{{ ' '+_class if _class is defined }}">
+            {% if icon is defined %}
+                <i class="material-symbols-rounded">{{ icon }}</i>
+            {% endif %}
+            {{ label if label is defined }}
+            {% if badge is defined %}
+                <span class="new badge">{{ badge }}</span>
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}
+
+{% macro divider() %}
+    <li class="divider" tabindex="-1"></li>
+{% endmacro %}
