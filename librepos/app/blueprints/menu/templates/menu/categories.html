@@ -1,6 +1,7 @@
 {% extends 'menu/_base.html' %}
 
 {% import 'macros/button.html' as Button %}
+{% import 'macros/modals.html' as Modal %}
 {% import 'components/_dropdown.html' as Dropdown %}
 
 {% block main %}
@@ -14,23 +15,9 @@
                     </div>
                     <p class="mt-0">Manage menu categories here.</p>
                 </div>
-                <input type="hidden" name="status" value="{{ current_status }}">
-                <input type="hidden" name="type" value="{{ current_type }}">
-                <input type="hidden" name="sort" value="{{ current_sort }}">
-
                 <div class="flex-row space-between">
-                    <div class="input-field inline" style="margin: 0;">
-                        <i class="material-symbols-rounded prefix">search</i>
-                        <label for="search-categories"></label><input type="search"
-                                                                      id="search-categories"
-                                                                      name="q"
-                                                                      value="{{ current_search }}"
-                                                                      placeholder="Search categories..."
-                                                                      hx-get="{{ url_for('menu.categories') }}"
-                                                                      hx-trigger="input changed delay:300ms, search"
-                                                                      hx-target="#categories-tbody"
-                                                                      hx-include="[name='status'],[name='type'],[name='sort']"
-                                                                      hx-push-url="true">
+                    <div>
+                        {{ Modal.trigger('searchModal', 'Search', 'search', 'elevated') }}
                     </div>
                     <div>
                         {{ Dropdown.trigger('filter-dropdown', icon='filter_list', label='Filter') }}
@@ -59,17 +46,56 @@
                     <thead>
                     <tr>
                         <th>Category Name</th>
+                        <th>Description</th>
                         <th>Items</th>
                         <th>Order</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody id="categories-tbody">
-                        {% include 'menu/_categories_table.html' %}
+                    <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.name }}</td>
+                            <td>
+                                {% if category.description %}
+                                    {{ category.description }}
+                                {% else %}
+                                    <span class="grey-text">No description provided.</span>
+                                {% endif %}
+                            </td>
+                            <td>N/A</td>
+                            <td>{{ category.display_order }}</td>
+                            <td>
+                                {% if category.is_active %}
+                                    <span class="green-text">Active</span>
+                                {% else %}
+                                    <span class="red-text">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% set category_dropdown = category.id|string + '-dropdown' %}
+                                {{ Dropdown.trigger(category_dropdown, label='More') }}
+                                {% call Dropdown.render(category_dropdown) %}
+                                    {{ Dropdown.item('Edit') }}
+                                    {{ Dropdown.item('Toggle Visibility') }}
+                                    {{ Dropdown.item('Reorder') }}
+                                    {{ Dropdown.item('Archive') }}
+                                    {{ Dropdown.item('Delete') }}
+                                {% endcall %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
                     </tbody>
                 </table>
             </div>
         </div>
     </section>
+
+    {{ Modal.search(
+        modal_id='search',
+        action=url_for('menu.categories', status=current_status, type=current_type, sort=current_sort),
+        placeholder='Search categories...'
+    ) }}
 {% endblock %}

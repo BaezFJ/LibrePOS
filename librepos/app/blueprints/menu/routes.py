@@ -57,24 +57,15 @@ def categories():
     _categories = query.all()
 
     context = {
+        "head_title": "Menu Categories | LibrePOS",
+        "nav_title": "Categories",
         "categories": _categories,
         "current_status": status,
         "current_type": type_filter,
         "current_sort": sort_by,
         "current_search": search,
+        **sidenav_title,
     }
-
-    # Return partial template for HTMX requests
-    if request.headers.get("HX-Request"):
-        return render_template("menu/_categories_table.html", **context)
-
-    context.update(
-        {
-            "head_title": "Menu Categories | LibrePOS",
-            "nav_title": "Categories",
-            **sidenav_title,
-        }
-    )
     return render_template("menu/categories.html", **context)
 
 
