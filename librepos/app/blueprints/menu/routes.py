@@ -1,8 +1,9 @@
 """Route handlers for menu blueprint."""
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import current_app, flash, redirect, render_template, request, url_for
 
 from . import bp
+from .forms import CategoryForm
 from .models import Category
 from .services import CategoryService
 
@@ -43,9 +44,27 @@ def item_detail(item_id):
     return render_template("menu/item_detail.html", **context)
 
 
-@bp.route("/categories")
+@bp.route("/categories", methods=["GET", "POST"])
 def categories():
     """List view for menu categories."""
+    form = CategoryForm()
+    form.parent_id.choices = CategoryService.get_parent_choices()  # pyright: ignore[reportAttributeAccessIssue]
+
+    if form.validate_on_submit():
+        CategoryService.create(
+            {
+                "name": form.name.data,
+                "description": form.description.data,
+                "parent_id": form.parent_id.data if form.parent_id.data else None,
+                "display_order": form.display_order.data,
+                "is_active": form.is_active.data,
+            },
+            image_file=form.image.data,
+            static_folder=current_app.static_folder,
+        )
+        flash("Category created successfully.", "success")
+        return redirect(url_for("menu.categories"))
+
     # Read filter/sort/search query parameters
     status = request.args.get("status", "all")
     type_filter = request.args.get("type", "all")
@@ -60,6 +79,7 @@ def categories():
         "head_title": "Menu Categories | LibrePOS",
         "nav_title": "Categories",
         "categories": _categories,
+        "form": form,
         "current_status": status,
         "current_type": type_filter,
         "current_sort": sort_by,

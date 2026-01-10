@@ -19,6 +19,31 @@ class MenuForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
+class AddCategoryForm(FlaskForm):
+    """Form for adding categories."""
+
+    parent_id = SelectField(
+        "Parent Category",
+        coerce=int,
+        validators=[Optional()],
+    )
+    name = StringField(
+        "Category Name",
+        validators=[DataRequired(), Length(max=100)],
+        render_kw={"placeholder": "Enter category name..."},
+    )
+    description = TextAreaField(
+        "Description",
+        validators=[Optional(), Length(max=500)],
+        render_kw={"placeholder": "Enter description (optional)..."},
+    )
+    image_url = FileField(
+        "Image",
+        validators=[Optional()],
+        render_kw={"placeholder": "Enter image (optional)..."},
+    )
+
+
 class CategoryForm(FlaskForm):
     """Form for creating/editing categories."""
 

@@ -141,7 +141,7 @@
         'deleteCategory',
         title='Delete Category',
         action=url_for('menu.category_delete', cat_id=category.id),
-        message='Are you sure you want to delete <strong>' ~ category.name ~ '</strong>?',
+        message='Are you sure you want to delete <strong>' ~ (category.name|e) ~ '</strong>?',
         warning='This cannot be undone.' ~ (' ' ~ category.children|length ~ ' subcategories will be promoted to top-level.' if category.children else ''),
         confirm_text='Delete',
         confirm_icon='delete',

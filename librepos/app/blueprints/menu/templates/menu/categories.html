@@ -1,6 +1,7 @@
 {% extends 'menu/_base.html' %}
 
 {% import 'macros/button.html' as Button %}
+{% import 'macros/forms.html' as Forms %}
 {% import 'macros/modals.html' as Modal %}
 {% import 'components/_dropdown.html' as Dropdown %}
 
@@ -11,7 +12,7 @@
                 <div class="card-header">
                     <div class="flex-row space-between">
                         <h5>Categories <span class="counter">{{ categories|count if categories else '0' }}</span></h5>
-                        {{ Button.render('Add Category', type='filled', icon='add') }}
+                        {{ Modal.trigger('addCategoryModal', 'Add Category', 'add', 'filled') }}
                     </div>
                     <p class="mt-0">Manage menu categories here.</p>
                 </div>
@@ -98,4 +99,14 @@
         action=url_for('menu.categories', status=current_status, type=current_type, sort=current_sort),
         placeholder='Search categories...'
     ) }}
+
+    {% call Modal.form_modal(
+        modal_id='addCategory',
+        title='Add Category',
+        action=url_for('menu.categories'),
+        submit_text='Create Category',
+        enctype='multipart/form-data'
+    ) %}
+        {{ Forms.render(form, {'name': 'm12', 'description': 'm12', 'parent_id': 'm6', 'display_order': 'm6', 'is_active': 'm12'}) }}
+    {% endcall %}
 {% endblock %}

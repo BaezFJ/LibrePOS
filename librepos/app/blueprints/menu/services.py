@@ -1,5 +1,7 @@
 """Business logic for menu blueprint."""
 
+from collections.abc import Sequence
+
 from sqlalchemy import or_
 
 from librepos.app.extensions import db
@@ -12,7 +14,7 @@ class CategoryService:
     """Service class for category operations."""
 
     @staticmethod
-    def get_parent_choices():
+    def get_parent_choices() -> Sequence[tuple[int, str]]:
         """Return choices for parent category dropdown."""
         categories = Category.query.order_by(Category.name).all()
         return [(0, "None (Top Level)")] + [(c.id, c.name) for c in categories]
