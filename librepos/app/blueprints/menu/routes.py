@@ -55,7 +55,7 @@ def categories():
             {
                 "name": form.name.data,
                 "description": form.description.data,
-                "parent_id": form.parent_id.data if form.parent_id.data else None,
+                "parent_id": form.parent_id.data,
                 "display_order": form.display_order.data,
                 "is_active": form.is_active.data,
             },
