@@ -196,7 +196,7 @@ Footer navigation bar for page actions.
 
 ### Dropdown (`components/_dropdown.html`)
 
-Dropdown menus for actions and app grids.
+Dropdown menus for actions, navigation, and app grids.
 
 ```jinja
 {% import "components/_dropdown.html" as Dropdown %}
@@ -206,38 +206,69 @@ Dropdown menus for actions and app grids.
 
 | Macro | Parameters | Description |
 |-------|------------|-------------|
-| `render(id, class_)` | `id`, `class_=None` | Dropdown container (use with `{% call %}`) |
-| `trigger(id, icon, aria_label)` | `id`, `icon`, `aria_label` | Trigger button |
-| `item(label, url, icon, badge, _class)` | `label`, `url`, `icon`, `badge`, `_class` | Menu item |
-| `tile(icon, label, url)` | `icon`, `label`, `url` | App grid tile |
+| `render(id, class_)` | `id`, `class_=''` | Dropdown container (use with `{% call %}`) |
+| `trigger(id, icon, label, class_)` | `id`, `icon='more_vert'`, `label=None`, `class_=''` | Trigger button |
+| `item(label, url, icon, badge, disabled, active, class_)` | See below | Menu item |
+| `header(text, class_)` | `text`, `class_=''` | Section header |
+| `tile(icon, label, url, class_)` | `icon`, `label=None`, `url='#'`, `class_=''` | App grid tile |
 | `divider()` | - | Horizontal divider |
 
-#### Example: Actions Menu
+#### `item()` Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | str | - | Menu item text |
+| `url` | str | `'#'` | Destination URL |
+| `icon` | str | `None` | Material Symbols icon |
+| `badge` | int | `None` | Notification count |
+| `disabled` | bool | `False` | Disabled state |
+| `active` | bool | `False` | Active/selected state |
+| `class_` | str | `''` | Additional CSS classes |
+
+#### Example: Basic Dropdown
 
 ```jinja
-{{ Dropdown.trigger("actions-menu", "more_vert", "Actions") }}
+{{ Dropdown.trigger("actions-menu") }}
 
 {% call Dropdown.render("actions-menu") %}
-    {{ Dropdown.item("Edit", url_for('menu.edit', id=item.id), "edit") }}
-    {{ Dropdown.item("Duplicate", url_for('menu.duplicate', id=item.id), "content_copy") }}
+    {{ Dropdown.item("Edit", url_for('menu.edit', id=item.id), icon="edit") }}
+    {{ Dropdown.item("Duplicate", url_for('menu.duplicate', id=item.id), icon="content_copy") }}
     {{ Dropdown.divider() }}
-    {{ Dropdown.item("Delete", url_for('menu.delete', id=item.id), "delete", _class="red-text") }}
+    {{ Dropdown.item("Delete", url_for('menu.delete', id=item.id), icon="delete", class_="red-text") }}
 {% endcall %}
+```
+
+#### Example: With Sections
+
+```jinja
+{{ Dropdown.trigger("user-menu", icon="person", label="Account") }}
+
+{% call Dropdown.render("user-menu") %}
+    {{ Dropdown.header("Account") }}
+    {{ Dropdown.item("Profile", url_for('staff.profile'), icon="person") }}
+    {{ Dropdown.item("Settings", url_for('staff.settings'), icon="settings") }}
+    {{ Dropdown.divider() }}
+    {{ Dropdown.header("Notifications") }}
+    {{ Dropdown.item("Messages", url_for('staff.messages'), icon="mail", badge=3) }}
+    {{ Dropdown.divider() }}
+    {{ Dropdown.item("Logout", url_for('auth.logout'), icon="logout", class_="red-text") }}
+{% endcall %}
+```
+
+#### Example: Item States
+
+```jinja
+{{ Dropdown.item("Current Page", "#", active=True) }}
+{{ Dropdown.item("Unavailable", "#", disabled=True) }}
 ```
 
 #### Example: Apps Grid
 
 ```jinja
-{% call Dropdown.render("apps-dropdown", "apps-dropdown") %}
-    <li>
-        <div class="apps-dropdown-inner">
-            <div class="apps-grid">
-                {{ Dropdown.tile("point_of_sale", "POS", url_for('orders.pos')) }}
-                {{ Dropdown.tile("restaurant_menu", "Menu", url_for('menu.index')) }}
-                {{ Dropdown.tile("groups", "Staff", url_for('staff.index')) }}
-            </div>
-        </div>
-    </li>
+{% call Dropdown.render("apps-dropdown", class_="apps-dropdown") %}
+    {{ Dropdown.tile("point_of_sale", "POS", url_for('orders.pos')) }}
+    {{ Dropdown.tile("restaurant_menu", "Menu", url_for('menu.index')) }}
+    {{ Dropdown.tile("groups", "Staff", url_for('staff.index')) }}
 {% endcall %}
 ```
 
@@ -426,6 +457,110 @@ MaterializeCSS badge components for status indicators and notifications.
 {# Generic with options #}
 {{ Badge.render("Sale", color="red") }}
 {{ Badge.render("99+", new=True, color="blue") }}
+```
+
+---
+
+### Button (`macros/button.html`)
+
+MaterializeCSS button components with support for links and action buttons.
+
+```jinja
+{% import "macros/button.html" as Button %}
+```
+
+#### Button Types
+
+| Type | Description |
+|------|-------------|
+| `filled` | Primary actions (solid background) - default |
+| `tonal` | Secondary actions (tonal background) |
+| `outlined` | Bordered with transparent background |
+| `elevated` | Raised with shadow |
+| `text` | Text-only, no background |
+
+#### Base Macros
+
+| Macro | Element | Description |
+|-------|---------|-------------|
+| `render(text, url, type, icon, ...)` | `<a>` | Link button for navigation |
+| `button(text, type, button_type, icon, ...)` | `<button>` | Action button for forms |
+
+#### Common Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `text` | str | - | Button label text |
+| `icon` | str | `None` | Material Symbols icon name |
+| `icon_position` | str | `'left'` | Icon position: 'left' or 'right' |
+| `hide_text_mobile` | bool | `False` | Hide text on small screens |
+| `class_` | str | `''` | Additional CSS classes |
+
+**Link-specific:** `url` (str, default `'#'`)
+
+**Button-specific:** `button_type` (str: 'button', 'submit', 'reset'), `disabled` (bool)
+
+#### Semantic Link Macros (`<a>`)
+
+| Macro | Type | Usage |
+|-------|------|-------|
+| `filled(text, url, icon, ...)` | filled | Primary action links |
+| `tonal(text, url, icon, ...)` | tonal | Secondary action links |
+| `outlined(text, url, icon, ...)` | outlined | Bordered links |
+| `elevated(text, url, icon, ...)` | elevated | Raised links |
+| `text_link(text, url, icon, ...)` | text | Text-only links |
+
+#### Semantic Button Macros (`<button>`)
+
+| Macro | Type | Usage |
+|-------|------|-------|
+| `filled_btn(text, icon, ...)` | filled | Primary action buttons |
+| `tonal_btn(text, icon, ...)` | tonal | Secondary action buttons |
+| `outlined_btn(text, icon, ...)` | outlined | Bordered buttons |
+| `elevated_btn(text, icon, ...)` | elevated | Raised buttons |
+| `text_btn(text, icon, ...)` | text | Text-only buttons |
+| `submit(text, icon, ...)` | filled | Form submit buttons |
+
+#### Example: Link Buttons
+
+```jinja
+{# Primary action #}
+{{ Button.filled("Save", url="/save", icon="save") }}
+
+{# Secondary action #}
+{{ Button.outlined("Cancel", url="/cancel") }}
+
+{# With icon on right #}
+{{ Button.tonal("Next", url="/next", icon="arrow_forward", icon_position="right") }}
+
+{# Icon-only on mobile #}
+{{ Button.filled("Dashboard", url="/", icon="home", hide_text_mobile=True) }}
+```
+
+#### Example: Action Buttons
+
+```jinja
+{# Form submit #}
+{{ Button.submit("Create Account", icon="person_add") }}
+
+{# Generic button #}
+{{ Button.filled_btn("Save", icon="save") }}
+
+{# Disabled state #}
+{{ Button.filled_btn("Processing...", disabled=True) }}
+
+{# Destructive action #}
+{{ Button.outlined_btn("Delete", icon="delete", class_="red-text") }}
+```
+
+#### Example: Using Base Macros
+
+```jinja
+{# Full control with render() #}
+{{ Button.render("Custom", url="/page", type="elevated", icon="star", class_="pulse") }}
+
+{# Full control with button() #}
+{{ Button.button("Reset", type="outlined", button_type="reset", icon="refresh") }}
 ```
 
 ---

@@ -1,127 +1,182 @@
 {#
     Dropdown Component
     ==================
-    MaterializeCSS dropdown menu component with support for icons, badges, and dividers.
+    MaterializeCSS dropdown menu component with support for icons, badges,
+    headers, and dividers.
 
     Import:
-        {% import "components/_dropdown.html" as dropdown %}
+        {% import "components/_dropdown.html" as Dropdown %}
 
     Basic Usage:
-        Trigger button that opens the dropdown
-        {{ dropdown.trigger("my-dropdown", "more_vert", "Options") }}
+        {{ Dropdown.trigger("my-dropdown") }}
 
-        Dropdown container with menu items
-        {% call dropdown.render("my-dropdown") %}
-            {{ dropdown.item("Edit", url_for("edit"), icon="edit") }}
-            {{ dropdown.item("Delete", url_for("delete"), icon="delete", _class="red-text") }}
+        {% call Dropdown.render("my-dropdown") %}
+            {{ Dropdown.item("Edit", url_for("edit"), icon="edit") }}
+            {{ Dropdown.item("Delete", url_for("delete"), icon="delete", class_="red-text") }}
         {% endcall %}
 
-    With Dividers and Badges:
-        {% call dropdown.render("notifications-dropdown", class_="wide") %}
-            {{ dropdown.item("Messages", "#", icon="mail", badge="3") }}
-            {{ dropdown.divider() }}
-            {{ dropdown.item("Settings", "#", icon="settings") }}
+    With Sections:
+        {% call Dropdown.render("user-menu") %}
+            {{ Dropdown.header("Account") }}
+            {{ Dropdown.item("Profile", "#", icon="person") }}
+            {{ Dropdown.item("Settings", "#", icon="settings") }}
+            {{ Dropdown.divider() }}
+            {{ Dropdown.header("Notifications") }}
+            {{ Dropdown.item("Messages", "#", icon="mail", badge=3) }}
+            {{ Dropdown.divider() }}
+            {{ Dropdown.item("Logout", "#", icon="logout", class_="red-text") }}
         {% endcall %}
 
-    App Tile Grid (alternative item style):
-        {% call dropdown.render("apps-menu") %}
-            {{ dropdown.tile("dashboard", "Dashboard", url_for("dashboard")) }}
-            {{ dropdown.tile("inventory", "Inventory", url_for("inventory")) }}
+    Item States:
+        {{ Dropdown.item("Current Page", "#", active=True) }}
+        {{ Dropdown.item("Unavailable", "#", disabled=True) }}
+
+    App Tile Grid:
+        {% call Dropdown.render("apps-menu") %}
+            {{ Dropdown.tile("dashboard", "Dashboard", url_for("dashboard")) }}
+            {{ Dropdown.tile("inventory", "Inventory", url_for("inventory")) }}
         {% endcall %}
 
     Note: Requires MaterializeCSS dropdown initialization in JavaScript:
         M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'));
 #}
 
+{% import 'macros/button.html' as Button %}
+{% import 'macros/icon.html' as Icon %}
+{% import 'macros/badge.html' as Badge %}
 
-{# render(id, class_=None)
-   -----------------------
+
+{# ==========================================================================
+   CONTAINER
+   ========================================================================== #}
+
+{# render(id, class_='')
+   ---------------------
    Creates the dropdown container element.
 
    Parameters:
-       id      (str): Required. Unique identifier matching the trigger's data-target.
-       class_  (str): Optional. Additional CSS classes for the dropdown.
+       id     (str): Required. Unique identifier matching the trigger's data-target.
+       class_ (str): Optional. Additional CSS classes for the dropdown.
 
    Usage: Must be called with {% call %} to inject content via {{ caller() }}.
 #}
-{% macro render(id, class_=None) %}
-    <!-- Dropdown Structure -->
-    <ul id="{{ id if id is defined }}" class="dropdown-content {{ class_ if class_ is defined }}">
+{% macro render(id, class_='') %}
+    <ul id="{{ id }}" class="dropdown-content{% if class_ %} {{ class_ }}{% endif %}">
         {{ caller() }}
     </ul>
 {% endmacro %}
 
 
-{# tile(icon, label, url)
-   ----------------------
-   Creates an app-tile style link for grid-based dropdown menus.
+{# ==========================================================================
+   TRIGGER
+   ========================================================================== #}
 
-   Parameters:
-       icon  (str): Material Symbols icon name (e.g., "dashboard", "settings").
-       label (str): Optional. Text label displayed below the icon.
-       url   (str): Destination URL for the tile link.
-#}
-{% macro tile(icon, label, url) %}
-    <a href="{{ url if url is defined }}" class="app-tile">
-        <span class="material-symbols-rounded app-icon">{{ icon if icon is defined }}</span>
-        {% if label is defined %}
-            <span class="app-label">{{ label }}</span>
-        {% endif %}
-    </a>
-{% endmacro %}
-
-
-{# trigger(id, icon, aria_label)
-   -----------------------------
+{# trigger(id, icon='more_vert', label=None, class_='')
+   -----------------------------------------------------
    Creates a button that opens the dropdown when clicked.
 
    Parameters:
-       id         (str): Required. Must match the dropdown's id attribute.
-       icon       (str): Material Symbols icon name. Defaults to "more_vert".
-       aria_label (str): Accessible label. Defaults to id with hyphens replaced by spaces.
+       id     (str): Required. Must match the dropdown's id attribute.
+       icon   (str): Optional. Material Symbols icon name. Defaults to 'more_vert'.
+       label  (str): Optional. Text label (hidden on medium screens and below).
+       class_ (str): Optional. Additional CSS classes.
 
-   Note: Text label is hidden on medium screens and below (hide-on-med-and-down).
+   Note: Label is hidden on medium screens and below (hide-on-med-and-down).
+         Also serves as the aria-label for accessibility.
 #}
-{% macro trigger(id, icon, aria_label) %}
-    {% set aria_label = aria_label if aria_label is defined else id|replace("-", " ") %}
-    <a href="" class="btn-flat waves-effect dropdown-trigger"
-       data-target="{{ id if id is defined }}" aria-label="{{ aria_label }}">
-        <i class="material-symbols-rounded">{{ icon if icon is defined else "more_vert" }}</i>
-    <span class="hide-on-med-and-down">&nbsp;{{ aria_label }}</span>
+{% macro trigger(id, icon='more_vert', label=None, class_='') -%}
+    {% set aria = label if label else id|replace("-", " ") %}
+    <a href="#"
+       class="btn tonal waves-effect dropdown-trigger{% if class_ %} {{ class_ }}{% endif %}"
+       data-target="{{ id }}"
+       aria-label="{{ aria }}">
+        {{ Icon.render(icon) }}
+        {% if label %}
+            <span class="hide-on-med-and-down">&nbsp;{{ label }}</span>
+        {% endif %}
     </a>
-{% endmacro %}
+{%- endmacro %}
 
 
-{# item(label, url, icon, badge, _class)
-   -------------------------------------
+{# ==========================================================================
+   MENU ITEMS
+   ========================================================================== #}
+
+{# item(label, url='#', icon=None, badge=None, disabled=False, active=False, class_='')
+   -------------------------------------------------------------------------------------
    Creates a dropdown menu item.
 
    Parameters:
-       label  (str): Text displayed for the menu item.
-       url    (str): Destination URL when clicked.
-       icon   (str): Optional. Material Symbols icon shown before label.
-       badge  (str): Optional. Badge text displayed after label (uses MaterializeCSS "new badge" class).
-       _class (str): Optional. Additional CSS classes (e.g., "red-text" for destructive actions).
+       label    (str):  Required. Text displayed for the menu item.
+       url      (str):  Optional. Destination URL when clicked. Defaults to '#'.
+       icon     (str):  Optional. Material Symbols icon shown before label.
+       badge    (int):  Optional. Notification count displayed after label.
+       disabled (bool): Optional. Disabled state. Defaults to False.
+       active   (bool): Optional. Active/selected state. Defaults to False.
+       class_   (str):  Optional. Additional CSS classes (e.g., "red-text").
 #}
-{% macro item(label, url, icon, badge, _class) %}
-    <li>
-        <a href="{{ url if url is defined }}" class="waves-effect waves-light{{ ' '+_class if _class is defined }}">
-            {% if icon is defined %}
-                <i class="material-symbols-rounded">{{ icon }}</i>
-            {% endif %}
-            {{ label if label is defined }}
-            {% if badge is defined %}
-                <span class="new badge">{{ badge }}</span>
-            {% endif %}
+{% macro item(label, url='#', icon=None, badge=None, disabled=False, active=False, class_='') -%}
+    <li{% if active %} class="active"{% endif %}>
+        <a href="{{ url }}"
+           class="waves-effect waves-light{% if class_ %} {{ class_ }}{% endif %}"
+           {% if disabled %}aria-disabled="true" tabindex="-1"{% endif %}>
+            {%- if icon %}
+                {{ Icon.render(icon) }}
+            {%- endif %}
+            {{ label }}
+            {%- if badge %}
+                {{ Badge.count(badge) }}
+            {%- endif %}
         </a>
     </li>
-{% endmacro %}
+{%- endmacro %}
+
+
+{# header(text, class_='')
+   -----------------------
+   Creates a section header for grouping menu items.
+
+   Parameters:
+       text   (str): Required. Header text.
+       class_ (str): Optional. Additional CSS classes.
+#}
+{% macro header(text, class_='') -%}
+    <li class="dropdown-header{% if class_ %} {{ class_ }}{% endif %}">
+        <span>{{ text }}</span>
+    </li>
+{%- endmacro %}
 
 
 {# divider()
    ---------
    Adds a horizontal separator line between menu items.
 #}
-{% macro divider() %}
+{% macro divider() -%}
     <li class="divider" tabindex="-1"></li>
-{% endmacro %}
+{%- endmacro %}
+
+
+{# ==========================================================================
+   APP TILES
+   ========================================================================== #}
+
+{# tile(icon, label=None, url='#', class_='')
+   ------------------------------------------
+   Creates an app-tile style link for grid-based dropdown menus.
+
+   Parameters:
+       icon   (str): Required. Material Symbols icon name.
+       label  (str): Optional. Text label displayed below the icon.
+       url    (str): Optional. Destination URL for the tile. Defaults to '#'.
+       class_ (str): Optional. Additional CSS classes.
+#}
+{% macro tile(icon, label=None, url='#', class_='') -%}
+    <li>
+        <a href="{{ url }}" class="app-tile{% if class_ %} {{ class_ }}{% endif %}">
+            {{ Icon.render(icon, class_='app-icon') }}
+            {%- if label %}
+                <span class="app-label">{{ label }}</span>
+            {%- endif %}
+        </a>
+    </li>
+{%- endmacro %}

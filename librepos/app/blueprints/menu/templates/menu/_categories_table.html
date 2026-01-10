@@ -1,0 +1,31 @@
+{% import 'components/_dropdown.html' as Dropdown %}
+
+{% for category in categories %}
+    <tr>
+        <td>{{ category.name }}</td>
+        <td>N/A</td>
+        <td>{{ category.display_order }}</td>
+        <td>
+            {% if category.is_active %}
+                <span class="green-text">Active</span>
+            {% else %}
+                <span class="red-text">Inactive</span>
+            {% endif %}
+        </td>
+        <td>
+            {% set category_dropdown = category.id|string + '-dropdown' %}
+            {{ Dropdown.trigger(category_dropdown, label='More') }}
+            {% call Dropdown.render(category_dropdown) %}
+                {{ Dropdown.item('Edit') }}
+                {{ Dropdown.item('Toggle Visibility') }}
+                {{ Dropdown.item('Reorder') }}
+                {{ Dropdown.item('Archive') }}
+                {{ Dropdown.item('Delete') }}
+            {% endcall %}
+        </td>
+    </tr>
+{% else %}
+    <tr>
+        <td colspan="5" class="center-align grey-text">No categories found</td>
+    </tr>
+{% endfor %}

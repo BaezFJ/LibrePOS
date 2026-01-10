@@ -1,6 +1,6 @@
 """Route handlers for menu blueprint."""
 
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template, request, url_for
 
 from . import bp
 from .models import Category
@@ -45,14 +45,36 @@ def item_detail(item_id):
 
 @bp.route("/categories")
 def categories():
-    """List view for menu categories"""
-    _categories = Category.get_all()
+    """List view for menu categories."""
+    # Read filter/sort/search query parameters
+    status = request.args.get("status", "all")
+    type_filter = request.args.get("type", "all")
+    sort_by = request.args.get("sort", "name")
+    search = request.args.get("q", "")
+
+    # Get filtered/sorted/searched categories
+    query = CategoryService.get_filtered_query(status, type_filter, sort_by, search)
+    _categories = query.all()
+
     context = {
-        "head_title": "Menu Categories | LibrePOS",
-        "nav_title": "Categories",
         "categories": _categories,
-        **sidenav_title,
+        "current_status": status,
+        "current_type": type_filter,
+        "current_sort": sort_by,
+        "current_search": search,
     }
+
+    # Return partial template for HTMX requests
+    if request.headers.get("HX-Request"):
+        return render_template("menu/_categories_table.html", **context)
+
+    context.update(
+        {
+            "head_title": "Menu Categories | LibrePOS",
+            "nav_title": "Categories",
+            **sidenav_title,
+        }
+    )
     return render_template("menu/categories.html", **context)
 
 
