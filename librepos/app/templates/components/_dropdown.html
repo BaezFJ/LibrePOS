@@ -1,3 +1,49 @@
+{#
+    Dropdown Component
+    ==================
+    MaterializeCSS dropdown menu component with support for icons, badges, and dividers.
+
+    Import:
+        {% import "components/_dropdown.html" as dropdown %}
+
+    Basic Usage:
+        Trigger button that opens the dropdown
+        {{ dropdown.trigger("my-dropdown", "more_vert", "Options") }}
+
+        Dropdown container with menu items
+        {% call dropdown.render("my-dropdown") %}
+            {{ dropdown.item("Edit", url_for("edit"), icon="edit") }}
+            {{ dropdown.item("Delete", url_for("delete"), icon="delete", _class="red-text") }}
+        {% endcall %}
+
+    With Dividers and Badges:
+        {% call dropdown.render("notifications-dropdown", class_="wide") %}
+            {{ dropdown.item("Messages", "#", icon="mail", badge="3") }}
+            {{ dropdown.divider() }}
+            {{ dropdown.item("Settings", "#", icon="settings") }}
+        {% endcall %}
+
+    App Tile Grid (alternative item style):
+        {% call dropdown.render("apps-menu") %}
+            {{ dropdown.tile("dashboard", "Dashboard", url_for("dashboard")) }}
+            {{ dropdown.tile("inventory", "Inventory", url_for("inventory")) }}
+        {% endcall %}
+
+    Note: Requires MaterializeCSS dropdown initialization in JavaScript:
+        M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'));
+#}
+
+
+{# render(id, class_=None)
+   -----------------------
+   Creates the dropdown container element.
+
+   Parameters:
+       id      (str): Required. Unique identifier matching the trigger's data-target.
+       class_  (str): Optional. Additional CSS classes for the dropdown.
+
+   Usage: Must be called with {% call %} to inject content via {{ caller() }}.
+#}
 {% macro render(id, class_=None) %}
     <!-- Dropdown Structure -->
     <ul id="{{ id if id is defined }}" class="dropdown-content {{ class_ if class_ is defined }}">
@@ -5,6 +51,16 @@
     </ul>
 {% endmacro %}
 
+
+{# tile(icon, label, url)
+   ----------------------
+   Creates an app-tile style link for grid-based dropdown menus.
+
+   Parameters:
+       icon  (str): Material Symbols icon name (e.g., "dashboard", "settings").
+       label (str): Optional. Text label displayed below the icon.
+       url   (str): Destination URL for the tile link.
+#}
 {% macro tile(icon, label, url) %}
     <a href="{{ url if url is defined }}" class="app-tile">
         <span class="material-symbols-rounded app-icon">{{ icon if icon is defined }}</span>
@@ -15,6 +71,17 @@
 {% endmacro %}
 
 
+{# trigger(id, icon, aria_label)
+   -----------------------------
+   Creates a button that opens the dropdown when clicked.
+
+   Parameters:
+       id         (str): Required. Must match the dropdown's id attribute.
+       icon       (str): Material Symbols icon name. Defaults to "more_vert".
+       aria_label (str): Accessible label. Defaults to id with hyphens replaced by spaces.
+
+   Note: Text label is hidden on medium screens and below (hide-on-med-and-down).
+#}
 {% macro trigger(id, icon, aria_label) %}
     {% set aria_label = aria_label if aria_label is defined else id|replace("-", " ") %}
     <a href="" class="btn-flat waves-effect dropdown-trigger"
@@ -25,6 +92,17 @@
 {% endmacro %}
 
 
+{# item(label, url, icon, badge, _class)
+   -------------------------------------
+   Creates a dropdown menu item.
+
+   Parameters:
+       label  (str): Text displayed for the menu item.
+       url    (str): Destination URL when clicked.
+       icon   (str): Optional. Material Symbols icon shown before label.
+       badge  (str): Optional. Badge text displayed after label (uses MaterializeCSS "new badge" class).
+       _class (str): Optional. Additional CSS classes (e.g., "red-text" for destructive actions).
+#}
 {% macro item(label, url, icon, badge, _class) %}
     <li>
         <a href="{{ url if url is defined }}" class="waves-effect waves-light{{ ' '+_class if _class is defined }}">
@@ -39,6 +117,11 @@
     </li>
 {% endmacro %}
 
+
+{# divider()
+   ---------
+   Adds a horizontal separator line between menu items.
+#}
 {% macro divider() %}
     <li class="divider" tabindex="-1"></li>
 {% endmacro %}
