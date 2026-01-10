@@ -46,9 +46,11 @@ def item_detail(item_id):
 @bp.route("/categories")
 def categories():
     """List view for menu categories"""
+    _categories = Category.get_all()
     context = {
         "head_title": "Menu Categories | LibrePOS",
         "nav_title": "Categories",
+        "categories": _categories,
         **sidenav_title,
     }
     return render_template("menu/categories.html", **context)
