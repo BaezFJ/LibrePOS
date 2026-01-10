@@ -1,5 +1,52 @@
+{#
+    Sidebar Component
+    =================
+    MaterializeCSS fixed side navigation with collapsible sections and subheaders.
+
+    Import:
+        {% import "components/_sidebar.html" as Sidebar with context %}
+
+    Basic Usage:
+        {% call Sidebar.render() %}
+            {{ Sidebar.item("Dashboard", icon="dashboard", url=url_for("main.index")) }}
+            {{ Sidebar.item("Orders", icon="receipt_long", url=url_for("orders.index")) }}
+        {% endcall %}
+
+    With Sections and Subheaders:
+        {% call Sidebar.render() %}
+            {{ Sidebar.subheader("Main") }}
+            {{ Sidebar.item("Dashboard", icon="dashboard", url=url_for("main.index")) }}
+
+            {{ Sidebar.divider() }}
+            {{ Sidebar.subheader("Management") }}
+
+            {% call Sidebar.collapsible("Menu", icon="restaurant_menu") %}
+                {{ Sidebar.item("Items", icon="inventory_2", url=url_for("menu.items")) }}
+                {{ Sidebar.item("Categories", icon="category", url=url_for("menu.categories")) }}
+            {% endcall %}
+        {% endcall %}
+
+    Context Variables:
+        sidenav_title - Brand text displayed in header (defaults to "LibrePOS")
+        app_version   - If defined, displays version number in footer
+
+    Note: Requires MaterializeCSS sidenav initialization in JavaScript:
+        M.Sidenav.init(document.querySelectorAll('.sidenav'));
+#}
+
 {% import "macros/icon.html" as Icon %}
 
+
+{# render(title, id)
+   -----------------
+   Creates the sidebar container element.
+
+   Parameters:
+       title (str): Unused. Brand text comes from sidenav_title context variable.
+       id    (str): Optional. HTML id attribute for the sidebar. Defaults to "mainMenu".
+
+   Usage: Must be called with {% call %} to inject content via {{ caller() }}.
+#}
 {% macro render(title, id) %}
     <aside id="{{ id if id is defined else "mainMenu" }}" class="sidenav sidenav-fixed">
         <div class="sidenav-header navbar">
@@ -16,6 +63,16 @@
     </aside>
 {% endmacro %}
 
+{# item(label, icon, url, active=False)
+   ------------------------------------
+   Creates a single navigation link item with optional icon.
+
+   Parameters:
+       label  (str):  Text displayed for the menu item.
+       icon   (str):  Optional. Material Symbols icon name (e.g., "dashboard", "settings").
+       url    (str):  Optional. Destination URL when clicked. Defaults to "".
+       active (bool): Optional. Force active state. Auto-detected from request.path. Defaults to False.
+#}
 {% macro item(label, icon, url, active=False) %}
     {% set is_active = active or (url is defined and request.path == url) %}
     <li {{ "class=active" if is_active }}>
@@ -31,6 +88,16 @@
     </li>
 {% endmacro %}
 
+{# collapsible(text, icon)
+   ------------------------
+   Creates an expandable accordion section for grouping related navigation items.
+
+   Parameters:
+       text (str): Header text displayed for the collapsible section.
+       icon (str): Optional. Material Symbols icon name shown before the header text.
+
+   Usage: Must be called with {% call %} to inject nested items via {{ caller() }}.
+#}
 {% macro collapsible(text, icon) %}
     <li class="no-padding">
         <ul class="collapsible collapsible-accordion">
@@ -51,12 +118,23 @@
     </li>
 {% endmacro %}
 
+{# divider()
+   ---------
+   Adds a horizontal separator line between navigation sections.
+#}
 {% macro divider() %}
     <li>
         <div class="divider"></div>
     </li>
 {% endmacro %}
 
+{# subheader(label)
+   -----------------
+   Creates a non-clickable section header to group related navigation items.
+
+   Parameters:
+       label (str): Section title text displayed as the subheader.
+#}
 {% macro subheader(label) %}
     {% if label is defined %}
         <li><a class="subheader">{{ label }}</a></li>

@@ -1,8 +1,271 @@
-{# Material Symbols helper. Usage: {{ Icon.render('add') }} #}
+{#
+    Icon Macros
+    ===========
+    Helper macros for rendering Material Symbols icons with consistent naming.
+
+    Import:
+        {% import "macros/icon.html" as Icon %}
+
+    Generic Usage:
+        {{ Icon.render("add") }}
+        {{ Icon.render("delete", class_="red-text") }}
+
+    Semantic Usage (Recommended):
+        {{ Icon.add() }}
+        {{ Icon.delete(class_="red-text") }}
+        {{ Icon.save(class_="left") }}
+
+    Available Semantic Macros:
+        CRUD:       add, edit, delete, save, cancel
+        Navigation: back, close, menu, home, more
+        Orders:     order, cart, payment, cash, card, table, receipt, discount, tip
+        Menu:       food, drink, category, modifier, price
+        Kitchen:    kitchen, timer, done, priority
+        Staff:      user, users, login, logout, role
+        Status:     success, error, warning, info, pending
+        Actions:    search, filter, sort, refresh, print_, export, settings, help_
+#}
+
+
+{# render(name, class_=None, attrs=None)
+   -------------------------------------
+   Renders a Material Symbols icon element.
+
+   Parameters:
+       name   (str): Required. Material Symbols icon name (e.g., "add", "delete", "settings").
+       class_ (str): Optional. Additional CSS classes to apply to the icon.
+       attrs  (str): Optional. Additional HTML attributes as a string.
+#}
 {% macro render(name, class_=None, attrs=None) -%}
     <i class="material-symbols-rounded {{ class_ or '' }}" aria-hidden="true"{{ attrs and ' ' ~ attrs or '' }}>
         {% if name is defined %}
             {{ name }}
         {% endif %}
     </i>
+{%- endmacro %}
+
+
+{# ==========================================================================
+   CRUD OPERATIONS
+   ========================================================================== #}
+
+{% macro add(class_=None, attrs=None) -%}
+    {{ render("add", class_, attrs) }}
+{%- endmacro %}
+
+{% macro edit(class_=None, attrs=None) -%}
+    {{ render("edit", class_, attrs) }}
+{%- endmacro %}
+
+{% macro delete(class_=None, attrs=None) -%}
+    {{ render("delete", class_, attrs) }}
+{%- endmacro %}
+
+{% macro save(class_=None, attrs=None) -%}
+    {{ render("save", class_, attrs) }}
+{%- endmacro %}
+
+{% macro cancel(class_=None, attrs=None) -%}
+    {{ render("cancel", class_, attrs) }}
+{%- endmacro %}
+
+
+{# ==========================================================================
+   NAVIGATION
+   ========================================================================== #}
+
+{% macro back(class_=None, attrs=None) -%}
+    {{ render("arrow_back", class_, attrs) }}
+{%- endmacro %}
+
+{% macro close(class_=None, attrs=None) -%}
+    {{ render("close", class_, attrs) }}
+{%- endmacro %}
+
+{% macro menu(class_=None, attrs=None) -%}
+    {{ render("menu", class_, attrs) }}
+{%- endmacro %}
+
+{% macro home(class_=None, attrs=None) -%}
+    {{ render("home", class_, attrs) }}
+{%- endmacro %}
+
+{% macro more(class_=None, attrs=None) -%}
+    {{ render("more_vert", class_, attrs) }}
+{%- endmacro %}
+
+
+{# ==========================================================================
+   ORDERS & POS
+   ========================================================================== #}
+
+{% macro order(class_=None, attrs=None) -%}
+    {{ render("receipt_long", class_, attrs) }}
+{%- endmacro %}
+
+{% macro cart(class_=None, attrs=None) -%}
+    {{ render("shopping_cart", class_, attrs) }}
+{%- endmacro %}
+
+{% macro payment(class_=None, attrs=None) -%}
+    {{ render("payments", class_, attrs) }}
+{%- endmacro %}
+
+{% macro cash(class_=None, attrs=None) -%}
+    {{ render("attach_money", class_, attrs) }}
+{%- endmacro %}
+
+{% macro card(class_=None, attrs=None) -%}
+    {{ render("credit_card", class_, attrs) }}
+{%- endmacro %}
+
+{% macro table(class_=None, attrs=None) -%}
+    {{ render("table_restaurant", class_, attrs) }}
+{%- endmacro %}
+
+{% macro receipt(class_=None, attrs=None) -%}
+    {{ render("receipt", class_, attrs) }}
+{%- endmacro %}
+
+{% macro discount(class_=None, attrs=None) -%}
+    {{ render("percent", class_, attrs) }}
+{%- endmacro %}
+
+{% macro tip(class_=None, attrs=None) -%}
+    {{ render("volunteer_activism", class_, attrs) }}
+{%- endmacro %}
+
+
+{# ==========================================================================
+   MENU MANAGEMENT
+   ========================================================================== #}
+
+{% macro food(class_=None, attrs=None) -%}
+    {{ render("restaurant_menu", class_, attrs) }}
+{%- endmacro %}
+
+{% macro drink(class_=None, attrs=None) -%}
+    {{ render("local_bar", class_, attrs) }}
+{%- endmacro %}
+
+{% macro category(class_=None, attrs=None) -%}
+    {{ render("category", class_, attrs) }}
+{%- endmacro %}
+
+{% macro modifier(class_=None, attrs=None) -%}
+    {{ render("tune", class_, attrs) }}
+{%- endmacro %}
+
+{% macro price(class_=None, attrs=None) -%}
+    {{ render("sell", class_, attrs) }}
+{%- endmacro %}
+
+
+{# ==========================================================================
+   KITCHEN
+   ========================================================================== #}
+
+{% macro kitchen(class_=None, attrs=None) -%}
+    {{ render("soup_kitchen", class_, attrs) }}
+{%- endmacro %}
+
+{% macro timer(class_=None, attrs=None) -%}
+    {{ render("timer", class_, attrs) }}
+{%- endmacro %}
+
+{% macro done(class_=None, attrs=None) -%}
+    {{ render("check_circle", class_, attrs) }}
+{%- endmacro %}
+
+{% macro priority(class_=None, attrs=None) -%}
+    {{ render("priority_high", class_, attrs) }}
+{%- endmacro %}
+
+
+{# ==========================================================================
+   STAFF & USERS
+   ========================================================================== #}
+
+{% macro user(class_=None, attrs=None) -%}
+    {{ render("person", class_, attrs) }}
+{%- endmacro %}
+
+{% macro users(class_=None, attrs=None) -%}
+    {{ render("groups", class_, attrs) }}
+{%- endmacro %}
+
+{% macro login(class_=None, attrs=None) -%}
+    {{ render("login", class_, attrs) }}
+{%- endmacro %}
+
+{% macro logout(class_=None, attrs=None) -%}
+    {{ render("logout", class_, attrs) }}
+{%- endmacro %}
+
+{% macro role(class_=None, attrs=None) -%}
+    {{ render("admin_panel_settings", class_, attrs) }}
+{%- endmacro %}
+
+
+{# ==========================================================================
+   STATUS INDICATORS
+   ========================================================================== #}
+
+{% macro success(class_=None, attrs=None) -%}
+    {{ render("check_circle", class_, attrs) }}
+{%- endmacro %}
+
+{% macro error(class_=None, attrs=None) -%}
+    {{ render("error", class_, attrs) }}
+{%- endmacro %}
+
+{% macro warning(class_=None, attrs=None) -%}
+    {{ render("warning", class_, attrs) }}
+{%- endmacro %}
+
+{% macro info(class_=None, attrs=None) -%}
+    {{ render("info", class_, attrs) }}
+{%- endmacro %}
+
+{% macro pending(class_=None, attrs=None) -%}
+    {{ render("hourglass_empty", class_, attrs) }}
+{%- endmacro %}
+
+
+{# ==========================================================================
+   COMMON ACTIONS
+   ========================================================================== #}
+
+{% macro search(class_=None, attrs=None) -%}
+    {{ render("search", class_, attrs) }}
+{%- endmacro %}
+
+{% macro filter(class_=None, attrs=None) -%}
+    {{ render("filter_list", class_, attrs) }}
+{%- endmacro %}
+
+{% macro sort(class_=None, attrs=None) -%}
+    {{ render("sort", class_, attrs) }}
+{%- endmacro %}
+
+{% macro refresh(class_=None, attrs=None) -%}
+    {{ render("refresh", class_, attrs) }}
+{%- endmacro %}
+
+{# Note: print_ has underscore to avoid conflict with Python's print #}
+{% macro print_(class_=None, attrs=None) -%}
+    {{ render("print", class_, attrs) }}
+{%- endmacro %}
+
+{% macro export(class_=None, attrs=None) -%}
+    {{ render("download", class_, attrs) }}
+{%- endmacro %}
+
+{% macro settings(class_=None, attrs=None) -%}
+    {{ render("settings", class_, attrs) }}
+{%- endmacro %}
+
+{# Note: help_ has underscore to avoid conflict with Python's help #}
+{% macro help_(class_=None, attrs=None) -%}
+    {{ render("help", class_, attrs) }}
 {%- endmacro %}

@@ -1,18 +1,48 @@
-{##}
-{#    Placeholder macro for pages or features under development.#}
-{##}
-{#    Usage:#}
-{#        {% import "macros/placeholder.html" as Placeholder %}#}
-{##}
-{# Full page placeholder #}
-{#{{ Placeholder.page(title="Coming Soon", description="This feature is under development.") }}#}
-{##}
-{# Inline/card placeholder #}
-{#{{ Placeholder.card(title="No Data", description="Nothing to display yet.") }}#}
+{#
+    Placeholder Macros
+    ==================
+    Placeholder components for pages or features under development, and empty states.
+
+    Import:
+        {% import "macros/placeholder.html" as Placeholder %}
+
+    Full Page Placeholder:
+        {{ Placeholder.page(
+            title="Coming Soon",
+            description="This feature is under development.",
+            icon="construction"
+        ) }}
+
+    Card/Inline Placeholder:
+        {{ Placeholder.card(
+            title="No Data",
+            description="Nothing to display yet.",
+            icon="hourglass_empty"
+        ) }}
+
+    Empty State (for lists/tables):
+        {{ Placeholder.empty(
+            title="No Items Found",
+            description="There's nothing here yet.",
+            icon="inbox",
+            action_url=url_for('menu.create'),
+            action_label="Add New"
+        ) }}
+#}
 
 
+{# page(title, description, icon, show_back, back_url, back_label)
+   ---------------------------------------------------------------
+   Full page placeholder - centered content for entire page views.
 
-{# Full page placeholder - centered content for entire page views #}
+   Parameters:
+       title       (str):  Optional. Heading text. Defaults to "Under Development".
+       description (str):  Optional. Description text. Defaults to feature coming soon message.
+       icon        (str):  Optional. Material Symbols icon. Defaults to "construction".
+       show_back   (bool): Optional. Show back button. Defaults to True.
+       back_url    (str):  Optional. Back button URL. Defaults to browser history.back().
+       back_label  (str):  Optional. Back button text. Defaults to "Go Back".
+#}
 {% macro page(
     title="Under Development",
     description="This feature is currently being built and will be available soon.",
@@ -54,7 +84,16 @@
 {% endmacro %}
 
 
-{# Card/inline placeholder - for sections within a page #}
+{# card(title, description, icon, class_)
+   ---------------------------------------
+   Card/inline placeholder - for sections within a page.
+
+   Parameters:
+       title       (str): Optional. Heading text. Defaults to "Coming Soon".
+       description (str): Optional. Description text. Defaults to under development message.
+       icon        (str): Optional. Material Symbols icon. Defaults to "hourglass_empty".
+       class_      (str): Optional. Additional CSS classes for the container.
+#}
 {% macro card(
     title="Coming Soon",
     description="This section is under development.",
@@ -71,7 +110,18 @@
 {% endmacro %}
 
 
-{# Empty state placeholder - for lists/tables with no data #}
+{# empty(title, description, icon, action_url, action_label, action_icon)
+   ----------------------------------------------------------------------
+   Empty state placeholder - for lists/tables with no data.
+
+   Parameters:
+       title        (str): Optional. Heading text. Defaults to "No Items Found".
+       description  (str): Optional. Description text. Defaults to nothing here message.
+       icon         (str): Optional. Material Symbols icon. Defaults to "inbox".
+       action_url   (str): Optional. URL for action button. If None, button is hidden.
+       action_label (str): Optional. Action button text. Defaults to "Add New".
+       action_icon  (str): Optional. Action button icon. Defaults to "add".
+#}
 {% macro empty(
     title="No Items Found",
     description="There's nothing here yet.",

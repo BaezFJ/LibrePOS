@@ -1,4 +1,59 @@
-{# ---------- Low-level helpers ---------- #}
+{#
+    Forms Macro
+    ===========
+    Auto-renders WTForms with MaterializeCSS styling.
+
+    Import:
+        {% import "macros/forms.html" as Forms %}
+
+    Basic Usage:
+        <form method="post">
+            {{ Forms.render(form) }}
+        </form>
+
+    With Custom Column Widths:
+        <form method="post">
+            {{ Forms.render(form, {'name': 'm6', 'email': 'm6'}) }}
+        </form>
+
+    Render Single Field:
+        {{ Forms.render_field_auto(form.email) }}
+
+    Supported Field Types:
+        - StringField, PasswordField, EmailField, SearchField, TelField, URLField
+        - IntegerField, DecimalField, FloatField (with optional stepper)
+        - DateField, DateTimeLocalField
+        - TextAreaField, SelectField, SelectMultipleField
+        - BooleanField (checkbox or switch via render_kw={'render_as': 'switch'})
+        - FileField (with drag-and-drop)
+        - SubmitField
+        - FieldList, FormField (nested forms)
+
+    Switch Toggle:
+        # In forms.py
+        is_active = BooleanField('Active', render_kw={'render_as': 'switch'})
+
+    Number Stepper:
+        # In forms.py
+        quantity = IntegerField('Qty', render_kw={'render_as': 'stepper'})
+#}
+
+
+{# ==========================================================================
+   PRIVATE HELPER MACROS
+   ========================================================================== #}
+
+{# _wrapper_classes(field, extra_wrap)
+   ------------------------------------
+   Generates CSS classes for the field wrapper div.
+
+   Parameters:
+       field      (Field): WTForms field object.
+       extra_wrap (str):   Optional. Additional CSS classes to append.
+
+   Returns: String of CSS classes including 'input-field outlined col s12' plus any
+            wrapper_class from field.render_kw or field.wrapper_class.
+#}
 {% macro _wrapper_classes(field, extra_wrap) %}
     {%- set classes = ['input-field outlined col s12'] -%}
     {%- set attr_wrap = field.wrapper_class if field.wrapper_class is defined else '' -%}
@@ -8,24 +63,69 @@
     {{ (classes|join(' ') ~ ' ' ~ attr_wrap ~ ' ' ~ extra_wrap)|trim }}
 {% endmacro %}
 
+
+{# _input_classes(field, plus='')
+   -------------------------------
+   Generates CSS classes for the input element itself.
+
+   Parameters:
+       field (Field): WTForms field object.
+       plus  (str):   Optional. Additional CSS classes to append.
+
+   Returns: String of CSS classes from field.render_kw['class'] plus any extra classes.
+#}
 {% macro _input_classes(field, plus='') -%}
     {% set base = (field.render_kw.get('class') if field.render_kw and field.render_kw.get('class') else '') %}
     {{ (base ~ ' ' ~ plus).strip() }}
 {%- endmacro %}
 
+
+{# _errors(field)
+   ---------------
+   Renders validation error messages for a field.
+
+   Parameters:
+       field (Field): WTForms field object.
+
+   Output: Red helper text span with comma-separated error messages, or nothing if no errors.
+#}
 {% macro _errors(field) -%}
     {% if field.errors %}
         <span class="helper-text red-text">{{ field.errors|join(', ') }}</span>
     {% endif %}
 {%- endmacro %}
 
+
+{# _help(field)
+   -------------
+   Renders the field's description as helper text.
+
+   Parameters:
+       field (Field): WTForms field object.
+
+   Output: Helper text span with field.description, or nothing if no description.
+#}
 {% macro _help(field) -%}
     {% if field.description %}
         <span class="helper-text">{{ field.description }}</span>
     {% endif %}
 {%- endmacro %}
 
-{# ---------- Field renderers ---------- #}
+
+{# ==========================================================================
+   PRIVATE FIELD RENDERER MACROS
+   ========================================================================== #}
+
+{# _render_input(field, extra_wrap='')
+   ------------------------------------
+   Renders a standard text input field (text, email, password, date, etc.).
+
+   Parameters:
+       field      (Field): WTForms field object.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Output: MaterializeCSS outlined input-field with label, help text, and errors.
+#}
 {% macro _render_input(field, extra_wrap='') -%}
     <div class="{{ _wrapper_classes(field, extra_wrap) }}">
         {{ field(class=_input_classes(field), id=field.id, placeholder=" ") }}
@@ -35,6 +135,17 @@
     </div>
 {%- endmacro %}
 
+
+{# _render_textarea(field, extra_wrap='')
+   ---------------------------------------
+   Renders a textarea field with MaterializeCSS auto-resize.
+
+   Parameters:
+       field      (Field): WTForms TextAreaField object.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Output: MaterializeCSS textarea with 'materialize-textarea' class for auto-resize.
+#}
 {% macro _render_textarea(field, extra_wrap='') -%}
     <div class="{{ _wrapper_classes(field, extra_wrap) }}">
         {{ field(class=_input_classes(field) + 'materialize-textarea', id=field.id) }}
@@ -44,6 +155,17 @@
     </div>
 {%- endmacro %}
 
+
+{# _render_select(field, extra_wrap='')
+   -------------------------------------
+   Renders a select dropdown field.
+
+   Parameters:
+       field      (Field): WTForms SelectField or SelectMultipleField object.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Output: MaterializeCSS select element. Requires M.FormSelect.init() in JS.
+#}
 {% macro _render_select(field, extra_wrap='') -%}
     <div class="{{ _wrapper_classes(field, extra_wrap) }}">
         {{ field(class=_input_classes(field), id=field.id) }}
@@ -53,8 +175,18 @@
     </div>
 {%- endmacro %}
 
+
+{# _render_check(field, extra_wrap='')
+   ------------------------------------
+   Renders a checkbox field.
+
+   Parameters:
+       field      (Field): WTForms BooleanField object.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Output: MaterializeCSS checkbox (not inside .input-field per Materialize requirements).
+#}
 {% macro _render_check(field, extra_wrap='') -%}
-    {# Materialize checkboxes are not inside .input-field #}
     {% set from_field = (field.render_kw.get('wrapper_class') if field.render_kw else '') %}
     {% set attr_wrap = field.wrapper_class if field.wrapper_class is defined else '' %}
     {% set wrapper = (from_field ~ ' ' ~ attr_wrap ~ ' ' ~ extra_wrap).strip() %}
@@ -68,8 +200,18 @@
     </div>
 {%- endmacro %}
 
+
+{# _render_switch(field, extra_wrap='')
+   -------------------------------------
+   Renders a toggle switch field (alternative to checkbox).
+
+   Parameters:
+       field      (Field): WTForms BooleanField with render_kw={'render_as': 'switch'}.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Output: MaterializeCSS switch with Off/On labels and lever.
+#}
 {% macro _render_switch(field, extra_wrap='') -%}
-    {# Materialize switches are not inside .input-field #}
     {% set from_field = (field.render_kw.get('wrapper_class') if field.render_kw else '') %}
     {% set attr_wrap = field.wrapper_class if field.wrapper_class is defined else '' %}
     {% set wrapper = ('switch ' ~ from_field ~ ' ' ~ attr_wrap ~ ' ' ~ extra_wrap).strip() %}
@@ -85,8 +227,19 @@
     </div>
 {%- endmacro %}
 
+
+{# _render_file(field, extra_wrap='')
+   -----------------------------------
+   Renders a file input with drag-and-drop support.
+
+   Parameters:
+       field      (Field): WTForms FileField object.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Output: Custom dropzone UI with cloud upload icon, browse link, and preview area.
+           Requires corresponding JS for drag-and-drop functionality.
+#}
 {% macro _render_file(field, extra_wrap='') -%}
-    {# Enhanced file input with drag-and-drop support #}
     <div class="{{ _wrapper_classes(field, extra_wrap) }}">
         <label class="active">{{ field.label.text }}</label>
         <div class="file-dropzone" data-target="{{ field.id }}">
@@ -102,8 +255,18 @@
     </div>
 {%- endmacro %}
 
+
+{# _render_number_stepper(field, extra_wrap='')
+   ---------------------------------------------
+   Renders a number input with increment/decrement buttons.
+
+   Parameters:
+       field      (Field): WTForms IntegerField/DecimalField with render_kw={'render_as': 'stepper'}.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Output: Number input with +/- buttons. Requires JS to handle button clicks.
+#}
 {% macro _render_number_stepper(field, extra_wrap='') -%}
-    {# Number input with increment/decrement buttons #}
     <div class="{{ _wrapper_classes(field, extra_wrap) }} number-stepper">
         {{ field(class=_input_classes(field), id=field.id, placeholder=" ", min=0) }}
         <label for="{{ field.id }}">{{ field.label.text }}</label>
@@ -128,6 +291,17 @@
     </div>
 {%- endmacro %}
 
+
+{# _render_submit(field, extra_wrap='')
+   -------------------------------------
+   Renders a submit button with save icon.
+
+   Parameters:
+       field      (Field): WTForms SubmitField object.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Output: MaterializeCSS filled button with save icon and label text.
+#}
 {% macro _render_submit(field, extra_wrap='') -%}
     {% set classes = field.render_kw.get('class') if field.render_kw and field.render_kw.get('class') else 'btn' %}
     <div class="col s12 {{ (extra_wrap) }}">
@@ -141,9 +315,34 @@
     </div>
 {%- endmacro %}
 
-{# ---------- Dispatcher for a single field ---------- #}
+
+{# ==========================================================================
+   PUBLIC MACROS
+   ========================================================================== #}
+
+{# render_field_auto(field, extra_wrap='')
+   ----------------------------------------
+   Auto-dispatches a WTForms field to the appropriate renderer based on field type.
+
+   Parameters:
+       field      (Field): Any WTForms field object.
+       extra_wrap (str):   Optional. Additional wrapper CSS classes.
+
+   Supported Types:
+       - HiddenField, CSRFTokenField (rendered as-is)
+       - IntegerField, DecimalField, FloatField (input or stepper)
+       - StringField, PasswordField, EmailField, SearchField, TelField, URLField
+       - DateField, DateTimeLocalField
+       - TextAreaField, SelectField, SelectMultipleField
+       - BooleanField (checkbox or switch)
+       - FileField (drag-and-drop)
+       - SubmitField
+       - FieldList, FormField (recursive)
+
+   Note: Use render_kw={'render_as': 'stepper'} for number stepper,
+         render_kw={'render_as': 'switch'} for toggle switch.
+#}
 {% macro render_field_auto(field, extra_wrap='') -%}
-    {# Hidden and CSRF handled at form-level; skip here if hidden #}
     {% if field.type in ['HiddenField', 'CSRFTokenField'] %}
         {{ field }}
     {% elif field.type in ['IntegerField','DecimalField','FloatField'] %}
@@ -193,16 +392,46 @@
     {% endif %}
 {%- endmacro %}
 
-{# ---------- Subform (FormField) ---------- #}
+
+{# render_subform(form, extra_wrap='')
+   ------------------------------------
+   Renders all fields of a nested form (FormField).
+
+   Parameters:
+       form       (Form): WTForms form object (from FormField.form).
+       extra_wrap (str):  Optional. Additional wrapper CSS classes for all fields.
+
+   Note: Automatically skips CSRFTokenField to avoid duplicate tokens.
+#}
 {% macro render_subform(form, extra_wrap='') -%}
     {% for f in form if f.type != 'CSRFTokenField' %}
         {{ render_field_auto(f, extra_wrap) }}
     {% endfor %}
 {%- endmacro %}
 
-{# ---------- MAIN: render a whole form ---------- #}
+
+{# render(form, extra_wrappers={})
+   --------------------------------
+   Renders an entire WTForms form with MaterializeCSS styling.
+
+   Parameters:
+       form           (Form): WTForms form object.
+       extra_wrappers (dict): Optional. Field-specific wrapper classes.
+                              Example: {'name': 'm6', 'email': 'm6'} for half-width fields.
+
+   Output: Hidden fields first (including CSRF), then all visible fields in a row div.
+           Each field is rendered via render_field_auto() with appropriate styling.
+
+   Example:
+       <form method="post">
+           {{ Forms.render(form) }}
+       </form>
+
+       <form method="post">
+           {{ Forms.render(form, {'name': 'm6', 'email': 'm6'}) }}
+       </form>
+#}
 {% macro render(form, extra_wrappers={}) -%}
-    {# collect hidden fields (including csrf) #}
     {% for f in form if f.type in ['HiddenField', 'CSRFTokenField'] %}
         {{ f }}
     {% endfor %}

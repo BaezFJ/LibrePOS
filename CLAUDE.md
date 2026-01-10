@@ -205,6 +205,57 @@ def new_page():
 5. **Template namespacing** - templates in `blueprints/{name}/templates/{name}/`
 6. **Write tests** in the corresponding `tests/unit/test_{blueprint}/` directory
 
+## Jinja2 Component Documentation Style
+
+When documenting Jinja2 macro components, follow this format:
+
+### File-Level Header
+```jinja
+{#
+    Component Name
+    ==============
+    Brief description of the component and its purpose.
+
+    Import:
+        {% import "components/_example.html" as Example %}
+
+    Basic Usage:
+        {{ Example.macro_name("param") }}
+
+    Advanced Usage:
+        {% call Example.container() %}
+            {{ Example.item("nested") }}
+        {% endcall %}
+
+    Context Variables:
+        var_name - Description of context variable
+
+    Note: Any important notes (e.g., JS initialization requirements).
+#}
+```
+
+### Macro Documentation
+```jinja
+{# macro_name(param1, param2=default)
+   ----------------------------------
+   Brief description of what the macro does.
+
+   Parameters:
+       param1 (type): Required. Description of the parameter.
+       param2 (type): Optional. Description. Defaults to "value".
+
+   Usage: Additional usage notes for {% call %} macros.
+#}
+{% macro macro_name(param1, param2=default) %}
+```
+
+### Style Rules
+- **Header underline**: Use `=` for component title, `-` for macro names (match length)
+- **Parameter format**: `name (type): Required/Optional. Description.`
+- **Types**: Use `str`, `bool`, `int`, or specific values
+- **Examples**: Place in file header, not in individual macro docs
+- **Call macros**: Add `Usage:` note explaining `{% call %}` requirement
+
 ## Related Documentation
 
 - Product requirements: see docs/PRD.md

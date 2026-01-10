@@ -1,3 +1,38 @@
+{#
+    Footer Component
+    ================
+    Navigation bar fixed to the bottom of the page for primary actions.
+
+    Import:
+        {% import "components/_footer.html" as Footer %}
+
+    Basic Usage:
+        {% call Footer.render() %}
+            {{ Footer.item("Back", icon="arrow_back", url=url_for("menu.index")) }}
+            {{ Footer.item("Save", icon="save", url=url_for("menu.save")) }}
+        {% endcall %}
+
+    With Modal Trigger:
+        {% call Footer.render() %}
+            {{ Footer.item("Delete", icon="delete", modal="deleteModal") }}
+        {% endcall %}
+
+    With Dropdown Trigger:
+        {% call Footer.render() %}
+            {{ Footer.item("More", icon="more_vert", dropdown="actions-dropdown") }}
+        {% endcall %}
+
+    Note: Modal triggers use popover API (modal.showPopover()).
+          Dropdown triggers require MaterializeCSS dropdown initialization.
+#}
+
+
+{# render()
+   --------
+   Creates the footer container element.
+
+   Usage: Must be called with {% call %} to inject content via {{ caller() }}.
+#}
 {% macro render() %}
 
     <footer>
@@ -11,6 +46,19 @@
 {% endmacro %}
 
 
+{# item(label, icon, url=None, modal=None, dropdown=None)
+   -------------------------------------------------------
+   Creates a footer action button with icon and label.
+
+   Parameters:
+       label    (str): Text displayed below the icon.
+       icon     (str): Material Symbols icon name (e.g., "save", "arrow_back").
+       url      (str): Optional. Destination URL when clicked. Defaults to "#!".
+       modal    (str): Optional. ID of modal/popover to trigger on click.
+       dropdown (str): Optional. ID of dropdown menu to trigger on click.
+
+   Note: Only one of url, modal, or dropdown should be specified.
+#}
 {% macro item(label, icon, url=None, modal=None, dropdown=None) %}
     {% set modal_trigger = 'javascript:' ~ modal|string ~ '.showPopover()' %}
     <a href="{{ (modal_trigger) if modal else (url if url else '#!') }}"

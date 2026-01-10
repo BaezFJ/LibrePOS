@@ -1,3 +1,33 @@
+{#
+    Breadcrumbs Macro
+    =================
+    Renders navigation breadcrumbs from a context variable.
+
+    Usage:
+        {% include "macros/breadcrumbs.html" %}
+
+    Context Variable:
+        Pass a `breadcrumb` list in the view context:
+
+        @bp.route('/items/<int:id>')
+        def item_detail(id):
+            item = MenuItem.query.get_or_404(id)
+            return render_template('menu/item_detail.html',
+                item=item,
+                breadcrumb=[
+                    {"url": url_for("menu.index"), "label": "Menu"},
+                    {"url": url_for("menu.items"), "label": "Items"},
+                    {"url": None, "label": item.name}  # Current page (no link)
+                ]
+            )
+
+    Renders as:
+        Menu > Items > Item Name
+
+    Note: This is an include template, not a macro import.
+          Each breadcrumb item should have 'label' (required) and 'url' (optional).
+#}
+
 {% if breadcrumb is defined and breadcrumb is iterable %}
     <nav class="breadcrumb-wrapper pt-4">
         <div class="col s12">
@@ -13,11 +43,3 @@
         </div>
     </nav>
 {% endif %}
-
-{#
-Add breadcrumb to the context in a view func.
-context = { "breadcrumb": [
-                            {"url": url_for("auth.home"), "label": "IAM"},
-                            {"url": None, "label": "Add auth"}, <-- current error no link
-                             ] }
-#}

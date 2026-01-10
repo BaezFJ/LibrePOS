@@ -1,14 +1,56 @@
-{# ---------- Modal Component ---------- #}
-{# Usage:
-   {% import "components/modal.j2" as Modal %}
+{#
+    Modal Macros
+    ============
+    Dialog components for confirmations, forms, and search.
 
-   {{ Modal.trigger("my-modal", label="Open Modal", icon="add") }}
+    Import:
+        {% import "macros/modals.html" as Modal %}
 
-   {% call Modal.render("my-modal", title="Modal Title") %}
-       <p>Modal content here</p>
-   {% endcall %}
+    Basic Modal:
+        {{ Modal.trigger("help-modal", label="Help", icon="help") }}
+
+        {% call Modal.render("help-modal", title="Help & Support") %}
+            <p>Contact support at support@example.com</p>
+        {% endcall %}
+
+    Form Modal:
+        {% call Modal.form_modal("create-category", title="New Category", action=url_for('menu.create_category')) %}
+            {{ Forms.render(category_form) }}
+        {% endcall %}
+
+    Confirmation Modal:
+        {{ Modal.confirmation(
+            modal_id="delete-item",
+            title="Delete Item",
+            action=url_for('menu.delete', id=item.id),
+            message="Are you sure you want to delete this item?",
+            warning="This action cannot be undone.",
+            confirm_text="Delete",
+            confirm_icon="delete",
+            confirm_color="red"
+        ) }}
+
+    Search Modal:
+        {{ Modal.search(
+            modal_id="search",
+            action=url_for('menu.items'),
+            placeholder="Search menu items..."
+        ) }}
+
+    Note: Modals use the Popover API. Trigger with popovertarget attribute.
 #}
 
+
+{# trigger(modal_id, label=None, icon=None, _class='')
+   ----------------------------------------------------
+   Creates a button that opens a modal using the popover API.
+
+   Parameters:
+       modal_id (str): Required. ID of the modal to trigger.
+       label    (str): Optional. Button text (hidden on medium screens if icon present).
+       icon     (str): Optional. Material Symbols icon name.
+       _class   (str): Optional. Additional CSS classes for the button.
+#}
 {% macro trigger(modal_id, label=None, icon=None, _class='') %}
     <button class="btn{{ ' '+_class if _class is defined else '' }} waves-effect waves-light" popovertarget="{{ modal_id }}">
         {% if icon is defined and label is defined %}
@@ -23,6 +65,17 @@
 {% endmacro %}
 
 
+{# render(modal_id, title=None, _class='')
+   ----------------------------------------
+   Creates a basic modal dialog container.
+
+   Parameters:
+       modal_id (str): Required. Unique ID for the modal element.
+       title    (str): Optional. Modal header title with close button.
+       _class   (str): Optional. Additional CSS classes for the modal.
+
+   Usage: Must be called with {% call %} to inject content via {{ caller() }}.
+#}
 {% macro render(modal_id, title=None, _class='') %}
     <div id="{{ modal_id }}" class="modal {{ _class if _class is defined }}" popover>
         {% if title %}
@@ -43,6 +96,21 @@
 {% endmacro %}
 
 
+{# form_modal(modal_id, title, action='', method='post', _class='', submit_text=None, enctype=None)
+   -------------------------------------------------------------------------------------------------
+   Creates a modal with an embedded form, including Cancel and Submit buttons.
+
+   Parameters:
+       modal_id    (str): Required. Unique ID (without 'Modal' suffix - added automatically).
+       title       (str): Required. Modal header title.
+       action      (str): Optional. Form action URL. Defaults to current page.
+       method      (str): Optional. Form method. Defaults to "post".
+       _class      (str): Optional. Additional CSS classes for the modal.
+       submit_text (str): Optional. Submit button text. Defaults to "Save".
+       enctype     (str): Optional. Form enctype (e.g., "multipart/form-data" for file uploads).
+
+   Usage: Must be called with {% call %} to inject form fields via {{ caller() }}.
+#}
 {% macro form_modal(modal_id, title, action='', method='post', _class='', submit_text=None, enctype=None) %}
     <div id="{{ modal_id }}Modal" class="modal {{ _class if _class is defined }}" popover>
         <form id="{{ modal_id }}Form" action="{{ action }}" method="{{ method }}"{% if enctype %}
@@ -75,6 +143,22 @@
 {% endmacro %}
 
 
+{# confirmation(modal_id, title, action, message, ...)
+   ----------------------------------------------------
+   Creates a confirmation dialog with optional password verification.
+
+   Parameters:
+       modal_id         (str):  Required. Unique ID (without 'Modal' suffix).
+       title            (str):  Required. Modal header title.
+       action           (str):  Required. Form action URL.
+       message          (str):  Required. Main confirmation message (HTML allowed).
+       warning          (str):  Optional. Warning text displayed below message.
+       confirm_text     (str):  Optional. Confirm button text. Defaults to "Confirm".
+       confirm_icon     (str):  Optional. Confirm button icon. Defaults to "check".
+       confirm_color    (str):  Optional. Button color class (e.g., "red", "green").
+       require_password (bool): Optional. Show password field. Defaults to False.
+       method           (str):  Optional. Form method. Defaults to "post".
+#}
 {% macro confirmation(
     modal_id,
     title,
@@ -87,21 +171,6 @@
     require_password=false,
     method='post'
 ) %}
-    {#
-    Renders a confirmation modal with optional password verification.
-
-    Args:
-        modal_id: Unique ID for the modal (without 'Modal' suffix)
-        title: Modal header title
-        action: Form action URL
-        message: Main confirmation message (HTML allowed)
-        warning: Optional warning text (displayed in grey or red)
-        confirm_text: Text for confirm button
-        confirm_icon: Icon for confirm button
-        confirm_color: Button color class (e.g., 'red', 'green')
-        require_password: Whether to show password confirmation field
-        method: Form method (default: post)
-#}
     <div id="{{ modal_id }}Modal" class="modal" popover>
         <form action="{{ action }}" method="{{ method }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -135,20 +204,18 @@
 {% endmacro %}
 
 
-{% macro search(modal_id, action, placeholder='Search...', param='q', clear_url=none) %}
-    {#
-    Renders a search modal with input field and clear/search buttons.
+{# search(modal_id, action, placeholder='Search...', param='q', clear_url=None)
+   -----------------------------------------------------------------------------
+   Creates a search modal with input field and clear/search buttons.
 
-    Args:
-        modal_id: Unique ID for the modal (without 'Modal' suffix)
-        action: Form action URL
-        placeholder: Input placeholder text
-        param: Query parameter name (default: 'q')
-        clear_url: URL for clear button (defaults to action)
-
-    Usage:
-        {{ Modal.search('search', url_for('iam.users'), placeholder='Search users...') }}
+   Parameters:
+       modal_id    (str): Required. Unique ID (without 'Modal' suffix).
+       action      (str): Required. Form action URL for search submission.
+       placeholder (str): Optional. Input placeholder text. Defaults to "Search...".
+       param       (str): Optional. Query parameter name. Defaults to "q".
+       clear_url   (str): Optional. URL for clear button. Defaults to action URL.
 #}
+{% macro search(modal_id, action, placeholder='Search...', param='q', clear_url=none) %}
     <div id="{{ modal_id }}Modal" class="modal small" popover>
         <form action="{{ action }}" method="get">
             <div class="modal-header">

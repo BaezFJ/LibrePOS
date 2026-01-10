@@ -60,7 +60,7 @@ Top navigation bar with support for dropdowns and mobile triggers.
 Fixed side navigation with collapsible sections.
 
 ```jinja
-{% import "components/_sidebar.html" as Sidebar %}
+{% import "components/_sidebar.html" as Sidebar with context %}
 ```
 
 #### Macros
@@ -73,21 +73,95 @@ Fixed side navigation with collapsible sections.
 | `divider()` | - | Horizontal divider |
 | `subheader(label)` | `label` | Section subheader |
 
-#### Example
+#### `render(title, id)`
+
+Container macro that wraps all sidebar content. Must be used with Jinja2's `{% call %}` block.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `title` | string | - | Unused (uses `sidenav_title` context variable instead) |
+| `id` | string | `"mainMenu"` | HTML id attribute for the sidebar |
+
+**Context Variables:**
+- `sidenav_title` - Brand text displayed in header (defaults to "LibrePOS")
+- `app_version` - If defined, displays version in footer
+
+#### `item(label, icon, url, active)`
+
+Creates a single navigation link item.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | string | - | Display text for the link |
+| `icon` | string | - | Material Icons icon name |
+| `url` | string | `""` | Destination URL |
+| `active` | bool | `False` | Force active state (auto-detected from `request.path`) |
 
 ```jinja
-{% call Sidebar.render("LibrePOS", "mainMenu") %}
-    {{ Sidebar.subheader("Main") }}
-    {{ Sidebar.item("Dashboard", "dashboard", url_for('main.dashboard')) }}
-    {{ Sidebar.item("Orders", "receipt_long", url_for('orders.index')) }}
+{{ Sidebar.item("Dashboard", url=url_for('menu.index'), icon="dashboard") }}
+{{ Sidebar.item("Settings", url="/settings", icon="settings", active=True) }}
+```
+
+#### `subheader(label)`
+
+Creates a non-clickable section header to group related items.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | string | - | Section title text |
+
+```jinja
+{{ Sidebar.subheader("Configuration") }}
+{{ Sidebar.item("Settings", url="/settings", icon="settings") }}
+```
+
+#### `collapsible(text, icon)`
+
+Creates an expandable accordion section. Must be used with `{% call %}` to nest child items.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `text` | string | - | Header text for the collapsible |
+| `icon` | string | - | Material Icons icon name |
+
+```jinja
+{% call Sidebar.collapsible("Reports", icon="analytics") %}
+    {{ Sidebar.item("Sales", url="/reports/sales") }}
+    {{ Sidebar.item("Inventory", url="/reports/inventory") }}
+{% endcall %}
+```
+
+#### `divider()`
+
+Renders a horizontal line separator between navigation sections. Takes no parameters.
+
+```jinja
+{{ Sidebar.item("Dashboard", url="/", icon="dashboard") }}
+{{ Sidebar.divider() }}
+{{ Sidebar.item("Logout", url="/auth/logout", icon="logout") }}
+```
+
+#### Example: Complete Sidebar
+
+```jinja
+{% import "components/_sidebar.html" as Sidebar with context %}
+
+{% call Sidebar.render() %}
+    {{ Sidebar.item("Dashboard", url=url_for('menu.index'), icon="dashboard") }}
+
+    {{ Sidebar.subheader("Catalog") }}
+    {{ Sidebar.item("Menu Items", url=url_for('menu.items'), icon="restaurant_menu") }}
+    {{ Sidebar.item("Categories", url=url_for('menu.categories'), icon="category") }}
 
     {{ Sidebar.divider() }}
-    {{ Sidebar.subheader("Management") }}
 
-    {% call Sidebar.collapsible("Menu", "restaurant_menu") %}
-        {{ Sidebar.item("Items", "inventory_2", url_for('menu.items')) }}
-        {{ Sidebar.item("Categories", "category", url_for('menu.categories')) }}
+    {% call Sidebar.collapsible("Reports", icon="analytics") %}
+        {{ Sidebar.item("Daily Sales", url="/reports/daily") }}
+        {{ Sidebar.item("Weekly Summary", url="/reports/weekly") }}
     {% endcall %}
+
+    {{ Sidebar.subheader("Configuration") }}
+    {{ Sidebar.item("Settings", url=url_for('menu.settings'), icon="settings") }}
 {% endcall %}
 ```
 
@@ -173,24 +247,120 @@ Dropdown menus for actions and app grids.
 
 ### Icon (`macros/icon.html`)
 
-Material Symbols icon helper.
+Material Symbols icon helper with semantic macros for POS consistency.
 
 ```jinja
 {% import "macros/icon.html" as Icon %}
 ```
 
-#### Macro
+#### Base Macro
 
 | Macro | Parameters | Description |
 |-------|------------|-------------|
-| `render(name, class_, attrs)` | `name`, `class_=None`, `attrs=None` | Renders icon element |
+| `render(name, class_, attrs)` | `name`, `class_=None`, `attrs=None` | Renders any icon by name |
 
-#### Example
+#### Semantic Icon Macros
+
+All semantic macros accept `(class_=None, attrs=None)` parameters.
+
+**CRUD Operations**
+
+| Macro | Icon | Usage |
+|-------|------|-------|
+| `add()` | add | Create new items |
+| `edit()` | edit | Edit existing items |
+| `delete()` | delete | Delete/remove items |
+| `save()` | save | Save changes |
+| `cancel()` | cancel | Cancel/discard |
+
+**Navigation**
+
+| Macro | Icon | Usage |
+|-------|------|-------|
+| `back()` | arrow_back | Go back |
+| `close()` | close | Close modal/panel |
+| `menu()` | menu | Hamburger menu |
+| `home()` | home | Home/dashboard |
+| `more()` | more_vert | More options |
+
+**Orders & POS**
+
+| Macro | Icon | Usage |
+|-------|------|-------|
+| `order()` | receipt_long | Orders |
+| `cart()` | shopping_cart | Cart/basket |
+| `payment()` | payments | Payment |
+| `cash()` | attach_money | Cash payment |
+| `card()` | credit_card | Card payment |
+| `table()` | table_restaurant | Table |
+| `receipt()` | receipt | Receipt/check |
+| `discount()` | percent | Discount |
+| `tip()` | volunteer_activism | Tip |
+
+**Menu Management**
+
+| Macro | Icon | Usage |
+|-------|------|-------|
+| `food()` | restaurant_menu | Food items |
+| `drink()` | local_bar | Beverages |
+| `category()` | category | Categories |
+| `modifier()` | tune | Modifiers |
+| `price()` | sell | Pricing |
+
+**Kitchen**
+
+| Macro | Icon | Usage |
+|-------|------|-------|
+| `kitchen()` | soup_kitchen | Kitchen display |
+| `timer()` | timer | Cook time |
+| `done()` | check_circle | Order ready |
+| `priority()` | priority_high | Rush order |
+
+**Staff & Users**
+
+| Macro | Icon | Usage |
+|-------|------|-------|
+| `user()` | person | Single user |
+| `users()` | groups | Multiple users |
+| `login()` | login | Sign in |
+| `logout()` | logout | Sign out |
+| `role()` | admin_panel_settings | Roles/permissions |
+
+**Status Indicators**
+
+| Macro | Icon | Usage |
+|-------|------|-------|
+| `success()` | check_circle | Success state |
+| `error()` | error | Error state |
+| `warning()` | warning | Warning state |
+| `info()` | info | Information |
+| `pending()` | hourglass_empty | Pending/waiting |
+
+**Common Actions**
+
+| Macro | Icon | Usage |
+|-------|------|-------|
+| `search()` | search | Search |
+| `filter()` | filter_list | Filter |
+| `sort()` | sort | Sort |
+| `refresh()` | refresh | Refresh/reload |
+| `print_()` | print | Print |
+| `export()` | download | Export/download |
+| `settings()` | settings | Settings |
+| `help_()` | help | Help |
+
+#### Example: Generic vs Semantic
 
 ```jinja
+{# Generic (still works) #}
 {{ Icon.render("add") }}
 {{ Icon.render("delete", "red-text") }}
-{{ Icon.render("info", "left", 'data-tooltip="Help"') }}
+
+{# Semantic (recommended) #}
+{{ Icon.add() }}
+{{ Icon.delete(class_="red-text") }}
+{{ Icon.save(class_="left") }}
+{{ Icon.cart() }}
 ```
 
 ---
