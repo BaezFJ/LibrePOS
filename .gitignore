@@ -337,4 +337,7 @@ wheels/
 x64/
 x86/
 librepos/app/static/images/users/
+librepos/app/static/img/*
+!librepos/app/static/img/icons/
+!librepos/app/static/img/placeholders/
 !/scripts/
