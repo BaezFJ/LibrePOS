@@ -37,11 +37,11 @@
        attrs  (str): Optional. Additional HTML attributes as a string.
 #}
 {% macro render(name, class_=None, attrs=None) -%}
-    <i class="material-symbols-rounded {{ class_ or '' }}" aria-hidden="true"{{ attrs and ' ' ~ attrs or '' }}>
+    <span class="material-symbols-rounded {{ class_ or '' }}" aria-hidden="true"{{ attrs and ' ' ~ attrs or '' }}>
         {% if name is defined %}
             {{ name }}
         {% endif %}
-    </i>
+    </span>
 {%- endmacro %}
 
 

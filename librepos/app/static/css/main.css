@@ -252,6 +252,10 @@ footer{
     transition: background 0.15s ease, transform 0.1s ease;
 }
 
+.app-tile > span{
+    color: var(--md-sys-color-on-surface);
+}
+
 .app-tile:hover {
     background: rgba(0, 0, 0, 0.08);
     transform: translateY(-1px);
