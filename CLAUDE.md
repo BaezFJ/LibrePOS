@@ -16,10 +16,80 @@ A full-featured Restaurant Point of Sale (POS) system built with Flask using the
 | Authentication | Flask-Login (sessions), JWT-ready for API |
 | Forms | Flask-WTF |
 | Serialization | Flask-Marshmallow |
-| Frontend | Jinja2 templates, MaterializeCSS |
+| Frontend | Jinja2 templates, Bootstrap 5.3.8 |
+| Icons | Google Material Symbols Rounded |
+| JS (Frontend) | Vanilla JavaScript (ES2022+) |
 | Charts | Chart.js |
 | Drag & Drop | SortableJS, interact.js |
 | Testing | Pytest |
+
+## UI/UX Philosophy
+
+| Principle | Description |
+|-----------|-------------|
+| Mobile & Touch First | Components designed for touch before mouse/keyboard |
+| Restaurant-Optimized | UI patterns for fast-paced restaurant environments |
+| Accessibility First | WCAG 2.1 AA compliance mandatory |
+| Performance Obsessed | Sub-second interactions, instant feedback |
+
+> Full UI/UX specifications: see `docs/uiux.md`
+
+## Design System
+
+### CSS Custom Properties
+All colors, spacing, and typography use `--pos-*` CSS custom properties. Never hardcode values.
+
+| Category | Prefix | Example |
+|----------|--------|---------|
+| Brand colors | `--pos-primary`, `--pos-secondary` | `--pos-primary: #2563eb` |
+| Semantic | `--pos-success`, `--pos-danger` | `--pos-danger: #ef4444` |
+| Surfaces | `--pos-bg-*`, `--pos-text-*` | `--pos-bg-primary`, `--pos-text-secondary` |
+| Spacing | `--pos-space-*` | `--pos-space-4` (16px) |
+
+### Icons
+Use Google Material Symbols Rounded. Include via CDN:
+```html
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+```
+
+Usage:
+```html
+<span class="material-symbols-rounded" aria-hidden="true">shopping_cart</span>
+```
+
+### Theme Support
+Dual theme (light/dark) via `data-theme` attribute on `<html>`. Theme variables auto-switch.
+
+> See `docs/uiux.md` for full color palette, typography scale, and spacing values.
+
+## Touch & Accessibility
+
+### Touch Targets
+- **Minimum size**: 48x48px for all interactive elements
+- **Spacing**: 8px minimum gap between touch targets
+- Use `pointerdown`/`pointerup` events for cross-device compatibility
+
+### Accessibility (WCAG 2.1 AA)
+
+| Requirement | Implementation |
+|-------------|----------------|
+| Color contrast | 4.5:1 normal text, 3:1 large text |
+| Focus indicators | Visible focus rings on all interactive elements |
+| Keyboard nav | All functionality keyboard accessible |
+| Screen readers | Proper ARIA labels, live regions for dynamic content |
+| Reduced motion | Respect `prefers-reduced-motion` |
+
+### CSS Class Prefixes
+
+| Prefix | Purpose |
+|--------|---------|
+| `.pos-btn-*` | Button variants |
+| `.pos-card-*` | Card components |
+| `.pos-menu-*` | Menu-related |
+| `.pos-cart-*` | Cart/order |
+| `.pos-sr-*` | Screen reader utilities |
+
+> See `docs/uiux.md` for ARIA patterns, focus management, and component HTML examples.
 
 ## Directory Structure
 
@@ -204,6 +274,10 @@ def new_page():
 4. **Blueprint-specific assets** go in `blueprints/{name}/static/`
 5. **Template namespacing** - templates in `blueprints/{name}/templates/{name}/`
 6. **Write tests** in the corresponding `tests/unit/test_{blueprint}/` directory
+7. **HTML**: Use semantic elements (`<nav>`, `<main>`, `<aside>`), `type="button"` on non-submit buttons, proper `aria-*` attributes
+8. **CSS**: BEM-like naming with `pos-` prefix (`.pos-component-element--modifier`), use CSS custom properties only
+9. **JavaScript**: ES2022+ modules, event delegation, `const`/`let` only, strict equality
+10. **Touch interactions**: Min 48x48px targets, use pointer events, provide immediate visual feedback
 
 ## Jinja2 Component Documentation Style
 
@@ -258,6 +332,7 @@ When documenting Jinja2 macro components, follow this format:
 
 ## Related Documentation
 
+- **UI/UX Guidelines: see docs/uiux.md** *(design system, components, accessibility)*
 - Product requirements: see docs/PRD.md
 - Database schema: see docs/database-schema.md
 - Application structure: see docs/architecture.md
