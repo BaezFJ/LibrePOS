@@ -1,7 +1,7 @@
 [project]
 name = "librepos"
 version = "1.0.0.dev2"
-description = "LibrePOS is an open-source, web-based Point of Sale system for restaurants and mobile food vendors. Built with Flask, MaterializeCSS, and HTMX, it offers product management, order tracking, and user authentication. "
+description = "LibrePOS is an open-source, web-based Point of Sale system for restaurants and mobile food vendors. Built with Flask, Bootstrap, and HTMX, it offers product management, order tracking, and user authentication. "
 authors = [
     { name = "BaezFJ", email = "baezdevs@gmail.com" }
 ]
@@ -19,10 +19,11 @@ dependencies = [
     "flask>=3.1.2",
     "flask-login>=0.6.3",
     "flask-mailman>=1.1.1",
+    "flask-migrate>=4.1.0",
     "flask-sqlalchemy>=3.1.1",
     "flask-wtf>=1.2.2",
     "pillow>=11.0.0",
-    "python-dotenv>=1.2.1",
+    "pydantic-settings>=2.12.0",
     "python-slugify>=8.0.4",
     "python-usernames>=1.1.0",
     "pytz>=2025.2",

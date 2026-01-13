@@ -1,0 +1,162 @@
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+/* Color Utilities
+   ========================================================================== */
+
+.primary-color {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+
+.primary-color-text {
+    color: var(--md-sys-color-primary);
+}
+
+.primary-border {
+    border: 1px solid var(--md-sys-color-primary);
+}
+
+.error {
+    background-color: var(--sys-color-error);
+    color: var(--sys-color-on-error);
+}
+
+.error-border {
+    border: 1px solid var(--sys-color-error);
+}
+
+.info {
+    background-color: var(--sys-color-info);
+    color: var(--sys-color-on-info);
+}
+
+.info-border {
+    border: 1px solid var(--sys-color-info);
+}
+
+.warning {
+    background-color: var(--sys-color-warning);
+    color: var(--sys-color-on-warning);
+}
+
+.success {
+    background-color: var(--sys-color-success);
+    color: var(--sys-color-on-success);
+}
+
+.success-border {
+    border: 1px solid var(--sys-color-success);
+}
+
+.success-text {
+    color: var(--sys-color-success);
+}
+
+/* Flexbox Utilities
+   ========================================================================== */
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.flex-align-center {
+    align-items: center;
+}
+
+.justify-flex-end {
+    justify-content: flex-end;
+}
+
+/* Layout Utilities
+   ========================================================================== */
+
+.center-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 96px);
+}
+
+/* File Dropzone
+   ========================================================================== */
+
+.file-dropzone {
+    border: 2px dashed var(--md-sys-color-outline);
+    border-radius: 8px;
+    padding: 2rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    background-color: var(--md-sys-color-surface-variant);
+}
+
+.file-dropzone:hover {
+    border-color: var(--md-sys-color-primary);
+}
+
+.file-dropzone--dragover {
+    border-color: var(--md-sys-color-primary);
+    background-color: var(--md-sys-color-primary-container);
+}
+
+.file-dropzone--selected {
+    border-style: solid;
+    border-color: var(--md-sys-color-primary);
+}
+
+.file-dropzone__input {
+    display: none !important;
+}
+
+.file-dropzone__icon {
+    font-size: 3rem;
+    color: var(--md-sys-color-outline);
+    margin-bottom: 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.file-dropzone:hover .file-dropzone__icon,
+.file-dropzone--dragover .file-dropzone__icon {
+    color: var(--md-sys-color-primary);
+}
+
+.file-dropzone__text {
+    margin: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.95rem;
+}
+
+.file-dropzone__preview {
+    margin-top: 0.75rem;
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
+    word-break: break-all;
+}
+
+.file-dropzone__preview:empty {
+    display: none;
+}

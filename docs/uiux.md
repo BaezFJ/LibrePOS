@@ -1,0 +1,118 @@
+# LibrePOS UI/UX Guidelines
+
+> Modern POS system built with Flask, Jinja2, Bootstrap 5.3.8, and vanilla JavaScript (ES2022+)
+
+---
+
+## Core Principles
+
+- **Mobile & Touch First**: Design for touch before mouse/keyboard
+- **Restaurant-Optimized**: Fast-paced environment patterns
+- **Accessibility First**: WCAG 2.1 AA mandatory
+- **Performance Obsessed**: Sub-second interactions
+
+---
+
+## Quick Reference
+
+| Task | Implementation |
+|------|----------------|
+| Add theme support | Use `var(--pos-*)` custom properties |
+| Make touchable | Min 48x48px, use `pointerdown`/`pointerup` |
+| Add to screen reader | Use `aria-label`, `aria-live`, `role` |
+| Animate safely | Use `transform`/`opacity`, check `prefers-reduced-motion` |
+| Handle state | Use `data-*` attributes and `aria-*` states |
+| Add icon | `<span class="material-symbols-rounded" aria-hidden="true">icon_name</span>` |
+
+---
+
+## CSS Files
+
+| File | Purpose |
+|------|---------|
+| `variables.css` | Design tokens (Catppuccin colors, spacing, typography) |
+| `main.css` | Global layout, navigation, components |
+| `utilities.css` | Utility classes (flexbox, colors) |
+| `override.css` | Bootstrap overrides |
+
+---
+
+## Class Prefixes
+
+| Prefix | Purpose |
+|--------|---------|
+| `.pos-` | All LibrePOS components |
+| `.pos-btn-` | Button variants |
+| `.pos-card-` | Card components |
+| `.pos-menu-` | Menu-related components |
+| `.pos-cart-` | Cart/order components |
+| `.pos-modal-` | Modal dialogs |
+| `.pos-sr-` | Screen reader utilities |
+
+---
+
+## Key Standards
+
+### Touch Targets
+
+| Size | Usage |
+|------|-------|
+| 44x44px | Minimum (WCAG) |
+| 48x48px | Recommended |
+| 56px | Menu items |
+| 8px gap | Between targets |
+
+### Performance Targets
+
+| Metric | Target |
+|--------|--------|
+| First Contentful Paint | < 1.0s |
+| Time to Interactive | < 2.0s |
+| JS Bundle (gzipped) | < 100KB |
+
+### Accessibility
+
+| Requirement | Standard |
+|-------------|----------|
+| Color Contrast | 4.5:1 text |
+| Focus Indicators | Visible rings |
+| Touch Targets | 44x44px min |
+
+---
+
+## Theme System
+
+```javascript
+// Set theme
+document.documentElement.setAttribute('data-theme', 'dark');
+localStorage.setItem('pos-theme', 'dark');
+```
+
+Light theme: Catppuccin Latte | Dark theme: Catppuccin Mocha
+
+---
+
+## Design References
+
+Reference Square POS, Clover, Lightspeed for patterns:
+- Large, easily tappable buttons
+- Minimal steps for common tasks
+- Clear visual feedback
+- Logical information hierarchy
+
+---
+
+## Browser Support
+
+Chrome, Firefox, Safari, Edge (last 2 versions), iOS Safari, Chrome Android. No IE11.
+
+---
+
+## Detailed Documentation
+
+- [Design System](uiux/design-system.md) - Colors, typography, spacing, icons
+- [Accessibility](uiux/accessibility.md) - WCAG compliance, ARIA patterns
+- [Touch & Responsive](uiux/touch-responsive.md) - Touch targets, breakpoints
+- [Performance](uiux/performance.md) - Targets, JS/CSS optimization
+- [Components](uiux/components.md) - Button patterns, layouts
+- [Conventions](uiux/conventions.md) - HTML, CSS, JS standards

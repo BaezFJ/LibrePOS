@@ -1,0 +1,146 @@
+{#
+    Placeholder Macros
+    ==================
+    Placeholder components for pages or features under development, and empty states.
+
+    Import:
+        {% import "macros/placeholder.html" as Placeholder %}
+
+    Full Page Placeholder:
+        {{ Placeholder.page(
+            title="Coming Soon",
+            description="This feature is under development.",
+            icon="construction"
+        ) }}
+
+    Card/Inline Placeholder:
+        {{ Placeholder.card(
+            title="No Data",
+            description="Nothing to display yet.",
+            icon="hourglass_empty"
+        ) }}
+
+    Empty State (for lists/tables):
+        {{ Placeholder.empty(
+            title="No Items Found",
+            description="There's nothing here yet.",
+            icon="inbox",
+            action_url=url_for('menu.create'),
+            action_label="Add New"
+        ) }}
+#}
+
+
+{# page(title, description, icon, show_back, back_url, back_label)
+   ---------------------------------------------------------------
+   Full page placeholder - centered content for entire page views.
+
+   Parameters:
+       title       (str):  Optional. Heading text. Defaults to "Under Development".
+       description (str):  Optional. Description text. Defaults to feature coming soon message.
+       icon        (str):  Optional. Material Symbols icon. Defaults to "construction".
+       show_back   (bool): Optional. Show back button. Defaults to True.
+       back_url    (str):  Optional. Back button URL. Defaults to browser history.back().
+       back_label  (str):  Optional. Back button text. Defaults to "Go Back".
+#}
+{% macro page(
+    title="Under Development",
+    description="This feature is currently being built and will be available soon.",
+    icon="construction",
+    show_back=True,
+    back_url=None,
+    back_label="Go Back"
+) %}
+    <div class="placeholder-page">
+        <div class="placeholder-content">
+            {% if icon is defined %}
+                <div class="placeholder-icon">
+                    <i class="material-symbols-rounded">{{ icon }}</i>
+                </div>
+            {% endif %}
+            {% if title is defined %}
+                <h4 class="placeholder-title">{{ title }}</h4>
+            {% endif %}
+            {% if description is defined %}
+                <p class="placeholder-description">{{ description }}</p>
+            {% endif %}
+            {% if show_back is defined %}
+            <div class="placeholder-actions">
+                {% if back_url is defined %}
+                <a href="{{ back_url }}" class="btn btn-primary">
+                    <i class="material-symbols-rounded me-2" aria-hidden="true">arrow_back</i>
+                    {{ back_label if back_label is defined }}
+                </a>
+                {% else %}
+                    <a href="javascript:history.back()" class="btn btn-primary">
+                        <i class="material-symbols-rounded me-2" aria-hidden="true">arrow_back</i>
+                        {{ back_label if back_label is defined }}
+                    </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+
+{# card(title, description, icon, class_)
+   ---------------------------------------
+   Card/inline placeholder - for sections within a page.
+
+   Parameters:
+       title       (str): Optional. Heading text. Defaults to "Coming Soon".
+       description (str): Optional. Description text. Defaults to under development message.
+       icon        (str): Optional. Material Symbols icon. Defaults to "hourglass_empty".
+       class_      (str): Optional. Additional CSS classes for the container.
+#}
+{% macro card(
+    title="Coming Soon",
+    description="This section is under development.",
+    icon="hourglass_empty",
+    class_=""
+) %}
+    <div class="placeholder-card {{ class_ }}">
+        <div class="placeholder-card-icon">
+            <i class="material-symbols-rounded">{{ icon }}</i>
+        </div>
+        <h5 class="placeholder-card-title">{{ title }}</h5>
+        <p class="placeholder-card-description">{{ description }}</p>
+    </div>
+{% endmacro %}
+
+
+{# empty(title, description, icon, action_url, action_label, action_icon)
+   ----------------------------------------------------------------------
+   Empty state placeholder - for lists/tables with no data.
+
+   Parameters:
+       title        (str): Optional. Heading text. Defaults to "No Items Found".
+       description  (str): Optional. Description text. Defaults to nothing here message.
+       icon         (str): Optional. Material Symbols icon. Defaults to "inbox".
+       action_url   (str): Optional. URL for action button. If None, button is hidden.
+       action_label (str): Optional. Action button text. Defaults to "Add New".
+       action_icon  (str): Optional. Action button icon. Defaults to "add".
+#}
+{% macro empty(
+    title="No Items Found",
+    description="There's nothing here yet.",
+    icon="inbox",
+    action_url=None,
+    action_label="Add New",
+    action_icon="add"
+) %}
+    <div class="placeholder-empty">
+        <div class="placeholder-empty-icon">
+            <i class="material-symbols-rounded">{{ icon }}</i>
+        </div>
+        <h5 class="placeholder-empty-title">{{ title }}</h5>
+        <p class="placeholder-empty-description">{{ description }}</p>
+        {% if action_url %}
+            <a href="{{ action_url }}" class="btn btn-primary">
+                <i class="material-symbols-rounded me-2" aria-hidden="true">{{ action_icon }}</i>
+                {{ action_label }}
+            </a>
+        {% endif %}
+    </div>
+{% endmacro %}

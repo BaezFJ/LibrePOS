@@ -1,0 +1,12 @@
+{% extends 'menu/_base.html' %}
+
+{% import 'macros/placeholder.html' as Placeholder %}
+
+{% block main %}
+    {{ Placeholder.page(
+        title="Modifier Groups",
+        description="The modifier groups management page is under development. You'll soon be able to organize modifiers into groups like 'Size', 'Temperature', or 'Add-ons'.",
+        icon="playlist_add",
+        back_url=url_for('menu.index')
+    ) }}
+{% endblock %}

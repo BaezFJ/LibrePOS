@@ -1,0 +1,93 @@
+/* ==========================================================================
+   MAIN.CSS - LibrePOS Global Styles
+   ==========================================================================
+   Table of Contents:
+   1. Reset & Base Styles
+   2. Layout Structure
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. RESET & BASE STYLES
+   ========================================================================== */
+
+/* Smooth scrolling for users without motion sensitivity */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Hide scrollbars globally (all browsers) */
+*,
+*::before,
+*::after {
+    -webkit-scrollbar {
+        display: none !important;
+    }
+}
+
+* {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+/* Remove number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+/* ==========================================================================
+   2. LAYOUT STRUCTURE
+   ========================================================================== */
+
+html {
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    max-height: 100vh;
+    flex-direction: column;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+    overflow: hidden;
+}
+
+body::-webkit-scrollbar {
+    display: none !important;
+}
+
+main {
+    flex: 1 1 auto;
+    overflow: scroll;
+}
+
+/* Sidenav offset for desktop */
+header,
+main,
+footer {
+    padding-left: 300px;
+}
+
+footer{
+    background-color: hsl(from var(--md-sys-color-surface) h s l);
+    color: var(--md-sys-color-on-surface);
+}
+
+@media only screen and (max-width: 992px) {
+    header,
+    main,
+    footer {
+        padding-left: 0;
+    }
+}

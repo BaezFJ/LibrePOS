@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="section teal darken-2 white-text">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 center-align" style="padding: 60px 0;">
+                <h1>LibrePOS</h1>
+                <p class="flow-text">Modern Restaurant Point of Sale System</p>
+                <a href="#!" class="btn btn-lg btn-light text-primary">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Cards -->
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-content center-align">
+                        <span class="material-symbols-outlined" style="font-size: 48px;">point_of_sale</span>
+                        <h5>POS Terminal</h5>
+                        <p>Process orders and payments quickly</p>
+                    </div>
+                    <div class="card-action center-align">
+                        <a href="#">Open POS</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-content center-align">
+                        <span class="material-symbols-outlined" style="font-size: 48px;">restaurant</span>
+                        <h5>Kitchen Display</h5>
+                        <p>Manage kitchen orders in real-time</p>
+                    </div>
+                    <div class="card-action center-align">
+                        <a href="#">Open KDS</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-content center-align">
+                        <span class="material-symbols-outlined" style="font-size: 48px;">admin_panel_settings</span>
+                        <h5>Admin Dashboard</h5>
+                        <p>Configure and manage your restaurant</p>
+                    </div>
+                    <div class="card-action center-align">
+                        <a href="{{ url_for('admin_view') }}">Open Admin</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'menu/_base.html' %}
+
+{% import 'macros/placeholder.html' as Placeholder %}
+
+{% block main %}
+    {{ Placeholder.page(
+        title="Tags",
+        description="The tags management page is under development. You'll soon be able to create tags like 'Vegetarian', 'Gluten-Free', or 'Spicy' to label menu items.",
+        icon="label",
+        back_url=url_for('menu.index')
+    ) }}
+{% endblock %}
