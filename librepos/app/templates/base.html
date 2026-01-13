@@ -80,7 +80,6 @@
 
 {% endblock %}
 
-</body>
 {% block scripts %}{% endblock %}
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -119,4 +118,5 @@
         event.detail.headers['X-CSRFToken'] = csrfToken;
     });
 </script>
+</body>
 </html>
