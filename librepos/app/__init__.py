@@ -2,7 +2,7 @@ import os
 from importlib.metadata import version
 from pathlib import Path
 
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 from jinja2 import DebugUndefined, FileSystemBytecodeCache, StrictUndefined
 
 from librepos.app.blueprints import register_blueprints
@@ -66,6 +66,27 @@ def create_app(app_config: str | type | None = None):
     @app.get("/admin")
     def admin_view():
         return render_template("layouts/admin.html", title="Admin")
+
+    # PWA Routes - serve at root scope for full service worker control
+    @app.get("/sw.js")
+    def service_worker():
+        """Serve service worker from root scope for full PWA control."""
+        static_folder = app.static_folder
+        if static_folder is None:
+            return "Static folder not configured", 500
+        response = send_from_directory(
+            static_folder,
+            "js/sw.js",
+            mimetype="application/javascript",
+        )
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Service-Worker-Allowed"] = "/"
+        return response
+
+    @app.get("/offline.html")
+    def offline_page():
+        """Serve offline page for service worker fallback."""
+        return render_template("offline.html")
 
     # Register blueprints
     register_blueprints(app)
