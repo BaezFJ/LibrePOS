@@ -1,4 +1,4 @@
-# CLAUDE.md - Restaurant POS System
+# LibrePOS - Restaurant POS System
 
 Flask-based Restaurant POS using factory pattern and blueprint architecture.
 
@@ -6,61 +6,49 @@ Flask-based Restaurant POS using factory pattern and blueprint architecture.
 
 Flask, PostgreSQL, SQLAlchemy, Flask-Login, Marshmallow, Jinja2, Materialize CSS 2.2.2, Vanilla JS (ES2022+), Google Material Symbols Rounded.
 
-## Quick Reference
+## Commands
 
 ```bash
-flask run                          # Dev server
-flask db migrate -m "msg"          # Generate migration
-flask db upgrade                   # Apply migrations
-pytest                             # Run tests
-pytest --cov=app                   # With coverage
+flask run                    # Dev server
+flask db migrate -m "msg"    # Generate migration
+flask db upgrade             # Apply migrations
+pytest                       # Run tests
+pytest --cov=app             # With coverage
 ```
 
 ## Architecture
 
 - **12 Blueprints**: auth, api, menu, orders, payments, staff, kitchen, tables, reporting, inventory, customers, integrations
 - **Blueprint structure**: `__init__.py`, `routes.py`, `models.py`, `services.py`, `schemas.py`, `forms.py`, `static/`, `templates/`
-- **Service layer**: Routes delegate to services for business logic - keep routes thin
-- **String FK references**: Use `db.ForeignKey('table.id')` to avoid circular imports
 
-## Development Rules
+## Critical Rules
 
-### Code Conventions
-1. Use service layer for business logic, keep routes thin
-2. Use Marshmallow schemas for API serialization/validation
-3. Blueprint assets in `blueprints/{name}/static/`, templates in `blueprints/{name}/templates/{name}/`
-4. Tests in `tests/unit/test_{blueprint}/`
+**IMPORTANT - You MUST follow these:**
 
-### Frontend Conventions
-- **CSS**: Use `--pos-*` custom properties only (never hardcode colors/spacing)
-- **CSS classes**: BEM-like with `pos-` prefix (`.pos-component-element--modifier`)
-- **Icons**: `<span class="material-symbols-rounded" aria-hidden="true">icon_name</span>`
-- **JS**: ES2022+ modules, event delegation, `const`/`let` only, strict equality
-- **Touch**: Min 48x48px targets, use pointer events, 8px gap between targets
-- **A11y**: WCAG 2.1 AA, 4.5:1 contrast, visible focus rings, proper ARIA labels
+1. **Service layer**: Routes delegate to services for business logic. NEVER put business logic in routes.
+2. **String FK references**: Use `db.ForeignKey('table.id')` to avoid circular imports.
+3. **CSS variables**: ONLY use `--pos-*` custom properties. NEVER hardcode colors/spacing.
+4. **CSS classes**: BEM-like with `pos-` prefix (`.pos-component-element--modifier`).
+5. **Accessibility**: WCAG 2.1 AA required. Min 4.5:1 contrast, visible focus rings, proper ARIA.
+6. **Touch targets**: Min 48x48px, 8px gap between targets.
+7. **Icons**: `<span class="material-symbols-rounded" aria-hidden="true">icon_name</span>`
+8. **Buttons**: Always use `type="button"` on non-submit buttons.
+9. **JavaScript**: ES2022+ modules, `const`/`let` only (never `var`), strict equality (`===`).
 
-### HTML Requirements
-- Semantic elements (`<nav>`, `<main>`, `<aside>`)
-- `type="button"` on non-submit buttons
-- Theme via `data-theme` attribute on `<html>`
+## File Locations
 
-## Jinja2 Macro Documentation
-
-```jinja
-{# macro_name(param1, param2=default)
-   ----------------------------------
-   Brief description.
-
-   Parameters:
-       param1 (type): Required. Description.
-       param2 (type): Optional. Defaults to "value".
-#}
-```
+| Type | Location |
+|------|----------|
+| Blueprint assets | `blueprints/{name}/static/` |
+| Blueprint templates | `blueprints/{name}/templates/{name}/` |
+| Tests | `tests/unit/test_{blueprint}/` |
+| Macros | `app/templates/macros/` |
 
 ## Documentation
 
-- **UI/UX & Design System**: `docs/uiux.md`
-- **Database schema**: `docs/database-schema.md`
-- **API spec**: `docs/api-spec.yaml`
-- **Architecture**: `docs/architecture.md`
-- **Setup**: `docs/guides/installation.md`, `.env.example`
+- [UI/UX Guidelines](docs/uiux.md) - Design system, components, accessibility
+- [Database Schema](docs/database-schema.md) - Table definitions, relationships
+- [API Reference](docs/api.md) - RESTful API endpoints
+- [Architecture](docs/architecture.md) - Blueprint structure, patterns
+- [Components](docs/components.md) - Jinja2 macro library
+- [PRD](docs/PRD.md) - Product requirements
