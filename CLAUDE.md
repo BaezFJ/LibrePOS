@@ -4,7 +4,7 @@ Flask-based Restaurant POS using factory pattern and blueprint architecture.
 
 ## Tech Stack
 
-Flask, PostgreSQL, SQLAlchemy, Flask-Login, Marshmallow, Jinja2, Bootstrap 5.3.8, Vanilla JS (ES2022+), Google Material Symbols Rounded.
+Flask, PostgreSQL, SQLAlchemy, Flask-Login, Marshmallow, Jinja2, Materialize CSS 2.2.2, Vanilla JS (ES2022+), Google Material Symbols Rounded.
 
 ## Commands
 

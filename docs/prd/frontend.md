@@ -1,20 +1,20 @@
 # Frontend Framework Configuration
 
-> Bootstrap, Chart.js, SortableJS, and interact.js integration
+> MaterializeCSS, Chart.js, SortableJS, and interact.js integration
 
 ---
 
 ## Overview
 
-The frontend stack combines Bootstrap for consistent styling with specialized JavaScript libraries for interactive features. This approach provides a polished, professional appearance while enabling complex interactions required for POS operations.
+The frontend stack combines MaterializeCSS for consistent Material Design styling with specialized JavaScript libraries for interactive features. This approach provides a polished, professional appearance while enabling complex interactions required for POS operations.
 
 ---
 
-## Bootstrap - Base Styling
+## MaterializeCSS - Base Styling
 
-Bootstrap serves as the base styling framework, providing responsive components optimized for touch interfaces.
+MaterializeCSS serves as the base styling framework, providing Material Design components optimized for touch interfaces.
 
-- UI components: cards, buttons, forms, modals, navigation
+- Material Design components: cards, buttons, forms, modals, navigation
 - Responsive grid system with 12-column layout
 - Built-in JavaScript components: dropdowns, modals, tabs, toasts
 - Touch-optimized interactions for mobile and tablet devices
@@ -68,7 +68,7 @@ interact.js powers the visual floor plan editor for table management.
 ## File Structure
 
 ```
-app/static/vendor/          # Bootstrap, Chart.js, SortableJS, interact.js
+app/static/vendor/          # MaterializeCSS, Chart.js, SortableJS, interact.js
 app/static/css/main.css     # Global custom styles
 app/static/js/app.js        # Global JavaScript initialization
 blueprints/{name}/static/   # Blueprint-specific CSS and JavaScript
@@ -78,7 +78,7 @@ blueprints/{name}/static/   # Blueprint-specific CSS and JavaScript
 
 ## Theme Customization
 
-Bootstrap is customized via Sass variables for consistent brand identity.
+MaterializeCSS is customized via Sass variables for consistent brand identity.
 
 | Token | Purpose |
 |-------|---------|

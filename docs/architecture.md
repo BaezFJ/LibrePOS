@@ -141,7 +141,7 @@ def new_page():
 | Framework | Flask + factory pattern | Flexibility, modularity, testing |
 | API | Separate versioned blueprint | Clean evolution (`/api/v1/...`) |
 | Auth | Flask-Login (web), JWT-ready (API) | Simple + future mobile support |
-| Frontend | Bootstrap + Chart.js + interact.js | Touch-friendly, modern |
+| Frontend | MaterializeCSS + Chart.js + interact.js | Touch-friendly, modern |
 | Testing | Pytest with fixtures | Powerful, readable |
 
 ---

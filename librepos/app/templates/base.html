@@ -33,9 +33,9 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='vendor/google/css/material-symbols-rounded.min.css') }}">
 
-    <!--Bootstrap-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
-    <!--Bootstrap overrides-->
+    <!--MaterializeCSS-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/materialize/css/materialize.min.css') }}">
+    <!--MaterializeCSS overrides-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/override.min.css') }}">
     <!--Custom Variables (Theme colors, fonts, etc.)-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.min.css') }}">
@@ -92,9 +92,9 @@
         {% endfor %}
     {% endif %}
 {% endwith %}
-<!--Bootstrap JavaScript-->
+<!--MaterializeCSS JavaScript-->
 <script type="text/javascript"
-        src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        src="{{ url_for('static', filename='vendor/materialize/js/materialize.min.js') }}"></script>
 <!--Application JavaScript-->
 <script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/utils.min.js') }}"></script>
@@ -104,12 +104,9 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    const toastEl = document.getElementById('message-template-{{ category }}');
-                    if (toastEl) {
-                        const toast = new bootstrap.Toast(toastEl.content.cloneNode(true).querySelector('.toast'));
-                        document.body.appendChild(toast._element);
-                        toast.show();
-                    }
+                    new M.Toast({
+                        toastId: 'message-template-{{ category }}',
+                    });
                 {% endfor %}
             {% endif %}
         {% endwith %}

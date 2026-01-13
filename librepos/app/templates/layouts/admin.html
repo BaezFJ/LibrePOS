@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% import "components/_navbar.html" as Navbar %}
+{% import "components/_dropdown.html" as Dropdown %}
+
+{% block header %}
+    <header>
+        <nav class="nav navbar">
+            <div class="nav-wrapper">
+                {#========== Left Menu ==========#}
+                <ul>
+                    {{ Navbar.sidenav_trigger() }}
+                    {% if back_url is defined %}
+                        {{ Navbar.item("Back", "arrow_back", url=back_url) }}
+                    {% endif %}
+                </ul>
+
+                {#========== Menu Title ==========#}
+                {% set nav_title = nav_title if nav_title is defined else business_name %}
+                {{ Navbar.title(nav_title) }}
+
+                {#========== Right Menu ==========#}
+                <ul class="right">
+                    {{ Navbar.dropdown_trigger(icon="apps", target="apps-dropdown") }}
+
+                    {{ Navbar.dropdown_trigger(icon="account_circle", target="user-dropdown") }}
+
+                </ul>
+
+
+                {% call Dropdown.render('user-dropdown', class_='user-dropdown') %}
+                    <!-- Custom header -->
+                    {#                    <li class="user-dropdown-header">#}
+                    {#                        <img src="{{ url_for("static", filename="images/"+current_user.profile.image) }}"#}
+                    {#                             alt="{{ current_user.profile.fullname or 'User avatar' }}"#}
+                    {#                             class="circle user-dropdown-avatar">#}
+                    {#                        <span class="user-dropdown-name">{{ current_user.profile.fullname or 'Guest User' }}</span>#}
+                    {#                    </li>#}
+                    {{ Dropdown.item('Profile', url='#!', icon='account_circle') }}
+                    {{ Dropdown.item('Notifications', url='#!', icon='notifications', badge='2') }}
+                    {{ Dropdown.item('Messages', url='#!', icon='chat', badge='14') }}
+                    {{ Dropdown.item('Settings', url='#!', icon='settings') }}
+                    {{ Dropdown.item('Help & Support', url='#!', icon='help') }}
+                    {{ Dropdown.divider() }}
+                    {{ Dropdown.item('Log out', url='#!', icon='logout', class_='red-text text-darken-1') }}
+                {% endcall %}
+
+                <!-- Apps Dropdown -->
+                <div id="apps-dropdown" class="dropdown-content apps-dropdown">
+                    <div class="apps-dropdown-inner">
+                        <div class="apps-grid">
+                            {{ Dropdown.tile('lock', 'Auth') }}
+                            {{ Dropdown.tile('restaurant_menu', 'Menu', url=url_for('menu.index')) }}
+                            {{ Dropdown.tile('receipt_long', 'Orders') }}
+                            {{ Dropdown.tile('credit_card', 'Payments') }}
+                            {{ Dropdown.tile('badge', 'Staff') }}
+                            {{ Dropdown.tile('restaurant', 'Kitchen') }}
+                            {{ Dropdown.tile('table_restaurant', 'Tables') }}
+                            {{ Dropdown.tile('analytics', 'Reporting') }}
+                            {{ Dropdown.tile('inventory_2', 'Inventory') }}
+                            {{ Dropdown.tile('people', 'Customers') }}
+                            {{ Dropdown.tile('extension', 'Integrations') }}
+                            {{ Dropdown.tile('api', 'API') }}
+                            {{ Dropdown.tile('settings', 'Settings') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        {% block sidenav %}{% endblock %}
+    </header>
+{% endblock %}
+

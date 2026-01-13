@@ -12,3 +12,15 @@
 #}
 
 {% extends 'layouts/admin.html' %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('menu.static', filename='css/menu.min.css') }}">
+{% endblock %}
+
+{% block sidenav %}
+    {% include 'menu/_sidenav.html' %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% include 'macros/breadcrumbs.html' %}
+{% endblock %}
