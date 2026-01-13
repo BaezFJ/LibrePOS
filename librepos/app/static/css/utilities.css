@@ -160,3 +160,32 @@
 .file-dropzone__preview:empty {
     display: none;
 }
+
+/* Screen Reader Utilities
+   ========================================================================== */
+
+.pos-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.pos-sr-only--focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: var(--pos-space-2) var(--pos-space-4);
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    background-color: var(--pos-bg-primary);
+    color: var(--pos-text-primary);
+    z-index: 9999;
+}

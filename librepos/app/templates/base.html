@@ -8,11 +8,11 @@
 
     {% set default_description = "Open Source web-based point of sale system for restaurants." %}
     <meta name="description" content="{{ head_description if head_description is defined else default_description }}">
-    <meta property="og:title" content="LibrePOS">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <meta property="og:image:alt" content="">
+    <meta property="og:title" content="{{ head_title if head_title is defined else 'LibrePOS' }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:image" content="{{ url_for('static', filename='img/icons/icon-512x512.png', _external=True) }}">
+    <meta property="og:image:alt" content="LibrePOS logo">
 
     <meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
 
@@ -26,7 +26,7 @@
     <title>{{ head_title if head_title is defined else business_name }}</title>
 
     <!--HTMX-->
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"></script>
+    <script src="{{ url_for('static', filename='vendor/htmx/htmx.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Material Symbols - Rounded Set -->
@@ -66,6 +66,7 @@
     {% block styles %}{% endblock %}
 </head>
 <body>
+<a href="#main" class="pos-sr-only pos-sr-only--focusable">Skip to main content</a>
 
 {% block header %}
 
@@ -81,15 +82,11 @@
 {% endblock %}
 
 {% block scripts %}{% endblock %}
+<div role="status" aria-live="polite" class="pos-sr-only" id="flash-announcer"></div>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        {% for category, message in messages %}
-            <template id="message-template-{{ category }}">
-                <div class="{{ category }}">
-                    <p class="flow-text"><b>{{ category|upper }}: </b> {{ message }}</p>
-                </div>
-            </template>
-        {% endfor %}
+        <div id="flash-messages-data" class="pos-sr-only"
+             data-messages="{{ messages | tojson | e }}"></div>
     {% endif %}
 {% endwith %}
 <!--MaterializeCSS JavaScript-->
@@ -98,25 +95,9 @@
 <!--Application JavaScript-->
 <script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/utils.min.js') }}"></script>
-<!-- Flask Message -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    new M.Toast({
-                        toastId: 'message-template-{{ category }}',
-                    });
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    });
-</script>
-<script>
-    document.body.addEventListener("htmx:configRequest", (event) => {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        event.detail.headers['X-CSRFToken'] = csrfToken;
-    });
-</script>
+<!--Flash Messages-->
+<script src="{{ url_for('static', filename='js/flash-messages.js') }}"></script>
+<!--HTMX CSRF Token-->
+<script src="{{ url_for('static', filename='js/htmx-csrf.js') }}"></script>
 </body>
 </html>
