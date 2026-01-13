@@ -1,6 +1,6 @@
 # Forms Component
 
-> Auto-renders WTForms with MaterializeCSS styling.
+> Auto-renders WTForms with Bootstrap styling.
 
 ```jinja
 {% import "macros/forms.html" as Forms %}

@@ -54,7 +54,7 @@ app/
 │   ├── static/js/         # Blueprint-specific scripts
 │   └── templates/{name}/  # Blueprint templates
 ├── static/
-│   ├── vendor/            # Materialize, Material Symbols, Chart.js, SortableJS, interact.js
+│   ├── vendor/            # Bootstrap, Material Symbols, Chart.js, SortableJS, interact.js
 │   ├── css/               # variables.css, main.css, utilities.css, override.css
 │   ├── js/                # app.js, utils.js, sw.js
 │   └── img/

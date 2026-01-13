@@ -66,4 +66,4 @@ Customer engagement and third-party ecosystem integration.
 | Model Organization | Blueprint-owned with cross-imports |
 | Database | Single PostgreSQL database |
 | CLI Tools | Flask CLI commands with click |
-| Frontend Styling | MaterializeCSS with Chart.js, SortableJS, interact.js |
+| Frontend Styling | Bootstrap with Chart.js, SortableJS, interact.js |

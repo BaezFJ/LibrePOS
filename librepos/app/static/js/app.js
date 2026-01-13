@@ -120,134 +120,38 @@ if ('serviceWorker' in navigator) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const sidenavElements = document.querySelectorAll('.sidenav');
+    // Bootstrap 5 auto-initializes most components via data-bs-* attributes.
+    // Only components that require explicit initialization are handled here.
 
-    // Function to initialize a single sidenav instance
-    const initializeRightSidenav = (element) => {
-        const edge = element.classList.contains('right') ? 'right' : 'left';
-        M.Sidenav.init(element, {edge});
-    };
-
-    // Initialize each sidenav element
-    sidenavElements.forEach(initializeRightSidenav);
-
-    // Function to initialize collapsible
-    const initializeCollapsible = () => {
-        const collapsibleElements = document.querySelectorAll('.collapsible');
-        M.Collapsible.init(collapsibleElements);
-    };
-
-    // Initialize collapsible
-    initializeCollapsible();
-
-    // Modal configuration options
-    const modalOptions = {
-        inDuration: 150, outDuration: 150, opacity: 1,
-    };
-
-    // Function to initialize modals
-    const initializeModals = () => {
-        const modalElements = document.querySelectorAll('.modal');
-        const modalInstances = M.Modal.init(modalElements, modalOptions);
-        return modalInstances;
-    };
-
-    // Initialize modals
-    initializeModals();
-
-    // Function to handle the 'onShow' event
-    const handleTabShow = (tab) => {
-        const selectedTabId = tab.getAttribute('id');
-        const tabContent = document.querySelector(TAB_CONTENT_SELECTOR(selectedTabId));
-        if (tabContent) {
-            tabContent.classList.add('active');
-        }
-    };
-
-    // Function to initialize tabs
-    const initializeTabs = () => {
-        const tabs = document.querySelectorAll(TAB_SELECTOR);
-        return M.Tabs.init(tabs, {
-            swipeable: true,
-            onShow: handleTabShow,
-            duration: 200,
-        });
-    };
-
-    // Initialize tabs
-    initializeTabs();
-
-    const initializeSelectElements = () => {
-        const selectElements = document.querySelectorAll('select');
-        return M.FormSelect.init(selectElements, {
-            // Specify options here
-        });
-    };
-
-    // Initialize select elements
-    initializeSelectElements();
-
-    // M.Forms.InitFileInputPath(document.querySelector('.file-input'));
-
-    // Const for calculating dates based on working age.
-    const CURRENT_DATE = new Date();
-    const MIN_WORKING_AGE = 12;
-    const MAX_WORKING_AGE = 65;
-
-    // Calculated important dates based on ages.
-    const MAX_WORKING_YEAR = CURRENT_DATE.getFullYear() - MIN_WORKING_AGE;
-    const MIN_WORKING_YEAR = CURRENT_DATE.getFullYear() - MAX_WORKING_AGE;
-
-
-    // Function to initialize date picker
-    const initializeDatepicker = () => {
-        const datepickerElements = document.querySelectorAll('.datepicker');
-        return M.Datepicker.init(datepickerElements, {
-            autoClose: true,
-            format: 'yyyy-mm-dd', // Example: Set the date format (1990-12-01)
-            yearRange: [MIN_WORKING_YEAR, MAX_WORKING_YEAR],
-            yearRangeReverse: true,
-            showClearBtn: true,
-            i18n: {
-                done: "Select"
-            }
-        });
-    };
-
-    // Initialize datepicker
-    initializeDatepicker();
-
-    // Function to initialize tooltips
+    // Initialize all tooltips (Bootstrap requires explicit initialization)
     const initializeTooltips = () => {
-        const tooltipElements = document.querySelectorAll('.tooltipped');
-        return M.Tooltip.init(tooltipElements, {
-            // Tooltip options can be specified here
-            // enterDelay: 200,
-            // exitDelay: 100,
-            // etc.
-        });
+        const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        return [...tooltipElements].map(el => new bootstrap.Tooltip(el));
     };
 
-    // Initialize tooltips
     initializeTooltips();
 
-    // Dropdowns
-    const dropdownTriggerSelector = '.dropdown-trigger';
-    const dropdownOptions = {
-        // specify options here
-        constrainWidth: false, // don't force dropdown to avatar width
-        coverTrigger: false,   // show dropdown below the avatar
-        alignment: 'right'     // align menu to the right edge of avatar
+    // Initialize all popovers (Bootstrap requires explicit initialization)
+    const initializePopovers = () => {
+        const popoverElements = document.querySelectorAll('[data-bs-toggle="popover"]');
+        return [...popoverElements].map(el => new bootstrap.Popover(el));
     };
 
-    const initializeDropdowns = () => {
-        const dropdownTriggerElements = document.querySelectorAll(dropdownTriggerSelector);
-        const dropdownInstances = M.Dropdown.init(dropdownTriggerElements, dropdownOptions);
-        return dropdownInstances;
-    };
+    initializePopovers();
 
-    // Initialize dropdowns
-    initializeDropdowns();
+    // Handle tab content activation
+    const tabElements = document.querySelectorAll('[data-bs-toggle="tab"]');
+    tabElements.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', (event) => {
+            const selectedTabId = event.target.getAttribute('id');
+            const tabContent = document.querySelector(TAB_CONTENT_SELECTOR(selectedTabId));
+            if (tabContent) {
+                tabContent.classList.add('active');
+            }
+        });
+    });
 
-
+    // Datepicker: Bootstrap 5 doesn't include a datepicker.
+    // Use native HTML5 date input or add a third-party library like Tempus Dominus.
+    // For now, datepicker elements use native <input type="date">.
 });

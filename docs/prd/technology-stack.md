@@ -74,7 +74,7 @@
 
 | Library | Purpose |
 |---------|---------|
-| MaterializeCSS 2.2.2 | Material Design CSS framework |
+| Bootstrap 5.3.8 | CSS framework |
 | Chart.js | JavaScript charting for reports |
 | SortableJS | Drag-and-drop reordering |
 | interact.js | Drag, resize, and gesture handling |

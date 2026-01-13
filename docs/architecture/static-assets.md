@@ -9,9 +9,9 @@
 ```
 app/static/
 ├── vendor/                       # Third-party libraries
-│   ├── materialize/
-│   │   ├── css/materialize.min.css
-│   │   └── js/materialize.min.js
+│   ├── bootstrap/
+│   │   ├── css/bootstrap.min.css
+│   │   └── js/bootstrap.bundle.min.js
 │   ├── chartjs/
 │   │   └── chart.min.js
 │   ├── sortablejs/
@@ -61,7 +61,7 @@ app/blueprints/tables/static/
 
 | Library | Version | Purpose | Location |
 |---------|---------|---------|----------|
-| MaterializeCSS | 2.2.2 | UI framework, components | `vendor/materialize/` |
+| Bootstrap | 5.3.8 | UI framework, components | `vendor/bootstrap/` |
 | Chart.js | 4.x | Dashboard charts | `vendor/chartjs/` |
 | SortableJS | 1.15.x | Drag-drop reordering | `vendor/sortablejs/` |
 | interact.js | 1.10.x | Floor plan editor | `vendor/interactjs/` |

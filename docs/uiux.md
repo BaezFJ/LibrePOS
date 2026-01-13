@@ -1,6 +1,6 @@
 # LibrePOS UI/UX Guidelines
 
-> Modern POS system built with Flask, Jinja2, Materialize CSS 2.2.2, and vanilla JavaScript (ES2022+)
+> Modern POS system built with Flask, Jinja2, Bootstrap 5.3.8, and vanilla JavaScript (ES2022+)
 
 ---
 
@@ -33,7 +33,7 @@
 | `variables.css` | Design tokens (Catppuccin colors, spacing, typography) |
 | `main.css` | Global layout, navigation, components |
 | `utilities.css` | Utility classes (flexbox, colors) |
-| `override.css` | Materialize CSS overrides |
+| `override.css` | Bootstrap overrides |
 
 ---
 

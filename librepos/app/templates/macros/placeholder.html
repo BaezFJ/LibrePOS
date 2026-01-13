@@ -67,13 +67,13 @@
             {% if show_back is defined %}
             <div class="placeholder-actions">
                 {% if back_url is defined %}
-                <a href="{{ back_url }}" class="btn waves-effect waves-light">
-                    <i class="material-symbols-rounded left">arrow_back</i>
+                <a href="{{ back_url }}" class="btn btn-primary">
+                    <i class="material-symbols-rounded me-2" aria-hidden="true">arrow_back</i>
                     {{ back_label if back_label is defined }}
                 </a>
                 {% else %}
-                    <a href="javascript:history.back()" class="btn waves-effect waves-light">
-                        <i class="material-symbols-rounded left">arrow_back</i>
+                    <a href="javascript:history.back()" class="btn btn-primary">
+                        <i class="material-symbols-rounded me-2" aria-hidden="true">arrow_back</i>
                         {{ back_label if back_label is defined }}
                     </a>
                 {% endif %}
@@ -137,8 +137,8 @@
         <h5 class="placeholder-empty-title">{{ title }}</h5>
         <p class="placeholder-empty-description">{{ description }}</p>
         {% if action_url %}
-            <a href="{{ action_url }}" class="btn waves-effect waves-light">
-                <i class="material-symbols-rounded left">{{ action_icon }}</i>
+            <a href="{{ action_url }}" class="btn btn-primary">
+                <i class="material-symbols-rounded me-2" aria-hidden="true">{{ action_icon }}</i>
                 {{ action_label }}
             </a>
         {% endif %}

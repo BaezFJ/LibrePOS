@@ -20,8 +20,8 @@ const STATIC_ASSETS = [
     '/static/img/icons/icon-192x192.png',
     '/static/img/icons/icon-384x384.png',
     '/static/img/icons/icon-512x512.png',
-    '/static/vendor/materialize/css/materialize.min.css',
-    '/static/vendor/materialize/js/materialize.min.js',
+    '/static/vendor/bootstrap/css/bootstrap.min.css',
+    '/static/vendor/bootstrap/js/bootstrap.min.js',
     '/static/vendor/google/css/material-symbols-rounded.css',
     '/static/vendor/google/fonts/material-symbols-rounded.woff2'
 ];

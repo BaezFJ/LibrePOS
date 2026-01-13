@@ -1,6 +1,6 @@
 # Badge Component
 
-> MaterializeCSS badge components for status indicators and notifications.
+> Bootstrap badge components for status indicators and notifications.
 
 ```jinja
 {% import "macros/badge.html" as Badge %}
