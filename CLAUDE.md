@@ -8,20 +8,20 @@ A full-featured Restaurant Point of Sale (POS) system built with Flask using the
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Backend | Flask (Python) with factory pattern |
-| Database | PostgreSQL (single database) |
-| ORM | SQLAlchemy with Flask-Migrate |
+| Layer | Technology                                |
+|-------|-------------------------------------------|
+| Backend | Flask (Python) with factory pattern       |
+| Database | PostgreSQL (single database)              |
+| ORM | SQLAlchemy with Flask-Migrate             |
 | Authentication | Flask-Login (sessions), JWT-ready for API |
-| Forms | Flask-WTF |
-| Serialization | Flask-Marshmallow |
-| Frontend | Jinja2 templates, Bootstrap 5.3.8 |
-| Icons | Google Material Symbols Rounded |
-| JS (Frontend) | Vanilla JavaScript (ES2022+) |
-| Charts | Chart.js |
-| Drag & Drop | SortableJS, interact.js |
-| Testing | Pytest |
+| Forms | Flask-WTF                                 |
+| Serialization | Flask-Marshmallow                         |
+| Frontend | Jinja2 templates, Materialize CSS 2.2.2   |
+| Icons | Google Material Symbols Rounded           |
+| JS (Frontend) | Vanilla JavaScript (ES2022+)              |
+| Charts | Chart.js                                  |
+| Drag & Drop | SortableJS, interact.js                   |
+| Testing | Pytest                                    |
 
 ## UI/UX Philosophy
 

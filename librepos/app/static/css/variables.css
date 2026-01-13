@@ -1,274 +1,346 @@
 /*
- * LibrePOS Theme: Warm Bistro
- * A hospitality-focused palette designed for readability in both
- * bright kitchens and dimly-lit dining rooms.
+ * LibrePOS Design System Variables
+ * ================================
+ * CSS custom properties following the --pos-* naming convention.
+ * Dual theme support via data-theme attribute and prefers-color-scheme fallback.
  *
- * Design principles:
- * - Warm undertones throughout (reduces eye strain on long shifts)
- * - High contrast for quick scanning during busy service
- * - Amber/copper accents (dark) and terracotta/rust accents (light)
- * - Semantic colors that feel organic, not synthetic
+ * Usage:
+ *   - Theme toggle: <html data-theme="dark"> or <html data-theme="light">
+ *   - Auto-detect: Remove data-theme attribute to follow system preference
+ *
+ * References:
+ *   - Full design system: docs/uiux.md
  */
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   DARK THEME - Evening Shift / Low Light
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* =============================================================================
+   BASE VARIABLES (Theme-Independent)
+   ============================================================================= */
+:root {
+    /* ── Interaction State Control ── */
+    --pos-hover-lightness-delta: 10%;
+    --pos-active-lightness-delta: 15%;
+
+    /* ── Brand Colors ── */
+    --pos-primary: #2563eb;
+    --pos-primary-hover: hsl(from var(--pos-primary) h s calc(l - var(--pos-hover-lightness-delta)));
+    --pos-primary-active: hsl(from var(--pos-primary) h s calc(l - var(--pos-active-lightness-delta)));
+
+    --pos-secondary: #64748b;
+    --pos-secondary-hover: hsl(from var(--pos-secondary) h s calc(l - var(--pos-hover-lightness-delta)));
+    --pos-secondary-active: hsl(from var(--pos-secondary) h s calc(l - var(--pos-active-lightness-delta)));
+
+    --pos-accent: #10b981;
+    --pos-accent-hover: hsl(from var(--pos-accent) h s calc(l - var(--pos-hover-lightness-delta)));
+    --pos-accent-active: hsl(from var(--pos-accent) h s calc(l - var(--pos-active-lightness-delta)));
+
+    /* ── Semantic Colors ── */
+    --pos-success: #22c55e;
+    --pos-success-hover: hsl(from var(--pos-success) h s calc(l - var(--pos-hover-lightness-delta)));
+    --pos-success-active: hsl(from var(--pos-success) h s calc(l - var(--pos-active-lightness-delta)));
+
+    --pos-warning: #f59e0b;
+    --pos-warning-hover: hsl(from var(--pos-warning) h s calc(l - var(--pos-hover-lightness-delta)));
+    --pos-warning-active: hsl(from var(--pos-warning) h s calc(l - var(--pos-active-lightness-delta)));
+
+    --pos-danger: #ef4444;
+    --pos-danger-hover: hsl(from var(--pos-danger) h s calc(l - var(--pos-hover-lightness-delta)));
+    --pos-danger-active: hsl(from var(--pos-danger) h s calc(l - var(--pos-active-lightness-delta)));
+
+    --pos-info: #3b82f6;
+    --pos-info-hover: hsl(from var(--pos-info) h s calc(l - var(--pos-hover-lightness-delta)));
+    --pos-info-active: hsl(from var(--pos-info) h s calc(l - var(--pos-active-lightness-delta)));
+
+
+    /* ── Typography ── */
+    --pos-font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                       'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    --pos-font-mono: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', monospace;
+
+    /* Font Sizes - Touch-optimized minimums */
+    --pos-text-xs: 0.75rem;    /* 12px - minimum for labels */
+    --pos-text-sm: 0.875rem;   /* 14px */
+    --pos-text-base: 1rem;     /* 16px - body text minimum */
+    --pos-text-lg: 1.125rem;   /* 18px */
+    --pos-text-xl: 1.25rem;    /* 20px */
+    --pos-text-2xl: 1.5rem;    /* 24px */
+    --pos-text-3xl: 1.875rem;  /* 30px */
+    --pos-text-4xl: 2.25rem;   /* 36px - large displays */
+
+    /* ── Spacing Scale ── */
+    --pos-space-1: 0.25rem;   /* 4px */
+    --pos-space-2: 0.5rem;    /* 8px */
+    --pos-space-3: 0.75rem;   /* 12px */
+    --pos-space-4: 1rem;      /* 16px */
+    --pos-space-5: 1.25rem;   /* 20px */
+    --pos-space-6: 1.5rem;    /* 24px */
+    --pos-space-8: 2rem;      /* 32px */
+    --pos-space-10: 2.5rem;   /* 40px */
+    --pos-space-12: 3rem;     /* 48px */
+
+    /* ── Layout ── */
+    --navbar-height: 64px;
+    --navbar-height-mobile: 56px;
+}
+
+
+/* =============================================================================
+   LIGHT THEME (Default)
+   ============================================================================= */
+:root,
+:root:not([data-theme]),
+[data-theme="light"] {
+    color-scheme: light;
+
+    /* ── Surface Colors ── */
+    --pos-bg-primary: #ffffff;
+    --pos-bg-secondary: #f8fafc;
+    --pos-bg-tertiary: #f1f5f9;
+
+    /* ── Text Colors ── */
+    --pos-text-primary: #0f172a;
+    --pos-text-secondary: #475569;
+    --pos-text-muted: #94a3b8;
+
+    /* ── Border & Dividers ── */
+    --pos-border: #e2e8f0;
+    --pos-border-strong: #cbd5e1;
+
+    /* ── Shadow ── */
+    --pos-shadow: rgba(15, 23, 42, 0.08);
+    --pos-shadow-strong: rgba(15, 23, 42, 0.16);
+
+    /* ── Semantic Container Colors ── */
+    --pos-success-container: #dcfce7;
+    --pos-warning-container: #fef3c7;
+    --pos-danger-container: #fee2e2;
+    --pos-info-container: #dbeafe;
+
+    /* ══════════════════════════════════════════════════════════════════════════
+       Material Design Token Mappings (Backwards Compatibility)
+       ══════════════════════════════════════════════════════════════════════════ */
+    --md-sys-color-primary: var(--pos-primary);
+    --md-sys-color-on-primary: #ffffff;
+    --md-sys-color-primary-container: #dbeafe;
+    --md-sys-color-on-primary-container: #1e3a5f;
+
+    --md-sys-color-secondary: var(--pos-secondary);
+    --md-sys-color-on-secondary: #ffffff;
+    --md-sys-color-secondary-container: #f1f5f9;
+    --md-sys-color-on-secondary-container: #334155;
+
+    --md-sys-color-tertiary: var(--pos-accent);
+    --md-sys-color-on-tertiary: #ffffff;
+    --md-sys-color-tertiary-container: #d1fae5;
+    --md-sys-color-on-tertiary-container: #065f46;
+
+    --md-sys-color-error: var(--pos-danger);
+    --md-sys-color-on-error: #ffffff;
+    --md-sys-color-error-container: var(--pos-danger-container);
+    --md-sys-color-on-error-container: #991b1b;
+
+    --md-sys-color-background: var(--pos-bg-secondary);
+    --md-sys-color-on-background: var(--pos-text-primary);
+    --md-sys-color-surface: var(--pos-bg-primary);
+    --md-sys-color-on-surface: var(--pos-text-primary);
+
+    --md-sys-color-surface-variant: var(--pos-bg-tertiary);
+    --md-sys-color-on-surface-variant: var(--pos-text-secondary);
+
+    --md-sys-color-outline: var(--pos-border-strong);
+    --md-sys-color-outline-variant: var(--pos-border);
+
+    --md-sys-color-inverse-surface: #1e293b;
+    --md-sys-color-inverse-on-surface: #f8fafc;
+    --md-sys-color-inverse-primary: #60a5fa;
+
+    --md-sys-color-shadow: var(--pos-shadow);
+    --md-sys-color-scrim: rgba(15, 23, 42, 0.5);
+    --md-sys-color-surface-tint: var(--pos-primary);
+
+    /* ── System Semantic Colors ── */
+    --sys-color-info: var(--pos-info);
+    --sys-color-on-info: #ffffff;
+    --sys-color-success: var(--pos-success);
+    --sys-color-on-success: #ffffff;
+    --sys-color-warning: var(--pos-warning);
+    --sys-color-on-warning: #ffffff;
+    --sys-color-error: var(--pos-danger);
+    --sys-color-on-error: #ffffff;
+}
+
+
+/* =============================================================================
+   DARK THEME
+   ============================================================================= */
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* ── Surface Colors ── */
+    --pos-bg-primary: #0f172a;
+    --pos-bg-secondary: #1e293b;
+    --pos-bg-tertiary: #334155;
+
+    /* ── Text Colors ── */
+    --pos-text-primary: #f8fafc;
+    --pos-text-secondary: #94a3b8;
+    --pos-text-muted: #64748b;
+
+    /* ── Border & Dividers ── */
+    --pos-border: #334155;
+    --pos-border-strong: #475569;
+
+    /* ── Shadow ── */
+    --pos-shadow: rgba(0, 0, 0, 0.3);
+    --pos-shadow-strong: rgba(0, 0, 0, 0.5);
+
+    /* ── Semantic Container Colors ── */
+    --pos-success-container: #14532d;
+    --pos-warning-container: #78350f;
+    --pos-danger-container: #7f1d1d;
+    --pos-info-container: #1e3a8a;
+
+    /* ══════════════════════════════════════════════════════════════════════════
+       Material Design Token Mappings (Backwards Compatibility)
+       ══════════════════════════════════════════════════════════════════════════ */
+    --md-sys-color-primary: #60a5fa;
+    --md-sys-color-on-primary: #1e3a5f;
+    --md-sys-color-primary-container: #1e3a8a;
+    --md-sys-color-on-primary-container: #dbeafe;
+
+    --md-sys-color-secondary: #94a3b8;
+    --md-sys-color-on-secondary: #1e293b;
+    --md-sys-color-secondary-container: #334155;
+    --md-sys-color-on-secondary-container: #e2e8f0;
+
+    --md-sys-color-tertiary: #34d399;
+    --md-sys-color-on-tertiary: #064e3b;
+    --md-sys-color-tertiary-container: #065f46;
+    --md-sys-color-on-tertiary-container: #d1fae5;
+
+    --md-sys-color-error: #fca5a5;
+    --md-sys-color-on-error: #7f1d1d;
+    --md-sys-color-error-container: var(--pos-danger-container);
+    --md-sys-color-on-error-container: #fecaca;
+
+    --md-sys-color-background: var(--pos-bg-secondary);
+    --md-sys-color-on-background: var(--pos-text-primary);
+    --md-sys-color-surface: var(--pos-bg-primary);
+    --md-sys-color-on-surface: var(--pos-text-primary);
+
+    --md-sys-color-surface-variant: var(--pos-bg-tertiary);
+    --md-sys-color-on-surface-variant: var(--pos-text-secondary);
+
+    --md-sys-color-outline: var(--pos-border-strong);
+    --md-sys-color-outline-variant: var(--pos-border);
+
+    --md-sys-color-inverse-surface: #f8fafc;
+    --md-sys-color-inverse-on-surface: #1e293b;
+    --md-sys-color-inverse-primary: #2563eb;
+
+    --md-sys-color-shadow: var(--pos-shadow);
+    --md-sys-color-scrim: rgba(0, 0, 0, 0.6);
+    --md-sys-color-surface-tint: #60a5fa;
+
+    /* ── System Semantic Colors ── */
+    --sys-color-info: #60a5fa;
+    --sys-color-on-info: #1e3a8a;
+    --sys-color-success: #4ade80;
+    --sys-color-on-success: #14532d;
+    --sys-color-warning: #fbbf24;
+    --sys-color-on-warning: #78350f;
+    --sys-color-error: #fca5a5;
+    --sys-color-on-error: #7f1d1d;
+}
+
+
+/* =============================================================================
+   SYSTEM PREFERENCE FALLBACK
+   Applies when no data-theme attribute is set
+   ============================================================================= */
 @media (prefers-color-scheme: dark) {
-    :root, :host {
+    :root:not([data-theme]) {
         color-scheme: dark;
 
-        /* ── Base Palette: Warm Charcoal ── */
-        --bistro-base: #1c1a18; /* Deep warm charcoal */
-        --bistro-mantle: #151311; /* Darker backdrop */
-        --bistro-crust: #0e0c0a; /* Deepest background */
+        /* ── Surface Colors ── */
+        --pos-bg-primary: #0f172a;
+        --pos-bg-secondary: #1e293b;
+        --pos-bg-tertiary: #334155;
 
-        /* ── Surface Hierarchy ── */
-        --bistro-surface-0: #262320; /* Elevated cards */
-        --bistro-surface-1: #302c28; /* Higher elevation */
-        --bistro-surface-2: #3a3632; /* Highest elevation */
+        /* ── Text Colors ── */
+        --pos-text-primary: #f8fafc;
+        --pos-text-secondary: #94a3b8;
+        --pos-text-muted: #64748b;
 
-        /* ── Text Hierarchy ── */
-        --bistro-text: #f5f0e8; /* Primary text - warm white */
-        --bistro-subtext-1: #d4cfc5; /* Secondary text */
-        --bistro-subtext-0: #a8a299; /* Tertiary/muted text */
+        /* ── Border & Dividers ── */
+        --pos-border: #334155;
+        --pos-border-strong: #475569;
 
-        /* ── Accent Colors: Amber & Copper ── */
-        --bistro-primary: #f0b866; /* Warm amber - primary actions */
-        --bistro-primary-container: #4a3d24; /* Container for primary */
-        --bistro-secondary: #d4a574; /* Soft copper - secondary actions */
-        --bistro-secondary-container: #3d3024; /* Container for secondary */
-        --bistro-tertiary: #b8a088; /* Muted tan - tertiary elements */
-        --bistro-tertiary-container: #3a322a; /* Container for tertiary */
+        /* ── Shadow ── */
+        --pos-shadow: rgba(0, 0, 0, 0.3);
+        --pos-shadow-strong: rgba(0, 0, 0, 0.5);
 
-        /* ── Dividers & Outlines ── */
-        --bistro-overlay: #5c564e; /* Borders, dividers */
-        --bistro-outline: #6e675e; /* Strong outlines */
+        /* ── Semantic Container Colors ── */
+        --pos-success-container: #14532d;
+        --pos-warning-container: #78350f;
+        --pos-danger-container: #7f1d1d;
+        --pos-info-container: #1e3a8a;
 
-        /* ── Semantic: Status Colors (warm-shifted) ── */
-        --bistro-success: #8bc68b; /* Sage green - completed orders */
-        --bistro-success-container: #1f3320;
-        --bistro-info: #7eb8d4; /* Soft sky blue - informational */
-        --bistro-info-container: #1a2e38;
-        --bistro-warning: #e6c06e; /* Warm gold - attention needed */
-        --bistro-warning-container: #3d3418;
-        --bistro-error: #e8847a; /* Soft coral - errors, voids */
-        --bistro-error-container: #3d1f1f;
+        /* ── Material Design Token Mappings ── */
+        --md-sys-color-primary: #60a5fa;
+        --md-sys-color-on-primary: #1e3a5f;
+        --md-sys-color-primary-container: #1e3a8a;
+        --md-sys-color-on-primary-container: #dbeafe;
 
-        /* ═══ System Color Mappings ═══ */
-        --sys-color-info: var(--bistro-info);
-        --sys-color-on-info: var(--bistro-crust);
-        --sys-color-success: var(--bistro-success);
-        --sys-color-on-success: var(--bistro-crust);
-        --sys-color-warning: var(--bistro-warning);
-        --sys-color-on-warning: var(--bistro-crust);
-        --sys-color-error: var(--bistro-error);
-        --sys-color-on-error: var(--bistro-crust);
+        --md-sys-color-secondary: #94a3b8;
+        --md-sys-color-on-secondary: #1e293b;
+        --md-sys-color-secondary-container: #334155;
+        --md-sys-color-on-secondary-container: #e2e8f0;
 
-        /* ═══ Material Design System Token Mappings ═══ */
-        --md-sys-color-primary: var(--bistro-primary);
-        --md-sys-color-on-primary: var(--bistro-crust);
-        --md-sys-color-primary-container: var(--bistro-primary-container);
-        --md-sys-color-on-primary-container: var(--bistro-text);
+        --md-sys-color-tertiary: #34d399;
+        --md-sys-color-on-tertiary: #064e3b;
+        --md-sys-color-tertiary-container: #065f46;
+        --md-sys-color-on-tertiary-container: #d1fae5;
 
-        --md-sys-color-secondary: var(--bistro-secondary);
-        --md-sys-color-on-secondary: var(--bistro-crust);
-        --md-sys-color-secondary-container: var(--bistro-secondary-container);
-        --md-sys-color-on-secondary-container: var(--bistro-text);
+        --md-sys-color-error: #fca5a5;
+        --md-sys-color-on-error: #7f1d1d;
+        --md-sys-color-error-container: var(--pos-danger-container);
+        --md-sys-color-on-error-container: #fecaca;
 
-        --md-sys-color-tertiary: var(--bistro-tertiary);
-        --md-sys-color-on-tertiary: var(--bistro-crust);
-        --md-sys-color-tertiary-container: var(--bistro-tertiary-container);
-        --md-sys-color-on-tertiary-container: var(--bistro-text);
+        --md-sys-color-background: var(--pos-bg-secondary);
+        --md-sys-color-on-background: var(--pos-text-primary);
+        --md-sys-color-surface: var(--pos-bg-primary);
+        --md-sys-color-on-surface: var(--pos-text-primary);
 
-        --md-sys-color-error: var(--bistro-error);
-        --md-sys-color-on-error: var(--bistro-crust);
-        --md-sys-color-error-container: var(--bistro-error-container);
-        --md-sys-color-on-error-container: var(--bistro-error);
+        --md-sys-color-surface-variant: var(--pos-bg-tertiary);
+        --md-sys-color-on-surface-variant: var(--pos-text-secondary);
 
-        --md-sys-color-background: var(--bistro-mantle);
-        --md-sys-color-on-background: var(--bistro-text);
-        --md-sys-color-surface: var(--bistro-base);
-        --md-sys-color-on-surface: var(--bistro-text);
+        --md-sys-color-outline: var(--pos-border-strong);
+        --md-sys-color-outline-variant: var(--pos-border);
 
-        --md-sys-color-surface-variant: var(--bistro-surface-0);
-        --md-sys-color-on-surface-variant: var(--bistro-subtext-1);
+        --md-sys-color-inverse-surface: #f8fafc;
+        --md-sys-color-inverse-on-surface: #1e293b;
+        --md-sys-color-inverse-primary: #2563eb;
 
-        --md-sys-color-outline: var(--bistro-outline);
-        --md-sys-color-outline-variant: var(--bistro-overlay);
-
-        --md-sys-color-inverse-surface: var(--bistro-text);
-        --md-sys-color-inverse-on-surface: var(--bistro-crust);
-        --md-sys-color-inverse-primary: #8b6b2a;
-
-        --md-sys-color-shadow: rgba(0, 0, 0, 0.5);
+        --md-sys-color-shadow: var(--pos-shadow);
         --md-sys-color-scrim: rgba(0, 0, 0, 0.6);
-        --md-sys-color-surface-tint: var(--bistro-primary);
+        --md-sys-color-surface-tint: #60a5fa;
 
-        /* ═══ Legacy Compatibility (dark suffix) ═══ */
-        --md-sys-color-primary-dark: var(--md-sys-color-primary);
-        --md-sys-color-on-primary-dark: var(--md-sys-color-on-primary);
-        --md-sys-color-primary-container-dark: var(--md-sys-color-primary-container);
-        --md-sys-color-on-primary-container-dark: var(--md-sys-color-on-primary-container);
-        --md-sys-color-secondary-dark: var(--md-sys-color-secondary);
-        --md-sys-color-on-secondary-dark: var(--md-sys-color-on-secondary);
-        --md-sys-color-secondary-container-dark: var(--md-sys-color-secondary-container);
-        --md-sys-color-on-secondary-container-dark: var(--md-sys-color-on-secondary-container);
-        --md-sys-color-tertiary-dark: var(--md-sys-color-tertiary);
-        --md-sys-color-on-tertiary-dark: var(--md-sys-color-on-tertiary);
-        --md-sys-color-tertiary-container-dark: var(--md-sys-color-tertiary-container);
-        --md-sys-color-on-tertiary-container-dark: var(--md-sys-color-on-tertiary-container);
-        --md-sys-color-error-dark: var(--md-sys-color-error);
-        --md-sys-color-on-error-dark: var(--md-sys-color-on-error);
-        --md-sys-color-error-container-dark: var(--md-sys-color-error-container);
-        --md-sys-color-on-error-container-dark: var(--md-sys-color-on-error-container);
-        --md-sys-color-background-dark: var(--md-sys-color-background);
-        --md-sys-color-on-background-dark: var(--md-sys-color-on-background);
-        --md-sys-color-surface-dark: var(--md-sys-color-surface);
-        --md-sys-color-on-surface-dark: var(--md-sys-color-on-surface);
-        --md-sys-color-surface-variant-dark: var(--md-sys-color-surface-variant);
-        --md-sys-color-on-surface-variant-dark: var(--md-sys-color-on-surface-variant);
-        --md-sys-color-outline-dark: var(--md-sys-color-outline);
-        --md-sys-color-outline-variant-dark: var(--md-sys-color-outline-variant);
-        --md-sys-color-inverse-surface-dark: var(--md-sys-color-inverse-surface);
-        --md-sys-color-inverse-on-surface-dark: var(--md-sys-color-inverse-on-surface);
-        --md-sys-color-inverse-primary-dark: var(--md-sys-color-inverse-primary);
-        --md-sys-color-shadow-dark: var(--md-sys-color-shadow);
-        --md-sys-color-scrim-dark: var(--md-sys-color-scrim);
-        --md-sys-color-surface-tint-dark: var(--md-sys-color-surface-tint);
+        /* ── System Semantic Colors ── */
+        --sys-color-info: #60a5fa;
+        --sys-color-on-info: #1e3a8a;
+        --sys-color-success: #4ade80;
+        --sys-color-on-success: #14532d;
+        --sys-color-warning: #fbbf24;
+        --sys-color-on-warning: #78350f;
+        --sys-color-error: #fca5a5;
+        --sys-color-on-error: #7f1d1d;
     }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   LIGHT THEME - Day Shift / Bright Environment
-   ═══════════════════════════════════════════════════════════════════════════ */
-@media (prefers-color-scheme: light) {
-    :root, :host {
-        color-scheme: light;
 
-        /* ── Base Palette: Warm Cream ── */
-        --bistro-base: #faf8f4; /* Warm off-white */
-        --bistro-mantle: #f0ede6; /* Slightly warmer */
-        --bistro-crust: #e6e2d9; /* Warmest light tone */
-
-        /* ── Surface Hierarchy ── */
-        --bistro-surface-0: #ebe7de; /* Cards, elevated surfaces */
-        --bistro-surface-1: #dfdbd2; /* Higher elevation */
-        --bistro-surface-2: #d4d0c6; /* Highest elevation */
-
-        /* ── Text Hierarchy ── */
-        --bistro-text: #2a2520; /* Primary text - warm near-black */
-        --bistro-subtext-1: #4a443c; /* Secondary text */
-        --bistro-subtext-0: #6e665c; /* Tertiary/muted text */
-
-        /* ── Accent Colors: Terracotta & Rust ── */
-        --bistro-primary: #b85c38; /* Rich terracotta - primary actions */
-        --bistro-primary-container: #f5ddd2; /* Light terracotta container */
-        --bistro-secondary: #8a6e4c; /* Warm sienna - secondary actions */
-        --bistro-secondary-container: #e8ddd0; /* Warm container */
-        --bistro-tertiary: #6b7a5c; /* Olive sage - tertiary elements */
-        --bistro-tertiary-container: #dce4d4; /* Sage container */
-
-        /* ── Dividers & Outlines ── */
-        --bistro-overlay: #bab4a8; /* Borders, dividers */
-        --bistro-outline: #8c867a; /* Strong outlines */
-
-        /* ── Semantic: Status Colors (legible on light) ── */
-        --bistro-success: #3d7a3d; /* Forest green - completed orders */
-        --bistro-success-container: #d4ecd4;
-        --bistro-info: #2a6b8a; /* Deep teal - informational */
-        --bistro-info-container: #d0e6f0;
-        --bistro-warning: #a67c1a; /* Burnt gold - attention needed */
-        --bistro-warning-container: #f5ecd0;
-        --bistro-error: #b83838; /* Brick red - errors, voids */
-        --bistro-error-container: #f5d4d4;
-
-        /* ═══ System Color Mappings ═══ */
-        --sys-color-info: var(--bistro-info);
-        --sys-color-on-info: #ffffff;
-        --sys-color-success: var(--bistro-success);
-        --sys-color-on-success: #ffffff;
-        --sys-color-warning: var(--bistro-warning);
-        --sys-color-on-warning: #ffffff;
-        --sys-color-error: var(--bistro-error);
-        --sys-color-on-error: #ffffff;
-
-        /* ═══ Material Design System Token Mappings ═══ */
-        --md-sys-color-primary: var(--bistro-primary);
-        --md-sys-color-on-primary: #ffffff;
-        --md-sys-color-primary-container: var(--bistro-primary-container);
-        --md-sys-color-on-primary-container: #4a2010;
-
-        --md-sys-color-secondary: var(--bistro-secondary);
-        --md-sys-color-on-secondary: #ffffff;
-        --md-sys-color-secondary-container: var(--bistro-secondary-container);
-        --md-sys-color-on-secondary-container: #3a2e1c;
-
-        --md-sys-color-tertiary: var(--bistro-tertiary);
-        --md-sys-color-on-tertiary: #ffffff;
-        --md-sys-color-tertiary-container: var(--bistro-tertiary-container);
-        --md-sys-color-on-tertiary-container: #2a3324;
-
-        --md-sys-color-error: var(--bistro-error);
-        --md-sys-color-on-error: #ffffff;
-        --md-sys-color-error-container: var(--bistro-error-container);
-        --md-sys-color-on-error-container: var(--bistro-error);
-
-        --md-sys-color-background: var(--bistro-mantle);
-        --md-sys-color-on-background: var(--bistro-text);
-        --md-sys-color-surface: var(--bistro-base);
-        --md-sys-color-on-surface: var(--bistro-text);
-
-        --md-sys-color-surface-variant: var(--bistro-surface-0);
-        --md-sys-color-on-surface-variant: var(--bistro-subtext-1);
-
-        --md-sys-color-outline: var(--bistro-outline);
-        --md-sys-color-outline-variant: var(--bistro-overlay);
-
-        --md-sys-color-inverse-surface: var(--bistro-text);
-        --md-sys-color-inverse-on-surface: var(--bistro-base);
-        --md-sys-color-inverse-primary: #e8a080;
-
-        --md-sys-color-shadow: rgba(42, 37, 32, 0.15);
-        --md-sys-color-scrim: rgba(42, 37, 32, 0.4);
-        --md-sys-color-surface-tint: var(--bistro-primary);
-
-        /* ═══ Legacy Compatibility (light suffix) ═══ */
-        --md-sys-color-primary-light: var(--md-sys-color-primary);
-        --md-sys-color-on-primary-light: var(--md-sys-color-on-primary);
-        --md-sys-color-primary-container-light: var(--md-sys-color-primary-container);
-        --md-sys-color-on-primary-container-light: var(--md-sys-color-on-primary-container);
-        --md-sys-color-secondary-light: var(--md-sys-color-secondary);
-        --md-sys-color-on-secondary-light: var(--md-sys-color-on-secondary);
-        --md-sys-color-secondary-container-light: var(--md-sys-color-secondary-container);
-        --md-sys-color-on-secondary-container-light: var(--md-sys-color-on-secondary-container);
-        --md-sys-color-tertiary-light: var(--md-sys-color-tertiary);
-        --md-sys-color-on-tertiary-light: var(--md-sys-color-on-tertiary);
-        --md-sys-color-tertiary-container-light: var(--md-sys-color-tertiary-container);
-        --md-sys-color-on-tertiary-container-light: var(--md-sys-color-on-tertiary-container);
-        --md-sys-color-error-light: var(--md-sys-color-error);
-        --md-sys-color-on-error-light: var(--md-sys-color-on-error);
-        --md-sys-color-error-container-light: var(--md-sys-color-error-container);
-        --md-sys-color-on-error-container-light: var(--md-sys-color-on-error-container);
-        --md-sys-color-background-light: var(--md-sys-color-background);
-        --md-sys-color-on-background-light: var(--md-sys-color-on-background);
-        --md-sys-color-surface-light: var(--md-sys-color-surface);
-        --md-sys-color-on-surface-light: var(--md-sys-color-on-surface);
-        --md-sys-color-surface-variant-light: var(--md-sys-color-surface-variant);
-        --md-sys-color-on-surface-variant-light: var(--md-sys-color-on-surface-variant);
-        --md-sys-color-outline-light: var(--md-sys-color-outline);
-        --md-sys-color-outline-variant-light: var(--md-sys-color-outline-variant);
-        --md-sys-color-inverse-surface-light: var(--md-sys-color-inverse-surface);
-        --md-sys-color-inverse-on-surface-light: var(--md-sys-color-inverse-on-surface);
-        --md-sys-color-inverse-primary-light: var(--md-sys-color-inverse-primary);
-        --md-sys-color-shadow-light: var(--md-sys-color-shadow);
-        --md-sys-color-scrim-light: var(--md-sys-color-scrim);
-        --md-sys-color-surface-tint-light: var(--md-sys-color-surface-tint);
-    }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
+/* =============================================================================
    HTMX Loading States
-   ═══════════════════════════════════════════════════════════════════════════ */
+   ============================================================================= */
 .htmx-indicator {
     display: none;
 }

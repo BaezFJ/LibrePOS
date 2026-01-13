@@ -9,6 +9,13 @@
     line-height: inherit;
 }
 
+.dropdown-content {
+    border-radius: 16px;
+    padding: 12px;
+    overflow: visible;
+    min-width: 260px;
+}
+
 ul {
     padding-inline-start: 0;
 }
