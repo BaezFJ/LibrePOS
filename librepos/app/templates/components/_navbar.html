@@ -1,0 +1,191 @@
+{#
+    Navbar Component
+    ================
+    Top navigation bar with support for items, dropdowns, and mobile sidenav trigger.
+
+    Import:
+        {% import "components/_navbar.html" as Navbar %}
+
+    Basic Usage:
+        {% call Navbar.render() %}
+            <ul class="left">
+                {{ Navbar.sidenav_trigger() }}
+            </ul>
+            {{ Navbar.title("Page Title") }}
+            <ul class="right">
+                {{ Navbar.item("Dashboard", icon="dashboard", url=url_for("main.index")) }}
+            </ul>
+        {% endcall %}
+
+    With Dropdown:
+        {% call Navbar.render() %}
+            {{ Navbar.title("Dashboard") }}
+            <ul class="right">
+                {% call Navbar.dropdown("Settings", icon="settings", target="settings-dropdown") %}
+                    {{ Navbar.dropdown_item("Profile", icon="person", url=url_for("staff.profile")) }}
+                    {{ Navbar.dropdown_item("Logout", icon="logout", url=url_for("auth.logout")) }}
+                {% endcall %}
+            </ul>
+        {% endcall %}
+
+    Note: Requires MaterializeCSS navbar and dropdown initialization:
+        M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'));
+        M.Sidenav.init(document.querySelectorAll('.sidenav-trigger'));
+#}
+
+{% import "macros/icon.html" as Icon %}
+
+
+{# render()
+   --------
+   Creates the navbar container element.
+
+   Usage: Must be called with {% call %} to inject content via {{ caller() }}.
+#}
+{% macro render() %}
+    <div class="nav navbar">
+        <div class="nav-wrapper">
+            {{ caller() }}
+        </div>
+    </div>
+{% endmacro %}
+
+
+{# title(text)
+   -----------
+   Displays a centered brand logo/title text in the navbar.
+
+   Parameters:
+       text (str): Title text to display. Truncated to 15 characters.
+#}
+{% macro title(text) %}
+    <p class="brand-logo center my-0 flow-text">
+        {{ text|truncate(15) }}
+    </p>
+{% endmacro %}
+
+
+{# item(label, icon, url, dynamic=True)
+   ------------------------------------
+   Creates a navigation link item with optional icon.
+
+   Parameters:
+       label   (str):  Text displayed for the nav item.
+       icon    (str):  Optional. Material Symbols icon name.
+       url     (str):  Optional. Destination URL. Defaults to "#".
+       dynamic (bool): Optional. If True, hides label on small screens. Defaults to True.
+#}
+{% macro item(label, icon, url, dynamic=True) %}
+    {% set icon_class = "left" if label is defined else "" %}
+    <li>
+        <a href="{{ url if url is defined else "#" }}" class="waves-effect">
+            {% if icon is defined %}
+                {{ Icon.render(icon, icon_class) }}
+            {% endif %}
+            {% if label is defined %}
+                {% if dynamic %}
+                    <span class="hide-on-small-and-down">&nbsp;{{ label }}</span>
+                {% else %}
+                    {{ label }}
+                {% endif %}
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}
+
+
+{# dropdown_trigger(label, icon, target)
+   -------------------------------------
+   Creates a button that opens a dropdown menu (trigger only, no dropdown content).
+
+   Parameters:
+       label  (str): Optional. Text displayed next to icon. Hidden on small screens.
+       icon   (str): Optional. Material Symbols icon name.
+       target (str): Required. ID of the dropdown element to trigger.
+
+   Note: Use this when the dropdown content is defined elsewhere.
+         For inline dropdown, use the dropdown() macro instead.
+#}
+{% macro dropdown_trigger(label, icon, target) %}
+    <!-- Dropdown Trigger -->
+    <li>
+        <a class='dropdown-trigger' href='#' data-target='{{ target if target is defined }}'>
+            {% if icon is defined %}
+                {{ Icon.render(icon) }}
+            {% endif %}
+            {% if label is defined %}
+                <span class="hide-on-small-and-down">&nbsp;{{ label }}</span>
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}
+
+
+{# dropdown(label, icon, target, class_)
+   -------------------------------------
+   Creates a complete dropdown with trigger button and content container.
+
+   Parameters:
+       label  (str): Optional. Text displayed on trigger. Hidden on small screens.
+       icon   (str): Optional. Material Symbols icon name for trigger.
+       target (str): Required. Unique ID for the dropdown element.
+       class_ (str): Optional. Additional CSS classes for the dropdown content.
+
+   Usage: Must be called with {% call %} to inject dropdown items via {{ caller() }}.
+#}
+{% macro dropdown(label, icon, target, class_) %}
+    <!-- Dropdown Trigger -->
+    <li>
+        <a class='dropdown-trigger' href='#' data-target='{{ target if target is defined }}'>
+            {% if icon is defined %}
+                {{ Icon.render(icon) }}
+            {% endif %}
+            {% if label is defined %}
+                <span class="hide-on-small-and-down">&nbsp;{{ label }}</span>
+            {% endif %}
+        </a>
+    </li>
+    <!-- Dropdown Structure -->
+    <ul id='{{ target if target is defined }}' class='dropdown-content'>
+        {{ caller() }}
+    </ul>
+{% endmacro %}
+
+
+{# dropdown_item(label, icon, url)
+   --------------------------------
+   Creates an item inside a dropdown menu.
+
+   Parameters:
+       label (str): Text displayed for the menu item.
+       icon  (str): Optional. Material Symbols icon name shown before label.
+       url   (str): Destination URL when clicked.
+#}
+{% macro dropdown_item(label, icon, url) %}
+    <li>
+        <a href="{{ url if url is defined }}" class="waves-effect waves-light">
+            {% if icon is defined %}
+                {{ Icon.render(icon, "left") }}
+            {% endif %}
+            {{ label if label is defined }}
+        </a>
+    </li>
+{% endmacro %}
+
+
+{# sidenav_trigger(target="mainMenu")
+   ----------------------------------
+   Creates a hamburger menu button to toggle the sidenav on mobile devices.
+
+   Parameters:
+       target (str): Optional. ID of the sidenav element to trigger. Defaults to "mainMenu".
+
+   Note: Only visible on medium screens and below (hide-on-large-only).
+#}
+{% macro sidenav_trigger(target="mainMenu") %}
+    <li>
+        <a data-target="{{ target if target is defined }}" class="sidenav-trigger m-0 hide-on-large-only">
+            {{ Icon.menu() }}
+        </a>
+    </li>
+{% endmacro %}

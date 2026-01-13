@@ -1,6 +1,151 @@
 {% extends 'menu/_base.html' %}
 
+{% import 'macros/action_bar.html' as ActionBar %}
+{% import 'macros/modals.html' as Modal %}
+{% import 'macros/forms.html' as Form %}
+
 
 {% block main %}
+    <section class="section">
+        <div class="row mx-4">
+            <div class="col s12 m10 l8 xl6 offset-m1 offset-l2 offset-xl3">
+
+                {# Card 1: Basic Info #}
+                <article class="card category-detail-card">
+                    {# Hero Image with Accessible Description #}
+                    <div class="card-image"
+                         role="img"
+                         aria-label="Category image for {{ category.name }}"
+                         style="background-image: url('{{ category.image_url or url_for('static', filename='img/placeholders/540x720.png') }}')">
+                        <div class="card-image-overlay"></div>
+                        <span class="status-dot {{ 'green' if category.is_active else 'red' }}"
+                              role="status"
+                              aria-label="{{ 'Active' if category.is_active else 'Inactive' }}">
+                            <span class="sr-only">{{ 'Active' if category.is_active else 'Inactive' }}</span>
+                        </span>
+                    </div>
+
+                    <div class="card-content">
+                        <h1 class="card-title">{{ category.name }}</h1>
+
+                        {# Description #}
+                        <div class="category-description">
+                            <h2 class="section-label">Description</h2>
+                            {% if category.description %}
+                                <p>{{ category.description }}</p>
+                            {% else %}
+                                <p class="grey-text">No description provided.</p>
+                            {% endif %}
+                        </div>
+
+                        {# Parent Category #}
+                        <div class="category-parent">
+                            <h2 class="section-label">Parent Category</h2>
+                            {% if category.parent %}
+                                <a href="{{ url_for('menu.category_detail', cat_id=category.parent.id) }}"
+                                   class="chip hoverable"
+                                   aria-label="View parent category: {{ category.parent.name }}">
+                                    <i class="material-symbols-rounded tiny" aria-hidden="true">folder</i>
+                                    {{ category.parent.name }}
+                                </a>
+                            {% else %}
+                                <span class="chip grey lighten-2">
+                                    <i class="material-symbols-rounded tiny" aria-hidden="true">folder_open</i>
+                                    Top-level category
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+
+                {# Card 2: Availability & Settings #}
+                <article class="card category-settings-card">
+                    <div class="card-content">
+                        <h2 class="card-panel-title">
+                            <i class="material-symbols-rounded" aria-hidden="true">tune</i>
+                            Availability & Settings
+                        </h2>
+                        <dl class="settings-grid row">
+                            <div class="col s6">
+                                <dt class="section-label">Status</dt>
+                                <dd>
+                                    <span class="chip {{ 'green lighten-4 green-text text-darken-2' if category.is_active else 'red lighten-4 red-text text-darken-2' }}">
+                                        {{ 'Active' if category.is_active else 'Inactive' }}
+                                    </span>
+                                </dd>
+                            </div>
+                            <div class="col s6">
+                                <dt class="section-label">Display Order</dt>
+                                <dd>{{ category.display_order }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </article>
+
+                {# Card 3: Subcategories (conditional) #}
+                {% if category.children %}
+                <article class="card category-children-card">
+                    <div class="card-content">
+                        <h2 class="card-panel-title">
+                            <i class="material-symbols-rounded" aria-hidden="true">folder_open</i>
+                            Subcategories ({{ category.children|length }})
+                        </h2>
+                        <div class="collection" role="list">
+                            {% for child in category.children %}
+                                <a href="{{ url_for('menu.category_detail', category_id=child.id) }}"
+                                   class="collection-item"
+                                   role="listitem"
+                                   aria-label="{{ child.name }} - {{ 'Active' if child.is_active else 'Inactive' }}">
+                                    <span class="status-dot {{ 'green' if child.is_active else 'red' }}" aria-hidden="true"></span>
+                                    {{ child.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+
+    {# Action Bar #}
+    {% call ActionBar.render(id='category-actions') %}
+        {{ ActionBar.item('Back', icon='arrow_back', url=url_for('menu.categories')) }}
+        {{ ActionBar.divider() }}
+        {{ ActionBar.item('Edit', icon='edit', modal='editCategoryModal') }}
+        {{ ActionBar.divider() }}
+        {{ ActionBar.item('Delete', icon='delete', modal='deleteCategoryModal', _class='red-text') }}
+    {% endcall %}
+
+    {# Edit Category Modal #}
+    {% call Modal.form_modal(
+        'editCategory',
+        title='Edit Category',
+        action=url_for('menu.category_update', cat_id=category.id),
+        submit_text='Save Changes',
+        enctype='multipart/form-data'
+    ) %}
+        {{ Form.render(edit_form, extra_wrappers={
+                'name': 'col s12',
+                'description': 'col s12',
+                'parent_id': 'col s12 m6',
+                'display_order': 'col s12 m6',
+                'image': 'col s12',
+                'is_active': 'col s12'
+            }) }}
+    {% endcall %}
+
+    {# Delete Confirmation Modal #}
+    {{ Modal.confirmation(
+        'deleteCategory',
+        title='Delete Category',
+        action=url_for('menu.category_delete', cat_id=category.id),
+        message='Are you sure you want to delete <strong>' ~ (category.name|e) ~ '</strong>?',
+        warning='This cannot be undone.' ~ (' ' ~ category.children|length ~ ' subcategories will be promoted to top-level.' if category.children else ''),
+        confirm_text='Delete',
+        confirm_icon='delete',
+        confirm_color='red'
+    ) }}
 
 {% endblock %}

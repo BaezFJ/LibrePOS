@@ -1,0 +1,15 @@
+{% import "components/_sidebar.html" as Sidenav with context %}
+
+{% call Sidenav.render() %}
+    {{ Sidenav.item("Dashboard", url=url_for('menu.index'), icon="dashboard") }}
+    {{ Sidenav.subheader("Catalog") }}
+    {{ Sidenav.item("Menu Items", url=url_for('menu.items'), icon="restaurant_menu") }}
+    {{ Sidenav.item("Categories", url=url_for('menu.categories'), icon="category") }}
+    {{ Sidenav.item("Modifiers", url=url_for('menu.modifiers'), icon="tune") }}
+    {{ Sidenav.item("Modifier Groups", url=url_for('menu.modifier_groups'), icon="format_list_bulleted") }}
+    {{ Sidenav.subheader("Configuration") }}
+    {{ Sidenav.item("Menus", url=url_for('menu.menus'), icon="menu_book") }}
+    {{ Sidenav.item("Pricing Rules", url=url_for('menu.pricing'), icon="attach_money") }}
+    {{ Sidenav.item("Tags & Allergens", url=url_for('menu.tags'), icon="sell") }}
+    {{ Sidenav.item("Settings", url=url_for('menu.settings'), icon="settings") }}
+{% endcall %}

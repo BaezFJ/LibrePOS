@@ -1,6 +1,6 @@
 # Button Component
 
-> Bootstrap button components with support for links and action buttons.
+> MaterializeCSS button components with support for links and action buttons.
 
 ```jinja
 {% import "macros/button.html" as Button %}

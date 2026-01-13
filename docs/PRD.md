@@ -94,7 +94,7 @@ Each blueprint is self-contained with:
 |----------|--------------|
 | Backend | Flask, SQLAlchemy, Flask-Login, Marshmallow |
 | Database | PostgreSQL |
-| Frontend | Bootstrap, Chart.js, SortableJS, interact.js |
+| Frontend | MaterializeCSS, Chart.js, SortableJS, interact.js |
 | Security | Flask-Bcrypt, PyJWT |
 | Testing | pytest, factory-boy, faker |
 
@@ -121,7 +121,7 @@ pytest --cov=app                   # Run tests with coverage
 | Blueprints | 12 (10 feature + 2 supporting) |
 | Authentication | Flask-Login (web), JWT-ready (API) |
 | Database | Single PostgreSQL |
-| Frontend | Bootstrap + Chart.js, SortableJS, interact.js |
+| Frontend | MaterializeCSS + Chart.js, SortableJS, interact.js |
 | Model Organization | Blueprint-owned with cross-imports |
 
 ---
@@ -130,7 +130,7 @@ pytest --cov=app                   # Run tests with coverage
 
 - [Architecture](prd/architecture.md) - Design principles, blueprint structure, URL organization
 - [Technology Stack](prd/technology-stack.md) - Frameworks, libraries, dependencies
-- [Frontend](prd/frontend.md) - Bootstrap, Chart.js, SortableJS, interact.js
+- [Frontend](prd/frontend.md) - MaterializeCSS, Chart.js, SortableJS, interact.js
 - [Authentication](prd/authentication.md) - Web auth, API auth, model organization
 - [Data Models](prd/data-models.md) - Complete model definitions by blueprint
 - [CLI Commands](prd/cli-commands.md) - Application, testing, database commands

@@ -1,12 +1,112 @@
 {% extends 'menu/_base.html' %}
 
-{% import 'macros/placeholder.html' as Placeholder %}
+{% import 'macros/button.html' as Button %}
+{% import 'macros/forms.html' as Forms %}
+{% import 'macros/modals.html' as Modal %}
+{% import 'components/_dropdown.html' as Dropdown %}
 
 {% block main %}
-    {{ Placeholder.page(
-        title="Categories",
-        description="The categories management page is under development. You'll soon be able to organize and manage your menu item categories here.",
-        icon="restaurant_menu",
-        back_url=url_for('menu.items')
+    <section class="section">
+        <div class="mx-4">
+            <div class="card-panel">
+                <div class="card-header">
+                    <div class="flex-row space-between">
+                        <h5>Categories <span class="counter">{{ categories|count if categories else '0' }}</span></h5>
+                        {{ Modal.trigger('addCategoryModal', 'Add Category', 'add', 'filled') }}
+                    </div>
+                    <p class="mt-0">Manage menu categories here.</p>
+                </div>
+                <div class="flex-row space-between">
+                    <div>
+                        {{ Modal.trigger('searchModal', 'Search', 'search', 'elevated') }}
+                    </div>
+                    <div>
+                        {{ Dropdown.trigger('filter-dropdown', icon='filter_list', label='Filter') }}
+                        {% call Dropdown.render('filter-dropdown') %}
+                            {{ Dropdown.header("Status") }}
+                            {{ Dropdown.item("All", url_for('menu.categories', status='all', type=current_type, sort=current_sort), active=(current_status == 'all')) }}
+                            {{ Dropdown.item("Active", url_for('menu.categories', status='active', type=current_type, sort=current_sort), active=(current_status == 'active')) }}
+                            {{ Dropdown.item("Inactive", url_for('menu.categories', status='inactive', type=current_type, sort=current_sort), active=(current_status == 'inactive')) }}
+                            {{ Dropdown.divider() }}
+                            {{ Dropdown.header("Type") }}
+                            {{ Dropdown.item("All", url_for('menu.categories', status=current_status, type='all', sort=current_sort), active=(current_type == 'all')) }}
+                            {{ Dropdown.item("Top-level", url_for('menu.categories', status=current_status, type='top-level', sort=current_sort), active=(current_type == 'top-level')) }}
+                            {{ Dropdown.item("Subcategories", url_for('menu.categories', status=current_status, type='subcategory', sort=current_sort), active=(current_type == 'subcategory')) }}
+                        {% endcall %}
+
+                        {{ Dropdown.trigger('sort-dropdown', icon='sort', label='Sort') }}
+                        {% call Dropdown.render('sort-dropdown') %}
+                            {{ Dropdown.item("Name A-Z", url_for('menu.categories', status=current_status, type=current_type, sort='name'), active=(current_sort == 'name')) }}
+                            {{ Dropdown.item("Name Z-A", url_for('menu.categories', status=current_status, type=current_type, sort='-name'), active=(current_sort == '-name')) }}
+                            {{ Dropdown.item("Display Order", url_for('menu.categories', status=current_status, type=current_type, sort='order'), active=(current_sort == 'order')) }}
+                            {{ Dropdown.item("Status", url_for('menu.categories', status=current_status, type=current_type, sort='status'), active=(current_sort == 'status')) }}
+                        {% endcall %}
+                    </div>
+                </div>
+                <table class="highlight striped">
+                    <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Description</th>
+                        <th>Items</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.name }}</td>
+                            <td>
+                                {% if category.description %}
+                                    {{ category.description }}
+                                {% else %}
+                                    <span class="grey-text">No description provided.</span>
+                                {% endif %}
+                            </td>
+                            <td>N/A</td>
+                            <td>{{ category.display_order }}</td>
+                            <td>
+                                {% if category.is_active %}
+                                    <span class="success-text">Active</span>
+                                {% else %}
+                                    <span class="error-text">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% set category_dropdown = category.id|string + '-dropdown' %}
+                                {{ Dropdown.trigger(category_dropdown, label='More') }}
+                                {% call Dropdown.render(category_dropdown) %}
+                                    {{ Dropdown.item('Edit') }}
+                                    {{ Dropdown.item('Toggle Visibility') }}
+                                    {{ Dropdown.item('Reorder') }}
+                                    {{ Dropdown.item('Archive') }}
+                                    {{ Dropdown.item('Delete') }}
+                                {% endcall %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    {{ Modal.search(
+        modal_id='search',
+        action=url_for('menu.categories', status=current_status, type=current_type, sort=current_sort),
+        placeholder='Search categories...'
     ) }}
+
+    {% call Modal.form_modal(
+        modal_id='addCategory',
+        title='Add Category',
+        action=url_for('menu.categories'),
+        submit_text='Create Category',
+        enctype='multipart/form-data'
+    ) %}
+        {{ Forms.render(form, {'name': 'm12', 'description': 'm12', 'parent_id': 'm6', 'display_order': 'm6', 'is_active': 'm12'}) }}
+    {% endcall %}
 {% endblock %}

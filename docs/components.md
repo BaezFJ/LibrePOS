@@ -11,7 +11,7 @@ LibrePOS uses reusable Jinja2 macros for UI components:
 - **Layout Components** (`templates/components/`) - Page structure elements
 - **Macro Components** (`templates/macros/`) - Reusable UI patterns
 
-All components use [Bootstrap](https://getbootstrap.com/) and [Material Symbols](https://fonts.google.com/icons) icons.
+All components use [MaterializeCSS](https://materializeweb.com/) and [Material Symbols](https://fonts.google.com/icons) icons.
 
 ---
 

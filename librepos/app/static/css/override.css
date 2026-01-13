@@ -1,0 +1,69 @@
+.navbar .brand-logo,
+.navbar a,
+.navbar ul:not(.dropdown-content) > li > a {
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+.navbar .dropdown-content i, .navbar .dropdown-content i.material-icons, .navbar .dropdown-content i.material-symbols-outlined, .navbar .dropdown-content i.material-symbols-rounded, .navbar i.material-symbols-sharp {
+    height: inherit;
+    line-height: inherit;
+}
+
+.dropdown-content {
+    border-radius: 16px;
+    padding: 12px;
+    overflow: visible;
+    min-width: 260px;
+}
+
+ul {
+    padding-inline-start: 0;
+}
+
+.modal {
+    --modal-background-color: var(--md-sys-color-surface);
+    max-height: 90%;
+}
+
+.modal .modal-header,
+.modal .modal-footer {
+    background-color: var(--md-sys-color-secondary-container);
+}
+
+
+/*.material-symbols-rounded {*/
+/*    font-size: 2rem;*/
+/*}*/
+
+.card {
+    background-color: var(--md-sys-color-surface);
+}
+
+/*.card .card-content .card-title {*/
+/*    font-weight: 600;*/
+/*}*/
+
+/*.card .card-action {*/
+/*    padding-bottom: 24px;*/
+/*}*/
+
+/*.card .card-action .btn.filled, .card .card-action .btn.tonal, .card .card-action .btn.elevated, .card .card-action .btn.outlined {*/
+/*    margin: 0;*/
+/*}*/
+
+/*.card-panel {*/
+/*    margin: 0;*/
+/*}*/
+
+/*.card-panel .card-title {*/
+/*    font-size: 24px;*/
+/*}*/
+
+/*.modal .modal-content {*/
+/*    padding-bottom: 0.5rem;*/
+/*}*/
+
+.input-field.outlined input, .input-field.outlined textarea {
+    background-color: var(--md-sys-color-surface-variant);
+    border: 1px solid var(--md-sys-color-on-surface-variant);
+}
