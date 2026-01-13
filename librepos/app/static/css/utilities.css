@@ -46,6 +46,14 @@
     color: var(--sys-color-on-success);
 }
 
+.success-border {
+    border: 1px solid var(--sys-color-success);
+}
+
+.success-text {
+    color: var(--sys-color-success);
+}
+
 /* Flexbox Utilities
    ========================================================================== */
 

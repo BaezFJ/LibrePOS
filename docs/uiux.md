@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-LibrePOS is a modern, professional Point of Sale (POS) system UI/UX designed specifically for restaurant operations. This is a **pure frontend project** with no backend dependencies, focusing on creating a polished, production-ready interface that rivals industry leaders.
+LibrePOS is a modern, professional Point of Sale (POS) system built with Flask for restaurant operations. The frontend uses Jinja2 templates with Materialize CSS, creating a polished, production-ready interface that rivals industry leaders.
 
 ### Core Philosophy
 
@@ -17,8 +17,10 @@ LibrePOS is a modern, professional Point of Sale (POS) system UI/UX designed spe
 
 | Technology         | Version  | Purpose |
 |--------------------|----------|---------|
+| Flask              | Latest   | Backend framework with factory pattern |
+| Jinja2             | Latest   | Server-side templating |
 | Materialize CSS    | 2.2.2    | CSS framework, grid system, components |
-| Vanilla JavaScript | ES2022+  | All interactivity, no frameworks |
+| Vanilla JavaScript | ES2022+  | All frontend interactivity, no frameworks |
 | HTML5              | Semantic | Structure and accessibility |
 | CSS3               | Modern   | Custom properties, Grid, Flexbox |
 
@@ -27,7 +29,6 @@ LibrePOS is a modern, professional Point of Sale (POS) system UI/UX designed spe
 - No jQuery
 - No React/Vue/Angular
 - No CSS preprocessors in production (vanilla CSS custom properties)
-- No backend/server dependencies
 - No external API calls for core functionality
 
 ---
@@ -35,75 +36,138 @@ LibrePOS is a modern, professional Point of Sale (POS) system UI/UX designed spe
 ## Project Structure
 
 ```
-LibrePOS-UIUX/
-├── css/
-│   ├── vendor/
-│   │   └── bootstrap.min.css      # Bootstrap 5.3.8
-│   ├── style.css                  # Main stylesheet (development)
-│   ├── style.min.css              # Minified stylesheet (production)
-│   ├── themes/
-│   │   ├── light.css              # Light theme variables
-│   │   └── dark.css               # Dark theme variables
-│   └── components/                # Component-specific styles
-├── js/
-│   ├── vendor/
-│   │   └── bootstrap.min.js       # Bootstrap JS
-│   ├── app.js                     # Main application entry
-│   ├── modules/                   # Feature modules
-│   │   ├── pos/                   # POS terminal functionality
-│   │   ├── menu/                  # Menu management
-│   │   ├── orders/                # Order processing
-│   │   └── theme/                 # Theme switching
-│   └── utils/                     # Utility functions
-├── img/                           # Images and icons
-├── pages/                         # HTML pages
-│   ├── pos-terminal.html          # Main POS interface
-│   ├── menu-management.html       # Menu editor
-│   ├── order-history.html         # Order tracking
-│   └── settings.html              # Configuration
-└── index.html                     # Entry point
+librepos/
+├── app/
+│   ├── __init__.py               # Application factory (create_app)
+│   ├── config.py                 # Configuration classes
+│   ├── extensions.py             # Flask extension instances
+│   ├── blueprints/               # Feature blueprints
+│   │   └── {blueprint}/
+│   │       ├── __init__.py       # Blueprint registration
+│   │       ├── routes.py         # HTTP route handlers
+│   │       ├── models.py         # SQLAlchemy models
+│   │       ├── services.py       # Business logic layer
+│   │       ├── schemas.py        # Marshmallow schemas
+│   │       ├── forms.py          # WTForms definitions
+│   │       ├── static/           # Blueprint-specific assets
+│   │       │   ├── css/
+│   │       │   └── js/
+│   │       └── templates/        # Blueprint-specific templates
+│   │           └── {blueprint}/
+│   ├── shared/                   # Decorators, helpers, validators
+│   ├── static/                   # Global static assets
+│   │   ├── vendor/               # Third-party libraries
+│   │   │   ├── materialize/      # Materialize CSS & JS
+│   │   │   ├── google/           # Material Symbols fonts
+│   │   │   ├── chartjs/          # Chart.js
+│   │   │   ├── sortablejs/       # SortableJS
+│   │   │   └── interactjs/       # interact.js
+│   │   ├── css/
+│   │   │   ├── variables.css     # Design system tokens (Catppuccin)
+│   │   │   ├── main.css          # Global styles
+│   │   │   ├── utilities.css     # Utility classes
+│   │   │   └── override.css      # Materialize overrides
+│   │   ├── js/
+│   │   │   ├── app.js            # Main application entry
+│   │   │   ├── utils.js          # Utility functions
+│   │   │   └── sw.js             # Service worker
+│   │   └── img/                  # Images and icons
+│   └── templates/                # Base templates
+│       ├── base.html             # Master layout
+│       ├── layouts/              # Page layouts (admin, pos, kds)
+│       ├── components/           # Reusable Jinja2 components
+│       ├── macros/               # Jinja2 macro libraries
+│       └── errors/               # Error pages
+├── migrations/                   # Flask-Migrate database migrations
+├── tests/                        # Test suite
+├── docs/                         # Documentation
+└── scripts/                      # Utility scripts
 ```
 
 ---
 
 ## Design System
 
-### Color Palette
+### Color Palette (Catppuccin)
 
-Use CSS custom properties for all colors. Never hardcode color values.
+The design system uses [Catppuccin](https://catppuccin.com/) color palette:
+- **Light theme**: Catppuccin Latte
+- **Dark theme**: Catppuccin Mocha
+
+All colors are defined in `app/static/css/variables.css` using CSS custom properties.
 
 ```css
-:root {
+/* Light Theme - Catppuccin Latte */
+:root, [data-theme="light"] {
   /* Brand Colors */
-  --pos-primary: #2563eb;
-  --pos-primary-hover: #1d4ed8;
-  --pos-secondary: #64748b;
-  --pos-accent: #10b981;
+  --pos-primary: var(--ctp-blue);     /* #1e66f5 */
+  --pos-secondary: var(--ctp-overlay0); /* #9ca0b0 */
+  --pos-accent: var(--ctp-teal);      /* #179299 */
 
   /* Semantic Colors */
-  --pos-success: #22c55e;
-  --pos-warning: #f59e0b;
-  --pos-danger: #ef4444;
-  --pos-info: #3b82f6;
+  --pos-success: var(--ctp-green);    /* #40a02b */
+  --pos-warning: var(--ctp-yellow);   /* #df8e1d */
+  --pos-danger: var(--ctp-red);       /* #d20f39 */
+  --pos-info: var(--ctp-sapphire);    /* #209fb5 */
 
-  /* Surface Colors (theme-dependent) */
-  --pos-bg-primary: #ffffff;
-  --pos-bg-secondary: #f8fafc;
-  --pos-bg-tertiary: #f1f5f9;
-  --pos-text-primary: #0f172a;
-  --pos-text-secondary: #475569;
-  --pos-border: #e2e8f0;
+  /* Surface Colors */
+  --pos-bg-primary: var(--ctp-base);    /* #eff1f5 */
+  --pos-bg-secondary: var(--ctp-mantle); /* #e6e9ef */
+  --pos-bg-tertiary: var(--ctp-surface0); /* #ccd0da */
+
+  /* Text Colors */
+  --pos-text-primary: var(--ctp-text);    /* #4c4f69 */
+  --pos-text-secondary: var(--ctp-subtext1); /* #5c5f77 */
+  --pos-text-muted: var(--ctp-subtext0);  /* #6c6f85 */
+
+  /* Borders */
+  --pos-border: var(--ctp-surface1);       /* #bcc0cc */
+  --pos-border-strong: var(--ctp-surface2); /* #acb0be */
 }
 
+/* Dark Theme - Catppuccin Mocha */
 [data-theme="dark"] {
-  --pos-bg-primary: #0f172a;
-  --pos-bg-secondary: #1e293b;
-  --pos-bg-tertiary: #334155;
-  --pos-text-primary: #f8fafc;
-  --pos-text-secondary: #94a3b8;
-  --pos-border: #334155;
+  /* Brand Colors */
+  --pos-primary: var(--ctp-blue);     /* #89b4fa */
+  --pos-secondary: var(--ctp-overlay0); /* #6c7086 */
+  --pos-accent: var(--ctp-teal);      /* #94e2d5 */
+
+  /* Semantic Colors */
+  --pos-success: var(--ctp-green);    /* #a6e3a1 */
+  --pos-warning: var(--ctp-yellow);   /* #f9e2af */
+  --pos-danger: var(--ctp-red);       /* #f38ba8 */
+  --pos-info: var(--ctp-sapphire);    /* #74c7ec */
+
+  /* Surface Colors */
+  --pos-bg-primary: var(--ctp-base);    /* #1e1e2e */
+  --pos-bg-secondary: var(--ctp-mantle); /* #181825 */
+  --pos-bg-tertiary: var(--ctp-surface0); /* #313244 */
+
+  /* Text Colors */
+  --pos-text-primary: var(--ctp-text);    /* #cdd6f4 */
+  --pos-text-secondary: var(--ctp-subtext1); /* #bac2de */
+  --pos-text-muted: var(--ctp-subtext0);  /* #a6adc8 */
+
+  /* Borders */
+  --pos-border: var(--ctp-surface1);       /* #45475a */
+  --pos-border-strong: var(--ctp-surface2); /* #585b70 */
 }
 ```
+
+### Additional Catppuccin Colors
+
+The full Catppuccin palette is available via `--ctp-*` variables:
+
+| Color | Latte | Mocha | Usage |
+|-------|-------|-------|-------|
+| rosewater | #dc8a78 | #f5e0dc | Decorative accents |
+| flamingo | #dd7878 | #f2cdcd | Decorative accents |
+| pink | #ea76cb | #f5c2e7 | Highlights |
+| mauve | #8839ef | #cba6f7 | Links, special actions |
+| maroon | #e64553 | #eba0ac | Alternative danger |
+| peach | #fe640b | #fab387 | Attention, badges |
+| sky | #04a5e5 | #89dceb | Alternative info |
+| lavender | #7287fd | #b4befe | Focus states |
 
 ### Typography
 
@@ -128,13 +192,12 @@ Use CSS custom properties for all colors. Never hardcode color values.
 
 ### Icons (Material Symbols Rounded)
 
-Use Google Material Symbols Rounded for all icons. Include via the variable font for flexibility in weight, fill, and optical size.
+Use Google Material Symbols Rounded for all icons. The font is bundled locally in `app/static/vendor/google/`.
 
 ```html
-<!-- Include in <head> -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+<!-- Usage in Jinja2 templates -->
+<span class="material-symbols-rounded" aria-hidden="true">shopping_cart</span>
+<span class="material-symbols-rounded filled" aria-hidden="true">favorite</span>
 ```
 
 ```css
@@ -163,13 +226,6 @@ Use Google Material Symbols Rounded for all icons. Include via the variable font
 .pos-icon-sm { font-size: 20px; font-variation-settings: 'opsz' 20; }
 .pos-icon-lg { font-size: 32px; font-variation-settings: 'opsz' 32; }
 .pos-icon-xl { font-size: 48px; font-variation-settings: 'opsz' 48; }
-```
-
-```html
-<!-- Usage examples -->
-<span class="material-symbols-rounded" aria-hidden="true">shopping_cart</span>
-<span class="material-symbols-rounded filled" aria-hidden="true">favorite</span>
-<span class="material-symbols-rounded pos-icon-lg" aria-hidden="true">receipt_long</span>
 ```
 
 ### Spacing Scale
@@ -320,9 +376,9 @@ const ThemeManager = {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(this.STORAGE_KEY, theme);
 
-    // Update meta theme-color for browser chrome
+    // Update meta theme-color for browser chrome (Catppuccin colors)
     const metaTheme = document.querySelector('meta[name="theme-color"]');
-    metaTheme?.setAttribute('content', theme === 'dark' ? '#0f172a' : '#ffffff');
+    metaTheme?.setAttribute('content', theme === 'dark' ? '#1e1e2e' : '#eff1f5');
   },
 
   toggle() {
@@ -338,7 +394,7 @@ const ThemeManager = {
 /* Button that adapts to theme */
 .pos-btn-primary {
   background-color: var(--pos-primary);
-  color: #ffffff;
+  color: var(--md-sys-color-on-primary);
   border: none;
   transition: background-color 0.15s ease;
 }
@@ -539,8 +595,9 @@ async function loadReportModule() {
 ### Asset Optimization
 
 - **Images**: Use WebP with PNG/JPG fallbacks, implement lazy loading
-- **Icons**: Use Google Material Symbols Rounded via the variable font for optimal flexibility and performance
-- **Fonts**: System font stack for text; Google Material Symbols Rounded for icons
+- **Icons**: Google Material Symbols Rounded bundled locally
+- **Fonts**: System font stack for text; Material Symbols for icons
+- **Vendor**: Materialize CSS, Chart.js, SortableJS, interact.js bundled locally
 
 ---
 
@@ -638,115 +695,21 @@ async function loadReportModule() {
 
 ---
 
-## JavaScript Module Structure
-
-### Module Pattern
-
-```javascript
-// modules/pos/cart.js
-export const Cart = {
-  items: [],
-
-  init() {
-    this.bindEvents();
-    this.render();
-  },
-
-  bindEvents() {
-    document.getElementById('menu-grid')
-      .addEventListener('click', this.handleMenuClick.bind(this));
-  },
-
-  addItem(item) {
-    const existing = this.items.find(i => i.id === item.id);
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      this.items.push({ ...item, quantity: 1 });
-    }
-    this.render();
-    this.announceUpdate(`${item.name} added to order`);
-  },
-
-  removeItem(itemId) {
-    const item = this.items.find(i => i.id === itemId);
-    this.items = this.items.filter(i => i.id !== itemId);
-    this.render();
-    if (item) {
-      this.announceUpdate(`${item.name} removed from order`);
-    }
-  },
-
-  getTotal() {
-    return this.items.reduce((sum, item) => {
-      return sum + (item.price * item.quantity);
-    }, 0);
-  },
-
-  render() {
-    requestAnimationFrame(() => {
-      // Render cart items
-    });
-  },
-
-  // Screen reader announcement
-  announceUpdate(message) {
-    const status = document.getElementById('order-status');
-    if (status) {
-      status.textContent = message;
-    }
-  }
-};
-```
-
-### App Initialization
-
-```javascript
-// js/app.js
-import { ThemeManager } from './modules/theme/index.js';
-import { Cart } from './modules/pos/cart.js';
-import { MenuGrid } from './modules/pos/menu.js';
-
-const App = {
-  async init() {
-    // Initialize theme first (prevents flash)
-    ThemeManager.init();
-
-    // Initialize core modules
-    Cart.init();
-    MenuGrid.init();
-
-    // Register service worker for offline support (optional)
-    if ('serviceWorker' in navigator) {
-      await navigator.serviceWorker.register('/sw.js');
-    }
-  }
-};
-
-// Start app when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => App.init());
-} else {
-  App.init();
-}
-```
-
----
-
 ## Code Style & Conventions
 
-### HTML
+### HTML / Jinja2
 
 - Use semantic elements (`<nav>`, `<main>`, `<aside>`, `<button>`, etc.)
 - Always include `lang` attribute on `<html>`
 - Use `type="button"` on non-submit buttons
 - Include proper `aria-*` attributes for dynamic content
 - Use `data-*` attributes for JavaScript hooks, not classes
+- Use Jinja2 macros for reusable components
 
 ### CSS
 
 - Use BEM-like naming: `.pos-component`, `.pos-component-element`, `.pos-component--modifier`
-- Prefix all custom classes with `pos-` to avoid Bootstrap conflicts
+- Prefix all custom classes with `pos-` to avoid Materialize conflicts
 - Use CSS custom properties for all colors, spacing, and typography
 - Mobile-first media queries only
 - No `!important` except for utility overrides
@@ -762,7 +725,7 @@ if (document.readyState === 'loading') {
 
 ### File Naming
 
-- HTML: `kebab-case.html` (e.g., `pos-terminal.html`)
+- Templates: `kebab-case.html` (e.g., `menu-list.html`)
 - CSS: `kebab-case.css` (e.g., `pos-components.css`)
 - JS: `kebab-case.js` (e.g., `cart-manager.js`)
 - JS Classes/Modules: `PascalCase` in code (e.g., `CartManager`)
@@ -772,17 +735,19 @@ if (document.readyState === 'loading') {
 ## Development Commands
 
 ```bash
-# Install dependencies
-npm install
+# Run development server
+flask run
 
-# Start development server with hot reload
-npm start
+# Database migrations
+flask db migrate -m "description"
+flask db upgrade
 
-# Build for production
-npm run build
+# Testing
+pytest
+pytest --cov=app
 
-# Run tests (when configured)
-npm test
+# Seed data
+python scripts/seed_data.py
 ```
 
 ---
@@ -842,3 +807,12 @@ Focus on what makes these systems efficient for high-volume restaurant operation
 | `.pos-cart-` | Cart/order components |
 | `.pos-modal-` | Modal dialogs |
 | `.pos-sr-` | Screen reader utilities |
+
+### CSS Files
+
+| File | Purpose |
+|------|---------|
+| `variables.css` | Design tokens (Catppuccin colors, spacing, typography) |
+| `main.css` | Global layout, navigation, components |
+| `utilities.css` | Utility classes (flexbox, colors, etc.) |
+| `override.css` | Materialize CSS overrides |
