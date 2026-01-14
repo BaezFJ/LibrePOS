@@ -17,7 +17,10 @@
 
 | Task | Implementation |
 |------|----------------|
-| Add theme support | Use `var(--pos-*)` custom properties |
+| Add button | Use `.btn .filled/.tonal/.outlined/.text` (Materialize) |
+| Add card | Use `.card`, `.card-content`, `.card-action` (Materialize) |
+| Add modal | Use `.modal`, `.modal-content`, `.modal-footer` (Materialize) |
+| Add theme support | Use `var(--pos-*)` or `var(--md-sys-color-*)` custom properties |
 | Make touchable | Min 48x48px, use `pointerdown`/`pointerup` |
 | Add to screen reader | Use `aria-label`, `aria-live`, `role` |
 | Animate safely | Use `transform`/`opacity`, check `prefers-reduced-motion` |
@@ -37,17 +40,23 @@
 
 ---
 
-## Class Prefixes
+## CSS Strategy: Materialize First
 
-| Prefix | Purpose |
-|--------|---------|
-| `.pos-` | All LibrePOS components |
-| `.pos-btn-` | Button variants |
-| `.pos-card-` | Card components |
-| `.pos-menu-` | Menu-related components |
-| `.pos-cart-` | Cart/order components |
-| `.pos-modal-` | Modal dialogs |
-| `.pos-sr-` | Screen reader utilities |
+| Priority | Classes | Usage |
+|----------|---------|-------|
+| 1st | Materialize CSS | Buttons, cards, modals, forms, grids |
+| 2nd | Utility classes | Flex helpers, color utilities (no prefix) |
+| 3rd | `.pos-*` custom | POS-specific components only |
+
+### Custom `.pos-*` Components (Only These)
+
+| Component | Classes | Purpose |
+|-----------|---------|---------|
+| Terminal layout | `.pos-terminal`, `.pos-menu-panel`, `.pos-cart-panel` | Split-screen POS |
+| Cart | `.pos-cart-*`, `.pos-cart-item-*` | Order cart components |
+| Accessibility | `.pos-sr-only` | Screen reader utilities |
+| Placeholder states | `.placeholder-*` | Empty state UI |
+| Action bar | `.action-bar-*` | Floating toolbar |
 
 ---
 
