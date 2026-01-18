@@ -16,11 +16,31 @@
 
 ## CSS
 
-- BEM-like naming: `.pos-component`, `.pos-component-element`, `.pos-component--modifier`
-- Prefix all custom classes with `pos-`
-- Use CSS custom properties for colors, spacing, typography
+### Strategy: Materialize First
+
+1. **Use Materialize CSS classes** for standard components
+2. **Use utility classes** without prefix for layout helpers
+3. **Use `.pos-*` prefix** ONLY for POS-specific components
+
+### Naming
+
+| Type | Prefix | Example |
+|------|--------|---------|
+| Materialize | None | `.btn`, `.card`, `.modal` |
+| Utility | None | `.flex-row`, `.space-between` |
+| POS-specific | `.pos-` | `.pos-terminal`, `.pos-cart-item` |
+
+### CSS Custom Properties
+
+- `var(--md-sys-color-*)` - Materialize theming tokens
+- `var(--pos-*)` - LibrePOS spacing/typography
+- `var(--ctp-*)` - Direct Catppuccin colors
+
+### Rules
+
 - Mobile-first media queries only
-- No `!important` except for utility overrides
+- No `!important` except utilities
+- Override Materialize in `override.css`, not inline
 
 ---
 

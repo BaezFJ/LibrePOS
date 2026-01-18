@@ -27,8 +27,8 @@ pytest --cov=app             # With coverage
 
 1. **Service layer**: Routes delegate to services for business logic. NEVER put business logic in routes.
 2. **String FK references**: Use `db.ForeignKey('table.id')` to avoid circular imports.
-3. **CSS variables**: ONLY use `--pos-*` custom properties. NEVER hardcode colors/spacing.
-4. **CSS classes**: BEM-like with `pos-` prefix (`.pos-component-element--modifier`).
+3. **CSS variables**: Use `var(--md-sys-color-*)` for theming, `var(--pos-*)` for spacing/typography.
+4. **CSS strategy**: Materialize CSS first. Use `.pos-*` prefix ONLY for POS-specific components (terminal, cart).
 5. **Accessibility**: WCAG 2.1 AA required. Min 4.5:1 contrast, visible focus rings, proper ARIA.
 6. **Touch targets**: Min 48x48px, 8px gap between targets.
 7. **Icons**: `<span class="material-symbols-rounded" aria-hidden="true">icon_name</span>`

@@ -67,3 +67,42 @@ ul {
     background-color: var(--md-sys-color-surface-variant);
     border: 1px solid var(--md-sys-color-on-surface-variant);
 }
+
+/* ==========================================================================
+   BUTTON TOUCH TARGETS
+   POS-optimized sizing for touch interfaces (WCAG 2.1 AA: 48px minimum)
+   ========================================================================== */
+
+:root {
+    --btn-height: 48px;
+}
+
+.btn,
+.btn-small,
+.btn-floating,
+.btn-flat {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+.btn-large {
+    min-height: 56px;
+}
+
+.btn + .btn,
+.btn-flat + .btn-flat,
+.btn + .btn-flat {
+    margin-left: 8px;
+}
+
+.btn-floating {
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+}
+
+.btn-floating.btn-large {
+    width: 56px;
+    height: 56px;
+    line-height: 56px;
+}

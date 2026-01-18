@@ -1,84 +1,150 @@
 # Component Patterns
 
-> Buttons, layouts, and cart components
+> Materialize CSS components with POS-specific additions
 
 ---
 
-## Buttons
+## Philosophy: Materialize First
 
-### Primary Button
+1. **Use Materialize CSS** for standard components (buttons, cards, modals)
+2. **Use utility classes** for flex layouts (no prefix)
+3. **Use `.pos-*` prefix** ONLY for POS-specific components
+
+---
+
+## Buttons (Materialize CSS)
+
+All buttons use Materialize CSS classes. Touch targets are enforced via `override.css`.
+
+### Button Types
 
 ```html
-<button type="button" class="pos-btn pos-btn-primary">Add to Order</button>
+<!-- Primary action -->
+<button type="button" class="btn filled waves-effect waves-light">Add to Order</button>
+
+<!-- Secondary action -->
+<button type="button" class="btn tonal waves-effect waves-light">Cancel</button>
+
+<!-- Outlined action -->
+<button type="button" class="btn outlined waves-effect waves-light">Details</button>
+
+<!-- Danger action -->
+<button type="button" class="btn filled waves-effect waves-light"
+        style="--md-sys-color-primary: var(--md-sys-color-error);">Void Item</button>
+
+<!-- Text-only action -->
+<button type="button" class="btn text waves-effect">Skip</button>
 ```
 
-### Secondary Button
+### Button with Icon
 
 ```html
-<button type="button" class="pos-btn pos-btn-secondary">Cancel</button>
-```
-
-### Danger Button
-
-```html
-<button type="button" class="pos-btn pos-btn-danger">Void Item</button>
-```
-
-### Icon Button
-
-```html
-<button type="button" class="pos-btn pos-btn-icon" aria-label="Print receipt">
-  <span class="material-symbols-rounded" aria-hidden="true">print</span>
+<button type="button" class="btn filled waves-effect waves-light">
+    <span class="material-symbols-rounded left" aria-hidden="true">print</span>
+    Print Receipt
 </button>
 ```
 
-### Large Touch Button
+### Icon-Only Button
 
 ```html
-<button type="button" class="pos-btn pos-btn-primary pos-btn-lg">Complete Order - $45.99</button>
+<button type="button" class="btn-floating waves-effect waves-light" aria-label="Print receipt">
+    <span class="material-symbols-rounded" aria-hidden="true">print</span>
+</button>
+```
+
+### Large Touch Button (POS Actions)
+
+```html
+<button type="button" class="btn-large filled waves-effect waves-light">Complete Order - $45.99</button>
+```
+
+### Using Button Macros (Recommended)
+
+```jinja2
+{% import "macros/button.html" as Button %}
+
+{{ Button.filled("Add to Order", url="/order/add", icon="add_shopping_cart") }}
+{{ Button.tonal("Cancel", url="/cancel") }}
+{{ Button.submit("Save", icon="save") }}
 ```
 
 ---
 
-## POS Terminal Layout
+## Cards (Materialize CSS)
 
 ```html
-<div class="pos-terminal">
-  <main class="pos-menu-panel" role="main">
-    <nav class="pos-category-nav" aria-label="Menu categories"><!-- tabs --></nav>
-    <div class="pos-menu-grid" role="list" aria-label="Menu items"><!-- items --></div>
-  </main>
-
-  <aside class="pos-cart-panel" aria-label="Current order">
-    <header class="pos-cart-header"><h2>Current Order</h2></header>
-    <ul class="pos-cart-items" aria-label="Order items"><!-- items --></ul>
-    <footer class="pos-cart-footer">
-      <div class="pos-cart-total" aria-live="polite">Total: <strong>$45.99</strong></div>
-      <button type="button" class="pos-btn pos-btn-primary pos-btn-lg">Pay Now</button>
-    </footer>
-  </aside>
+<div class="card">
+    <div class="card-content">
+        <span class="card-title">Card Title</span>
+        <p>Card content here.</p>
+    </div>
+    <div class="card-action">
+        <a href="#" class="btn text waves-effect">Action</a>
+    </div>
 </div>
 ```
 
 ---
 
-## Cart Item
+## Modals (Materialize CSS)
+
+```html
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <h4>Modal Header</h4>
+        <p>Modal content here.</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn text waves-effect" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn filled waves-effect waves-light">Confirm</button>
+    </div>
+</div>
+```
+
+---
+
+## POS-Specific Components (Custom)
+
+These are the ONLY components that should use the `.pos-*` prefix.
+
+### POS Terminal Layout
+
+```html
+<div class="pos-terminal">
+    <main class="pos-menu-panel" role="main">
+        <nav class="pos-category-nav" aria-label="Menu categories"><!-- tabs --></nav>
+        <div class="pos-menu-grid" role="list" aria-label="Menu items"><!-- items --></div>
+    </main>
+
+    <aside class="pos-cart-panel" aria-label="Current order">
+        <header class="pos-cart-header"><h2>Current Order</h2></header>
+        <ul class="pos-cart-items" aria-label="Order items"><!-- items --></ul>
+        <footer class="pos-cart-footer">
+            <div class="pos-cart-total" aria-live="polite">Total: <strong>$45.99</strong></div>
+            <button type="button" class="btn-large filled waves-effect waves-light">Pay Now</button>
+        </footer>
+    </aside>
+</div>
+```
+
+### Cart Item
 
 ```html
 <li class="pos-cart-item">
-  <div class="pos-cart-item-info">
-    <span class="pos-cart-item-qty">2x</span>
-    <span class="pos-cart-item-name">Caesar Salad</span>
-    <span class="pos-cart-item-mods">No croutons, dressing on side</span>
-  </div>
-  <div class="pos-cart-item-actions">
-    <span class="pos-cart-item-price">$25.98</span>
-    <button type="button" class="pos-btn pos-btn-icon pos-btn-sm" aria-label="Edit Caesar Salad">
-      <span class="material-symbols-rounded" aria-hidden="true">edit</span>
-    </button>
-    <button type="button" class="pos-btn pos-btn-icon pos-btn-sm pos-btn-danger" aria-label="Remove Caesar Salad">
-      <span class="material-symbols-rounded" aria-hidden="true">delete</span>
-    </button>
-  </div>
+    <div class="pos-cart-item-info">
+        <span class="pos-cart-item-qty">2x</span>
+        <span class="pos-cart-item-name">Caesar Salad</span>
+        <span class="pos-cart-item-mods">No croutons, dressing on side</span>
+    </div>
+    <div class="pos-cart-item-actions">
+        <span class="pos-cart-item-price">$25.98</span>
+        <button type="button" class="btn-floating btn-small waves-effect" aria-label="Edit Caesar Salad">
+            <span class="material-symbols-rounded" aria-hidden="true">edit</span>
+        </button>
+        <button type="button" class="btn-floating btn-small waves-effect" aria-label="Remove Caesar Salad">
+            <span class="material-symbols-rounded" aria-hidden="true">delete</span>
+        </button>
+    </div>
 </li>
 ```

@@ -1,0 +1,14 @@
+/**
+ * HTMX CSRF Token Configuration
+ * Automatically adds CSRF token to all HTMX requests
+ */
+
+const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+
+if (csrfMeta) {
+    const csrfToken = csrfMeta.getAttribute('content');
+
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = csrfToken;
+    });
+}
