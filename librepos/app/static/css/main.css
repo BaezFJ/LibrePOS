@@ -183,7 +183,7 @@ footer {
 .dropdown-content.apps-dropdown {
     padding: var(--pos-space-4);
     width: 320px;
-    border-radius: 12px;
+    border-radius: var(--pos-radius-lg);
 }
 
 .apps-dropdown-header {
@@ -205,7 +205,7 @@ footer {
     justify-content: center;
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: var(--pos-radius-md);
     color: var(--md-sys-color-on-surface-variant);
     transition: background-color 0.15s ease;
 }
@@ -246,7 +246,7 @@ footer {
     min-height: 88px;
     min-width: 0;
     padding: var(--pos-space-3);
-    border-radius: 12px;
+    border-radius: var(--pos-radius-lg);
     border: 1px solid var(--md-sys-color-outline-variant);
     background: var(--md-sys-color-surface);
     text-decoration: none;
@@ -283,7 +283,7 @@ footer {
     gap: var(--pos-space-2);
     width: 100%;
     padding: var(--pos-space-3) var(--pos-space-4);
-    border-radius: 12px;
+    border-radius: var(--pos-radius-lg);
     background: var(--md-sys-color-surface);
     border: 1px solid var(--md-sys-color-outline-variant);
     color: var(--md-sys-color-on-surface);
@@ -354,7 +354,7 @@ span.counter::after {
 /* --- Numpad (POS) --- */
 .numpad-btn {
     width: 100%;
-    height: 64px;
+    height: var(--navbar-height);
     font-size: var(--pos-text-xl);
 }
 
@@ -372,7 +372,7 @@ span.counter::after {
 /* --- File Dropzone --- */
 .file-dropzone {
     border: 2px dashed var(--md-sys-color-outline);
-    border-radius: 8px;
+    border-radius: var(--pos-radius-md);
     padding: var(--pos-space-8) var(--pos-space-4);
     text-align: center;
     cursor: pointer;
@@ -473,7 +473,7 @@ table.sticky-header thead {
 }
 
 table.sticky-header thead th {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--pos-shadow-md);
 }
 
 /* Keyboard Focus for Sortable Headers */
@@ -517,9 +517,8 @@ th.sortable:focus-visible {
     padding: var(--pos-space-2) var(--pos-space-3);
     background-color: var(--md-sys-color-surface);
     border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 9999px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15),
-    0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: var(--pos-radius-full);
+    box-shadow: var(--pos-shadow-lg);
     pointer-events: auto;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -568,9 +567,9 @@ th.sortable:focus-visible {
 .action-bar-label {
     font-size: 0.6875rem;
     font-weight: var(--pos-font-medium);
-    line-height: 1.2;
+    line-height: var(--pos-leading-tight);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: var(--pos-tracking-wider);
     white-space: nowrap;
 }
 
@@ -701,7 +700,7 @@ th.sortable:focus-visible {
     padding: var(--pos-space-12) var(--pos-space-8);
     text-align: center;
     background: var(--md-sys-color-surface-variant);
-    border-radius: 12px;
+    border-radius: var(--pos-radius-lg);
     border: 1px dashed var(--md-sys-color-outline-variant);
 }
 
