@@ -201,6 +201,16 @@
 .text-3xl { font-size: var(--pos-text-3xl); }
 .text-4xl { font-size: var(--pos-text-4xl); }
 
+/* Font Weights */
+.font-thin { font-weight: var(--pos-font-thin); }
+.font-light { font-weight: var(--pos-font-light); }
+.font-normal { font-weight: var(--pos-font-normal); }
+.font-medium { font-weight: var(--pos-font-medium); }
+.font-semibold { font-weight: var(--pos-font-semibold); }
+.font-bold { font-weight: var(--pos-font-bold); }
+.font-extrabold { font-weight: var(--pos-font-extrabold); }
+.font-black { font-weight: var(--pos-font-black); }
+
 /* Layout Utilities
    ========================================================================== */
 
