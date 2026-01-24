@@ -48,9 +48,9 @@
    Usage: Must be called with {% call %} to inject content via {{ caller() }}.
 #}
 {% macro render(title, id) %}
-    <aside id="{{ id if id is defined else "mainMenu" }}" class="sidenav sidenav-fixed">
+    <aside id="{{ id if id is defined else "mainMenu" }}" class="sidenav">
         <div class="sidenav-header navbar">
-            <span class="brand-logo">{{ sidenav_title if sidenav_title is defined else "LibrePOS" }}</span>
+            <span class="brand-logo">{{ business_name }}</span>
         </div>
         <div class="sidenav-content">
             {{ caller() }}
