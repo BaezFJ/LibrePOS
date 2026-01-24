@@ -368,7 +368,7 @@ table thead th {
     font-weight: var(--pos-font-semibold, 600);
     letter-spacing: 0.02em;
     padding: 15px 12px;
-    background-color: var(--md-sys-color-surface-container);
+    background-color: var(--md-sys-color-surface-variant);
     border-bottom: 2px solid var(--md-sys-color-outline);
 }
 
