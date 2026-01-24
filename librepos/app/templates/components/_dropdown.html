@@ -150,7 +150,7 @@
        class_ (str): Optional. Additional CSS classes.
 #}
 {% macro header(text, class_='') -%}
-    <div class="text-lg font-bold tracking-wide{% if class_ %} {{ class_ }}{% endif %}">
+    <div class="text-lg font-bold tracking-wide mb-4{% if class_ %} {{ class_ }}{% endif %}">
         <span>{{ text }}</span>
     </div>
 {%- endmacro %}
@@ -161,7 +161,7 @@
    Adds a horizontal separator line between menu items.
 #}
 {% macro divider() -%}
-    <li class="divider" tabindex="-1"></li>
+    <li class="divider my-2" tabindex="-1"></li>
 {%- endmacro %}
 
 
