@@ -46,22 +46,26 @@
 
                 <!-- Apps Dropdown -->
                 <div id="apps-dropdown" class="dropdown-content apps-dropdown">
-                    <div class="apps-dropdown-inner">
-                        <div class="apps-grid">
-                            {{ Dropdown.tile('lock', 'Auth') }}
-                            {{ Dropdown.tile('restaurant_menu', 'Menu', url=url_for('menu.index')) }}
-                            {{ Dropdown.tile('receipt_long', 'Orders') }}
-                            {{ Dropdown.tile('credit_card', 'Payments') }}
-                            {{ Dropdown.tile('badge', 'Staff') }}
-                            {{ Dropdown.tile('restaurant', 'Kitchen') }}
-                            {{ Dropdown.tile('table_restaurant', 'Tables') }}
-                            {{ Dropdown.tile('analytics', 'Reporting') }}
-                            {{ Dropdown.tile('inventory_2', 'Inventory') }}
-                            {{ Dropdown.tile('people', 'Customers') }}
-                            {{ Dropdown.tile('extension', 'Integrations') }}
-                            {{ Dropdown.tile('api', 'API') }}
-                            {{ Dropdown.tile('settings', 'Settings') }}
-                        </div>
+                    <div class="apps-dropdown-header">
+                        <span>Applications</span>
+                        <a href="#!" class="apps-dropdown-action" aria-label="Settings">
+                            <span class="material-symbols-rounded" aria-hidden="true">tune</span>
+                        </a>
+                    </div>
+                    <div class="apps-grid">
+                        {{ Dropdown.tile('lock', 'Auth') }}
+                        {{ Dropdown.tile('restaurant_menu', 'Menu', url=url_for('menu.index')) }}
+                        {{ Dropdown.tile('receipt_long', 'Orders') }}
+                        {{ Dropdown.tile('credit_card', 'Payments') }}
+                        {{ Dropdown.tile('badge', 'Staff') }}
+                        {{ Dropdown.tile('restaurant', 'Kitchen') }}
+                        {{ Dropdown.tile('table_restaurant', 'Tables') }}
+                        {{ Dropdown.tile('analytics', 'Reporting') }}
+                        {{ Dropdown.tile('inventory_2', 'Inventory') }}
+                        {{ Dropdown.tile('people', 'Customers') }}
+                        {{ Dropdown.tile('extension', 'Integrations') }}
+                        {{ Dropdown.tile('api', 'API') }}
+                        {{ Dropdown.tile('settings', 'Settings') }}
                     </div>
                 </div>
             </div>
