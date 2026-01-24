@@ -44,15 +44,24 @@
                 <div class="flex flex-row items-center justify-between">
 
                 </div>
-                <table class="highlight striped">
+                <table class="highlight striped sticky-header">
                     <thead>
                     <tr>
-                        <th>Category Name</th>
-                        <th>Description</th>
-                        <th>Items</th>
-                        <th>Order</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th scope="col" class="sortable sort-asc" tabindex="0" role="button" aria-sort="ascending">
+                            Category Name
+                            <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
+                        </th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Items</th>
+                        <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none">
+                            Order
+                            <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
+                        </th>
+                        <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none">
+                            Status
+                            <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
+                        </th>
+                        <th scope="col">Actions</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -330,3 +330,69 @@
     color: var(--md-sys-color-on-surface);
     z-index: 9999;
 }
+
+/* Table Header Enhancements
+   ========================================================================== */
+
+table thead th {
+    font-weight: var(--pos-font-semibold, 600);
+    letter-spacing: 0.02em;
+    padding: 15px 12px;
+    background-color: var(--md-sys-color-surface-container);
+    border-bottom: 2px solid var(--md-sys-color-outline);
+}
+
+/* Sortable Headers */
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s ease;
+}
+
+th.sortable:hover {
+    color: var(--md-sys-color-on-surface);
+}
+
+th.sortable .material-symbols-rounded {
+    font-size: 18px;
+    vertical-align: middle;
+    margin-left: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+th.sortable:hover .material-symbols-rounded {
+    opacity: 0.5;
+}
+
+th.sortable.sort-asc .material-symbols-rounded,
+th.sortable.sort-desc .material-symbols-rounded {
+    opacity: 1;
+    color: var(--md-sys-color-primary);
+}
+
+/* Sticky Table Headers */
+table.sticky-header thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+table.sticky-header thead th {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Keyboard Focus for Sortable Headers */
+th.sortable:focus {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+}
+
+th.sortable:focus:not(:focus-visible) {
+    outline: none;
+}
+
+th.sortable:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+}
