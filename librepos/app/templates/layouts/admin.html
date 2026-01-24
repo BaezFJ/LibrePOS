@@ -46,12 +46,13 @@
 
                 <!-- Apps Dropdown -->
                 <div id="apps-dropdown" class="dropdown-content apps-dropdown">
-                    <div class="apps-dropdown-header">
-                        <span>Applications</span>
-                        <a href="#!" class="apps-dropdown-action" aria-label="Settings">
-                            <span class="material-symbols-rounded" aria-hidden="true">tune</span>
-                        </a>
-                    </div>
+                    {{ Dropdown.header("Applications") }}
+{#                    <div class="apps-dropdown-header">#}
+{#                        <span>Applications</span>#}
+{#                        <a href="#!" class="apps-dropdown-action" aria-label="Settings">#}
+{#                            <span class="material-symbols-rounded" aria-hidden="true">tune</span>#}
+{#                        </a>#}
+{#                    </div>#}
                     <div class="apps-grid">
                         {{ Dropdown.tile('lock', 'Auth') }}
                         {{ Dropdown.tile('restaurant_menu', 'Menu', url=url_for('menu.index')) }}
