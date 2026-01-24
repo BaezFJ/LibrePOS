@@ -4,10 +4,14 @@
 {% import 'macros/forms.html' as Forms %}
 {% import 'macros/modals.html' as Modal %}
 {% import 'components/_dropdown.html' as Dropdown %}
+{% import 'macros/headers.html' as Header %}
 
 {% block main %}
+
+    {{ Header.page(page_title) }}
+
     <section class="section">
-        <div class="mx-4">
+        <div class="container">
             <div class="card-panel">
                 <div class="card-header">
                     <div class="flex flex-row items-center justify-between">

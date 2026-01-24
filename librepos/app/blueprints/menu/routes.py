@@ -8,6 +8,7 @@ from .models import Category
 from .services import CategoryService
 
 sidenav_title = {"sidenav_title": "Menu"}
+nav_title = {"nav_title": "Menu"}
 
 
 @bp.route("/")
@@ -15,8 +16,7 @@ def index():
     """List view for a menu."""
     context = {
         "head_title": "Menu | LibrePOS",
-        "nav_title": "Dashboard",
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/index.html", **context)
 
@@ -26,8 +26,7 @@ def items():
     """List view for menu items."""
     context = {
         "head_title": "Menu Items | LibrePOS",
-        "nav_title": "Items",
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/items.html", **context)
 
@@ -37,9 +36,8 @@ def item_detail(item_id):
     """Detail view for a single menu item."""
     context = {
         "head_title": f"Item #{item_id} | LibrePOS",
-        "nav_title": "Item Detail",
         "item_id": item_id,
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/item_detail.html", **context)
 
@@ -77,14 +75,14 @@ def categories():
 
     context = {
         "head_title": "Menu Categories | LibrePOS",
-        "nav_title": "Categories",
         "categories": _categories,
         "form": form,
         "current_status": status,
         "current_type": type_filter,
         "current_sort": sort_by,
         "current_search": search,
-        **sidenav_title,
+        "page_title": "Categories",
+        **nav_title,
     }
     return render_template("menu/categories.html", **context)
 
@@ -99,8 +97,7 @@ def category_detail(category_id):
 
     context = {
         "head_title": f"{_category.name} | Categories | LibrePOS",
-        "nav_title": _category.name,
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/category_detail.html", **context)
 
@@ -124,8 +121,7 @@ def modifiers():
     """List view for menu modifiers"""
     context = {
         "head_title": "Menu Modifiers | LibrePOS",
-        "nav_title": "Modifiers",
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/modifiers.html", **context)
 
@@ -135,8 +131,7 @@ def modifier_groups():
     """List view for menu modifier groups"""
     context = {
         "head_title": "Menu Modifier Groups | LibrePOS",
-        "nav_title": "Modifier Groups",
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/modifier_groups.html", **context)
 
@@ -146,8 +141,7 @@ def menus():
     """List view for menu menus"""
     context = {
         "head_title": "Menu Menus | LibrePOS",
-        "nav_title": "Menus",
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/menus.html", **context)
 
@@ -157,8 +151,7 @@ def pricing():
     """List view for menu pricing rules"""
     context = {
         "head_title": "Menu Pricing | LibrePOS",
-        "nav_title": "Pricing",
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/pricing.html", **context)
 
@@ -168,8 +161,7 @@ def tags():
     """List view for menu tags"""
     context = {
         "head_title": "Menu Tags | LibrePOS",
-        "nav_title": "Tags",
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/tags.html", **context)
 
@@ -179,7 +171,6 @@ def settings():
     """List view for menu settings"""
     context = {
         "head_title": "Menu Settings | LibrePOS",
-        "nav_title": "Settings",
-        **sidenav_title,
+        **nav_title,
     }
     return render_template("menu/settings.html", **context)
