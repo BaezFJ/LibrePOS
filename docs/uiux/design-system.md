@@ -4,53 +4,44 @@
 
 ---
 
-## Color Palette (Catppuccin)
+## Color Palette (Elegant Restaurant)
 
-All colors defined in `app/static/css/variables.css`. Light theme uses Catppuccin Latte, dark theme uses Catppuccin Mocha.
+All colors defined in `app/static/css/variables.css`. Both themes use warm tones optimized for restaurant environments.
 
-### Brand Colors
+### Theme Overview
 
-| Token | Light | Dark |
-|-------|-------|------|
-| `--pos-primary` | Blue `#1e66f5` | `#89b4fa` |
-| `--pos-secondary` | Overlay `#9ca0b0` | `#6c7086` |
-| `--pos-accent` | Teal `#179299` | `#94e2d5` |
+| Theme | Background | Text | Primary Accent |
+|-------|------------|------|----------------|
+| Light | Warm cream `#FAF7F2` | Espresso `#2D2622` | Dark amber `#8B5E00` |
+| Dark | Warm charcoal `#1A1614` | Warm white `#F5F0EB` | Amber `#FFB74D` |
 
-### Semantic Colors
+### Core Colors (Material Design 3 Tokens)
 
-| Token | Purpose |
-|-------|---------|
-| `--pos-success` | Green - success states |
-| `--pos-warning` | Yellow - warning states |
-| `--pos-danger` | Red - error/destructive |
-| `--pos-info` | Sapphire - informational |
-
-### Surface Colors
-
-| Token | Purpose |
-|-------|---------|
-| `--pos-bg-primary` | Base background |
-| `--pos-bg-secondary` | Mantle (cards, panels) |
-| `--pos-bg-tertiary` | Surface0 (elevated elements) |
+| Token | Light | Dark | Usage |
+|-------|-------|------|-------|
+| `--md-sys-color-background` | `#FAF7F2` | `#1A1614` | Page background |
+| `--md-sys-color-surface` | `#F5F0EA` | `#252220` | Cards, panels |
+| `--md-sys-color-surface-variant` | `#EDE8E1` | `#302C28` | Elevated surfaces |
+| `--md-sys-color-primary` | `#8B5E00` | `#FFB74D` | Key actions, links |
+| `--md-sys-color-secondary` | `#5C534A` | `#C9C0B5` | Secondary actions |
+| `--md-sys-color-tertiary` | `#4A6355` | `#A8C5B8` | Accent variety (sage) |
 
 ### Text Colors
 
-| Token | Purpose |
-|-------|---------|
-| `--pos-text-primary` | Main text |
-| `--pos-text-secondary` | Secondary text |
-| `--pos-text-muted` | Disabled/hint text |
+| Token | Light | Dark | Usage |
+|-------|-------|------|-------|
+| `--md-sys-color-on-background` | `#2D2622` | `#F5F0EB` | Primary text |
+| `--md-sys-color-on-surface-variant` | `#5C534A` | `#A8A099` | Secondary text |
+| `--md-sys-color-outline` | `#8A8279` | `#6D665D` | Borders, dividers |
 
-### Borders
+### Semantic Colors (WCAG 2.1 AA)
 
-| Token | Purpose |
-|-------|---------|
-| `--pos-border` | Default border |
-| `--pos-border-strong` | Emphasized border |
-
-### Additional Catppuccin Colors
-
-Available via `--ctp-*` variables: rosewater, flamingo, pink, mauve, maroon, peach, sky, lavender.
+| Token | Light | Dark | Purpose |
+|-------|-------|------|---------|
+| `--sys-color-success` | `#2E7D32` | `#81C784` | Order complete, payments |
+| `--sys-color-warning` | `#E65100` | `#FFB74D` | Low stock, attention |
+| `--sys-color-error` | `#C62828` | `#EF9A9A` | Errors, destructive |
+| `--sys-color-info` | `#00796B` | `#4FC3F7` | Tips, informational |
 
 ---
 
