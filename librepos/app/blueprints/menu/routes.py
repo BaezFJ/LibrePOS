@@ -81,7 +81,6 @@ def categories():
         "current_type": type_filter,
         "current_sort": sort_by,
         "current_search": search,
-        "page_title": "Categories",
         **nav_title,
     }
     return render_template("menu/categories.html", **context)

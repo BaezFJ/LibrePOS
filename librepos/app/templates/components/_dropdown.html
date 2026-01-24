@@ -15,6 +15,13 @@
             {{ Dropdown.item("Delete", url_for("delete"), icon="delete", class_="red-text") }}
         {% endcall %}
 
+    Button Types:
+        {{ Dropdown.trigger("menu", type_="tonal") }}
+        {{ Dropdown.trigger("menu", type_="filled") }}
+        {{ Dropdown.trigger("menu", type_="outlined") }}
+        {{ Dropdown.trigger("menu", type_="text") }}
+        {{ Dropdown.trigger("menu", type_="elevated") }}
+
     With Sections:
         {% call Dropdown.render("user-menu") %}
             {{ Dropdown.header("Account") }}
@@ -71,23 +78,25 @@
    TRIGGER
    ========================================================================== #}
 
-{# trigger(id, icon='more_vert', label=None, class_='')
-   -----------------------------------------------------
+{# trigger(id, icon='more_vert', label=None, type_='tonal', class_='')
+   ---------------------------------------------------------------------
    Creates a button that opens the dropdown when clicked.
 
    Parameters:
        id     (str): Required. Must match the dropdown's id attribute.
        icon   (str): Optional. Material Symbols icon name. Defaults to 'more_vert'.
        label  (str): Optional. Text label (hidden on medium screens and below).
+       type_  (str): Optional. Button type: 'tonal', 'filled', 'outlined', 'text', 'elevated'.
+                     Defaults to 'tonal'.
        class_ (str): Optional. Additional CSS classes.
 
    Note: Label is hidden on medium screens and below (hide-on-med-and-down).
          Also serves as the aria-label for accessibility.
 #}
-{% macro trigger(id, icon='more_vert', label=None, class_='') -%}
+{% macro trigger(id, icon='more_vert', label=None, type_='tonal', class_='') -%}
     {% set aria = label if label else id|replace("-", " ") %}
     <a href="#"
-       class="btn tonal waves-effect dropdown-trigger{% if class_ %} {{ class_ }}{% endif %}"
+       class="btn {{ type_ }} waves-effect dropdown-trigger{% if class_ %} {{ class_ }}{% endif %}"
        data-target="{{ id }}"
        aria-label="{{ aria }}">
         {{ Icon.render(icon) }}

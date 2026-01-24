@@ -1,16 +1,28 @@
-{% macro page(title, subtitle) %}
+{% import "macros/button.html" as Button %}
+
+{% macro page(title, subtitle, count) %}
 
     <section class="section">
         <div class="container">
-            <div class="flex flex-col justify-between">
-                <div class="flex flex-col justify-between">
-                    <h1 class="text-3xl my-1 font-bold">{{ title }}</h1>
+            <div class="flex flex-row justify-between mb-4">
+                <div>
+                    <h1 class="text-3xl my-1 font-bold">
+                        {{ title }}
+                        {% if count is defined %}
+                            <span class="counter text-xl">{{ count }}</span>
+                        {% endif %}
+                    </h1>
                     {% if subtitle is defined %}
-                        <p class="text-gray-600">{{ subtitle }}</p>
+                        <p class="text-outline text-lg my-1">{{ subtitle }}</p>
                     {% endif %}
                 </div>
+                {% if caller() is defined %}
+                    <div class="valign-wrapper flex flex-row justify-between">
+                        {{ caller() }}
+                    </div>
+                {% endif %}
             </div>
-        <div class="divider"></div>
+            <div class="divider"></div>
         </div>
     </section>
 
