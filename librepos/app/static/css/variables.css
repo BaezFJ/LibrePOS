@@ -26,14 +26,24 @@
     --pos-font-mono: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', monospace;
 
     /* Font Sizes - Fluid typography with touch-optimized minimums */
-    --pos-text-xs: clamp(0.75rem, calc(0.7rem + 0.15vw), 0.875rem);    /* 12-14px */
-    --pos-text-sm: clamp(0.875rem, calc(0.825rem + 0.2vw), 1rem);      /* 14-16px */
-    --pos-text-base: clamp(1rem, calc(0.925rem + 0.25vw), 1.125rem);   /* 16-18px */
-    --pos-text-lg: clamp(1.125rem, calc(1.05rem + 0.25vw), 1.25rem);   /* 18-20px */
-    --pos-text-xl: clamp(1.25rem, calc(1.1rem + 0.5vw), 1.5rem);       /* 20-24px */
-    --pos-text-2xl: clamp(1.5rem, calc(1.25rem + 0.75vw), 1.875rem);   /* 24-30px */
-    --pos-text-3xl: clamp(1.875rem, calc(1.4rem + 1.25vw), 2.5rem);    /* 30-40px */
-    --pos-text-4xl: clamp(2.25rem, calc(1.5rem + 1.75vw), 3rem);       /* 36-48px */
+    --pos-text-xs: clamp(0.75rem, calc(0.7rem + 0.15vw), 0.875rem); /* 12-14px */
+    --pos-text-sm: clamp(0.875rem, calc(0.825rem + 0.2vw), 1rem); /* 14-16px */
+    --pos-text-base: clamp(1rem, calc(0.925rem + 0.25vw), 1.125rem); /* 16-18px */
+    --pos-text-lg: clamp(1.125rem, calc(1.05rem + 0.25vw), 1.25rem); /* 18-20px */
+    --pos-text-xl: clamp(1.25rem, calc(1.1rem + 0.5vw), 1.5rem); /* 20-24px */
+    --pos-text-2xl: clamp(1.5rem, calc(1.25rem + 0.75vw), 1.875rem); /* 24-30px */
+    --pos-text-3xl: clamp(1.875rem, calc(1.4rem + 1.25vw), 2.5rem); /* 30-40px */
+    --pos-text-4xl: clamp(2.25rem, calc(1.5rem + 1.75vw), 3rem); /* 36-48px */
+
+    /* Font Weights - Material Design Scale (100-900) */
+    --pos-font-thin: 100;
+    --pos-font-light: 300;
+    --pos-font-normal: 400;
+    --pos-font-medium: 500;
+    --pos-font-semibold: 600;
+    --pos-font-bold: 700;
+    --pos-font-extrabold: 800;
+    --pos-font-black: 900;
 
     /* ── Spacing Scale ── */
     --pos-space-1: 0.25rem; /* 4px */
