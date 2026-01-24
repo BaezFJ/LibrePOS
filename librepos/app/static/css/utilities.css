@@ -248,6 +248,46 @@
     .xl\:grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 
+/* Typography Utilities
+   ========================================================================== */
+
+/* Base Font Sizes */
+.text-xs { font-size: var(--pos-text-xs); }
+.text-sm { font-size: var(--pos-text-sm); }
+.text-base { font-size: var(--pos-text-base); }
+.text-lg { font-size: var(--pos-text-lg); }
+.text-xl { font-size: var(--pos-text-xl); }
+.text-2xl { font-size: var(--pos-text-2xl); }
+.text-3xl { font-size: var(--pos-text-3xl); }
+.text-4xl { font-size: var(--pos-text-4xl); }
+
+/* Responsive Font Sizes (Materialize breakpoints)
+   ========================================================================== */
+
+/* Medium screens and up (601px+) */
+@media (min-width: 601px) {
+    .m\:text-base { font-size: var(--pos-text-base); }
+    .m\:text-xl { font-size: var(--pos-text-xl); }
+    .m\:text-2xl { font-size: var(--pos-text-2xl); }
+    .m\:text-3xl { font-size: var(--pos-text-3xl); }
+}
+
+/* Large screens and up (993px+) */
+@media (min-width: 993px) {
+    .l\:text-base { font-size: var(--pos-text-base); }
+    .l\:text-xl { font-size: var(--pos-text-xl); }
+    .l\:text-2xl { font-size: var(--pos-text-2xl); }
+    .l\:text-3xl { font-size: var(--pos-text-3xl); }
+}
+
+/* Extra large screens and up (1201px+) */
+@media (min-width: 1201px) {
+    .xl\:text-base { font-size: var(--pos-text-base); }
+    .xl\:text-xl { font-size: var(--pos-text-xl); }
+    .xl\:text-2xl { font-size: var(--pos-text-2xl); }
+    .xl\:text-3xl { font-size: var(--pos-text-3xl); }
+}
+
 /* Layout Utilities
    ========================================================================== */
 
