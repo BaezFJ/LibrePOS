@@ -19,7 +19,7 @@ npx clean-css-cli -o <out>.min.css <in>.css  # Minify CSS
 
 ## Architecture
 
-- **12 Blueprints**: auth, api, menu, orders, payments, staff, kitchen, tables, reporting, inventory, customers, integrations
+- **8 Blueprints**: auth, api, menu, orders, payments, operations, staff, reporting
 - **Blueprint structure**: `__init__.py`, `routes.py`, `models.py`, `services.py`, `schemas.py`, `forms.py`, `static/`, `templates/`
 
 ## Critical Rules

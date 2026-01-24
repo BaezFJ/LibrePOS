@@ -1,10 +1,10 @@
 # Implementation Phases
 
-> Phased deployment across four priority tiers
+> Phased deployment across three priority phases optimized for solo development
 
 ---
 
-## Phase 1: Core Foundation (Tier 1)
+## Phase 1: MVP Core
 
 Minimum viable POS functionality enabling basic restaurant operations.
 
@@ -17,38 +17,36 @@ Minimum viable POS functionality enabling basic restaurant operations.
 
 ---
 
-## Phase 2: Operational Readiness (Tier 2)
+## Phase 2: Floor Operations
 
 Features required for efficient daily restaurant operations.
 
 | Blueprint | Deliverables |
 |-----------|--------------|
+| operations | KDS interface, ticket routing, floor plans, table management, reservations, waitlist |
 | staff | User management, roles, permissions, time tracking, scheduling |
-| kitchen | KDS interface, ticket routing, station management, prep times |
-| tables | Floor plan editor, table management, reservations, waitlist |
 
 ---
 
-## Phase 3: Business Insights (Tier 3)
+## Phase 3: Analytics
 
-Analytics and inventory management for business optimization.
+Business insights and reporting for optimization.
 
 | Blueprint | Deliverables |
 |-----------|--------------|
 | reporting | Sales reports, labor reports, dashboards, audit logs, scheduled reports |
-| inventory | Stock tracking, recipes, purchase orders, vendor management, cost analysis |
 
 ---
 
-## Phase 4: Growth Features (Tier 4)
+## Deferred Features
 
-Customer engagement and third-party ecosystem integration.
+The following features are deferred for later implementation when specific needs arise:
 
-| Blueprint | Deliverables |
-|-----------|--------------|
-| customers | Customer profiles, loyalty program, rewards, gift cards, feedback |
-| integrations | Third-party delivery, accounting sync, payroll export, webhooks |
-| api | RESTful API v1, OpenAPI documentation, API key management |
+| Feature | Strategy | Notes |
+|---------|----------|-------|
+| **Inventory** | Menu extensions | Recipe/cost tracking as menu features |
+| **Customers** | Future blueprint | Build when loyalty program needed |
+| **Integrations** | Ad-hoc | Third-party integrations as required |
 
 ---
 
@@ -57,7 +55,7 @@ Customer engagement and third-party ecosystem integration.
 | Decision Area | Choice |
 |---------------|--------|
 | Framework | Flask with factory pattern |
-| Blueprint Count | 12 (10 feature + 2 supporting) |
+| Blueprint Count | 8 (6 feature + 2 supporting) |
 | Blueprint Structure | Self-contained with own `static/` and `templates/` |
 | API Strategy | Separate versioned api blueprint (`/api/v1/...`) |
 | Template Engine | Jinja2 with extensions |

@@ -1,7 +1,7 @@
 # LibrePOS System Architecture
 
 > **Pattern:** Flask Blueprints with Factory Pattern
-> **Blueprints:** 12 (10 Feature + 2 Supporting)
+> **Blueprints:** 8 (6 Feature + 2 Supporting)
 > **Database:** PostgreSQL
 > **Version:** 1.0 | January 2026
 
@@ -27,7 +27,7 @@ librepos/
 │   ├── __init__.py               # Application factory (create_app)
 │   ├── config.py                 # Configuration classes
 │   ├── extensions.py             # Flask extension instances
-│   ├── blueprints/               # 12 feature blueprints
+│   ├── blueprints/               # 8 blueprints
 │   ├── shared/                   # Decorators, helpers, validators
 │   ├── static/                   # Global assets (vendor/, css/, js/)
 │   └── templates/                # Base templates, layouts, macros
@@ -42,20 +42,26 @@ librepos/
 
 ## Blueprint Overview
 
-| Tier | Blueprint | Purpose |
-|------|-----------|---------|
+| Phase | Blueprint | Purpose |
+|-------|-----------|---------|
 | **Support** | `auth` | Authentication, sessions, API keys |
 | **Support** | `api` | RESTful API v1, OpenAPI docs |
-| **Tier 1** | `menu` | Items, categories, modifiers, pricing |
-| **Tier 1** | `orders` | Order lifecycle, items, checks |
-| **Tier 1** | `payments` | Transactions, tips, discounts |
-| **Tier 2** | `staff` | Users, roles, permissions, time tracking |
-| **Tier 2** | `kitchen` | KDS, tickets, stations, routing |
-| **Tier 2** | `tables` | Floor plans, reservations, waitlist |
-| **Tier 3** | `reporting` | Sales, labor, analytics, audit logs |
-| **Tier 3** | `inventory` | Stock, recipes, vendors, POs |
-| **Tier 4** | `customers` | Profiles, loyalty, gift cards |
-| **Tier 4** | `integrations` | Third-party, webhooks, external orders |
+| **Phase 1** | `menu` | Items, categories, modifiers, pricing |
+| **Phase 1** | `orders` | Order lifecycle, items, checks |
+| **Phase 1** | `payments` | Transactions, tips, discounts |
+| **Phase 2** | `operations` | KDS, floor plans, tables, reservations |
+| **Phase 2** | `staff` | Users, roles, permissions, time tracking |
+| **Phase 3** | `reporting` | Sales, labor, analytics, audit logs |
+
+### Deferred Features
+
+The following are deferred for later phases when specific needs arise:
+
+| Feature | Strategy | Notes |
+|---------|----------|-------|
+| **Inventory** | Menu features | Recipe/cost tracking as menu extensions |
+| **Customers** | Future blueprint | Build when loyalty program needed |
+| **Integrations** | Ad-hoc | Third-party integrations as required |
 
 ### Blueprint Structure
 
@@ -83,13 +89,9 @@ app/blueprints/{name}/
 | menu | `/menu` | `/api/v1/menu` |
 | orders | `/orders` | `/api/v1/orders` |
 | payments | `/payments` | `/api/v1/payments` |
+| operations | `/operations` | `/api/v1/operations` |
 | staff | `/staff` | `/api/v1/staff` |
-| kitchen | `/kitchen` | `/api/v1/kitchen` |
-| tables | `/tables` | `/api/v1/tables` |
 | reporting | `/reports` | `/api/v1/reports` |
-| inventory | `/inventory` | `/api/v1/inventory` |
-| customers | `/customers` | `/api/v1/customers` |
-| integrations | `/integrations` | `/api/v1/integrations` |
 
 ---
 

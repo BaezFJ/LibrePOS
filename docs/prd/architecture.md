@@ -41,13 +41,9 @@ Each blueprint is self-contained with its own models, routes, services, schemas,
 | menu | `/menu` | `/api/v1/menu` |
 | orders | `/orders` | `/api/v1/orders` |
 | payments | `/payments` | `/api/v1/payments` |
+| operations | `/operations` | `/api/v1/operations` |
 | staff | `/staff` | `/api/v1/staff` |
-| kitchen | `/kitchen` | `/api/v1/kitchen` |
-| tables | `/tables` | `/api/v1/tables` |
 | reporting | `/reports` | `/api/v1/reports` |
-| inventory | `/inventory` | `/api/v1/inventory` |
-| customers | `/customers` | `/api/v1/customers` |
-| integrations | `/integrations` | `/api/v1/integrations` |
 
 ---
 
@@ -58,17 +54,14 @@ app/
 ├── __init__.py              # Application factory
 ├── config.py                # Configuration classes
 ├── blueprints/
+│   ├── api/
 │   ├── auth/
 │   ├── menu/
+│   ├── operations/
 │   ├── orders/
 │   ├── payments/
-│   ├── staff/
-│   ├── kitchen/
-│   ├── tables/
 │   ├── reporting/
-│   ├── inventory/
-│   ├── customers/
-│   └── integrations/
+│   └── staff/
 ├── shared/                  # Shared utilities
 ├── static/                  # Global static files
 └── templates/               # Base templates

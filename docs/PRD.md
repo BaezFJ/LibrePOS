@@ -8,14 +8,14 @@
 |----------|-------|
 | Document Status | Draft - Pending Approval |
 | Architecture Pattern | Flask Blueprints with Factory Pattern |
-| Total Blueprints | 12 (10 Feature + 2 Supporting) |
+| Total Blueprints | 8 (6 Feature + 2 Supporting) |
 | Database | Single PostgreSQL Database |
 
 ---
 
 ## Executive Summary
 
-This PRD defines the technical architecture and implementation specifications for a comprehensive Restaurant POS system. The system uses Flask's blueprint architecture with a factory pattern, enabling modular development and phased deployment across four priority tiers.
+This PRD defines the technical architecture and implementation specifications for a comprehensive Restaurant POS system. The system uses Flask's blueprint architecture with a factory pattern, enabling modular development and phased deployment across three priority phases.
 
 The architecture supports both web-based interfaces using Jinja2 templating and a versioned RESTful API for mobile and third-party integrations.
 
@@ -25,30 +25,32 @@ The architecture supports both web-based interfaces using Jinja2 templating and 
 
 ### In Scope
 
-| Tier | Focus | Blueprints |
-|------|-------|------------|
-| **Tier 1** | Core Foundation | menu, orders, payments |
-| **Tier 2** | Operational Necessities | staff, kitchen, tables |
-| **Tier 3** | Business Optimization | reporting, inventory |
-| **Tier 4** | Growth and Expansion | customers, integrations |
+| Phase | Focus | Blueprints |
+|-------|-------|------------|
+| **Phase 1** | MVP Core | auth, menu, orders, payments |
+| **Phase 2** | Floor Operations | operations, staff |
+| **Phase 3** | Analytics | reporting |
 
-**Tier 1: Core Foundation**
+**Phase 1: MVP Core**
+- Authentication: Login, logout, session management, PIN entry
 - Menu Management: Item configuration, categories, modifiers, pricing, combos
 - Order Management: Order entry, types, lifecycle, check handling, course management
 - Payment Processing: Tender types, tips, adjustments, discounts, taxes, receipts
 
-**Tier 2: Operational Necessities**
+**Phase 2: Floor Operations**
+- Operations: KDS, ticket routing, floor plans, table management, reservations, waitlist
 - Staff Management: Users, roles, permissions, time tracking, scheduling
-- Kitchen Operations: Ticket routing, KDS, prioritization, course timing
-- Table Management: Floor plans, status tracking, reservations, waitlist
 
-**Tier 3: Business Optimization**
-- Reporting: Sales reports, labor reports, dashboards, audit logs
-- Inventory: Stock tracking, recipes, purchase orders, vendors, cost analysis
+**Phase 3: Analytics**
+- Reporting: Sales reports, labor reports, dashboards, audit logs, scheduled reports
 
-**Tier 4: Growth and Expansion**
-- Customer Management: Profiles, loyalty, rewards, gift cards, feedback
-- Integrations: Third-party delivery, accounting, payroll, webhooks
+### Deferred
+
+| Feature | Strategy |
+|---------|----------|
+| Inventory | Recipe/cost tracking as menu extensions |
+| Customers | Build when loyalty program needed |
+| Integrations | Third-party integrations ad-hoc as required |
 
 ### Out of Scope
 
@@ -80,13 +82,9 @@ Each blueprint is self-contained with:
 | menu | `/menu` | `/api/v1/menu` |
 | orders | `/orders` | `/api/v1/orders` |
 | payments | `/payments` | `/api/v1/payments` |
+| operations | `/operations` | `/api/v1/operations` |
 | staff | `/staff` | `/api/v1/staff` |
-| kitchen | `/kitchen` | `/api/v1/kitchen` |
-| tables | `/tables` | `/api/v1/tables` |
 | reporting | `/reports` | `/api/v1/reports` |
-| inventory | `/inventory` | `/api/v1/inventory` |
-| customers | `/customers` | `/api/v1/customers` |
-| integrations | `/integrations` | `/api/v1/integrations` |
 
 ### Core Technology Stack
 
@@ -118,7 +116,7 @@ pytest --cov=app                   # Run tests with coverage
 | Decision | Choice |
 |----------|--------|
 | Framework | Flask with factory pattern |
-| Blueprints | 12 (10 feature + 2 supporting) |
+| Blueprints | 8 (6 feature + 2 supporting) |
 | Authentication | Flask-Login (web), JWT-ready (API) |
 | Database | Single PostgreSQL |
 | Frontend | MaterializeCSS + Chart.js, SortableJS, interact.js |
