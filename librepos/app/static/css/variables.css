@@ -19,6 +19,7 @@
 :root {
     /* ── Materialize CSS Overrides ── */
     --btn-height: 48px;
+    --btn-height-large: 56px;
 
     /* ── Typography ── */
     --pos-font-family: system-ui, -apple-system, BlinkMacSystemFont,
