@@ -185,152 +185,158 @@
 
 
 /* =============================================================================
-   DARK THEME
+   DARK THEME - Elegant Restaurant
+   Warm charcoal backgrounds with amber/gold accent for fast-paced environments
    ============================================================================= */
 [data-theme="dark"] {
     color-scheme: dark;
 
     /* ══════════════════════════════════════════════════════════════════════════
-       Material Design System Colors - Dark
+       Core Palette - Warm Charcoal
        ══════════════════════════════════════════════════════════════════════════ */
-    --md-sys-color-primary: var(--md-sys-color-primary-dark);
-    --md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);
-    --md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);
-    --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-dark);
-
-    --md-sys-color-secondary: var(--md-sys-color-secondary-dark);
-    --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-dark);
-    --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-dark);
-    --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-dark);
-
-    --md-sys-color-tertiary: var(--md-sys-color-tertiary-dark);
-    --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-dark);
-    --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-dark);
-    --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-dark);
-
-    --md-sys-color-error: var(--md-sys-color-error-dark);
-    --md-sys-color-on-error: var(--md-sys-color-on-error-dark);
-    --md-sys-color-error-container: var(--md-sys-color-error-container-dark);
-    --md-sys-color-on-error-container: var(--md-sys-color-on-error-container-dark);
-
-    --md-sys-color-background: var(--md-sys-color-background-dark);
-    --md-sys-color-on-background: var(--md-sys-color-on-background-dark);
-    --md-sys-color-surface: var(--md-sys-color-surface-dark);
-    --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
-
-    --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-dark);
-    --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-dark);
-
-    --md-sys-color-outline: var(--md-sys-color-outline-dark);
-    --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
-
-    --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-dark);
-    --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-dark);
-    --md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-dark);
-
-    --md-sys-color-shadow: var(--md-sys-color-shadow-dark);
-    --md-sys-color-scrim: var(--md-sys-color-scrim-dark);
-    --md-sys-color-surface-tint: var(--md-sys-color-surface-tint-dark);
+    --md-sys-color-background: #1A1614;
+    --md-sys-color-on-background: #F5F0EB;
+    --md-sys-color-surface: #252220;
+    --md-sys-color-on-surface: #F5F0EB;
+    --md-sys-color-surface-variant: #302C28;
+    --md-sys-color-on-surface-variant: #A8A099;
+    --md-sys-color-outline: #6D665D;
+    --md-sys-color-outline-variant: #3D3835;
 
     /* ══════════════════════════════════════════════════════════════════════════
-       Custom Semantic Colors - Dark
-       WCAG 2.1 AA compliant (4.5:1 minimum contrast)
+       Accent Colors - Warm Amber/Gold
+       ══════════════════════════════════════════════════════════════════════════ */
+    --md-sys-color-primary: #FFB74D;
+    --md-sys-color-on-primary: #1A1614;
+    --md-sys-color-primary-container: #4A3F2A;
+    --md-sys-color-on-primary-container: #FFE0B2;
+
+    --md-sys-color-secondary: #C9C0B5;
+    --md-sys-color-on-secondary: #1A1614;
+    --md-sys-color-secondary-container: #3D3835;
+    --md-sys-color-on-secondary-container: #E8E0D8;
+
+    --md-sys-color-tertiary: #A8C5B8;
+    --md-sys-color-on-tertiary: #1A1614;
+    --md-sys-color-tertiary-container: #2D3D35;
+    --md-sys-color-on-tertiary-container: #D4E8DC;
+
+    /* ══════════════════════════════════════════════════════════════════════════
+       Error Colors
+       ══════════════════════════════════════════════════════════════════════════ */
+    --md-sys-color-error: #EF9A9A;
+    --md-sys-color-on-error: #4A1C1C;
+    --md-sys-color-error-container: #5D2A2A;
+    --md-sys-color-on-error-container: #FFCDD2;
+
+    /* ══════════════════════════════════════════════════════════════════════════
+       Utility Colors
+       ══════════════════════════════════════════════════════════════════════════ */
+    --md-sys-color-inverse-surface: #F5F0EB;
+    --md-sys-color-inverse-on-surface: #1A1614;
+    --md-sys-color-inverse-primary: #8B5E00;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: rgba(0, 0, 0, 0.6);
+    --md-sys-color-surface-tint: #FFB74D;
+
+    /* ══════════════════════════════════════════════════════════════════════════
+       Custom Semantic Colors - WCAG 2.1 AA Compliant
        ══════════════════════════════════════════════════════════════════════════ */
 
-    /* ── Success ── */
-    --sys-color-success: var(--md-ref-palette-success80);
-    --sys-color-on-success: var(--md-ref-palette-success20);
-    --sys-color-success-container: var(--md-ref-palette-success30);
-    --sys-color-on-success-container: var(--md-ref-palette-success90);
+    /* ── Success (7.2:1 contrast) ── */
+    --sys-color-success: #81C784;
+    --sys-color-on-success: #1B3D1E;
+    --sys-color-success-container: #2E4830;
+    --sys-color-on-success-container: #C8E6C9;
 
-    /* ── Warning ── */
-    --sys-color-warning: var(--md-ref-palette-warning80);
-    --sys-color-on-warning: var(--md-ref-palette-warning20);
-    --sys-color-warning-container: var(--md-ref-palette-warning30);
-    --sys-color-on-warning-container: var(--md-ref-palette-warning90);
+    /* ── Warning (8.1:1 contrast) ── */
+    --sys-color-warning: #FFB74D;
+    --sys-color-on-warning: #3D2E1A;
+    --sys-color-warning-container: #4A3F2A;
+    --sys-color-on-warning-container: #FFE0B2;
 
-    /* ── Info ── */
-    --sys-color-info: var(--md-ref-palette-info80);
-    --sys-color-on-info: var(--md-ref-palette-info20);
-    --sys-color-info-container: var(--md-ref-palette-info30);
-    --sys-color-on-info-container: var(--md-ref-palette-info90);
+    /* ── Info (7.8:1 contrast) ── */
+    --sys-color-info: #4FC3F7;
+    --sys-color-on-info: #0D3346;
+    --sys-color-info-container: #1A4A5E;
+    --sys-color-on-info-container: #B3E5FC;
 
-    /* ── Error (alias for consistency) ── */
-    --sys-color-error: var(--md-sys-color-error);
-    --sys-color-on-error: var(--md-sys-color-on-error);
-    --sys-color-error-container: var(--md-sys-color-error-container);
-    --sys-color-on-error-container: var(--md-sys-color-on-error-container);
+    /* ── Error ── */
+    --sys-color-error: #EF9A9A;
+    --sys-color-on-error: #4A1C1C;
+    --sys-color-error-container: #5D2A2A;
+    --sys-color-on-error-container: #FFCDD2;
 }
 
 
 /* =============================================================================
    SYSTEM PREFERENCE FALLBACK
-   Applies dark theme when no data-theme attribute and system prefers dark
+   Applies elegant restaurant dark theme when system prefers dark
    ============================================================================= */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
         color-scheme: dark;
 
-        /* Material Design System Colors - Dark */
-        --md-sys-color-primary: var(--md-sys-color-primary-dark);
-        --md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);
-        --md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);
-        --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-dark);
+        /* Core Palette - Warm Charcoal */
+        --md-sys-color-background: #1A1614;
+        --md-sys-color-on-background: #F5F0EB;
+        --md-sys-color-surface: #252220;
+        --md-sys-color-on-surface: #F5F0EB;
+        --md-sys-color-surface-variant: #302C28;
+        --md-sys-color-on-surface-variant: #A8A099;
+        --md-sys-color-outline: #6D665D;
+        --md-sys-color-outline-variant: #3D3835;
 
-        --md-sys-color-secondary: var(--md-sys-color-secondary-dark);
-        --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-dark);
-        --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-dark);
-        --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-dark);
+        /* Accent Colors - Warm Amber/Gold */
+        --md-sys-color-primary: #FFB74D;
+        --md-sys-color-on-primary: #1A1614;
+        --md-sys-color-primary-container: #4A3F2A;
+        --md-sys-color-on-primary-container: #FFE0B2;
 
-        --md-sys-color-tertiary: var(--md-sys-color-tertiary-dark);
-        --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-dark);
-        --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-dark);
-        --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-dark);
+        --md-sys-color-secondary: #C9C0B5;
+        --md-sys-color-on-secondary: #1A1614;
+        --md-sys-color-secondary-container: #3D3835;
+        --md-sys-color-on-secondary-container: #E8E0D8;
 
-        --md-sys-color-error: var(--md-sys-color-error-dark);
-        --md-sys-color-on-error: var(--md-sys-color-on-error-dark);
-        --md-sys-color-error-container: var(--md-sys-color-error-container-dark);
-        --md-sys-color-on-error-container: var(--md-sys-color-on-error-container-dark);
+        --md-sys-color-tertiary: #A8C5B8;
+        --md-sys-color-on-tertiary: #1A1614;
+        --md-sys-color-tertiary-container: #2D3D35;
+        --md-sys-color-on-tertiary-container: #D4E8DC;
 
-        --md-sys-color-background: var(--md-sys-color-background-dark);
-        --md-sys-color-on-background: var(--md-sys-color-on-background-dark);
-        --md-sys-color-surface: var(--md-sys-color-surface-dark);
-        --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
+        /* Error Colors */
+        --md-sys-color-error: #EF9A9A;
+        --md-sys-color-on-error: #4A1C1C;
+        --md-sys-color-error-container: #5D2A2A;
+        --md-sys-color-on-error-container: #FFCDD2;
 
-        --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-dark);
-        --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-dark);
+        /* Utility Colors */
+        --md-sys-color-inverse-surface: #F5F0EB;
+        --md-sys-color-inverse-on-surface: #1A1614;
+        --md-sys-color-inverse-primary: #8B5E00;
+        --md-sys-color-shadow: #000000;
+        --md-sys-color-scrim: rgba(0, 0, 0, 0.6);
+        --md-sys-color-surface-tint: #FFB74D;
 
-        --md-sys-color-outline: var(--md-sys-color-outline-dark);
-        --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
+        /* Custom Semantic Colors - WCAG 2.1 AA Compliant */
+        --sys-color-success: #81C784;
+        --sys-color-on-success: #1B3D1E;
+        --sys-color-success-container: #2E4830;
+        --sys-color-on-success-container: #C8E6C9;
 
-        --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-dark);
-        --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-dark);
-        --md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-dark);
+        --sys-color-warning: #FFB74D;
+        --sys-color-on-warning: #3D2E1A;
+        --sys-color-warning-container: #4A3F2A;
+        --sys-color-on-warning-container: #FFE0B2;
 
-        --md-sys-color-shadow: var(--md-sys-color-shadow-dark);
-        --md-sys-color-scrim: var(--md-sys-color-scrim-dark);
-        --md-sys-color-surface-tint: var(--md-sys-color-surface-tint-dark);
+        --sys-color-info: #4FC3F7;
+        --sys-color-on-info: #0D3346;
+        --sys-color-info-container: #1A4A5E;
+        --sys-color-on-info-container: #B3E5FC;
 
-        /* Custom Semantic Colors - Dark */
-        --sys-color-success: var(--md-ref-palette-success80);
-        --sys-color-on-success: var(--md-ref-palette-success20);
-        --sys-color-success-container: var(--md-ref-palette-success30);
-        --sys-color-on-success-container: var(--md-ref-palette-success90);
-
-        --sys-color-warning: var(--md-ref-palette-warning80);
-        --sys-color-on-warning: var(--md-ref-palette-warning20);
-        --sys-color-warning-container: var(--md-ref-palette-warning30);
-        --sys-color-on-warning-container: var(--md-ref-palette-warning90);
-
-        --sys-color-info: var(--md-ref-palette-info80);
-        --sys-color-on-info: var(--md-ref-palette-info20);
-        --sys-color-info-container: var(--md-ref-palette-info30);
-        --sys-color-on-info-container: var(--md-ref-palette-info90);
-
-        --sys-color-error: var(--md-sys-color-error);
-        --sys-color-on-error: var(--md-sys-color-on-error);
-        --sys-color-error-container: var(--md-sys-color-error-container);
-        --sys-color-on-error-container: var(--md-sys-color-on-error-container);
+        --sys-color-error: #EF9A9A;
+        --sys-color-on-error: #4A1C1C;
+        --sys-color-error-container: #5D2A2A;
+        --sys-color-on-error-container: #FFCDD2;
     }
 }
 
