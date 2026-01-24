@@ -14,7 +14,7 @@
     <section class="section">
         <div class="container">
             <div class="card-panel">
-                <div class="row">
+                <div class="row mb-4">
                     <div class="col s12 m4">
                         {{ Modal.trigger('searchModal', 'Search', 'search', 'elevated') }}
                     </div>
@@ -40,9 +40,6 @@
                             {{ Dropdown.item("Status", url_for('menu.categories', status=current_status, type=current_type, sort='status'), active=(current_sort == 'status')) }}
                         {% endcall %}
                     </div>
-                </div>
-                <div class="flex flex-row items-center justify-between">
-
                 </div>
                 <table class="highlight striped sticky-header">
                     <thead>
