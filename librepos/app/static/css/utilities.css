@@ -54,6 +54,27 @@
     color: var(--sys-color-success);
 }
 
+/* Text Color Utilities (Theme-Aware)
+   ========================================================================== */
+
+/* Surface Text */
+.text-on-surface { color: var(--md-sys-color-on-surface); }
+.text-on-surface-variant { color: var(--md-sys-color-on-surface-variant); }
+
+/* Accent Text */
+.text-primary { color: var(--md-sys-color-primary); }
+.text-secondary { color: var(--md-sys-color-secondary); }
+.text-tertiary { color: var(--md-sys-color-tertiary); }
+
+/* Semantic Text */
+.text-error { color: var(--sys-color-error); }
+.text-warning { color: var(--sys-color-warning); }
+.text-info { color: var(--sys-color-info); }
+.text-success { color: var(--sys-color-success); }
+
+/* Outline/Muted Text */
+.text-outline { color: var(--md-sys-color-outline); }
+
 /* Flexbox Utilities
    ========================================================================== */
 
