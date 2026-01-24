@@ -150,9 +150,9 @@
        class_ (str): Optional. Additional CSS classes.
 #}
 {% macro header(text, class_='') -%}
-    <li class="dropdown-header{% if class_ %} {{ class_ }}{% endif %}">
+    <div class="text-lg font-bold tracking-wide{% if class_ %} {{ class_ }}{% endif %}">
         <span>{{ text }}</span>
-    </li>
+    </div>
 {%- endmacro %}
 
 
