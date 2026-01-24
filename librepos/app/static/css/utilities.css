@@ -263,6 +263,20 @@
 .leading-relaxed { line-height: var(--pos-leading-relaxed); }
 .leading-loose { line-height: var(--pos-leading-loose); }
 
+/* Letter Spacing (Tracking) */
+.tracking-tighter { letter-spacing: var(--pos-tracking-tighter); }
+.tracking-tight { letter-spacing: var(--pos-tracking-tight); }
+.tracking-normal { letter-spacing: var(--pos-tracking-normal); }
+.tracking-wide { letter-spacing: var(--pos-tracking-wide); }
+.tracking-wider { letter-spacing: var(--pos-tracking-wider); }
+.tracking-widest { letter-spacing: var(--pos-tracking-widest); }
+
+/* Word Spacing */
+.word-space-tight { word-spacing: var(--pos-word-space-tight); }
+.word-space-normal { word-spacing: var(--pos-word-space-normal); }
+.word-space-wide { word-spacing: var(--pos-word-space-wide); }
+.word-space-wider { word-spacing: var(--pos-word-space-wider); }
+
 /* Layout Utilities
    ========================================================================== */
 

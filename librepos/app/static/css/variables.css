@@ -53,6 +53,20 @@
     --pos-leading-relaxed: 1.625;
     --pos-leading-loose: 2;
 
+    /* Letter Spacing (Tracking) */
+    --pos-tracking-tighter: -0.05em;
+    --pos-tracking-tight: -0.025em;
+    --pos-tracking-normal: 0;
+    --pos-tracking-wide: 0.025em;
+    --pos-tracking-wider: 0.05em;
+    --pos-tracking-widest: 0.1em;
+
+    /* Word Spacing */
+    --pos-word-space-tight: -0.05em;
+    --pos-word-space-normal: 0;
+    --pos-word-space-wide: 0.1em;
+    --pos-word-space-wider: 0.25em;
+
     /* ── Spacing Scale ── */
     --pos-space-1: 0.25rem; /* 4px */
     --pos-space-2: 0.5rem; /* 8px */
