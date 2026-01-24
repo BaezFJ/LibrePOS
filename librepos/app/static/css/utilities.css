@@ -255,6 +255,14 @@
 .font-extrabold { font-weight: var(--pos-font-extrabold); }
 .font-black { font-weight: var(--pos-font-black); }
 
+/* Line Heights */
+.leading-none { line-height: var(--pos-leading-none); }
+.leading-tight { line-height: var(--pos-leading-tight); }
+.leading-snug { line-height: var(--pos-leading-snug); }
+.leading-normal { line-height: var(--pos-leading-normal); }
+.leading-relaxed { line-height: var(--pos-leading-relaxed); }
+.leading-loose { line-height: var(--pos-leading-loose); }
+
 /* Layout Utilities
    ========================================================================== */
 

@@ -45,6 +45,14 @@
     --pos-font-extrabold: 800;
     --pos-font-black: 900;
 
+    /* Line Heights - Typographic scale */
+    --pos-leading-none: 1;
+    --pos-leading-tight: 1.25;
+    --pos-leading-snug: 1.375;
+    --pos-leading-normal: 1.5;
+    --pos-leading-relaxed: 1.625;
+    --pos-leading-loose: 2;
+
     /* ── Spacing Scale ── */
     --pos-space-1: 0.25rem; /* 4px */
     --pos-space-2: 0.5rem; /* 8px */
