@@ -33,7 +33,7 @@
 
 | File | Purpose |
 |------|---------|
-| `variables.css` | Design tokens (Catppuccin colors, spacing, typography) |
+| `variables.css` | Design tokens (MaterializeCSS colors, spacing, typography) |
 | `main.css` | Global layout, navigation, components |
 | `utilities.css` | Utility classes (flexbox, colors) |
 | `override.css` | Materialize CSS overrides |
@@ -97,7 +97,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
 localStorage.setItem('pos-theme', 'dark');
 ```
 
-Light theme: Catppuccin Latte | Dark theme: Catppuccin Mocha
+Light theme: MaterializeCSS default | Dark theme: MaterializeCSS dark
 
 ---
 
