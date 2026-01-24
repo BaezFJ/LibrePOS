@@ -185,7 +185,7 @@
     overflow: visible;
     clip: auto;
     white-space: normal;
-    background-color: var(--pos-bg-primary);
-    color: var(--pos-text-primary);
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
     z-index: 9999;
 }
