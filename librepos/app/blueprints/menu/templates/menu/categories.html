@@ -10,13 +10,13 @@
         <div class="mx-4">
             <div class="card-panel">
                 <div class="card-header">
-                    <div class="flex-row space-between">
+                    <div class="flex flex-row items-center justify-between">
                         <h5>Categories <span class="counter">{{ categories|count if categories else '0' }}</span></h5>
                         {{ Modal.trigger('addCategoryModal', 'Add Category', 'add', 'filled') }}
                     </div>
                     <p class="mt-0">Manage menu categories here.</p>
                 </div>
-                <div class="flex-row space-between">
+                <div class="flex flex-row items-center justify-between">
                     <div>
                         {{ Modal.trigger('searchModal', 'Search', 'search', 'elevated') }}
                     </div>

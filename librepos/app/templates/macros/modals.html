@@ -79,7 +79,7 @@
 {% macro render(modal_id, title=None, _class='') %}
     <div id="{{ modal_id }}" class="modal {{ _class if _class is defined }}" popover>
         {% if title %}
-            <div class="modal-header flex-row space-between">
+            <div class="modal-header flex flex-row items-center justify-between">
                 <h5>{{ title }}</h5>
                 <button class="btn-flat" popovertarget="{{ modal_id }}">
                     <i class="material-symbols-rounded">close</i>
@@ -116,7 +116,7 @@
         <form id="{{ modal_id }}Form" action="{{ action }}" method="{{ method }}"{% if enctype %}
               enctype="{{ enctype }}"{% endif %}>
             {% if title %}
-                <div class="modal-header flex-row space-between">
+                <div class="modal-header flex flex-row items-center justify-between">
                     <h5>{{ title }}</h5>
                     <button type="button" class="btn-flat" popovertarget="{{ modal_id }}Modal">
                         <i class="material-symbols-rounded">close</i>
