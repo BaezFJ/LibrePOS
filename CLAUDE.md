@@ -31,11 +31,12 @@ npx clean-css-cli -o <out>.min.css <in>.css  # Minify CSS
 3. **CSS variables**: Use `var(--md-sys-color-*)` for theming, `var(--pos-*)` for spacing/typography. Theme: elegant restaurant palette (warm cream/espresso light, charcoal/amber dark).
 4. **CSS strategy**: Materialize CSS first. Use `.pos-*` prefix ONLY for POS-specific components (terminal, cart).
 5. **Utility classes**: Atomic/composable pattern (`.flex .flex-row .gap-4`). Responsive prefixes: `m:`, `l:`, `xl:` (Materialize breakpoints).
-6. **Accessibility**: WCAG 2.1 AA required. Min 4.5:1 contrast, visible focus rings, proper ARIA.
-7. **Touch targets**: Min 48x48px, 8px gap between targets.
-8. **Icons**: `<span class="material-symbols-rounded" aria-hidden="true">icon_name</span>`
-9. **Buttons**: Always use `type="button"` on non-submit buttons.
-10. **JavaScript**: ES2022+ modules, `const`/`let` only (never `var`), strict equality (`===`).
+6. **CSS file organization**: `utilities.css` = atomic utilities only. `main.css` = components (BEM classes, element selectors). `override.css` = Materialize overrides. `variables.css` = custom properties.
+7. **Accessibility**: WCAG 2.1 AA required. Min 4.5:1 contrast, visible focus rings, proper ARIA.
+8. **Touch targets**: Min 48x48px, 8px gap between targets.
+9. **Icons**: `<span class="material-symbols-rounded" aria-hidden="true">icon_name</span>`
+10. **Buttons**: Always use `type="button"` on non-submit buttons.
+11. **JavaScript**: ES2022+ modules, `const`/`let` only (never `var`), strict equality (`===`).
 
 ## File Locations
 
