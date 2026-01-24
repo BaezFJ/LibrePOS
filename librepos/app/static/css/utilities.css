@@ -196,6 +196,11 @@
 .grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 
+/* Auto-Fit Card Grids */
+.grid-cards-sm { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid-cards-md { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.grid-cards-lg { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
 /* Layout Utilities
    ========================================================================== */
 
