@@ -54,6 +54,29 @@
     color: var(--sys-color-success);
 }
 
+/* Background Color Utilities (Theme-Aware)
+   ========================================================================== */
+
+/* Surface Colors */
+.bg-background { background-color: var(--md-sys-color-background); }
+.bg-surface { background-color: var(--md-sys-color-surface); }
+.bg-surface-variant { background-color: var(--md-sys-color-surface-variant); }
+
+/* Container Colors */
+.bg-primary-container { background-color: var(--md-sys-color-primary-container); }
+.bg-secondary-container { background-color: var(--md-sys-color-secondary-container); }
+.bg-tertiary-container { background-color: var(--md-sys-color-tertiary-container); }
+.bg-error-container { background-color: var(--md-sys-color-error-container); }
+
+/* Semantic State Containers */
+.bg-success-container { background-color: var(--sys-color-success-container); }
+.bg-warning-container { background-color: var(--sys-color-warning-container); }
+.bg-info-container { background-color: var(--sys-color-info-container); }
+
+/* Inverse/Utility */
+.bg-inverse-surface { background-color: var(--md-sys-color-inverse-surface); }
+.bg-scrim { background-color: var(--md-sys-color-scrim); }
+
 /* Text Color Utilities (Theme-Aware)
    ========================================================================== */
 
