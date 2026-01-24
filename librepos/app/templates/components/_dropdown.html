@@ -182,9 +182,9 @@
 {% macro tile(icon, label=None, url='#', class_='') -%}
     <li>
         <a href="{{ url }}" class="app-tile{% if class_ %} {{ class_ }}{% endif %}">
-            {{ Icon.render(icon, class_='app-icon') }}
+            {{ Icon.render(icon) }}
             {%- if label %}
-                <span class="app-label">{{ label }}</span>
+                <span>{{ label }}</span>
             {%- endif %}
         </a>
     </li>

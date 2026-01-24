@@ -114,7 +114,7 @@ footer {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.2rem;
+    gap: var(--pos-space-5);
     height: var(--navbar-height);
     line-height: var(--navbar-height);
     overflow: hidden;
@@ -126,11 +126,11 @@ footer {
 .sidenav-content {
     flex: 1 1 auto;
     overflow: scroll;
-    padding-top: 1rem;
+    padding-top: var(--pos-space-4);
 }
 
 .sidenav-footer {
-    padding: 1rem 1.5rem;
+    padding: var(--pos-space-4) var(--pos-space-6);
     text-align: center;
     color: var(--md-sys-color-on-surface);
     background: var(--md-sys-color-surface-variant);
@@ -144,11 +144,11 @@ footer {
 /* --- User Dropdown --- */
 .dropdown-content.user-dropdown {
     width: 260px;
-    padding-top: 8px;
+    padding-top: var(--pos-space-2);
 }
 
 .user-dropdown-header {
-    padding: 16px 16px 8px;
+    padding: var(--pos-space-4) var(--pos-space-4) var(--pos-space-2);
     text-align: center;
 }
 
@@ -157,26 +157,26 @@ footer {
     height: 72px;
     object-fit: cover;
     display: block;
-    margin: 0 auto 8px;
+    margin: 0 auto var(--pos-space-2);
 }
 
 .user-dropdown-name {
     display: block;
-    font-weight: 600;
-    font-size: 1rem;
-    line-height: 1.4;
+    font-weight: var(--pos-font-semibold);
+    font-size: var(--pos-text-base);
+    line-height: var(--pos-leading-snug);
     text-align: center;
 }
 
 .dropdown-content.user-dropdown > li > a {
-    padding: 0.8rem 1.5rem;
+    padding: var(--pos-space-3) var(--pos-space-6);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--pos-space-3);
 }
 
 .dropdown-content.user-dropdown .material-symbols-rounded {
-    font-size: 1.3rem;
+    font-size: var(--pos-text-lg);
 }
 
 /* --- Apps Dropdown --- */
@@ -255,12 +255,12 @@ footer {
 }
 
 .footer-nav-item i {
-    font-size: 24px;
+    font-size: var(--pos-text-2xl);
     margin-bottom: 2px;
 }
 
 .footer-nav-item span {
-    font-size: 12px;
+    font-size: var(--pos-text-xs);
     color: var(--md-sys-color-on-surface);
 }
 
@@ -286,7 +286,7 @@ span.counter::after {
 .numpad-btn {
     width: 100%;
     height: 64px;
-    font-size: 1.5rem;
+    font-size: var(--pos-text-xl);
 }
 
 #keypadQuantity {
@@ -304,7 +304,7 @@ span.counter::after {
 .file-dropzone {
     border: 2px dashed var(--md-sys-color-outline);
     border-radius: 8px;
-    padding: 2rem 1rem;
+    padding: var(--pos-space-8) var(--pos-space-4);
     text-align: center;
     cursor: pointer;
     transition: border-color 0.2s ease, background-color 0.2s ease;
@@ -330,9 +330,9 @@ span.counter::after {
 }
 
 .file-dropzone__icon {
-    font-size: 3rem;
+    font-size: var(--pos-text-3xl);
     color: var(--md-sys-color-outline);
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--pos-space-2);
     transition: color 0.2s ease;
 }
 
@@ -344,12 +344,12 @@ span.counter::after {
 .file-dropzone__text {
     margin: 0;
     color: var(--md-sys-color-on-surface-variant);
-    font-size: 0.95rem;
+    font-size: var(--pos-text-base);
 }
 
 .file-dropzone__preview {
-    margin-top: 0.75rem;
-    font-weight: 500;
+    margin-top: var(--pos-space-3);
+    font-weight: var(--pos-font-medium);
     color: var(--md-sys-color-primary);
     word-break: break-all;
 }
@@ -360,9 +360,9 @@ span.counter::after {
 
 /* --- Table Headers --- */
 table thead th {
-    font-weight: var(--pos-font-semibold, 600);
+    font-weight: var(--pos-font-semibold);
     letter-spacing: 0.02em;
-    padding: 15px 12px;
+    padding: var(--pos-space-4) var(--pos-space-3);
     background-color: var(--md-sys-color-surface-variant);
     border-bottom: 2px solid var(--md-sys-color-outline);
 }
@@ -379,9 +379,9 @@ th.sortable:hover {
 }
 
 th.sortable .material-symbols-rounded {
-    font-size: 18px;
+    font-size: var(--pos-text-lg);
     vertical-align: middle;
-    margin-left: 4px;
+    margin-left: var(--pos-space-1);
     opacity: 0;
     transition: opacity 0.15s ease;
 }
@@ -430,22 +430,22 @@ th.sortable:focus-visible {
 /* --- Container --- */
 .action-bar {
     position: fixed;
-    bottom: 1.5rem;
+    bottom: var(--pos-space-6);
     left: 0;
     right: 0;
     z-index: 100;
     display: flex;
     justify-content: center;
     pointer-events: none;
-    padding: 0 1rem;
+    padding: 0 var(--pos-space-4);
 }
 
 /* --- Inner pill container --- */
 .action-bar-inner {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 0.75rem;
+    gap: var(--pos-space-1);
+    padding: var(--pos-space-2) var(--pos-space-3);
     background-color: var(--md-sys-color-surface);
     border: 1px solid var(--md-sys-color-outline-variant);
     border-radius: 9999px;
@@ -462,10 +462,10 @@ th.sortable:focus-visible {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.125rem;
-    padding: 0.5rem 0.75rem;
+    gap: 2px;
+    padding: var(--pos-space-2) var(--pos-space-3);
     min-width: 3.5rem;
-    border-radius: 1.5rem;
+    border-radius: var(--pos-space-6);
     background: transparent;
     color: var(--md-sys-color-on-surface);
     border: none;
@@ -491,14 +491,14 @@ th.sortable:focus-visible {
 
 /* --- Icon styling --- */
 .action-bar-item .material-symbols-rounded {
-    font-size: 1.5rem;
-    line-height: 1;
+    font-size: var(--pos-text-xl);
+    line-height: var(--pos-leading-none);
 }
 
 /* --- Label styling --- */
 .action-bar-label {
     font-size: 0.6875rem;
-    font-weight: 500;
+    font-weight: var(--pos-font-medium);
     line-height: 1.2;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -508,9 +508,9 @@ th.sortable:focus-visible {
 /* --- Divider --- */
 .action-bar-divider {
     width: 1px;
-    height: 2rem;
+    height: var(--pos-space-8);
     background-color: var(--md-sys-color-outline-variant);
-    margin: 0 0.25rem;
+    margin: 0 var(--pos-space-1);
 }
 
 /* --- Active/selected state --- */
@@ -523,30 +523,30 @@ th.sortable:focus-visible {
 .action-bar .dropdown-content {
     bottom: 100%;
     top: auto !important;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--pos-space-2);
     transform-origin: bottom center;
 }
 
 /* --- Responsive: Mobile --- */
 @media only screen and (max-width: 600px) {
     .action-bar {
-        bottom: 1rem;
+        bottom: var(--pos-space-4);
         left: 0;
         right: 0;
         transform: none;
-        padding: 0 0.75rem;
+        padding: 0 var(--pos-space-3);
     }
 
     .action-bar-inner {
         width: 100%;
         justify-content: space-around;
-        padding: 0.375rem 0.5rem;
+        padding: 6px var(--pos-space-2);
     }
 
     .action-bar-item {
         flex: 1;
         min-width: unset;
-        padding: 0.375rem 0.25rem;
+        padding: 6px var(--pos-space-1);
     }
 
     .action-bar-label {
@@ -590,7 +590,7 @@ th.sortable:focus-visible {
     align-items: center;
     justify-content: center;
     min-height: 60vh;
-    padding: 2rem;
+    padding: var(--pos-space-8);
 }
 
 .placeholder-content {
@@ -599,7 +599,7 @@ th.sortable:focus-visible {
 }
 
 .placeholder-icon {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--pos-space-6);
 }
 
 .placeholder-icon .material-symbols-rounded {
@@ -609,18 +609,18 @@ th.sortable:focus-visible {
 }
 
 .placeholder-title {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--pos-space-3);
     color: var(--md-sys-color-on-surface);
 }
 
 .placeholder-description {
     color: var(--md-sys-color-on-surface-variant);
-    margin-bottom: 2rem;
-    line-height: 1.6;
+    margin-bottom: var(--pos-space-8);
+    line-height: var(--pos-leading-relaxed);
 }
 
 .placeholder-actions {
-    margin-top: 1.5rem;
+    margin-top: var(--pos-space-6);
 }
 
 /* --- Card Placeholder --- */
@@ -629,7 +629,7 @@ th.sortable:focus-visible {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 3rem 2rem;
+    padding: var(--pos-space-12) var(--pos-space-8);
     text-align: center;
     background: var(--md-sys-color-surface-variant);
     border-radius: 12px;
@@ -637,13 +637,13 @@ th.sortable:focus-visible {
 }
 
 .placeholder-card-icon .material-symbols-rounded {
-    font-size: 3rem;
+    font-size: var(--pos-text-3xl);
     color: var(--md-sys-color-outline);
     opacity: 0.6;
 }
 
 .placeholder-card-title {
-    margin: 1rem 0 0.5rem;
+    margin: var(--pos-space-4) 0 var(--pos-space-2);
     color: var(--md-sys-color-on-surface);
 }
 
@@ -659,7 +659,7 @@ th.sortable:focus-visible {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4rem 2rem;
+    padding: 4rem var(--pos-space-8);
     text-align: center;
 }
 
@@ -670,12 +670,12 @@ th.sortable:focus-visible {
 }
 
 .placeholder-empty-title {
-    margin: 1rem 0 0.5rem;
+    margin: var(--pos-space-4) 0 var(--pos-space-2);
     color: var(--md-sys-color-on-surface);
 }
 
 .placeholder-empty-description {
     color: var(--md-sys-color-on-surface-variant);
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--pos-space-6);
     max-width: 360px;
 }
