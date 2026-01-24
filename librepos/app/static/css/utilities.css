@@ -201,6 +201,20 @@
 .grid-cards-md { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
 .grid-cards-lg { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 
+/* Place Items (align content inside each cell) */
+.place-items-start { place-items: start; }
+.place-items-center { place-items: center; }
+.place-items-end { place-items: end; }
+.place-items-stretch { place-items: stretch; }
+
+/* Place Content (position the grid within container) */
+.place-content-start { place-content: start; }
+.place-content-center { place-content: center; }
+.place-content-end { place-content: end; }
+.place-content-between { place-content: space-between; }
+.place-content-around { place-content: space-around; }
+.place-content-evenly { place-content: space-evenly; }
+
 /* Layout Utilities
    ========================================================================== */
 
