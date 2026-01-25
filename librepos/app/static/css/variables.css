@@ -17,6 +17,9 @@
    BASE VARIABLES (Theme-Independent)
    ============================================================================= */
 :root {
+
+    --pos-corner-shape: squircle;
+
     /* ── Materialize CSS Overrides ── */
     --btn-height: 48px;
     --btn-height-large: 56px;

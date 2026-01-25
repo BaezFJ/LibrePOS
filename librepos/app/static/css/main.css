@@ -182,8 +182,9 @@ footer {
 /* --- Apps Dropdown --- */
 .dropdown-content.apps-dropdown {
     padding: var(--pos-space-4);
-    width: 320px;
-    border-radius: var(--pos-radius-lg);
+    /*width: 320px;*/
+    /*border-radius: var(--pos-radius-xl);*/
+    /*background: var(--md-sys-color-surface);*/
 }
 
 .apps-dropdown-header {
@@ -243,31 +244,28 @@ footer {
     align-items: center;
     justify-content: center;
     gap: var(--pos-space-2);
-    min-height: 88px;
-    min-width: 0;
-    padding: var(--pos-space-3);
-    border-radius: var(--pos-radius-lg);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    background: var(--md-sys-color-surface);
+    min-height: 80px;
+    min-width: 80px;
+    padding: var(--pos-space-4);
+    border-radius: var(--pos-radius-2xl);
+    border: none;
+    background: var(--md-sys-color-surface-variant);
     text-decoration: none;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
+    transition: background-color 150ms ease, transform 150ms ease;
 }
 
 .app-tile:hover {
     background: var(--md-sys-color-surface-variant);
-    border-color: var(--md-sys-color-outline);
+    transform: scale(1.02);
 }
 
-.app-tile .material-symbols-rounded {
-    font-size: var(--pos-text-xl);
-    color: var(--md-sys-color-on-surface);
+.app-tile:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
 }
 
-.app-tile span:not(.material-symbols-rounded) {
-    font-size: var(--pos-text-sm);
-    font-weight: var(--pos-font-medium);
-    color: var(--md-sys-color-on-surface);
-    text-align: center;
+.app-tile:active {
+    transform: scale(0.98);
 }
 
 .apps-dropdown-footer {

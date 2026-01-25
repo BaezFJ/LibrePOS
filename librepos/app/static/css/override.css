@@ -11,9 +11,14 @@
 
 .dropdown-content {
     border-radius: var(--pos-radius-xl);
+    corner-shape: var(--pos-corner-shape);
     padding: var(--pos-space-5) var(--pos-space-4);
     overflow: visible;
-    min-width: 260px;
+    min-width: 280px;
+}
+
+.container {
+    max-width: 1440px;
 }
 
 ul {
@@ -83,6 +88,7 @@ ul {
 .btn-flat {
     min-height: var(--btn-height);
     min-width: var(--btn-height);
+    border-radius: var(--pos-radius-xl);
 }
 
 .btn-large {
