@@ -29,12 +29,12 @@
 
                 {% call Dropdown.render('user-dropdown', class_='user-dropdown') %}
                     <!-- Custom header -->
-                    {#                    <li class="user-dropdown-header">#}
-                    {#                        <img src="{{ url_for("static", filename="images/"+current_user.profile.image) }}"#}
-                    {#                             alt="{{ current_user.profile.fullname or 'User avatar' }}"#}
-                    {#                             class="circle user-dropdown-avatar">#}
-                    {#                        <span class="user-dropdown-name">{{ current_user.profile.fullname or 'Guest User' }}</span>#}
-                    {#                    </li>#}
+                    <li class="user-dropdown-header">
+                        <img src="{{ url_for("static", filename="img/placeholders/profile_image.png") }}"
+                             alt="User avatar"
+                             class="circle user-dropdown-avatar">
+                        <span class="user-dropdown-name">Guest User</span>
+                    </li>
                     {{ Dropdown.item('Profile', url='#!', icon='account_circle') }}
                     {{ Dropdown.item('Notifications', url='#!', icon='notifications', badge='2') }}
                     {{ Dropdown.item('Messages', url='#!', icon='chat', badge='14') }}
@@ -45,14 +45,9 @@
                 {% endcall %}
 
                 <!-- Apps Dropdown -->
-                <div id="apps-dropdown" class="dropdown-content apps-dropdown">
+
+                {% call Dropdown.render("apps-dropdown", class_="apps-dropdown") %}
                     {{ Dropdown.header("Applications") }}
-{#                    <div class="apps-dropdown-header">#}
-{#                        <span>Applications</span>#}
-{#                        <a href="#!" class="apps-dropdown-action" aria-label="Settings">#}
-{#                            <span class="material-symbols-rounded" aria-hidden="true">tune</span>#}
-{#                        </a>#}
-{#                    </div>#}
                     <div class="apps-grid">
                         {{ Dropdown.tile('lock', 'Auth') }}
                         {{ Dropdown.tile('restaurant_menu', 'Menu', url=url_for('menu.index')) }}
@@ -68,7 +63,26 @@
                         {{ Dropdown.tile('api', 'API') }}
                         {{ Dropdown.tile('settings', 'Settings') }}
                     </div>
-                </div>
+                {% endcall %}
+
+                {#                <div id="apps-dropdown" class="dropdown-content apps-dropdown">#}
+                {#                    {{ Dropdown.header("Applications") }}#}
+                {#                    <div class="apps-grid">#}
+                {#                        {{ Dropdown.tile('lock', 'Auth') }}#}
+                {#                        {{ Dropdown.tile('restaurant_menu', 'Menu', url=url_for('menu.index')) }}#}
+                {#                        {{ Dropdown.tile('receipt_long', 'Orders') }}#}
+                {#                        {{ Dropdown.tile('credit_card', 'Payments') }}#}
+                {#                        {{ Dropdown.tile('badge', 'Staff') }}#}
+                {#                        {{ Dropdown.tile('restaurant', 'Kitchen') }}#}
+                {#                        {{ Dropdown.tile('table_restaurant', 'Tables') }}#}
+                {#                        {{ Dropdown.tile('analytics', 'Reporting') }}#}
+                {#                        {{ Dropdown.tile('inventory_2', 'Inventory') }}#}
+                {#                        {{ Dropdown.tile('people', 'Customers') }}#}
+                {#                        {{ Dropdown.tile('extension', 'Integrations') }}#}
+                {#                        {{ Dropdown.tile('api', 'API') }}#}
+                {#                        {{ Dropdown.tile('settings', 'Settings') }}#}
+                {#                    </div>#}
+                {#                </div>#}
             </div>
         </nav>
         {% block sidenav %}{% endblock %}

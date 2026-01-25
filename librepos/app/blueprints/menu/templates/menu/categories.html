@@ -5,6 +5,7 @@
 {% import 'macros/modals.html' as Modal %}
 {% import 'components/_dropdown.html' as Dropdown %}
 {% import 'macros/headers.html' as Header %}
+{% import 'components/_footer.html' as Footer %}
 
 {% block main %}
     {% call Header.page("Categories", count=categories|count) %}
@@ -115,5 +116,11 @@
         enctype='multipart/form-data'
     ) %}
         {{ Forms.render(form, {'name': 'm12', 'description': 'm12', 'parent_id': 'm6', 'display_order': 'm6', 'is_active': 'm12'}) }}
+    {% endcall %}
+{% endblock %}
+
+{% block footer %}
+    {% call Footer.render() %}
+        {{ Footer.item("") }}
     {% endcall %}
 {% endblock %}
