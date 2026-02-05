@@ -18,10 +18,10 @@
             {# Filter and Sort Controls #}
             <div class="card-panel mb-6">
                 <div class="row mb-0">
-                    <div class="col s12 m4">
+                    <div class="col mobile12 sm4">
                         {{ Modal.trigger('searchModal', 'Search', 'search', 'elevated') }}
                     </div>
-                    <div class="col s12 m8 flex flex-row justify-end gap-3">
+                    <div class="col mobile12 sm8 flex flex-row justify-end gap-3">
                         {{ Dropdown.trigger('filter-dropdown', icon='filter_list', label='Filter', type_='text') }}
                         {% call Dropdown.render('filter-dropdown') %}
                             {{ Dropdown.header("Status") }}
@@ -77,7 +77,7 @@
         submit_text='Create Category',
         enctype='multipart/form-data'
     ) %}
-        {{ Forms.render(form, {'name': 'm12', 'description': 'm12', 'parent_id': 'm6', 'display_order': 'm6', 'is_active': 'm12'}) }}
+        {{ Forms.render(form, {'name': 'sm12', 'description': 'sm12', 'parent_id': 'sm6', 'display_order': 'sm6', 'is_active': 'sm12'}) }}
     {% endcall %}
 {% endblock %}
 

@@ -8,7 +8,7 @@
 {% block main %}
     <section class="section">
         <div class="row mx-4">
-            <div class="col s12 m10 l8 xl6 offset-m1 offset-l2 offset-xl3">
+            <div class="col mobile12 sm10 md8 lg6 offset-sm1 offset-md2 offset-lg3">
 
                 {# Card 1: Basic Info #}
                 <article class="card category-detail-card">
@@ -66,7 +66,7 @@
                             Availability & Settings
                         </h2>
                         <dl class="settings-grid row">
-                            <div class="col s6">
+                            <div class="col mobile6">
                                 <dt class="section-label">Status</dt>
                                 <dd>
                                     <span class="chip {{ 'green lighten-4 green-text text-darken-2' if category.is_active else 'red lighten-4 red-text text-darken-2' }}">
@@ -74,7 +74,7 @@
                                     </span>
                                 </dd>
                             </div>
-                            <div class="col s6">
+                            <div class="col mobile6">
                                 <dt class="section-label">Display Order</dt>
                                 <dd>{{ category.display_order }}</dd>
                             </div>
@@ -127,12 +127,12 @@
         enctype='multipart/form-data'
     ) %}
         {{ Form.render(edit_form, extra_wrappers={
-                'name': 'col s12',
-                'description': 'col s12',
-                'parent_id': 'col s12 m6',
-                'display_order': 'col s12 m6',
-                'image': 'col s12',
-                'is_active': 'col s12'
+                'name': 'col mobile12',
+                'description': 'col mobile12',
+                'parent_id': 'col mobile12 sm6',
+                'display_order': 'col mobile12 sm6',
+                'image': 'col mobile12',
+                'is_active': 'col mobile12'
             }) }}
     {% endcall %}
 

@@ -30,7 +30,7 @@
 
 {% if breadcrumb is defined and breadcrumb is iterable %}
     <nav class="breadcrumb-wrapper pt-4">
-        <div class="col s12">
+        <div class="col mobile12">
             {% for crumb in breadcrumb %}
                 {% if crumb is mapping and 'label' in crumb %}
                     {% if crumb.url %}

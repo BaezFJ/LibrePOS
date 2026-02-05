@@ -13,7 +13,7 @@
 
     With Custom Column Widths:
         <form method="post">
-            {{ Forms.render(form, {'name': 'm6', 'email': 'm6'}) }}
+            {{ Forms.render(form, {'name': 'sm6', 'email': 'sm6'}) }}
         </form>
 
     Render Single Field:
@@ -51,11 +51,11 @@
        field      (Field): WTForms field object.
        extra_wrap (str):   Optional. Additional CSS classes to append.
 
-   Returns: String of CSS classes including 'input-field outlined col s12' plus any
+   Returns: String of CSS classes including 'input-field outlined col mobile12' plus any
             wrapper_class from field.render_kw or field.wrapper_class.
 #}
 {% macro _wrapper_classes(field, extra_wrap) %}
-    {%- set classes = ['input-field outlined col s12'] -%}
+    {%- set classes = ['input-field outlined col mobile12'] -%}
     {%- set attr_wrap = field.wrapper_class if field.wrapper_class is defined else '' -%}
     {%- if not attr_wrap and field.render_kw and 'wrapper_class' in field.render_kw -%}
         {%- set attr_wrap = field.render_kw['wrapper_class'] -%}
@@ -215,7 +215,7 @@
     {% set from_field = (field.render_kw.get('wrapper_class') if field.render_kw else '') %}
     {% set attr_wrap = field.wrapper_class if field.wrapper_class is defined else '' %}
     {% set wrapper = ('switch ' ~ from_field ~ ' ' ~ attr_wrap ~ ' ' ~ extra_wrap).strip() %}
-    <div class="{{ wrapper }} col s12">
+    <div class="{{ wrapper }} col mobile12">
         <label>
             Off
             {{ field(id=field.id) }}
@@ -304,7 +304,7 @@
 #}
 {% macro _render_submit(field, extra_wrap='') -%}
     {% set classes = field.render_kw.get('class') if field.render_kw and field.render_kw.get('class') else 'btn' %}
-    <div class="col s12 {{ (extra_wrap) }}">
+    <div class="col mobile12 {{ (extra_wrap) }}">
         <button id="{{ field.id }}" class="btn filled waves-effect waves-light{{ ' '+classes if classes is defined }}"
                 type="submit" name="{{ field.id }}">
             <i class="material-symbols-rounded">save</i>
@@ -417,7 +417,7 @@
    Parameters:
        form           (Form): WTForms form object.
        extra_wrappers (dict): Optional. Field-specific wrapper classes.
-                              Example: {'name': 'm6', 'email': 'm6'} for half-width fields.
+                              Example: {'name': 'sm6', 'email': 'sm6'} for half-width fields.
 
    Output: Hidden fields first (including CSRF), then all visible fields in a row div.
            Each field is rendered via render_field_auto() with appropriate styling.
@@ -428,7 +428,7 @@
        </form>
 
        <form method="post">
-           {{ Forms.render(form, {'name': 'm6', 'email': 'm6'}) }}
+           {{ Forms.render(form, {'name': 'sm6', 'email': 'sm6'}) }}
        </form>
 #}
 {% macro render(form, extra_wrappers={}) -%}
@@ -438,7 +438,7 @@
 
     <div class="row">
         {% for field in form if field.type not in ['HiddenField','CSRFTokenField'] %}
-            {# allow per-call override: extra_wrappers = {'name': 'col s12 m6'} #}
+            {# allow per-call override: extra_wrappers = {'name': 'col mobile12 sm6'} #}
             {% set extra = extra_wrappers.get(field.name, '') %}
             {{ render_field_auto(field, extra) }}
         {% endfor %}
