@@ -1,5 +1,5 @@
-@use '../global' as *;
-@use '../colors.module.scss' as *;
+@use '../../base/global' as *;
+@use '../../tokens/colors' as *;
 
 .range-field {
   position: relative;

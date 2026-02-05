@@ -1,4 +1,4 @@
-@use './colors.module.scss' as *;
+@use '../tokens/colors' as *;
 
 .chip {
   --font-size: 14px;

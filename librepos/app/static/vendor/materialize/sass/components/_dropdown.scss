@@ -1,5 +1,5 @@
-@use './variables' as *;
-@use './global' as *;
+@use '../base/variables' as *;
+@use '../base/global' as *;
 
 [popover] {
   outline: none;

@@ -2,7 +2,7 @@
 $md_sys_typescale_body-large_size: 16px;
 
 @use "sass:math";
-@use "./_color-variables";
+@use "../legacy/color-variables";
 
 // Colors
 $success-color: colorFunc("green", "base") !default;
