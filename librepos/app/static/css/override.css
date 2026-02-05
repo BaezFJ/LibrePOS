@@ -1,85 +1,85 @@
-.navbar .brand-logo,
-.navbar a,
-.navbar ul:not(.dropdown-content) > li > a {
-    color: var(--md-sys-color-on-secondary-container);
-}
+/*.navbar .brand-logo,*/
+/*.navbar a,*/
+/*.navbar ul:not(.dropdown-content) > li > a {*/
+/*    color: var(--md-sys-color-on-secondary-container);*/
+/*}*/
 
-.navbar .dropdown-content i, .navbar .dropdown-content i.material-icons, .navbar .dropdown-content i.material-symbols-outlined, .navbar .dropdown-content i.material-symbols-rounded, .navbar i.material-symbols-sharp {
-    height: inherit;
-    line-height: inherit;
-}
+/*.navbar .dropdown-content i, .navbar .dropdown-content i.material-icons, .navbar .dropdown-content i.material-symbols-outlined, .navbar .dropdown-content i.material-symbols-rounded, .navbar i.material-symbols-sharp {*/
+/*    height: inherit;*/
+/*    line-height: inherit;*/
+/*}*/
 
-.dropdown-content {
-    border-radius: var(--pos-radius-xl);
-    corner-shape: var(--pos-corner-shape);
-    padding: var(--pos-space-5) var(--pos-space-4);
-    overflow: visible;
-    min-width: 280px;
-}
+/*.dropdown-content {*/
+/*    border-radius: var(--pos-radius-xl);*/
+/*    corner-shape: var(--pos-corner-shape);*/
+/*    padding: var(--pos-space-5) var(--pos-space-4);*/
+/*    overflow: visible;*/
+/*    min-width: 280px;*/
+/*}*/
 
-.container {
-    max-width: 1440px;
-}
+/*.container {*/
+/*    max-width: 1440px;*/
+/*}*/
 
-ul {
-    padding-inline-start: 0;
-}
+/*ul {*/
+/*    padding-inline-start: 0;*/
+/*}*/
 
-.modal {
-    --modal-background-color: var(--md-sys-color-surface);
-    max-height: 90%;
-}
+/*.modal {*/
+/*    --modal-background-color: var(--md-sys-color-surface);*/
+/*    max-height: 90%;*/
+/*}*/
 
-.modal .modal-header,
-.modal .modal-footer {
-    background-color: var(--md-sys-color-secondary-container);
-}
+/*.modal .modal-header,*/
+/*.modal .modal-footer {*/
+/*    background-color: var(--md-sys-color-secondary-container);*/
+/*}*/
 
-.card {
-    background-color: var(--md-sys-color-surface);
-}
+/*.card {*/
+/*    background-color: var(--md-sys-color-surface);*/
+/*}*/
 
-.input-field.outlined input, .input-field.outlined textarea {
-    background-color: var(--md-sys-color-surface-variant);
-    border: 1px solid var(--md-sys-color-on-surface-variant);
-}
+/*.input-field.outlined input, .input-field.outlined textarea {*/
+/*    background-color: var(--md-sys-color-surface-variant);*/
+/*    border: 1px solid var(--md-sys-color-on-surface-variant);*/
+/*}*/
 
-/* ==========================================================================
-   BUTTON TOUCH TARGETS
-   POS-optimized sizing for touch interfaces (WCAG 2.1 AA: 48px minimum)
-   ========================================================================== */
+/*!* ==========================================================================*/
+/*   BUTTON TOUCH TARGETS*/
+/*   POS-optimized sizing for touch interfaces (WCAG 2.1 AA: 48px minimum)*/
+/*   ========================================================================== *!*/
 
-:root {
-    --btn-height: 48px;
-}
+/*:root {*/
+/*    --btn-height: 48px;*/
+/*}*/
 
-.btn,
-.btn-small,
-.btn-floating,
-.btn-flat {
-    min-height: var(--btn-height);
-    min-width: var(--btn-height);
-    border-radius: var(--pos-radius-xl);
-}
+/*.btn,*/
+/*.btn-small,*/
+/*.btn-floating,*/
+/*.btn-flat {*/
+/*    min-height: var(--btn-height);*/
+/*    min-width: var(--btn-height);*/
+/*    border-radius: var(--pos-radius-xl);*/
+/*}*/
 
-.btn-large {
-    min-height: var(--btn-height-large);
-}
+/*.btn-large {*/
+/*    min-height: var(--btn-height-large);*/
+/*}*/
 
-.btn + .btn,
-.btn-flat + .btn-flat,
-.btn + .btn-flat {
-    margin-left: var(--pos-space-2);
-}
+/*.btn + .btn,*/
+/*.btn-flat + .btn-flat,*/
+/*.btn + .btn-flat {*/
+/*    margin-left: var(--pos-space-2);*/
+/*}*/
 
-.btn-floating {
-    width: var(--btn-height);
-    height: var(--btn-height);
-    line-height: var(--btn-height);
-}
+/*.btn-floating {*/
+/*    width: var(--btn-height);*/
+/*    height: var(--btn-height);*/
+/*    line-height: var(--btn-height);*/
+/*}*/
 
-.btn-floating.btn-large {
-    width: var(--btn-height-large);
-    height: var(--btn-height-large);
-    line-height: var(--btn-height-large);
-}
+/*.btn-floating.btn-large {*/
+/*    width: var(--btn-height-large);*/
+/*    height: var(--btn-height-large);*/
+/*    line-height: var(--btn-height-large);*/
+/*}*/
