@@ -1,59 +1,68 @@
 @use '../base/variables' as *;
 
-// Media Query Classes
-.hide-on-small-only, .hide-on-small-and-down {
-  @media #{$small-and-down} { display: none !important; }
+// ─── Hide utilities ─────────────────────────────────────
+.hide-on-mobile {
+  @media #{$mobile-only} { display: none !important; }
 }
 
-.hide-on-med-and-down {
-  @media #{$medium-and-down} { display: none !important; }
+.hide-on-sm-and-down {
+  @media #{$sm-and-down} { display: none !important; }
 }
 
-.hide-on-med-and-up {
-  @media #{$medium-and-up} { display: none !important; }
+.hide-on-sm-and-up {
+  @media #{$sm-and-up} { display: none !important; }
 }
 
-.hide-on-med-only {
-  @media only screen and (min-width: $small-screen-up) and (max-width: $medium-screen) {
-    display: none !important;
-  }
+.hide-on-sm-only {
+  @media #{$sm-only} { display: none !important; }
 }
 
-.hide-on-large-only {
-  @media #{$large-and-up} { display: none !important; }
+.hide-on-md-and-up {
+  @media #{$md-and-up} { display: none !important; }
 }
 
-.hide-on-extra-large-only {
-  @media #{$extra-large-and-up} { display: none !important; }
+.hide-on-md-and-down {
+  @media #{$md-and-down} { display: none !important; }
 }
 
-.show-on-extra-large {
-  @media #{$extra-large-and-up} { display: block !important; }
+.hide-on-lg-and-up {
+  @media #{$lg-and-up} { display: none !important; }
 }
 
-.show-on-large {
-  @media #{$large-and-up} { display: block !important; }
+.hide-on-xl {
+  @media #{$xl-and-up} { display: none !important; }
 }
 
-.show-on-medium {
-  @media only screen and (min-width: $small-screen-up) and (max-width: $medium-screen) {
-    display: block !important;
-  }
+// ─── Show utilities ─────────────────────────────────────
+.show-on-mobile {
+  @media #{$mobile-only} { display: block !important; }
 }
 
-.show-on-small {
-  @media #{$small-and-down} { display: block !important; }
+.show-on-sm {
+  @media #{$sm-only} { display: block !important; }
 }
 
-.show-on-medium-and-up {
-  @media #{$medium-and-up} { display: block !important; }
+.show-on-sm-and-up {
+  @media #{$sm-and-up} { display: block !important; }
 }
 
-.show-on-medium-and-down {
-  @media #{$medium-and-down} { display: block !important; }
+.show-on-sm-and-down {
+  @media #{$sm-and-down} { display: block !important; }
 }
 
-// Center text on mobile
-.center-on-small-only {
-  @media #{$small-and-down} { text-align: center; }
+.show-on-md-and-up {
+  @media #{$md-and-up} { display: block !important; }
+}
+
+.show-on-lg-and-up {
+  @media #{$lg-and-up} { display: block !important; }
+}
+
+.show-on-xl {
+  @media #{$xl-and-up} { display: block !important; }
+}
+
+// ─── Alignment utilities ────────────────────────────────
+.center-on-mobile {
+  @media #{$mobile-only} { text-align: center; }
 }
