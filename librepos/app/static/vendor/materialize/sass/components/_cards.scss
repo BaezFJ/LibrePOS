@@ -1,5 +1,6 @@
 @use '../base/variables' as *;
 @use '../base/mixins' as *;
+@use '../base/elevation';
 
 .card-panel {
   transition: box-shadow .25s;

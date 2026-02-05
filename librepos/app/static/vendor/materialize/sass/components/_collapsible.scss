@@ -1,6 +1,7 @@
 @use '../base/variables' as *;
 @use '../tokens/colors' as *;
 @use '../base/global' as *;
+@use '../base/elevation';
 
 .collapsible {
   padding-left: 0;

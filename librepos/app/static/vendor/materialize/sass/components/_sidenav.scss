@@ -1,5 +1,6 @@
 @use '../base/variables' as *;
 @use '../base/global' as *;
+@use '../base/elevation';
 
 .sidenav {
   --sidenav-width: 300px;

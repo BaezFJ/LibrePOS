@@ -1,5 +1,6 @@
 @use '../../base/global' as *;
 @use '../../tokens/colors' as *;
+@use '../../utilities/helpers';
 
 .range-field {
   position: relative;
