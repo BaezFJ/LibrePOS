@@ -1,0 +1,126 @@
+@use './variables' as *;
+
+// Dividers
+.divider {
+  height: 1px;
+  overflow: hidden;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+// Tables
+table, th, td {
+  border: none;
+}
+
+table {
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  &.striped {
+    tr {
+      border-bottom: none;
+    }
+    tbody > tr:nth-child(odd) {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  &.highlight > tbody > tr {
+    transition: background-color .25s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  thead {
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  &.centered {
+    thead tr th, tbody tr td {
+      text-align: center;
+    }
+  }
+}
+
+tr {
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+td, th {
+  padding: 15px 5px;
+  display: table-cell;
+  text-align: left;
+  vertical-align: middle;
+  border-radius: 0;
+}
+
+// Responsive Table
+@media #{$medium-and-down} {
+
+  table.responsive-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: block;
+    position: relative;
+
+    td:empty:before {
+      content: '\00a0';
+    }
+    th,
+    td {
+      margin: 0;
+      vertical-align: top;
+    }
+    th {
+      text-align: left;
+    }
+    thead {
+      display: block;
+      float: left;
+
+      tr {
+        display: block;
+        padding: 0 10px 0 0;
+
+        th::before {
+          content: "\00a0";
+        }
+      }
+    }
+    tbody {
+      display: block;
+      width: auto;
+      position: relative;
+      overflow-x: auto;
+      white-space: nowrap;
+
+      tr {
+        display: inline-block;
+        vertical-align: top;
+      }
+    }
+    th {
+      display: block;
+      text-align: right;
+    }
+    td {
+      display: block;
+      min-height: 1.25em;
+      text-align: left;
+    }
+    tr {
+      border-bottom: none;
+      padding: 0 10px;
+    }
+    /* sort out borders */
+    thead {
+      border: 0;
+      border-right: 1px solid var(--md-sys-color-outline-variant);
+    }
+  }
+}

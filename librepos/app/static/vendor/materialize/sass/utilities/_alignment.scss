@@ -1,0 +1,13 @@
+// Positioning
+.valign-wrapper { display: flex; align-items: center; }
+
+.clearfix { clear: both; }
+
+// Text Align
+.left-align { text-align: left; }
+.right-align { text-align: right }
+.center, .center-align { text-align: center; }
+
+// TODO: Remove this
+.left { float: left !important; }
+.right { float: right !important; }
