@@ -14,23 +14,28 @@
 
     Args:
         category: Category model instance with fields:
-            - id, name, description, image_url, is_active, parent
+            - id, name, description, image_url, is_active, parent, items
 #}
-<a href="{{ url_for('menu.category_detail', cat_id=category.id) }}" class="category-card card">
-    <div class="card-image"
-         style="background-image: url('{{ category.image_url or url_for('static', filename='img/placeholders/540x720.png') }}')">
-        <div class="card-image-overlay"></div>
+<a href="" class="category-card card">
+    <div class="card-image">
+        {% if category.image_url %}
+            <img src="{{ category.image_url }}" alt="{{ category.name }}">
+            <div class="card-image-overlay"></div>
+        {% else %}
+            <div class="category-card__placeholder">
+                <span class="material-symbols-rounded" aria-hidden="true">category</span>
+            </div>
+        {% endif %}
         <span class="status-dot {{ 'green' if category.is_active else 'red' }}"
-              title="{{ 'Active' if category.is_active else 'Inactive' }}"></span>
+              aria-label="{{ 'Active' if category.is_active else 'Inactive' }}"></span>
     </div>
     <div class="card-content">
         <span class="card-title truncate">{{ category.name }}</span>
         {% if category.parent %}
             <span class="parent-name grey-text">{{ category.parent.name }}</span>
         {% endif %}
-        {% if category.description %}
-            <p class="description grey-text text-darken-1">{{ category.description|truncate(80) }}</p>
-        {% endif %}
+        <p class="description grey-text text-darken-1">{{ category.description or 'No description' }}</p>
+        <span class="chip">{{ category.items|length if category.items else 0 }} items</span>
     </div>
 </a>
 {% endmacro %}

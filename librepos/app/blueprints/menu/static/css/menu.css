@@ -78,12 +78,25 @@
     font-size: 0.75rem;
 }
 
-/* Category Card */
+/* ==========================================================================
+   Categories Grid
+   ========================================================================== */
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--pos-space-6);
+}
+
+/* ==========================================================================
+   Category Card
+   ========================================================================== */
+
 .category-card {
     display: block;
     text-decoration: none;
     color: inherit;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
     position: relative;
     overflow: hidden;
 }
@@ -92,11 +105,38 @@
     transform: translateY(-2px);
 }
 
+.category-card:focus {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+}
+
+.category-card:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.category-card:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .category-card {
+        transition: none;
+    }
+}
+
+/* Category Card Image */
 .category-card .card-image {
-    height: 120px;
+    height: 140px;
     background-size: cover;
     background-position: center;
     position: relative;
+}
+
+.category-card .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .category-card .card-image-overlay {
@@ -105,10 +145,23 @@
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
 }
 
-.category-card .card-content {
-    position: relative;
+/* Category Card Placeholder (no image) */
+.category-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--md-sys-color-surface-variant);
 }
 
+.category-card__placeholder .material-symbols-rounded {
+    font-size: 48px;
+    color: var(--md-sys-color-on-surface-variant);
+    opacity: 0.6;
+}
+
+/* Category Card Status Dot */
 .category-card .status-dot {
     position: absolute;
     top: 12px;
@@ -116,6 +169,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
+    z-index: 1;
 }
 
 .category-card .status-dot.green {
@@ -124,6 +178,11 @@
 
 .category-card .status-dot.red {
     background-color: #f44336;
+}
+
+/* Category Card Content */
+.category-card .card-content {
+    position: relative;
 }
 
 .category-card .card-title {
@@ -139,6 +198,15 @@
 
 .category-card .description {
     font-size: 0.85rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.category-card .chip {
+    margin: 0;
 }
 
 /* Dropdown Headers */

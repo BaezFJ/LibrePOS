@@ -6,6 +6,7 @@
 {% import 'components/_dropdown.html' as Dropdown %}
 {% import 'macros/headers.html' as Header %}
 {% import 'components/_footer.html' as Footer %}
+{% import 'menu/macros/categories_card.html' as CategoryCard %}
 
 {% block main %}
     {% call Header.page("Categories", count=categories|count) %}
@@ -14,8 +15,9 @@
 
     <section class="section">
         <div class="container">
-            <div class="card-panel">
-                <div class="row mb-4">
+            {# Filter and Sort Controls #}
+            <div class="card-panel mb-6">
+                <div class="row mb-0">
                     <div class="col s12 m4">
                         {{ Modal.trigger('searchModal', 'Search', 'search', 'elevated') }}
                     </div>
@@ -42,63 +44,23 @@
                         {% endcall %}
                     </div>
                 </div>
-                <table class="highlight striped sticky-header">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="sortable sort-asc" tabindex="0" role="button" aria-sort="ascending">
-                            Category Name
-                            <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
-                        </th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Items</th>
-                        <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none">
-                            Order
-                            <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
-                        </th>
-                        <th scope="col" class="sortable" tabindex="0" role="button" aria-sort="none">
-                            Status
-                            <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
-                        </th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for category in categories %}
-                        <tr>
-                            <td>{{ category.name }}</td>
-                            <td>
-                                {% if category.description %}
-                                    {{ category.description }}
-                                {% else %}
-                                    <span class="grey-text">No description provided.</span>
-                                {% endif %}
-                            </td>
-                            <td>N/A</td>
-                            <td>{{ category.display_order }}</td>
-                            <td>
-                                {% if category.is_active %}
-                                    <span class="success-text">Active</span>
-                                {% else %}
-                                    <span class="error-text">Inactive</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% set category_dropdown = category.id|string + '-dropdown' %}
-                                {{ Dropdown.trigger(category_dropdown, label='More', type_='text') }}
-                                {% call Dropdown.render(category_dropdown) %}
-                                    {{ Dropdown.item('Edit') }}
-                                    {{ Dropdown.item('Toggle Visibility') }}
-                                    {{ Dropdown.item('Reorder') }}
-                                    {{ Dropdown.item('Archive') }}
-                                    {{ Dropdown.item('Delete') }}
-                                {% endcall %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-
-                    </tbody>
-                </table>
             </div>
+
+            {# Categories Grid #}
+            {% if categories %}
+                <div class="categories-grid">
+                    {% for category in categories %}
+                        {{ CategoryCard.render(category) }}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card-panel center-align py-12">
+                    <span class="material-symbols-rounded grey-text text-lighten-1" style="font-size: 64px;" aria-hidden="true">category</span>
+                    <h5 class="grey-text text-darken-1 mt-4 mb-2">No categories yet</h5>
+                    <p class="grey-text mb-6">Create your first category to start organizing your menu.</p>
+                    {{ Button.filled("Add Category", icon="add", attrs={'data-target': 'addCategory', 'class': 'modal-trigger'}) }}
+                </div>
+            {% endif %}
         </div>
     </section>
 
