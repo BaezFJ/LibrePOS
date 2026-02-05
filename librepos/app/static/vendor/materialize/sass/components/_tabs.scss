@@ -152,7 +152,7 @@
 
 /* Fixed Sidenav hide on smaller */
 
-@media #{$medium-and-down} {
+@media #{$sm-and-down} {
   .tabs {
     display: flex;
 

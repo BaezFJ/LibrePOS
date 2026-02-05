@@ -16,11 +16,11 @@ html{
     font-size: 14px;
   }
 
-  @media only screen and (min-width: $medium-screen-up) {
+  @media only screen and (min-width: $md-screen) {
     font-size: 14.5px;
   }
 
-  @media only screen and (min-width: $large-screen-up) {
+  @media only screen and (min-width: $lg-screen) {
     font-size: 15px;
   }
 }

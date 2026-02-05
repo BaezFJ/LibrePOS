@@ -59,7 +59,7 @@ td, th {
 }
 
 // Responsive Table
-@media #{$medium-and-down} {
+@media #{$sm-and-down} {
 
   table.responsive-table {
     width: 100%;

@@ -48,7 +48,7 @@
     height: 100%;
   }
 
-  @media #{$large-and-up} {
+  @media #{$md-and-up} {
     a.sidenav-trigger {
       display: none;
     }
@@ -81,7 +81,7 @@
       transform: translateX(-50%);
     }
 
-    @media #{$medium-and-down} {
+    @media #{$sm-and-down} {
       left: 50%;
       transform: translateX(-50%);
 
@@ -219,7 +219,7 @@
   }
 }
 
-@media #{$medium-and-up} {
+@media #{$sm-and-up} {
   .nav.nav-extended .nav-wrapper {
     min-height: var(--navbar-height-mobile);
   }

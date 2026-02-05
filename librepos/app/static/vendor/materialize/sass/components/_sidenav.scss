@@ -198,7 +198,7 @@
 }
 
 // Fixed Sidenav hide on smaller
-@media #{$medium-and-down} {
+@media #{$sm-and-down} {
   .sidenav {
     &.sidenav-fixed {
       transform: translateX(-105%);
