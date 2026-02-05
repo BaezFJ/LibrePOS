@@ -1,23 +1,33 @@
 @charset "UTF-8";
 
-@forward "components/tokens.module";
-@forward "components/theme.module";
-//@forward "components/_theme_variables";
-@forward "components/colors.module";
-@forward "components/typography.module";
-@forward "components/mixins.module";
-@forward "components/color-variables";
-@forward "components/variables";
-@forward "components/normalize";
+// ─── Tokens ──────────────────────────────────────────────
+@forward "tokens/tokens";
+@forward "tokens/theme";
+@forward "tokens/colors";
 
-// components
-@forward "components/global";
-@forward "components/typography";
+// ─── Base ────────────────────────────────────────────────
+@forward "legacy/color-variables";
+@forward "base/variables";
+@forward "base/normalize";
+@forward "base/mixins";
+@forward "base/global";
+@forward "base/elevation";
+@forward "base/typography";
+@forward "base/tables";
+
+// ─── Layout ──────────────────────────────────────────────
+@forward "layout/grid";
+@forward "layout/responsive";
+@forward "layout/footer";
+
+// ─── Legacy ──────────────────────────────────────────────
+@forward "legacy/typography-module";
+@forward "legacy/icons-material-design";
+
+// ─── Components ──────────────────────────────────────────
 @forward "components/buttons";
 @forward "components/collection";
 @forward "components/badges";
-@forward "components/icons-material-design";
-@forward "components/grid";
 @forward "components/navbar";
 @forward "components/transitions";
 @forward "components/cards";
@@ -30,14 +40,20 @@
 @forward "components/chips";
 @forward "components/materialbox";
 @forward "components/forms/forms";
-@forward "components/table_of_contents";
+@forward "components/table-of-contents";
 @forward "components/sidenav";
 @forward "components/preloader";
 @forward "components/slider";
 @forward "components/carousel";
-@forward "components/tapTarget";
+@forward "components/tap-target";
 @forward "components/pulse";
 @forward "components/datepicker";
 @forward "components/timepicker";
 @forward "components/breadcrumb";
 @forward "components/pagination";
+
+// ─── Utilities ───────────────────────────────────────────
+@forward "utilities/spacing";
+@forward "utilities/display";
+@forward "utilities/alignment";
+@forward "utilities/helpers";
