@@ -1,15 +1,16 @@
 {#
     Badge Macros
     ============
-    MaterializeCSS badge components for status indicators and notifications.
+    M3 Expressive badge components for status indicators and notifications.
 
     Import:
         {% import "macros/badge.html" as Badge %}
 
     Basic Usage:
         {{ Badge.render("5") }}
-        {{ Badge.render("Sale", color="red") }}
-        {{ Badge.render("3", caption="items", new=True) }}
+        {{ Badge.render("Sale", color="success") }}
+        {{ Badge.count(3) }}
+        {{ Badge.dot() }}
 
     Semantic Usage (Recommended):
         {{ Badge.pending() }}
@@ -20,26 +21,45 @@
     Available Semantic Macros:
         Status:  pending, in_progress, completed, cancelled
         Colors:  success, warning, error, info
-        Special: count, notification
+        Special: count, dot
 #}
 
 
-{# render(data, caption=None, new=False, color=None, class_='')
-   -------------------------------------------------------------
-   Renders a MaterializeCSS badge element.
+{# render(data, color=None, class_='', aria_label=None)
+   -----------------------------------------------------
+   Renders an M3 Expressive badge element (large pill variant).
 
    Parameters:
-       data    (str): Required. Text or number to display in the badge.
-       caption (str): Optional. Caption text shown after the badge value.
-       new     (bool): Optional. If True, adds 'new' class for notification style.
-       color   (str): Optional. Color class (e.g., "red", "green", "blue", "orange").
-       class_  (str): Optional. Additional CSS classes.
+       data       (str): Required. Text or number to display in the badge.
+       color      (str): Optional. Modifier: "success", "warning", "error", "info".
+       class_     (str): Optional. Additional CSS classes.
+       aria_label (str): Optional. Accessible label for the badge.
 #}
-{% macro render(data, caption=None, new=False, color=None, class_='') -%}
-    <span class="{% if new %}new {% endif %}badge{% if color %} {{ color }}{% endif %}{% if class_ %} {{ class_ }}{% endif %}"
-          {%- if caption %} data-badge-caption="{{ caption }}"{% endif %}>
+{% macro render(data, color=None, class_='', aria_label=None) -%}
+    <span class="badge{% if color %} badge-{{ color }}{% endif %}{% if class_ %} {{ class_ }}{% endif %}"
+          role="status"
+          {%- if aria_label %} aria-label="{{ aria_label }}"{% endif %}>
         {{- data -}}
     </span>
+{%- endmacro %}
+
+
+{# ==========================================================================
+   DOT BADGE
+   ========================================================================== #}
+
+{# dot(class_='', aria_label='New notification')
+   ----------------------------------------------
+   Renders a 6px dot badge (small variant, no text).
+
+   Parameters:
+       class_     (str): Optional. Additional CSS classes.
+       aria_label (str): Optional. Accessible label. Defaults to 'New notification'.
+#}
+{% macro dot(class_='', aria_label='New notification') -%}
+    <span class="badge-dot{% if class_ %} {{ class_ }}{% endif %}"
+          role="status"
+          aria-label="{{ aria_label }}"></span>
 {%- endmacro %}
 
 
@@ -49,34 +69,34 @@
 
 {# pending(text='Pending', class_='')
    -----------------------------------
-   Orange badge for items awaiting action.
+   Warning-colored badge for items awaiting action.
 #}
 {% macro pending(text='Pending', class_='') -%}
-    {{ render(text, color='orange', class_=class_) }}
+    {{ render(text, color='warning', class_=class_) }}
 {%- endmacro %}
 
 {# in_progress(text='In Progress', class_='')
    -------------------------------------------
-   Blue badge for items being processed.
+   Info-colored badge for items being processed.
 #}
 {% macro in_progress(text='In Progress', class_='') -%}
-    {{ render(text, color='blue', class_=class_) }}
+    {{ render(text, color='info', class_=class_) }}
 {%- endmacro %}
 
 {# completed(text='Completed', class_='')
    ---------------------------------------
-   Green badge for successfully completed items.
+   Success-colored badge for successfully completed items.
 #}
 {% macro completed(text='Completed', class_='') -%}
-    {{ render(text, color='green', class_=class_) }}
+    {{ render(text, color='success', class_=class_) }}
 {%- endmacro %}
 
 {# cancelled(text='Cancelled', class_='')
    ---------------------------------------
-   Red badge for cancelled or failed items.
+   Error-colored badge for cancelled or failed items.
 #}
 {% macro cancelled(text='Cancelled', class_='') -%}
-    {{ render(text, color='red', class_=class_) }}
+    {{ render(text, color='error', class_=class_) }}
 {%- endmacro %}
 
 
@@ -84,36 +104,36 @@
    COLOR VARIANTS
    ========================================================================== #}
 
-{# success(data, caption=None, class_='')
-   ---------------------------------------
-   Green badge for success states.
+{# success(data, class_='')
+   -------------------------
+   Success-colored badge.
 #}
-{% macro success(data, caption=None, class_='') -%}
-    {{ render(data, caption=caption, color='green', class_=class_) }}
+{% macro success(data, class_='') -%}
+    {{ render(data, color='success', class_=class_) }}
 {%- endmacro %}
 
-{# warning(data, caption=None, class_='')
-   ---------------------------------------
-   Orange badge for warning states.
+{# warning(data, class_='')
+   -------------------------
+   Warning-colored badge.
 #}
-{% macro warning(data, caption=None, class_='') -%}
-    {{ render(data, caption=caption, color='orange', class_=class_) }}
+{% macro warning(data, class_='') -%}
+    {{ render(data, color='warning', class_=class_) }}
 {%- endmacro %}
 
-{# error(data, caption=None, class_='')
-   -------------------------------------
-   Red badge for error states.
+{# error(data, class_='')
+   -----------------------
+   Error-colored badge.
 #}
-{% macro error(data, caption=None, class_='') -%}
-    {{ render(data, caption=caption, color='red', class_=class_) }}
+{% macro error(data, class_='') -%}
+    {{ render(data, color='error', class_=class_) }}
 {%- endmacro %}
 
-{# info(data, caption=None, class_='')
-   ------------------------------------
-   Blue badge for informational states.
+{# info(data, class_='')
+   ----------------------
+   Info-colored badge.
 #}
-{% macro info(data, caption=None, class_='') -%}
-    {{ render(data, caption=caption, color='blue', class_=class_) }}
+{% macro info(data, class_='') -%}
+    {{ render(data, color='info', class_=class_) }}
 {%- endmacro %}
 
 
@@ -121,18 +141,16 @@
    NOTIFICATION BADGES
    ========================================================================== #}
 
-{# count(number, caption=None, class_='')
-   ---------------------------------------
+{# count(number, class_='', aria_label=None)
+   ------------------------------------------
    Notification-style badge for counts (e.g., cart items, unread messages).
-#}
-{% macro count(number, caption=None, class_='') -%}
-    {{ render(number, caption=caption, new=True, class_=class_) }}
-{%- endmacro %}
+   Auto-generates aria-label "N notifications" when not provided.
 
-{# notification(text, caption=None, color=None, class_='')
-   --------------------------------------------------------
-   Generic notification badge with 'new' styling.
+   Parameters:
+       number     (int|str): Required. The count to display.
+       class_     (str):     Optional. Additional CSS classes.
+       aria_label (str):     Optional. Overrides auto-generated label.
 #}
-{% macro notification(text, caption=None, color=None, class_='') -%}
-    {{ render(text, caption=caption, new=True, color=color, class_=class_) }}
+{% macro count(number, class_='', aria_label=None) -%}
+    {{ render(number, class_=class_, aria_label=aria_label or (number ~ ' notifications')) }}
 {%- endmacro %}
