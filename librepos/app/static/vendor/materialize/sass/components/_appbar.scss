@@ -1,0 +1,108 @@
+@use '../base/variables' as *;
+
+// M3 App Bar — Small / Center-Aligned
+// Spec: 64px height, surface bg, color-shift on scroll (no shadow)
+
+:root {
+  --appbar-height: 64px;
+  --navbar-height: var(--appbar-height);
+}
+
+.appbar {
+  display: flex;
+  align-items: center;
+  height: var(--appbar-height);
+  width: 100%;
+  padding: 0 4px;
+  box-sizing: border-box;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+
+  // Scroll state — JS toggles this class
+  &.scrolled {
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  // Center-aligned variant
+  &.center-aligned .headline {
+    text-align: center;
+  }
+
+  // Hide sidenav trigger on md+ (900px)
+  @media #{$md-and-up} {
+    .sidenav-trigger {
+      display: none;
+    }
+  }
+
+  // Sections
+  .leading,
+  .trailing {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  // Headline — Title Large (22/400/28)
+  .headline {
+    flex: 1;
+    min-width: 0;
+    padding: 0 12px;
+    margin: 0;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // Icon buttons (48x48 touch target)
+  .icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+      background-color: var(--md-sys-color-on-surface-variant-hover, rgba(0, 0, 0, 0.08));
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--md-sys-color-secondary);
+      outline-offset: 2px;
+    }
+
+    .material-symbols-rounded {
+      font-size: 24px;
+    }
+  }
+
+  // No extra margin between trailing buttons
+  .trailing .icon-button + .icon-button {
+    margin-left: 0;
+  }
+}
+
+// Fixed wrapper
+.appbar-fixed {
+  position: relative;
+  height: var(--appbar-height);
+  z-index: 997;
+
+  .appbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+}
