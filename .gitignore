@@ -341,3 +341,4 @@ librepos/app/static/img/*
 !librepos/app/static/img/icons/
 !librepos/app/static/img/placeholders/
 !/scripts/
+.claude/plans/
