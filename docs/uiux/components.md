@@ -8,7 +8,8 @@
 
 1. **Use Materialize CSS** for standard components (buttons, cards, modals)
 2. **Use utility classes** for flex layouts (no prefix)
-3. **Use `.pos-*` prefix** ONLY for POS-specific components
+3. **Use plain descriptive names** for custom components (no prefix, no BEM)
+4. **Use CSS nesting** for child elements and modifiers
 
 ---
 
@@ -104,41 +105,49 @@ All buttons use Materialize CSS classes. Touch targets are enforced via `overrid
 
 ---
 
-## POS-Specific Components (Custom)
+## Custom Components
 
-These are the ONLY components that should use the `.pos-*` prefix.
+Custom components use plain descriptive class names with CSS nesting for structure.
 
-### POS Terminal Layout
+### Terminal Layout
 
 ```html
-<div class="pos-terminal">
-    <main class="pos-menu-panel" role="main">
-        <nav class="pos-category-nav" aria-label="Menu categories"><!-- tabs --></nav>
-        <div class="pos-menu-grid" role="list" aria-label="Menu items"><!-- items --></div>
+<div class="terminal">
+    <main class="menu-panel" role="main">
+        <nav class="category-nav" aria-label="Menu categories"><!-- tabs --></nav>
+        <div class="menu-grid" role="list" aria-label="Menu items"><!-- items --></div>
     </main>
 
-    <aside class="pos-cart-panel" aria-label="Current order">
-        <header class="pos-cart-header"><h2>Current Order</h2></header>
-        <ul class="pos-cart-items" aria-label="Order items"><!-- items --></ul>
-        <footer class="pos-cart-footer">
-            <div class="pos-cart-total" aria-live="polite">Total: <strong>$45.99</strong></div>
+    <aside class="cart-panel" aria-label="Current order">
+        <header class="cart-header"><h2>Current Order</h2></header>
+        <ul class="cart-items" aria-label="Order items"><!-- items --></ul>
+        <footer class="cart-footer">
+            <div class="cart-total" aria-live="polite">Total: <strong>$45.99</strong></div>
             <button type="button" class="btn-large filled waves-effect waves-light">Pay Now</button>
         </footer>
     </aside>
 </div>
 ```
 
+```css
+/* CSS uses nesting for child elements */
+.terminal {
+  & .menu-panel { /* ... */ }
+  & .cart-panel { /* ... */ }
+}
+```
+
 ### Cart Item
 
 ```html
-<li class="pos-cart-item">
-    <div class="pos-cart-item-info">
-        <span class="pos-cart-item-qty">2x</span>
-        <span class="pos-cart-item-name">Caesar Salad</span>
-        <span class="pos-cart-item-mods">No croutons, dressing on side</span>
+<li class="cart-item">
+    <div class="info">
+        <span class="qty">2x</span>
+        <span class="name">Caesar Salad</span>
+        <span class="mods">No croutons, dressing on side</span>
     </div>
-    <div class="pos-cart-item-actions">
-        <span class="pos-cart-item-price">$25.98</span>
+    <div class="actions">
+        <span class="price">$25.98</span>
         <button type="button" class="btn-floating btn-small waves-effect" aria-label="Edit Caesar Salad">
             <span class="material-symbols-rounded" aria-hidden="true">edit</span>
         </button>
@@ -147,4 +156,16 @@ These are the ONLY components that should use the `.pos-*` prefix.
         </button>
     </div>
 </li>
+```
+
+```css
+/* CSS nesting replaces BEM naming */
+.cart-item {
+  & .info { /* ... */ }
+  & .qty { /* ... */ }
+  & .name { /* ... */ }
+  & .mods { /* ... */ }
+  & .actions { /* ... */ }
+  & .price { /* ... */ }
+}
 ```

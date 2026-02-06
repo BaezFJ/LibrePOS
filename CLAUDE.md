@@ -29,9 +29,9 @@ npx clean-css-cli -o <out>.min.css <in>.css  # Minify CSS
 1. **Service layer**: Routes delegate to services for business logic. NEVER put business logic in routes.
 2. **String FK references**: Use `db.ForeignKey('table.id')` to avoid circular imports.
 3. **CSS variables**: Use `var(--md-sys-color-*)` for theming, `var(--pos-*)` for spacing/typography. Theme: elegant restaurant palette (warm cream/espresso light, charcoal/amber dark).
-4. **CSS strategy**: Materialize CSS first. Use `.pos-*` prefix ONLY for POS-specific components (terminal, cart).
+4. **CSS strategy**: Materialize CSS first. Custom component classes use plain descriptive names (no `.pos-*` prefix). Use CSS nesting for modifiers and child elements instead of BEM.
 5. **Utility classes**: Atomic/composable pattern (`.flex .flex-row .gap-4`). Responsive prefixes: `sm:`, `md:`, `lg:`, `xl:` (Materialize breakpoints). Grid tiers: mobile (0+), sm (600px+), md (900px+), lg (1200px+), xl (1440px+).
-6. **CSS file organization**: `utilities.css` = atomic utilities only. `main.css` = components (BEM classes, element selectors). `override.css` = Materialize overrides. `variables.css` = custom properties.
+6. **CSS file organization**: `utilities.css` = atomic utilities only. `main.css` = components (nested selectors). `override.css` = Materialize overrides. `variables.css` = custom properties.
 7. **Accessibility**: WCAG 2.1 AA required. Min 4.5:1 contrast, visible focus rings, proper ARIA.
 8. **Touch targets**: Min 48x48px, 8px gap between targets.
 9. **Icons**: `<span class="material-symbols-rounded" aria-hidden="true">icon_name</span>`

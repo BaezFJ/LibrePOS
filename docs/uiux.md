@@ -46,17 +46,39 @@
 |----------|---------|-------|
 | 1st | Materialize CSS | Buttons, cards, modals, forms, grids |
 | 2nd | Utility classes | Flex helpers, color utilities (no prefix) |
-| 3rd | `.pos-*` custom | POS-specific components only |
+| 3rd | Custom components | Plain descriptive names, CSS nesting for structure |
 
-### Custom `.pos-*` Components (Only These)
+### CSS Nesting (Instead of BEM)
+
+Use CSS nesting for child elements and modifiers instead of BEM naming:
+
+```css
+/* Do this (nesting) */
+.terminal {
+  & .menu-panel { ... }
+  & .cart-panel { ... }
+}
+.cart-item {
+  & .info { ... }
+  & .actions { ... }
+  &.highlighted { ... }
+}
+
+/* Not this (BEM) */
+.pos-terminal__menu-panel { ... }
+.pos-cart-item__info { ... }
+.pos-cart-item--highlighted { ... }
+```
+
+### Custom Components
 
 | Component | Classes | Purpose |
 |-----------|---------|---------|
-| Terminal layout | `.pos-terminal`, `.pos-menu-panel`, `.pos-cart-panel` | Split-screen POS |
-| Cart | `.pos-cart-*`, `.pos-cart-item-*` | Order cart components |
-| Accessibility | `.pos-sr-only` | Screen reader utilities |
-| Placeholder states | `.placeholder-*` | Empty state UI |
-| Action bar | `.action-bar-*` | Floating toolbar |
+| Terminal layout | `.terminal`, `.menu-panel`, `.cart-panel` | Split-screen POS |
+| Cart | `.cart-item`, `.cart-header`, `.cart-footer` | Order cart components |
+| Accessibility | `.sr-only` | Screen reader utilities |
+| Placeholder states | `.placeholder` | Empty state UI |
+| Action bar | `.action-bar` | Floating toolbar |
 
 ---
 

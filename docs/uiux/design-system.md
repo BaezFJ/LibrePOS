@@ -101,7 +101,7 @@ Bundled locally in `app/static/vendor/google/`.
 
 | Class | Size |
 |-------|------|
-| `.pos-icon-sm` | 20px |
+| `.icon-sm` | 20px |
 | (default) | 24px |
-| `.pos-icon-lg` | 32px |
-| `.pos-icon-xl` | 48px |
+| `.icon-lg` | 32px |
+| `.icon-xl` | 48px |

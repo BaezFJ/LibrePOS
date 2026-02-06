@@ -20,15 +20,18 @@
 
 1. **Use Materialize CSS classes** for standard components
 2. **Use utility classes** without prefix for layout helpers
-3. **Use `.pos-*` prefix** ONLY for POS-specific components
+3. **Use plain descriptive names** for custom components (no prefix)
+4. **Use CSS nesting** for child elements and modifiers (no BEM)
 
 ### Naming
 
-| Type | Prefix | Example |
-|------|--------|---------|
-| Materialize | None | `.btn`, `.card`, `.modal` |
-| Utility | None | `.flex-row`, `.space-between` |
-| POS-specific | `.pos-` | `.pos-terminal`, `.pos-cart-item` |
+| Type | Convention | Example |
+|------|------------|---------|
+| Materialize | Framework classes | `.btn`, `.card`, `.modal` |
+| Utility | No prefix | `.flex-row`, `.space-between` |
+| Custom components | Plain descriptive | `.terminal`, `.cart-item` |
+| Child elements | CSS nesting | `.cart-item { & .info { } }` |
+| Modifiers | Nested `&` | `.cart-item { &.highlighted { } }` |
 
 ### CSS Custom Properties
 
