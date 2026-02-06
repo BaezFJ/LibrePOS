@@ -49,8 +49,8 @@
 #}
 {% macro render(title, id) %}
     <aside id="{{ id if id is defined else "mainMenu" }}" class="sidenav">
-        <div class="sidenav-header navbar">
-            <span class="brand-logo">{{ business_name }}</span>
+        <div class="sidenav-header">
+            <span class="sidenav-brand">{{ business_name }}</span>
         </div>
         <div class="sidenav-content">
             {{ caller() }}
