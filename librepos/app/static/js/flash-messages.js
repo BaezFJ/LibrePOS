@@ -1,7 +1,6 @@
 /**
  * Flash Messages Module
- * Displays flash messages using MaterializeCSS Toast
- * and announces them to screen readers via aria-live region
+ * Displays flash messages and announces them to screen readers
  */
 
 const initFlashMessages = () => {
@@ -13,12 +12,8 @@ const initFlashMessages = () => {
     const messages = JSON.parse(container.dataset.messages || '[]');
 
     messages.forEach(({ category, message }) => {
-        // Create toast using MaterializeCSS
-        M.toast({
-            html: `<div class="pos-toast pos-toast--${category}" role="alert">
-                <p class="pos-toast-text"><strong>${category.toUpperCase()}:</strong> ${message}</p>
-            </div>`
-        });
+        // TODO: Implement BeerCSS snackbar notifications
+        console.log(`[${category.toUpperCase()}] ${message}`);
 
         // Announce to screen readers
         if (announcer) {

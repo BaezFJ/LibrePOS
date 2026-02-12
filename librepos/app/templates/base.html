@@ -33,15 +33,12 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='vendor/google/css/material-symbols-rounded.min.css') }}">
 
-    <!--MaterializeCSS-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/materialize/css/materialize.min.css') }}">
-    <!--MaterializeCSS overrides-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/override.min.css') }}">
-    <!--Custom Variables (Theme colors, fonts, etc.)-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.min.css') }}">
+    <!--BeerCSS-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/beercss/beer.min.css') }}">
     <!--Custom CSS-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/utilities.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/utilities.css') }}">
 
     <!--Favicon-->
     <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-72x72.png') }}" type="image/png">
@@ -89,9 +86,8 @@
              data-messages="{{ messages | tojson | e }}"></div>
     {% endif %}
 {% endwith %}
-<!--MaterializeCSS JavaScript-->
-<script type="text/javascript"
-        src="{{ url_for('static', filename='vendor/materialize/js/materialize.min.js') }}"></script>
+<!--BeerCSS JavaScript-->
+<script src="{{ url_for('static', filename='vendor/beercss/beer.min.js') }}"></script>
 <!--Application JavaScript-->
 <script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/utils.min.js') }}"></script>

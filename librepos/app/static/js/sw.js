@@ -1,16 +1,14 @@
-const STATIC_CACHE_NAME = 'static-cache-v3';
+const STATIC_CACHE_NAME = 'static-cache-v4';
 const DYNAMIC_CACHE_NAME = 'dynamic-cache-v1';
 const DYNAMIC_CACHE_LIMIT = 50;
 
 const STATIC_ASSETS = [
     '/',
-    '/offline.html',
-    '/static/css/main.min.css',
-    '/static/css/override.min.css',
-    '/static/css/utilities.min.css',
-    '/static/css/variables.min.css',
-    '/static/js/app.min.js',
-    '/static/js/utils.min.js',
+    '/static/css/variables.css',
+    '/static/css/main.css',
+    '/static/css/utilities.css',
+    '/static/js/app.js',
+    '/static/js/utils.js',
     '/static/manifest.json',
     '/static/img/icons/icon-72x72.png',
     '/static/img/icons/icon-96x96.png',
@@ -20,8 +18,8 @@ const STATIC_ASSETS = [
     '/static/img/icons/icon-192x192.png',
     '/static/img/icons/icon-384x384.png',
     '/static/img/icons/icon-512x512.png',
-    '/static/vendor/materialize/css/materialize.min.css',
-    '/static/vendor/materialize/js/materialize.min.js',
+    '/static/vendor/beercss/beer.min.css',
+    '/static/vendor/beercss/beer.min.js',
     '/static/vendor/google/css/material-symbols-rounded.css',
     '/static/vendor/google/fonts/material-symbols-rounded.woff2'
 ];
@@ -105,11 +103,8 @@ self.addEventListener('fetch', event => {
                 return networkResponse;
             });
         }).catch(() => {
-            // Return offline page for navigation requests
-            if (request.mode === 'navigate' ||
-                (request.headers.get('accept') && request.headers.get('accept').includes('text/html'))) {
-                return caches.match('/offline.html');
-            }
+            // Navigation requests with no cache - let browser handle
+            return;
         })
     );
 });
