@@ -4,9 +4,6 @@ const DYNAMIC_CACHE_LIMIT = 50;
 
 const STATIC_ASSETS = [
     '/',
-    '/static/css/variables.css',
-    '/static/css/main.css',
-    '/static/css/utilities.css',
     '/static/js/app.js',
     '/static/js/utils.js',
     '/static/manifest.json',

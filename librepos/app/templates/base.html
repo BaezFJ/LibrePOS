@@ -19,26 +19,17 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-    <!-- Theme color adapts to light/dark mode -->
-    <meta name="theme-color" content="#1c1a18" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#f0ede6" media="(prefers-color-scheme: light)">
-
     <title>{{ head_title if head_title is defined else business_name }}</title>
 
     <!--HTMX-->
     <script src="{{ url_for('static', filename='vendor/htmx/htmx.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Material Symbols - Rounded Set -->
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='vendor/google/css/material-symbols-rounded.min.css') }}">
-
     <!--BeerCSS-->
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/beercss/beer.min.css') }}">
-    <!--Custom CSS-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/utilities.css') }}">
+    <!--Material Symbols-->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendor/google/css/material-symbols-rounded.min.css') }}">
 
     <!--Favicon-->
     <link rel="icon" href="{{ url_for('static', filename='img/icons/icon-72x72.png') }}" type="image/png">
@@ -60,16 +51,29 @@
 
     <!--PWA-->
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+    <style>
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
     {% block styles %}{% endblock %}
 </head>
 <body>
-<a href="#main" class="pos-sr-only pos-sr-only--focusable">Skip to main content</a>
 
 {% block header %}
 
 {% endblock %}
 
-<main id="main">
+<main id="main" class="responsive">
     {% block breadcrumb %}{% endblock %}
     {% block main %}{% endblock %}
 </main>
@@ -79,18 +83,18 @@
 {% endblock %}
 
 {% block scripts %}{% endblock %}
-<div role="status" aria-live="polite" class="pos-sr-only" id="flash-announcer"></div>
+<div role="status" aria-live="polite" class="visually-hidden" id="flash-announcer"></div>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <div id="flash-messages-data" class="pos-sr-only"
+        <div id="flash-messages-data" class="visually-hidden"
              data-messages="{{ messages | tojson | e }}"></div>
     {% endif %}
 {% endwith %}
 <!--BeerCSS JavaScript-->
 <script src="{{ url_for('static', filename='vendor/beercss/beer.min.js') }}"></script>
 <!--Application JavaScript-->
-<script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/utils.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
 <!--Flash Messages-->
 <script src="{{ url_for('static', filename='js/flash-messages.js') }}"></script>
 <!--HTMX CSRF Token-->
