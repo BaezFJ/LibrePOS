@@ -18,10 +18,10 @@ Essential infrastructure that other features depend on.
 
 | Status | Feature | Description |
 |--------|---------|-------------|
-| :white_check_mark: | User Authentication | Secure login/logout with session management |
-| :white_check_mark: | Role-Based Access Control | Granular permissions based on user roles (owner, admin, manager, cashier) |
-| :white_check_mark: | User Management | Create, edit, and manage user accounts |
-| :white_check_mark: | Staff Profiles | Employee directory with contact information |
+| :construction: | User Authentication | Secure login/logout with session management |
+| :white_large_square: | Role-Based Access Control | Granular permissions based on user roles (owner, admin, manager, cashier) |
+| :white_large_square: | User Management | Create, edit, and manage user accounts |
+| :white_large_square: | Staff Profiles | Employee directory with contact information |
 | :white_large_square: | Business Settings | Configure business name, address, tax rates, currency |
 | :white_large_square: | Multi-Location Support | Manage multiple restaurant locations from one system |
 
