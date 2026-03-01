@@ -7,7 +7,11 @@ from . import bp
 @bp.route("/")
 def index():
     """List view for auth."""
-    return render_template("auth/index.html")
+    context = {
+        "head_title": "Auth | LibrePOS",
+        "appbar_title": "Auth"
+    }
+    return render_template("auth/index.html", **context)
 
 
 @bp.route("/<int:id>")

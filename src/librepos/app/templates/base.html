@@ -6,7 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    {% set default_description = "Open Source web-based point of sale system for restaurants." %}
+    {% set head_description = "Open Source web-based point of sale system for restaurants." %}
     <meta name="description" content="{{ head_description if head_description is defined else default_description }}">
     <meta property="og:title" content="{{ head_title if head_title is defined else 'LibrePOS' }}">
     <meta property="og:type" content="website">
@@ -59,17 +59,25 @@
 </head>
 <body>
 
-{% block header %}
+{% block body %}
+    <header>
+        {% block appbar %}
+            {% include 'partials/appbar.html' %}
+        {% endblock %}
+        {% block nav %}
+            {% include 'partials/nav.html' %}
+        {% endblock %}
+        {% block header %}{% endblock %}
+    </header>
 
-{% endblock %}
+    <main id="main">
+        {% block breadcrumb %}{% endblock %}
+        {% block main %}{% endblock %}
+    </main>
 
-<main id="main">
-    {% block breadcrumb %}{% endblock %}
-    {% block main %}{% endblock %}
-</main>
+    {% block footer %}
 
-{% block footer %}
-
+    {% endblock %}
 {% endblock %}
 
 {% block scripts %}{% endblock %}
@@ -83,11 +91,11 @@
 <!--Materialize JavaScript-->
 <script src="{{ url_for('static', filename='vendor/materialize/js/materialize.min.js') }}"></script>
 <!--Application JavaScript-->
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
-<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/utils.min.js') }}"></script>
 <!--Flash Messages-->
-<script src="{{ url_for('static', filename='js/flash-messages.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flash-messages.min.js') }}"></script>
 <!--HTMX CSRF Token-->
-<script src="{{ url_for('static', filename='js/htmx-csrf.js') }}"></script>
+<script src="{{ url_for('static', filename='js/htmx-csrf.min.js') }}"></script>
 </body>
 </html>
