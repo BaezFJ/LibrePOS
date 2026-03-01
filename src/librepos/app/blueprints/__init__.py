@@ -3,6 +3,8 @@
 from .menu import bp as menu_bp
 
 
+from .auth import bp as auth_bp
+
 def register_blueprints(app):
     """Register all blueprints with the application.
 

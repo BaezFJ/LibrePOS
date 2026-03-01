@@ -21,8 +21,7 @@
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/librepos/app/templates" />
-        <option value="$MODULE_DIR$/librepos/app/blueprints/menu/templates" />
+        <option value="$MODULE_DIR$/src/librepos/app/blueprints/auth/templates" />
       </list>
     </option>
   </component>
