@@ -1,9 +1,7 @@
 """Blueprint registration for LibrePOS."""
 
-from .menu import bp as menu_bp
-
-
 from .auth import bp as auth_bp
+
 
 def register_blueprints(app):
     """Register all blueprints with the application.
@@ -11,4 +9,4 @@ def register_blueprints(app):
     Blueprints are imported and registered here. The create_blueprint.py script
     will automatically add new blueprints to this function.
     """
-    app.register_blueprint(menu_bp)
+    app.register_blueprint(auth_bp)
