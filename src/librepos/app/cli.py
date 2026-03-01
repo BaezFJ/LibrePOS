@@ -3,7 +3,6 @@
 import click
 from flask import Flask
 
-from librepos.app.blueprints.menu.models import Category
 
 CATEGORY_SEED_DATA = [
     {
@@ -40,15 +39,15 @@ def register_cli(app: Flask) -> None:
         created = 0
         skipped = 0
 
-        for data in CATEGORY_SEED_DATA:
-            existing = Category.get_first_by(name=data["name"])
-            if existing:
-                click.echo(f"  Skipped: {data['name']} (already exists)")
-                skipped += 1
-            else:
-                Category.create(**data)
-                click.echo(f"  Created: {data['name']}")
-                created += 1
+        # for data in CATEGORY_SEED_DATA:
+        #     existing = Category.get_first_by(name=data["name"])
+        #     if existing:
+        #         click.echo(f"  Skipped: {data['name']} (already exists)")
+        #         skipped += 1
+        #     else:
+        #         Category.create(**data)
+        #         click.echo(f"  Created: {data['name']}")
+        #         created += 1
 
         click.echo(f"\nDone! Created: {created}, Skipped: {skipped}")
 
