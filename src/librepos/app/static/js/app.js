@@ -59,7 +59,7 @@ const PWA = {
             };
 
             navigator.serviceWorker.controller.postMessage(
-                { type: 'CLEAR_CACHES' },
+                {type: 'CLEAR_CACHES'},
                 [messageChannel.port2]
             );
         });
@@ -68,14 +68,14 @@ const PWA = {
     // Force update to new service worker
     async update() {
         if (this.registration && this.registration.waiting) {
-            this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            this.registration.waiting.postMessage({type: 'SKIP_WAITING'});
         }
     },
 
     // Check if app is running as installed PWA
     isInstalled() {
         return window.matchMedia('(display-mode: standalone)').matches ||
-               window.navigator.standalone === true;
+            window.navigator.standalone === true;
     },
 };
 
@@ -101,7 +101,7 @@ window.showInstallPrompt = async () => {
     }
 
     deferredInstallPrompt.prompt();
-    const { outcome } = await deferredInstallPrompt.userChoice;
+    const {outcome} = await deferredInstallPrompt.userChoice;
     deferredInstallPrompt = null;
     return outcome === 'accepted';
 };
@@ -113,3 +113,16 @@ window.PWA = PWA;
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => PWA.register());
 }
+
+
+const SIDENAV_SELECTOR = '.sidenav';
+
+function initSidenav() {
+    const sidenavElements = document.querySelectorAll(SIDENAV_SELECTOR);
+
+    M.Sidenav.init(sidenavElements, {
+        // specify options here
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initSidenav);

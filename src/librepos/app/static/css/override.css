@@ -1,3 +1,100 @@
 ul {
     padding-inline-start: 0;
 }
+
+/* ── M3 Expressive Top App Bar ─────────────────────────────── */
+
+/* Colors: surface-based (not secondary-container) */
+.navbar {
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+}
+
+.navbar a {
+    color: var(--md-sys-color-on-surface);
+}
+
+/* Elevation: flat at rest */
+.navbar-fixed .navbar {
+    box-shadow: none;
+}
+
+/* Layout: flexbox alignment */
+.navbar .nav-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+}
+
+/* Left nav (menu button) */
+.navbar .nav-wrapper > ul:first-child {
+    flex: 0 0 auto;
+}
+
+/* Brand logo: static flow, centered via flex */
+.navbar .brand-logo,
+.navbar .brand-logo.center {
+    position: static;
+    flex: 1;
+    text-align: center;
+    transform: none;
+    color: var(--md-sys-color-on-surface);
+    /* M3 Title Large */
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0;
+}
+
+/* Right nav icons */
+.navbar .nav-wrapper > ul.right {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 4px;
+}
+
+/* Icon buttons: 48dp touch target, rounded, centered */
+.navbar ul:not(.dropdown-content) > li > a {
+    min-width: 48px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0 8px;
+    color: var(--md-sys-color-on-surface);
+    transition: background-color 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Icon height reset (Materialize sets it to navbar height) */
+.navbar ul:not(.dropdown-content) > li > a > i {
+    height: auto;
+    line-height: 1;
+}
+
+/* State layers */
+.navbar ul:not(.dropdown-content) > li > a:hover:not(.active) {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+.navbar ul:not(.dropdown-content) > li > a:active {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+}
+
+/* Focus-visible: accessible outline */
+.navbar ul:not(.dropdown-content) > li > a:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+}
+
+/* Sidenav trigger alignment */
+.navbar .sidenav-trigger {
+    margin: 0;
+}
+
+/* Nav list items: flex layout instead of float */
+.navbar ul:not(.dropdown-content) > li {
+    float: none;
+    display: flex;
+    align-items: center;
+}
