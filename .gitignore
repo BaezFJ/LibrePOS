@@ -336,8 +336,8 @@ venv/
 wheels/
 x64/
 x86/
-librepos/app/static/images/users/
-librepos/app/static/img/*
-!librepos/app/static/img/icons/
-!librepos/app/static/img/placeholders/
+src/librepos/app/static/images/users/
+src/librepos/app/static/img/*
+!src/librepos/app/static/img/icons/
+!src/librepos/app/static/img/placeholders/
 !/scripts/

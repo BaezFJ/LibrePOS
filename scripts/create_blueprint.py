@@ -22,9 +22,9 @@ import click
 
 # Base paths
 PROJECT_ROOT = Path(__file__).parent.parent
-BLUEPRINTS_DIR = PROJECT_ROOT / "librepos" / "app" / "blueprints"
+BLUEPRINTS_DIR = PROJECT_ROOT / "src" / "librepos" / "app" / "blueprints"
 BLUEPRINTS_INIT = BLUEPRINTS_DIR / "__init__.py"
-APP_INIT = PROJECT_ROOT / "librepos" / "app" / "__init__.py"
+APP_INIT = PROJECT_ROOT / "src" / "librepos" / "app" / "__init__.py"
 
 
 # =============================================================================

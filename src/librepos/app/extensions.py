@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 
 from flask_mailman import Mail
 from flask_migrate import Migrate
@@ -8,6 +9,8 @@ from sqlalchemy import DateTime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from librepos.app.shared.helpers import fetch_time_by_timezone
+
+_MIGRATIONS_DIR = str(Path(__file__).resolve().parent.parent / "migrations")
 
 
 class Base(DeclarativeBase):
@@ -50,7 +53,7 @@ csrf = CSRFProtect()
 def init_extensions(app):
     """Initialize Flask extensions."""
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, directory=_MIGRATIONS_DIR)
     mail.init_app(app)
     csrf.init_app(app)
 

@@ -37,17 +37,11 @@ def create_app(app_config: str | type | None = None):
     app.jinja_env.lstrip_blocks = True
     app.jinja_env.trim_blocks = True
 
-    # jinja cache
-    def ensure_jinja_cache_dir():
-        cache_dir = Path("instance/jinja_cache")
-        cache_dir.mkdir(parents=True, exist_ok=True)
-
-    # Ensure the cache directory exists
-    ensure_jinja_cache_dir()
-
     # Bytecode cache (big templates render faster after the first hit)
+    cache_dir = Path(app.instance_path) / "jinja_cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
     app.jinja_env.bytecode_cache = FileSystemBytecodeCache(
-        directory="instance/jinja_cache", pattern="%s.cache"
+        directory=str(cache_dir), pattern="%s.cache"
     )
 
     @app.context_processor
