@@ -12,7 +12,7 @@ const initFlashMessages = () => {
     const messages = JSON.parse(container.dataset.messages || '[]');
 
     messages.forEach(({ category, message }) => {
-        // TODO: Implement BeerCSS snackbar notifications
+        // TODO: Implement MaterializeCSS toast notifications
         console.log(`[${category.toUpperCase()}] ${message}`);
 
         // Announce to screen readers
