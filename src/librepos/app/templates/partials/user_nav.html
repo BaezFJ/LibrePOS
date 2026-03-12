@@ -1,0 +1,73 @@
+<aside id="user-menu" class="sidenav sidenav-right" role="navigation" aria-label="User menu">
+    <div class="sidenav-header center">
+        <i class="material-symbols-rounded" aria-hidden="true">account_circle</i>
+        <span class="sidenav-title">{{ current_user.name if current_user is defined else "User" }}</span>
+    </div>
+
+    <li><a class="subheader">Account</a></li>
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">person</i>
+            My Profile
+        </a>
+    </li>
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">lock</i>
+            Change PIN
+        </a>
+    </li>
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">schedule</i>
+            My Shifts
+        </a>
+    </li>
+
+    <li role="separator"><div class="divider"></div></li>
+
+    <li><a class="subheader">Quick Actions</a></li>
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">point_of_sale</i>
+            Open Register
+        </a>
+    </li>
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">receipt_long</i>
+            Recent Transactions
+        </a>
+    </li>
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">payments</i>
+            Cash Drawer
+        </a>
+    </li>
+
+    <li role="separator"><div class="divider"></div></li>
+
+    <li><a class="subheader">Support</a></li>
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">help</i>
+            Help
+        </a>
+    </li>
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">info</i>
+            About
+        </a>
+    </li>
+
+    <li role="separator"><div class="divider"></div></li>
+
+    <li>
+        <a class="waves-effect" href="#!">
+            <i class="material-symbols-rounded" aria-hidden="true">logout</i>
+            Log Out
+        </a>
+    </li>
+</aside>

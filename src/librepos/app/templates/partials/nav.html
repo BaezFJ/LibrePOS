@@ -1,19 +1,27 @@
-<ul id="main-menu" class="sidenav" role="navigation" aria-label="Main menu">
-    <li>
-        <div class="user-view">
-            <div class="background">
-                <img src="images/office.jpg">
-            </div>
-            <a href="#user"><img class="circle" src="images/yuna.jpg"></a>
-            <a href="#name"><span class="white-text name">John Doe</span></a>
-            <a href="#email"><span class="white-text email">jdoe@example.com</span></a>
-        </div>
-    </li>
-    <li><a href="#!"><i class="material-symbols-rounded" aria-hidden="true">cloud</i>First Link With Icon</a></li>
-    <li><a href="#!">Second Link</a></li>
-    <li role="separator">
-        <div class="divider"></div>
-    </li>
-    <li><a class="subheader">Subheader</a></li>
-    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-</ul>
+<aside id="main-menu" class="sidenav" role="navigation" aria-label="Main menu">
+    <div class="sidenav-header center">
+        <span class="sidenav-title">{{ business_name }}</span>
+    </div>
+    {% for item in nav_items %}
+        {% if item.get("divider") %}
+            <li role="separator">
+                <div class="divider"></div>
+            </li>
+        {% elif item.get("subheader") %}
+            <li><a class="subheader">{{ item.subheader }}</a></li>
+        {% else %}
+            <li>
+                <a class="waves-effect" href="{{ url_for(item.endpoint) if item.endpoint != '#' else '#!' }}">
+                    {% if item.get("icon") %}
+                        <i class="material-symbols-rounded" aria-hidden="true">{{ item.icon }}</i>
+                    {% endif %}
+                    {{ item.label }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+
+    <div class="sidenav-footer center">
+        <small>v{{ app_version }}</small>
+    </div>
+</aside>

@@ -11,6 +11,28 @@ from librepos.app.extensions import init_extensions
 
 from .config import CONFIG_BY_NAME, BaseConfig, DevelopmentConfig
 
+# Navigation menu items injected into all templates via context processor.
+# Each item: label, icon (Material Symbols name), endpoint (url_for target),
+# and optional "children" for submenus or "divider": True for separators.
+NAV_ITEMS: list[dict] = [
+    {"label": "Dashboard", "icon": "dashboard", "endpoint": "admin_view"},
+    {"divider": True},
+    {"label": "Point of Sale", "icon": "point_of_sale", "endpoint": "#"},
+    {"label": "Orders", "icon": "receipt_long", "endpoint": "#"},
+    {"label": "Tables", "icon": "table_restaurant", "endpoint": "#"},
+    {"divider": True},
+    {"subheader": "Management"},
+    {"label": "Menu & Products", "icon": "restaurant_menu", "endpoint": "#"},
+    {"label": "Inventory", "icon": "inventory_2", "endpoint": "#"},
+    {"label": "Customers", "icon": "group", "endpoint": "#"},
+    {"label": "Staff", "icon": "badge", "endpoint": "#"},
+    {"divider": True},
+    {"subheader": "Analytics"},
+    {"label": "Reports", "icon": "bar_chart", "endpoint": "#"},
+    {"divider": True},
+    {"label": "Settings", "icon": "settings", "endpoint": "#"},
+]
+
 
 def create_app(app_config: str | type | None = None):
     app = Flask(__name__)
@@ -48,7 +70,11 @@ def create_app(app_config: str | type | None = None):
     def inject_global_variables():
         librepos_version = version("librepos")
         business_name = app.config.get("BUSINESS_NAME") or "LibrePOS"
-        return {"app_version": librepos_version, "business_name": business_name}
+        return {
+            "app_version": librepos_version,
+            "business_name": business_name,
+            "nav_items": NAV_ITEMS,
+        }
 
     # load extensions
     init_extensions(app)

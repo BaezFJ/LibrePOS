@@ -115,14 +115,20 @@ if ('serviceWorker' in navigator) {
 }
 
 
-const SIDENAV_SELECTOR = '.sidenav';
-
 function initSidenav() {
-    const sidenavElements = document.querySelectorAll(SIDENAV_SELECTOR);
+    const mainMenu = document.getElementById('main-menu');
+    if (mainMenu) {
+        M.Sidenav.init(mainMenu);
+    }
 
-    M.Sidenav.init(sidenavElements, {
-        // specify options here
-    });
+    const userMenu = document.getElementById('user-menu');
+    if (userMenu) {
+        M.Sidenav.init(userMenu, {
+            edge: 'right',
+        });
+    }
 }
 
-document.addEventListener('DOMContentLoaded', initSidenav);
+document.addEventListener('DOMContentLoaded', () => {
+    initSidenav();
+});

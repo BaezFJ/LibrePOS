@@ -31,8 +31,9 @@
 
     <!--Materialize CSS-->
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/materialize/css/materialize.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/override.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/override.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.min.css') }}">
 
 
     <!--Favicon-->
@@ -66,6 +67,9 @@
         {% endblock %}
         {% block nav %}
             {% include 'partials/nav.html' %}
+        {% endblock %}
+        {% block user_nav %}
+            {% include 'partials/user_nav.html' %}
         {% endblock %}
         {% block header %}{% endblock %}
     </header>
