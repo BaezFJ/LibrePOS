@@ -1,3 +1,7 @@
+body {
+    min-height: 100vh;
+}
+
 ul {
     padding-inline-start: 0;
 }
@@ -224,20 +228,22 @@ ul {
 /* Item link/span: Label Large (14sp / 500), proper padding */
 .dropdown-content li > a,
 .dropdown-content li > span {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
     letter-spacing: 0.1px;
     color: var(--md-sys-color-on-surface);
-    padding: 14px 12px;
+    padding: 0 12px;
 }
 
-/* Leading icon: on-surface-variant, flex layout */
+/* Leading icon: on-surface-variant */
 .dropdown-content li > a > i {
     float: none;
-    display: inline-flex;
-    vertical-align: middle;
-    margin: 0 12px 0 0;
+    margin: 0;
+    flex-shrink: 0;
     width: 24px;
     height: 24px;
     font-size: 24px;
@@ -274,4 +280,12 @@ body.keyboard-focused .dropdown-content li:focus {
     height: 1px;
     background-color: var(--md-sys-color-outline-variant);
     margin: 8px 0;
+}
+
+/* View all link: centered, primary color */
+.dropdown-content .dropdown-view-all {
+    justify-content: center;
+    align-items: center;
+    min-height: 48px;
+    color: var(--md-sys-color-primary);
 }

@@ -115,6 +115,14 @@ if ('serviceWorker' in navigator) {
 }
 
 
+function initDropdowns() {
+    const dropdowns = document.querySelectorAll('.dropdown-trigger');
+    M.Dropdown.init(dropdowns, {
+        coverTrigger: false,
+        constrainWidth: false,
+    });
+}
+
 function initSidenav() {
     const mainMenu = document.getElementById('main-menu');
     if (mainMenu) {
@@ -130,5 +138,6 @@ function initSidenav() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initDropdowns();
     initSidenav();
 });

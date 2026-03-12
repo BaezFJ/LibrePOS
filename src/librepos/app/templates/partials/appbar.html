@@ -2,14 +2,17 @@
     <nav class="nav navbar" role="banner" aria-label="Main navigation">
         <div class="nav-wrapper">
             <ul>
-                <li><a data-target="main-menu" class="sidenav-trigger" aria-label="Open menu"><i
-                        class="material-symbols-rounded" role="img" aria-hidden="true">menu</i></a></li>
+                <li>
+                    <a data-target="main-menu" class="sidenav-trigger" aria-label="Open menu">
+                        <i class="material-symbols-rounded" role="img" aria-hidden="true">menu</i>
+                    </a>
+                </li>
             </ul>
             <a aria-label="Application logo" class="brand-logo center no-select">{{ appbar_title if appbar_title is defined else "LibrePOS" }}</a>
             <ul id="nav-mobile" class="right">
                 <li><a class="dropdown-trigger" data-target="notifications-dropdown" aria-label="Notifications"><i class="material-symbols-rounded" role="img"
                                                              aria-hidden="true">notifications</i></a></li>
-                <li><a href="" aria-label="Messages"><i class="material-symbols-rounded" role="img" aria-hidden="true">chat</i></a>
+                <li><a class="dropdown-trigger" data-target="messages-dropdown" aria-label="Messages"><i class="material-symbols-rounded" role="img" aria-hidden="true">chat</i></a>
                 </li>
                 <li><a data-target="user-menu" class="sidenav-trigger" aria-label="Account"><i class="material-symbols-rounded" role="img" aria-hidden="true">account_circle</i></a>
                 </li>
@@ -17,3 +20,25 @@
         </div>
     </nav>
 </div>
+
+<ul id="notifications-dropdown" class="dropdown-content">
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">table_restaurant</i>Table 5 is ready</a></li>
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">receipt_long</i>Order #1024 completed</a></li>
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">inventory</i>Low stock: Olive Oil</a></li>
+    <li class="divider" tabindex="-1"></li>
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">person</i>New staff login: María</a></li>
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">payments</i>Daily sales report available</a></li>
+    <li class="divider" tabindex="-1"></li>
+    <li><a href="" class="dropdown-view-all">View all notifications</a></li>
+</ul>
+
+<ul id="messages-dropdown" class="dropdown-content">
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">person</i>María: Table 3 needs cleanup</a></li>
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">person</i>Carlos: Running low on napkins</a></li>
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">person</i>Ana: Shift swap request</a></li>
+    <li class="divider" tabindex="-1"></li>
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">group</i>Kitchen: Order #1031 delayed</a></li>
+    <li><a><i class="material-symbols-rounded" aria-hidden="true">group</i>Management: Staff meeting at 4pm</a></li>
+    <li class="divider" tabindex="-1"></li>
+    <li><a href="" class="dropdown-view-all">View all messages</a></li>
+</ul>
